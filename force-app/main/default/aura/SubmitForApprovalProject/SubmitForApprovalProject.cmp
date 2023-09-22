@@ -1,0 +1,4 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction"  controller="LeadApprovalUtility" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <center><h3>Submitting For Business Head Approval, Please wait...</h3></center>
+</aura:component>

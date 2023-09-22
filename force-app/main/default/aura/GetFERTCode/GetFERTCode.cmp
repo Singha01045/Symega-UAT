@@ -1,0 +1,142 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader"
+                access="global" controller="GetFERTCodeController">
+    
+    <aura:attribute type="OpportunityLineItem[]" name="OLIList"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="symLogoOptions" type="map" />
+    <aura:attribute name="mtrlSecOptions" type="map" />
+    <aura:attribute name="plantOptions" type="map" />
+    <aura:attribute name="OpplineItemSize" type="Integer" />
+    
+    <aura:html tag="style">
+        .slds-modal__container{
+        max-width: 60rem !important;
+        width:120% !important;
+        }
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }       
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+        .plant-width{
+        width:10% !important;
+        }
+    </aura:html>
+    
+    <aura:attribute name="Message" type="string" />
+    <aura:attribute name="OppLineItemList" type="List" default="[{'record':{
+                                                                'sobjectType': 'OpportunityLineItem',
+                                                                'Name': '',
+                                                                'Quantity': '',
+                                                                'UnitPrice': '',
+                                                                'TotalPrice': '',
+                                                                'Customized_Label__c': '',
+                                                                'Symega_Logo__c': '',
+                                                                'Material_Sector__c': '',
+                                                                'Plant__c': '',
+                                                                'If_Organised_set_Micro_as_Long_Term__c': ''
+                                                                }}]"/>
+    
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <h4 class="title slds-text-heading--medium"><b>Request FERT Code</b></h4>
+    </div>
+    
+    <div class="slds-m-around_x-small slds-modal_large slds-scrollable_x" style="z-index: 1; padding-bottom: 150px;">
+        
+        <div class="container-fluid">
+            
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                
+                <thead >
+                    <tr class="slds-text-title_caps" >
+                        <th scope="col">
+                            <div class="slds-truncate" >#</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate">Product</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Quantity</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Sales Price</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Total Price</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Primary</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Secondary</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Tertiary</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Customized Label</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Symega Logo</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >Material Sector</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" >If Organised, set Micro as Long Term</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <aura:iteration items="{!v.OppLineItemList}" var="OLI" indexVar="index">
+                        <tr>
+                            <td> 
+                                {!index + 1}
+                            </td>
+                            <td><div class="slds-truncate" title="">{!OLI.Name}</div></td>
+                            <td><div class="slds-truncate" title="">{!OLI.Quantity}</div></td>
+                            <td><div class="slds-truncate" title="">{!OLI.UnitPrice}</div></td>
+                            <td><div class="slds-truncate" title="">{!OLI.TotalPrice}</div></td>
+                            <td><lightning:input value="{!OLI.Primary__c}" required="true"/></td>
+                            <td><lightning:input value="{!OLI.Secondary__c}" required="true"/></td>
+                            <td><lightning:input value="{!OLI.Tertiary__c}" required="true"/></td>
+                            <td><lightning:input value="{!OLI.Customized_Label__c}" required="true"/></td>
+                            <td>
+                                <lightning:select value="{!OLI.Symega_Logo__c}" required="true">
+                                    <option value="">--None--</option>
+                                    <aura:iteration items="{!v.symLogoOptions}" var="i">
+                                        <option text="{!i.value}" value="{!i.value}" selected="{!i.selected}" />
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                            <td>
+                                <lightning:select value="{!OLI.Material_Sector__c}" required="true">
+                                    <option value="">--None--</option>
+                                    <aura:iteration items="{!v.mtrlSecOptions}" var="i">
+                                        <option text="{!i.value}" value="{!i.value}" selected="{!i.selected}" />
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                            <td><lightning:input value="{!OLI.If_Organised_set_Micro_as_Long_Term__c}" required="true"/></td>                           
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="modal-footer slds-modal__footer slds-size_1-of-1 slds-p-around_large slds-align_absolute-center">
+        <div role="contentinfo">
+            <lightning:button label="Send Notification" onclick="{! c.handleSubmit}" class="marginTop"/>
+            <lightning:button label="Cancel" onclick="{! c.handleCancel }" class="marginTop"/>
+        </div>
+    </div>
+    
+</aura:component>
