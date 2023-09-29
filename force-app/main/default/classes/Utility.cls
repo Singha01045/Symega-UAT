@@ -852,10 +852,72 @@ Global without sharing class Utility {
         return missingFields;
     }
 
+    public static String checkProjectSAPCustomerReqField(String accId){
+        Account acc = [Select Id, Name, Customer_Type__c, Customer_Contact__c, 
+                       BillingCountry, BillingPostalCode, BillingState, BillingCity, BillingStreet, 
+                       ShippingCountry, ShippingPostalCode, ShippingState, ShippingCity, ShippingStreet 
+                       From Account Where Id =:accId];
+        return sapForProjectFieldsCheck(acc);
+    }
+    
+    public static String sapForProjectFieldsCheck(Account acc) {
+        String missingFields = '';
+
+        if(String.isBlank(acc.Name)){
+            missingFields +='Customer Name,';
+        }
+
+        if(String.isBlank(acc.Customer_Contact__c)){
+            missingFields +='Customer Contact,';
+        }
+
+        if(String.isBlank(acc.BillingCity)){
+            missingFields +='BillingCity,';
+        }
+        if(String.isBlank(acc.BillingStreet)){
+            missingFields +='BillingStreet,';
+        }
+        if(String.isBlank(acc.BillingState) && acc.Customer_Type__c!='Export'){
+            missingFields += ' BillingState, ';
+        }
+        if(String.isBlank(acc.BillingCountry)){
+            missingFields +=' BillingCountry,';
+        }
+        if(String.isBlank(acc.BillingPostalCode)){
+            missingFields += ' BillingPostalCode, ';
+        }
+
+        if(String.isBlank(acc.ShippingCity)){
+            missingFields +='ShippingCity,';
+        }
+        if(String.isBlank(acc.ShippingStreet)){
+            missingFields +='ShippingStreet,';
+        }
+        if(String.isBlank(acc.ShippingState) && acc.Customer_Type__c!='Export'){
+            missingFields += ' ShippingState, ';
+        }
+        if(String.isBlank(acc.ShippingCountry)){
+            missingFields +=' ShippingCountry,';
+        }
+        if(String.isBlank(acc.ShippingPostalCode)){
+            missingFields += ' ShippingPostalCode, ';
+        }
+
+        if(missingFields.contains(',')){
+            missingFields = missingFields.removeEnd(',');
+            missingFields += ' are required fields';
+        }
+
+        if(String.isBlank(missingFields)){
+            missingFields = 'Success';
+        }
+        return missingFields;
+    }
+
+
     public static String checkSAPCustomerReqField(String accId){
         Account acc = [Select Id,Customer_Type__c,BillingCountry,BillingPostalCode,BillingState,Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c From Account Where Id =:accId];
         return sapAccountMFieldsCheck(acc);
-        
     }
     
     public static String sapAccountMFieldsCheck(Account acc) {
@@ -917,6 +979,21 @@ Global without sharing class Utility {
     public static string getUserDocUrl(string udId){
         return [SELECT Id, Document_Link__c FROM User_Document__c WHERE Id =: udId].Document_Link__c;
     }
-        
+
+    public static string capitalizeString(String name){
+        try{
+            if(name != null && !string.IsEmpty(name)){
+                String capitalLetters = name.toUppercase();
+                System.debug('capitalLetters--->'+capitalLetters);
+                return capitalLetters;
+            }
+            return null;
+        }catch(Exception e){
+            System.debug('Exception Message--->'+e.getMessage());
+            System.debug('Exception Line NUmber-->'+e.getLineNumber());
+            return e.getMessage();
+        }
+    }
+    
 
 }

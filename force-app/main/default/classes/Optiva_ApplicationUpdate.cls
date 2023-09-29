@@ -71,15 +71,16 @@ global without sharing class Optiva_ApplicationUpdate {
                             system.debug('sscCd ::' + sscCd);
                             system.debug('newCode ::' + newCode);
                             if(!String.isBlank(optivaRec.ssc_code)) {
+                                string captialSSC = Utility.capitalizeString(optivaRec.ssc_code);
                                 if(sscCodeToPRMap.containsKey(optivaRec.ssc_code)) {
                                     Project_Quotient__c extPR = sscCodeToPRMap.get(optivaRec.ssc_code);
-                                    extPR.SSC_Code__c = !String.isBlank(optivaRec.ssc_code) ? optivaRec.ssc_code : extPR.SSC_Code__c;
+                                    extPR.SSC_Code__c = !String.isBlank(captialSSC) ? captialSSC : Utility.capitalizeString(extPR.SSC_Code__c);
                                     extPR.Product_Name__c = !String.isBlank(optivaRec.prod_name) ? optivaRec.prod_name : extPR.Product_Name__c;
                                 }
                                 else{
                                     Project_Quotient__c newPR = new Project_Quotient__c();
                                     newPR.Sample_Project_Application__c = applicationId;
-                                    newPR.SSC_Code__c = !String.isBlank(optivaRec.ssc_code) ? optivaRec.ssc_code : '';
+                                    newPR.SSC_Code__c = !String.isBlank(captialSSC) ? captialSSC : '';
                                     newPR.Product_Name__c = !String.isBlank(optivaRec.prod_name) ? optivaRec.prod_name : '';
                                     sscCodeToPRMap.put(optivaRec.ssc_code, newPR);
                                 }

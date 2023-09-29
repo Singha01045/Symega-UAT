@@ -7,6 +7,7 @@
             "recordTypeName" : "Application" 
         });
         action.setCallback(this, function(result){
+            debugger;
             var state = result.getState(); // get the response state
             resolve(result.getReturnValue());
             if(state == 'SUCCESS') {
@@ -14,7 +15,6 @@
                 return result.getReturnValue();
             }
         });
-        
         $A.enqueueAction(action);
       }));
   }

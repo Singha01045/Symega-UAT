@@ -50,9 +50,10 @@ global without sharing class SAP_UpdateProjectQuotient {
                 if(quotientList != null) {
                     for(SAP_ProjectQuotientWrapper.cls_PRODUCT_OUTCOME prRec : quotientList) {
                         if(!String.isBlank(prRec.HALB_CODE)) {
+                            string capitalHALB = Utility.capitalizeString(prRec.HALB_CODE);
                             if(sscCodeToPRMap.containsKey(prRec.HALB_CODE)) {
                                 Project_Quotient__c extPR = sscCodeToPRMap.get(prRec.HALB_CODE);
-                                extPR.SSC_Code__c = !String.isBlank(prRec.HALB_CODE) ? prRec.HALB_CODE : extPR.SSC_Code__c;
+                                extPR.SSC_Code__c = !String.isBlank(capitalHALB) ? capitalHALB : Utility.capitalizeString(extPR.SSC_Code__c);
                                 extPR.Product_Name__c = !String.isBlank(prRec.PROD_NAME) ? prRec.PROD_NAME : extPR.Product_Name__c;
                                 extPR.Current_Shelf_Life__c = !String.isBlank(prRec.CURRENT_SHELF_LIFE) ? prRec.CURRENT_SHELF_LIFE : extPR.Current_Shelf_Life__c;
                                 extPR.Usage_Level__c = !String.isBlank(prRec.USAGE_LEVEL) ? prRec.USAGE_LEVEL : extPR.Usage_Level__c;
@@ -61,7 +62,7 @@ global without sharing class SAP_UpdateProjectQuotient {
                             else{
                                 Project_Quotient__c newPR = new Project_Quotient__c();
                                 newPR.Sample_Project_Application__c = projectId;
-                                newPR.SSC_Code__c = !String.isBlank(prRec.HALB_CODE) ? prRec.HALB_CODE : '';
+                                newPR.SSC_Code__c = !String.isBlank(capitalHALB) ? capitalHALB : '';
                                 newPR.Product_Name__c = !String.isBlank(prRec.PROD_NAME) ? prRec.PROD_NAME : '';
                                 newPR.Current_Shelf_Life__c = !String.isBlank(prRec.CURRENT_SHELF_LIFE) ? prRec.CURRENT_SHELF_LIFE : '';
                                 newPR.Usage_Level__c = !String.isBlank(prRec.USAGE_LEVEL) ? prRec.USAGE_LEVEL : '';

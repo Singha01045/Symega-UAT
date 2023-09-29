@@ -90,6 +90,29 @@ public class GetFERTCodeController {
                 }   
                 
                 if(prodFamilyByOppProdsMap.size()>0){
+                    List<ContentDocumentLink> docLinks  = [SELECT Id, ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId =: oppId ]; 
+                    system.debug('docLinks -- ' + docLinks);
+                    system.debug('docLinks.size() -- ' + docLinks.size());
+
+                    set<id> cdIdSet = new set<id>();
+                    for(ContentDocumentLink cdl : docLinks){
+                        cdIdSet.add(cdl.ContentDocumentId);
+                    }
+                    system.debug('cdIdSet -- ' + cdIdSet);
+                    List<ContentVersion> cVerList = [SELECT ContentDocumentId, VersionData, FileExtension, FileType, Id, Title FROM ContentVersion WHERE ContentDocumentId IN: cdIdSet] ;
+                    system.debug('cVerList -- ' + cVerList);
+                    system.debug('cVerList.size() -- ' + cVerList.size());
+                    
+
+                    List<Messaging.EmailFileAttachment> attachments = new List<Messaging.EmailFileAttachment>();
+                    for (ContentVersion cVer: cVerList) {
+                        Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
+                        efa.setFileName(cVer.Title + '.' + cVer.FileExtension);
+                        efa.setBody(cVer.VersionData);
+                        //efa.setContentType(cVer.ContentType);
+                        attachments.add(efa);
+                    }
+
                     for(String prodFamily : prodFamilyByOppProdsMap.keyset()){
                         
                         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
@@ -123,6 +146,9 @@ public class GetFERTCodeController {
                                 message.setCcAddresses(cC_EmailRecipients);
                             }
                         }
+
+                        if(attachments.size()>0)
+                            message.setFileAttachments(attachments);
                         
                         Messaging.SingleEmailMessage[] messages = new List<Messaging.SingleEmailMessage> {message};
                             Messaging.SendEmailResult[] results =  Messaging.sendEmail(messages);
@@ -163,5 +189,77 @@ public class GetFERTCodeController {
             system.debug('Email Error : ' + e.getMessage() + ' At Line No : ' + e.getLineNumber()); 
             return e.getMessage();
         }
+    }
+    
+    // Method for get Opp related Account Details
+     @AuraEnabled
+    public static List<String> getOppRelatedAccountDetails(String oppId){
+        Opportunity opp = new Opportunity();
+        Account accRec = new Account();
+        List<String> missingReqField = new List<String>();
+        try{
+            if(String.isNotBlank(oppId))
+                opp = [SELECT Id,AccountId,Name FROM Opportunity WHERE Id=:oppId];
+                if(string.isNotBlank(opp.AccountId)){
+                    accRec = [Select Id,Customer_Type__c,BillingCountry,BillingPostalCode,BillingState,Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c From Account Where ID=:opp.AccountId];
+                   // system.debug('Yes Found Blank accRec.PAN_Number__c ==>'+accRec.PAN_Number__c);
+                    if((accRec.Customer_Type__c == null) || (accRec.Customer_Type__c =='')){
+                        missingReqField.add('Customer_Type__c');
+                        system.debug('Yes Found  accRec.Customer_Type__c ==>'+accRec.Customer_Type__c);
+                    }
+                     if((accRec.BillingCountry == null) || (accRec.BillingCountry == '')){
+                        missingReqField.add('BillingCountry');
+                        system.debug('Yes Found  accRec.BillingCountry ==>'+accRec.BillingCountry);
+                    }
+                    
+                     if((accRec.BillingPostalCode == null) || (accRec.BillingPostalCode == '')){
+                        missingReqField.add('BillingPostalCode');
+                        system.debug('Yes Found  accRec.BillingPostalCode ==>'+accRec.BillingPostalCode);
+                    }
+                    
+                    if((accRec.BillingState == null) || (accRec.BillingState == '')){
+                        missingReqField.add('BillingState');
+                        system.debug('Yes Found  accRec.CustoBillingStatemer_Type__c ==>'+accRec.BillingState);
+                    }
+                     if((accRec.Delivery_Plant__c == null) || (accRec.Delivery_Plant__c == '')){
+                        missingReqField.add('Delivery_Plant__c');
+                        system.debug('Yes Found  accRec.Delivery_Plant__c ==>'+accRec.Delivery_Plant__c);
+                    }
+                     if((accRec.Account_Segment__c == null) || (accRec.Account_Segment__c == '')){
+                        missingReqField.add('Account_Segment__c');
+                        system.debug('Yes Found  accRec.Account_Segment__c ==>'+accRec.Account_Segment__c);
+                    }
+                     if((accRec.Transportation_Terms__c == null) || (accRec.Transportation_Terms__c == '')){
+                        missingReqField.add('Transportation_Terms__c');
+                        system.debug('Yes Found  accRec.Transportation_Terms__c ==>'+accRec.Transportation_Terms__c);
+                    }
+                     if((accRec.PAN_Number__c == null) || (accRec.PAN_Number__c == '')){
+                        missingReqField.add('PAN_Number__c');
+                        system.debug('Yes Found  accRec.PAN_Number__c ==>'+accRec.PAN_Number__c);
+                    }
+                     if((accRec.GST_number__c == null) || (accRec.GST_number__c == '')){
+                        missingReqField.add('GST_number__c');
+                        system.debug('Yes Found  accRec.GST_number__c ==>'+accRec.GST_number__c);
+                    }
+                    system.debug('Missing Field List === >'+missingReqField);
+                    return missingReqField;
+                }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+    public static string updateOppRelatedAccountRecords(String oppId){
+        try{
+            Opportunity oppRec = [SELECT Id,AccountId,Name FROM Opportunity WHERE Id=:oppId];
+            Account accRec = new Account();
+            accRec.Id = oppRec.AccountId;
+            update accRec;
+        }
+        catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
     }
 }

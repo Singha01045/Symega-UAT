@@ -272,8 +272,8 @@ public without sharing class OpportunityLineItemTriggerHandler {
 
     private void checkAndUpdateFERT(Map<Id,Id> opTooppMap, List<OpportunityLineItem> oppLineList, Set<Id> productIdSet) {
 
-        System.debug('--- oppLineList '+oppLineList);
-        System.debug('--- productIdSet '+productIdSet);
+        System.debug('--- oppLineList '+ oppLineList);
+        System.debug('--- productIdSet '+ productIdSet);
 
         Map<Id,Id> oppToaccMap = new Map<Id,Id>();
         Set<Id> customerIdSet = new Set<Id>();

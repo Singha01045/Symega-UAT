@@ -28,11 +28,28 @@ public without sharing class OppSplitParentController {
                 opp.Pricebook2Id = parentOpp.Pricebook2Id;
                 opp.Parent_Opportunity__c = parentOpp.Id;
                 opp.StageName = 'New';
-                opp.CloseDate = Date.parse(opWrapper.closeDate);
-                opp.Next_Order_Date__c = Date.parse(opWrapper.nextOrderDate);
+                opp.CloseDate = system.today(); //Date.parse(opWrapper.closeDate);
+                opp.Next_Order_Date__c = system.today(); //Date.parse(opWrapper.nextOrderDate);
                 opp.End_Use_Category__c = parentOpp.End_Use_Category__c;
                 opp.End_Use_Application__c = parentOpp.End_Use_Application__c;
                 opp.RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('One Time').getRecordTypeId();
+
+                opp.Billing_City__c = opWrapper.billCity;
+                opp.Billing_State__c = opWrapper.billState;
+                opp.Billing_Street__c = opWrapper.billStreet;
+                opp.Billing_Postal_Code__c = opWrapper.billCode;
+                opp.Billing_Country__c = opWrapper.billCountry;
+
+                opp.Shipping_City__c = opWrapper.shipCity;
+                opp.Shipping_State__c = opWrapper.shipState;
+                opp.Shipping_Street__c = opWrapper.shipStreet;
+                opp.Shipping_Postal_Code__c = opWrapper.shipCode;
+                opp.Shipping_Country__c = opWrapper.shipCountry;
+
+                opp.Customer_Shipping_Address__c = opWrapper.customShippingAddress;
+                opp.Account_Shipping_Address__c = opWrapper.accountShipAddress;
+                opp.Customer_Billing_Address__c =  opWrapper.customBillingAddress;
+                opp.Account_Billing_Address__c = opWrapper.accountBillAddress;
 
                 if(!String.isEmpty(parentOpp.Distributer_Customer__c)){
                     opp.Distributer_Customer__c = parentOpp.Distributer_Customer__c;
@@ -56,19 +73,8 @@ public without sharing class OppSplitParentController {
             for(Integer i=0;i<oppList.size();i++){
                 Opportunity opp = oppList[i];
                 String oppId = opp.Id;
-
                 oppIdList.add(oppId);
-
-                // Sales_Order__c salesOrder = new Sales_Order__c();
-                // salesOrder.Name = 'Sales_'+opp.Name+'_'+(i+1);
-                // salesOrder.Opportunity__c = oppId;
-                // salesOrder.Amount__c = oppWrappers[i].totalAmount;
-                // salesOrder.Initiated_By__c = UserInfo.getUserId();
-                // salesOrder.Account__c = opp.AccountId;
-                // salesOrder.Order_quantity__c = oppWrappers[i].totalQuantity;
-
                 List<LineItemWrapper> products = oppWrappers[i].products;
-
                 for(LineItemWrapper lineWrapper:products){
                     if(lineWrapper.quantityChoosed!=0){
                         OpportunityLineItem oppLineItem = new OpportunityLineItem();
@@ -111,6 +117,24 @@ public without sharing class OppSplitParentController {
         @AuraEnabled public Integer totalQuantity{get;set;}
         @AuraEnabled public Decimal totalAmount{get;set;}
         @AuraEnabled public List<LineItemWrapper> products{get;set;}  
+
+        @AuraEnabled public String shipCity{get;set;}
+        @AuraEnabled public String shipCountry{get;set;}
+        @AuraEnabled public String shipCode{get;set;}
+        @AuraEnabled public String shipState{get;set;}
+        @AuraEnabled public String shipStreet{get;set;}
+
+        @AuraEnabled public String billCity{get;set;}
+        @AuraEnabled public String billCountry{get;set;}
+        @AuraEnabled public String billCode{get;set;}
+        @AuraEnabled public String billState{get;set;}
+        @AuraEnabled public String billStreet{get;set;}
+
+        @AuraEnabled public Boolean accountBillAddress{get;set;}
+        @AuraEnabled public Boolean accountShipAddress{get;set;}
+        @AuraEnabled public Id customShippingAddress{get;set;}
+        @AuraEnabled public Id customBillingAddress{get;set;}
+
     }
 
     public class LineItemWrapper {
@@ -129,6 +153,80 @@ public without sharing class OppSplitParentController {
         @AuraEnabled public Integer remainingQuantity{get;set;}
         @AuraEnabled public Decimal remainingAmount{get;set;}
         @AuraEnabled public String FERT_Code{get;set;}
-        
+    }
+
+    @AuraEnabled
+    public static Map<String, Object> getAllCustomerAddress(String oppId){
+        try {
+            Map<String, Object> returnWrapperMap = new Map<String, Object>();
+            List<CustomerAddressWrapper> customerShippingAddressWrapper = new List<CustomerAddressWrapper>();
+            List<CustomerAddressWrapper> customerBillingAddressWrapper = new List<CustomerAddressWrapper>();
+            System.debug('--- oppId'+oppId);
+            if(!String.isBlank(oppId)) {
+                Opportunity oppRec = [Select Id, Name, AccountId, CurrencyIsoCode, TotalOpportunityQuantity, Distributer_Customer__c, Pricebook2Id, End_Use_Application__c, End_Use_Category__c, Account.Name, Account.CurrencyIsoCode, Account.BillingState, Account.BillingStreet, Account.BillingCountry, Account.BillingPostalCode, Account.BillingCity, Account.GST_Number__c, Account.ShippingState, Account.ShippingStreet, Account.ShippingCountry, Account.ShippingCity, Account.ShippingPostalCode, (SELECT Id,Name,Quantity,Product2Id,PricebookEntryId,UnitPrice,CurrencyIsoCode,TotalPrice,Packaging_Type__c,FERT_Code__c From OpportunityLineItems), Amount from opportunity where Id=:oppId];
+                
+                if(oppRec != null && !String.isBlank(oppRec.Account.BillingCountry)) {
+                    customerBillingAddressWrapper.add(new CustomerAddressWrapper('Billing', oppRec.Account.BillingStreet, oppRec.Account.BillingState, oppRec.Account.BillingCountry, oppRec.Account.BillingCity, oppRec.Account.BillingPostalCode, oppRec.Account.GST_Number__c, 'Billing', true));
+                    returnWrapperMap.put('ship_selected_index', 0);
+                }
+                
+                if(oppRec != null && !String.isBlank(oppRec.Account.ShippingCountry)) {
+                    customerShippingAddressWrapper.add(new CustomerAddressWrapper('Shipping', oppRec.Account.ShippingStreet, oppRec.Account.ShippingState, oppRec.Account.ShippingCountry, oppRec.Account.ShippingCity, oppRec.Account.ShippingPostalCode, oppRec.Account.GST_Number__c, 'Shipping', true));
+                    returnWrapperMap.put('bill_selected_index', 0);
+                }
+
+                for(Dispatch_Address__c custAddress :[SELECT Id, Address__Street__s, ToLabel(Address__StateCode__s), Address__PostalCode__s, GST_Number__c, ToLabel(Address__CountryCode__s), Address__City__s, Type__c FROM Dispatch_Address__c WHERE Account__c =: oppRec.AccountId]) {
+
+                    if(custAddress.Type__c == 'Billing') {
+                        customerBillingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s, custAddress.GST_Number__c, custAddress.Type__c, false));
+                    }else {
+                        customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s, custAddress.GST_Number__c, custAddress.Type__c, false));
+                    }
+                }
+
+                //System.debug('--- customerAddressWrapper'+customerAddressWrapper);
+                returnWrapperMap.put('Opportunity', oppRec);
+                returnWrapperMap.put('customer_ship_addresses', customerShippingAddressWrapper);
+                returnWrapperMap.put('customer_bill_addresses', customerBillingAddressWrapper);
+                System.debug('--- response Wrapper '+returnWrapperMap);
+            }
+            return returnWrapperMap;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+
+    public class CustomerAddressWrapper {
+        @auraEnabled
+        public String id;
+        @auraEnabled
+        public String street;
+        @auraEnabled
+        public String state;
+        @auraEnabled
+        public String country;
+        @auraEnabled
+        public String city;
+        @auraEnabled
+        public String gstNumber;
+        @auraEnabled
+        public String type;
+        @AuraEnabled
+        public String postalCode;
+        @AuraEnabled
+        public Boolean checked;
+
+        public CustomerAddressWrapper(String id, String street, String state, String country, String city, String postalCode, String gstNumber, String type, Boolean checked) {
+            this.id = id;
+            this.street = street;
+            this.state = state;
+            this.country = country;
+            this.city = city;
+            this.gstNumber = gstNumber;
+            this.postalCode = postalCode;
+            this.type = type;
+            this.checked = checked;
+        }
     }
 }

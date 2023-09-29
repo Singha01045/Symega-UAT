@@ -53,6 +53,23 @@ public without sharing class SampleTriggerHandler {
         }
     }
 
+    public void onAfterUpdate(Map<Id,Project__c> oldMap, Map<Id,Project__c> newMap){
+
+        Set<Id> projectIds = new Set<Id>();
+        Set<Id> applicationIds = new Set<Id>();
+        for(Project__c proj : newMap.values()){
+            if(proj.Approval_Status__c == 'Accepted by Business Head' && proj.Approval_Status__c != oldMap.get(proj.Id).Approval_Status__c){
+                system.debug('proj.Record_Type_Name__c -- ' + proj.Record_Type_Name__c);
+                call_OPTIVA_API(proj.Id, proj.Record_Type_Name__c);
+            }
+        }
+    }
+
+    @future(callout=true)
+    private static void call_OPTIVA_API(String recId, String recType){
+        Optiva_LWC_NPD_Controller.syncSample(recId, recType);
+    }
+
 
     private void validateSample(List<Project__c> sampleList, Set<Id> accountIdSet) {
         Map<Id, Account> accountMap = new Map<Id, Account>([SELECT Id, Potential_Opportunity__c, Total_Team_Members__c FROM Account WHERE Id IN:accountIdSet AND Run_Validation_Rule__c = true AND RecordType.DeveloperName = 'Direct_Customer']);

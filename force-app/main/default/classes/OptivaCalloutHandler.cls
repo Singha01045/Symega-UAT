@@ -31,7 +31,7 @@ public without sharing class OptivaCalloutHandler {
                     return createResponse('Failed','400','Project is under approval');
                 }
 
-                String accValidationsResp = Utility.checkSAPCustomerReqField(project.Account__c);
+                String accValidationsResp = Utility.checkProjectSAPCustomerReqField(project.Account__c);
 
                 if(accValidationsResp.equalsIgnoreCase('Success')){
                     if(!project.Account__r.Submitted_to_SAP__c){
@@ -279,7 +279,7 @@ public without sharing class OptivaCalloutHandler {
     }
 
     public static Project__c getProject(String recId){
-        return [Select Id,Type_of_PR__c,Approval_Status__c,Opportunity_Close_Date__c,Product_Family__c,Account__r.Submitted_to_Optiva__c,Account__r.Submitted_to_SAP__c,Account__r.Customer_Code_SAP__c,Account__r.Customer_Code_OPTIVA__c, Owner.Name,Project_Name__c,Product_Spec__c,MSDS__c,Country_of_Compliance__c,Allergen__c,Nutritional__c,Other__c,Product_ID__c,Target_Date__c,Submitted_To_SAP_Optiva__c,CreatedDate,Project_Type__c,Project_Category__c,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,End_Use_Applications__c,Customer_Target_price__c,CurrencyIsoCode,Customer_Cost_in_USE_CIU__c,Expected_Volume_Unit__c,Expected_Annual_Value__c,Quantity__c,Required_End_Date__c,Proposed_date_of_dispatch__c,Customer_Launch_Date__c,Sensory_profiling_Report_Required__c,Application_Samples_Receipe_Support__c,Wet_Dry__c,Solublity__c,Current_Shelf_life__c,Supplier_Legal_Status__c,Dosage_Guidelines__c,Expected_Shelf_Life__c,Other_Application_Methods__c,Customer_Base_Details__c,Matching_Target_details__c,Sample_Size_for_trails__c,Sensory_Target_profile_expectation__c,Specific_inputs_by_customer__c,Allergin_Free_Decleration__c,GMO_Status__c,Halal_Certification__c,Kosher_Certification__c,Legal_Status_as_per_EU__c,Legal_Status_as_per_Indian_FSSAI__c,Legal_Status_as_per_US__c,Organic_Certification__c	,Product_approval_format_by_customer__c,Business_potential_value_INR_New__c,Annual_Volume_Full__c,First_Sample_due_date__c,Solubility_Preference__c From Project__c Where Id =:recId];
+        return [Select Id,Name,Type_of_PR__c,Approval_Status__c,Opportunity_Close_Date__c,Product_Family__c,Account__r.Submitted_to_Optiva__c,Account__r.Submitted_to_SAP__c,Account__r.Customer_Code_SAP__c,Account__r.Customer_Code_OPTIVA__c, Owner.Name,Project_Name__c,Product_Spec__c,MSDS__c,Country_of_Compliance__c,Allergen__c,Nutritional__c,Other__c,Product_ID__c,Target_Date__c,Submitted_To_SAP_Optiva__c,CreatedDate,Project_Type__c,Project_Category__c,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,End_Use_Applications__c,Customer_Target_price__c,CurrencyIsoCode,Customer_Cost_in_USE_CIU__c,Expected_Volume_Unit__c,Expected_Annual_Value__c,Quantity__c,Required_End_Date__c,Proposed_date_of_dispatch__c,Customer_Launch_Date__c,Sensory_profiling_Report_Required__c,Application_Samples_Receipe_Support__c,Wet_Dry__c,Solublity__c,Current_Shelf_life__c,Supplier_Legal_Status__c,Dosage_Guidelines__c,Expected_Shelf_Life__c,Other_Application_Methods__c,Customer_Base_Details__c,Matching_Target_details__c,Sample_Size_for_trails__c,Sensory_Target_profile_expectation__c,Specific_inputs_by_customer__c,Allergin_Free_Decleration__c,GMO_Status__c,Halal_Certification__c,Kosher_Certification__c,Legal_Status_as_per_EU__c,Legal_Status_as_per_Indian_FSSAI__c,Legal_Status_as_per_US__c,Organic_Certification__c	,Product_approval_format_by_customer__c,Business_potential_value_INR_New__c,Annual_Volume_Full__c,First_Sample_due_date__c,Solubility_Preference__c From Project__c Where Id =:recId];
     }
 
     public static Project__c getApplication(String recId){
@@ -298,7 +298,7 @@ public without sharing class OptivaCalloutHandler {
         Optiva_NPDCreationWrapper OpWrapper = new Optiva_NPDCreationWrapper();
 
         OpWrapper.project_sf_code = project.Id;
-        OpWrapper.project_title = checkIfBlank(project.Project_Name__c);
+        OpWrapper.project_title = project.Name + ':' + checkIfBlank(project.Project_Name__c);
         OpWrapper.created_by = checkIfBlank(project.Owner.Name);
         OpWrapper.project_type = 'External';//checkIfBlank(project.Project_Type__c);
         OpWrapper.project_category = project.Product_Family__c;//checkIfBlank(project.Project_Category__c);

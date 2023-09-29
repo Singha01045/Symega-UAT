@@ -1,13 +1,14 @@
 <template>
 
     <lightning-quick-action-panel header="Choose Address">
-        
+        <h3>Shipping Address</h3><br/>
         <div class="slds-scrollable_x">
             <table class="slds-table slds-table_bordered slds-table_col-bordered">
                 <thead>
                     <th>
                         Select
                     </th>
+                    <th>Address Type</th>
                     <th>Street</th>
                     <th>City</th>
                     <th>State</th>
@@ -18,19 +19,10 @@
                 <template for:each={ship_addresses} for:item="address" for:index="index">
                     <tr key={address.id}>
                         <td>
-                            <!-- <lightning-input type="checkbox" data-index={index} data-id={address.id} checked={address.checked}
-                                onchange={onAddressSelect}></lightning-input> -->
-                                <!-- <lightning-radio-group name="radioGroup"
-                                    label="Radio Group"
-                                    options={options}
-                                    value={value}
-                                    type="radio"
-                                    onchange={onAddressSelect}>
-                                </lightning-radio-group> -->
-
-                            <input type="radio" name="record-selection" value={address.id} data-index={index} data-id={address.id} data-city={address.city} data-country={address.country}
-                             checked={address.checked} onchange={onAddressSelect} />
+                            <lightning-input type="checkbox" data-index={index} data-id={address.id} checked={address.checked}
+                                onchange={onAddressSelect}></lightning-input>
                         </td>
+                        <td> {address.type}</td>
                         <td> {address.street}</td>
                         <td> {address.city}</td>
                         <td> {address.state}</td>
@@ -42,6 +34,42 @@
             </table>
             
         </div>
+
+        <br/><br/>
+        <h3>Billing Address</h3><br />
+        <div class="slds-scrollable_x">
+            <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                <thead>
+                    <th>
+                        Select
+                    </th>
+                    <th>Address Type</th>
+                    <th>Street</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Pin Code</th>
+                    <th>GST Number</th>
+                </thead>
+                <template for:each={bill_addresses} for:item="address" for:index="index">
+                    <tr key={address.id}>
+                        <td>
+                            <lightning-input type="checkbox" data-index={index} data-id={address.id} checked={address.checked}
+                                onchange={onBillAddressSelect}></lightning-input>
+                        </td>
+                        <td> {address.type}</td>
+                        <td> {address.street}</td>
+                        <td> {address.city}</td>
+                        <td> {address.state}</td>
+                        <td> {address.country}</td>
+                        <td> {address.postalCode}</td>
+                        <td> {address.gstNumber}</td>
+                    </tr>
+                </template>
+            </table>
+        
+        </div>
+
         <br/>
         <div class="slds-clearfix">
             <div class="slds-float_right">

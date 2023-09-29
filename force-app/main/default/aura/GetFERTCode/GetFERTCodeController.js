@@ -1,7 +1,7 @@
 ({
     doInit : function(component, event, helper) {
         debugger;
-        
+        helper.getOppRelatedAccountData(component, event);
         helper.getSymegaPicklistValues(component, event);
         helper.getMtrlSecPicklistValues(component, event);
         helper.getPlantPicklistValues(component, event);
@@ -141,6 +141,39 @@
         debugger;
         var dismissActionPanel = $A.get("e.force:closeQuickAction");
         dismissActionPanel.fire();
+    },
+    closeModelCreateContact : function(component, event, helper) {
+        var dismissActionPanel = $A.get("e.force:closeQuickAction");
+        dismissActionPanel.fire();
+    },
+    updateContact : function(component, event, helper){
+        debugger;
+        var tempField = component.get("v.MissingFieldList");
+        for (var i = 0; i < tempField.length; i++) {
+            var auraId = tempField[i];
+            var source = event.getSource();
+            var customerType = source.get("v.value");
+            // var inputElement = component.find(auraId);
+            // var inputValue = inputElement.get("v.value");
+
+          //  var firstNameJs = component.find(auraId).get("v.value");
+            console.log('Value of ' + auraId + ': ' + firstNameJs);
+        }
+    },
+    
+    handleUpdate : function(component, event, helper){
+        debugger;
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            title : 'Success',
+            message: 'Account Updated Successfully!',
+            duration:' 5000',
+            key: 'info_alt',
+            type: 'success',
+            mode: 'pester'
+        });
+        toastEvent.fire();
+        component.set('v.ShowUpdateAccountPage', false);
     }
     
 })

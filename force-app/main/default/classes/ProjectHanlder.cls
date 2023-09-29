@@ -30,8 +30,12 @@ public without sharing class ProjectHanlder {
         try {
             if(String.isBlank(id))
                 return null;
-            return [Select Id, Name, CurrencyIsoCode, Proposed_Date_of_Dispatch__c, Pre_carriage_By__c, Port_of_Discharge__c, Place_of_Reciept_by_Pre_Carrier__c,
-                    Port_of_Loading__c, Vessel_Flight_Name_Voy_No__c, Amount, TotalOpportunityQuantity, AccountId FROM Opportunity where Id =:id];
+            return [Select Id, Name, AccountId, Account.Name, Account.Customer_Contact__c, Amount,
+                    Billing_City__c, Billing_State__c, Billing_Street__c, Billing_Postal_Code__c, Billing_Country__c, 
+                    Shipping_City__c, Shipping_State__c, Shipping_Street__c, Shipping_Postal_Code__c, Shipping_Country__c,
+                    CurrencyIsoCode, Proposed_Date_of_Dispatch__c, Pre_carriage_By__c, Port_of_Discharge__c, Place_of_Reciept_by_Pre_Carrier__c,
+                    Port_of_Loading__c, Vessel_Flight_Name_Voy_No__c, TotalOpportunityQuantity FROM Opportunity where Id =:id];
+                    
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -178,7 +182,6 @@ public without sharing class ProjectHanlder {
         }
     }
 
-
     @AuraEnabled
     public static Map<String, Object> getAllCustomerAddress(String custId){
         try {
@@ -187,25 +190,31 @@ public without sharing class ProjectHanlder {
             List<CustomerAddressWrapper> customerBillingAddressWrapper = new List<CustomerAddressWrapper>();
             System.debug('--- custId'+custId);
             if(!String.isBlank(custId)) {
-                Account customerAcc = [SELECT Id, Name, CurrencyIsoCode, AccountSource, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, GST_number__c, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode FROM Account WHERE Id =: custId];
+                Account customerAcc = [SELECT Id, Name, CurrencyIsoCode, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, GST_Number__c, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :custId];
                 
                 if(customerAcc != null && !String.isBlank(customerAcc.BillingCountry)) {
-                    customerShippingAddressWrapper.add(new CustomerAddressWrapper(customerAcc.BillingStreet, customerAcc.BillingState, customerAcc.BillingCountry, customerAcc.BillingCity, customerAcc.BillingPostalCode, false, customerAcc.GST_Number__c));
-                    //returnWrapperMap.put('ship_selected_index', 0);
+                    customerBillingAddressWrapper.add(new CustomerAddressWrapper('Billing', customerAcc.BillingStreet, customerAcc.BillingState, customerAcc.BillingCountry, customerAcc.BillingCity, customerAcc.BillingPostalCode, customerAcc.GST_Number__c, 'Billing', true));
+                    returnWrapperMap.put('ship_selected_index', 0);
                 }
                 
                 if(customerAcc != null && !String.isBlank(customerAcc.ShippingCountry)) {
-                    customerShippingAddressWrapper.add(new CustomerAddressWrapper(customerAcc.ShippingStreet, customerAcc.ShippingState, customerAcc.ShippingCountry, customerAcc.ShippingCity, customerAcc.ShippingPostalCode, false, customerAcc.GST_Number__c));
-                    //returnWrapperMap.put('bill_selected_index', 0);
+                    customerShippingAddressWrapper.add(new CustomerAddressWrapper('Shipping', customerAcc.ShippingStreet, customerAcc.ShippingState, customerAcc.ShippingCountry, customerAcc.ShippingCity, customerAcc.ShippingPostalCode, customerAcc.GST_Number__c, 'Shipping', true));
+                    returnWrapperMap.put('bill_selected_index', 0);
                 }
 
-                for(Dispatch_Address__c custAddress :[SELECT Id, Address__Street__s, Address__StateCode__s, Address__PostalCode__s, GST_Number__c, Address__CountryCode__s, Address__City__s FROM Dispatch_Address__c WHERE Account__c =:custId]) {
-                    customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s, false, custAddress.GST_Number__c));
+                for(Dispatch_Address__c custAddress :[SELECT Id, Address__Street__s, ToLabel(Address__StateCode__s), Address__PostalCode__s, GST_Number__c, ToLabel(Address__CountryCode__s), Address__City__s, Type__c FROM Dispatch_Address__c WHERE Account__c =:custId]) {
+
+                    if(custAddress.Type__c == 'Billing') {
+                        customerBillingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s, custAddress.GST_Number__c, custAddress.Type__c, false));
+                    }else {
+                        customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s, custAddress.GST_Number__c, custAddress.Type__c, false));
+                    }
                 }
 
                 //System.debug('--- customerAddressWrapper'+customerAddressWrapper);
                 returnWrapperMap.put('account', customerAcc);
                 returnWrapperMap.put('customer_ship_addresses', customerShippingAddressWrapper);
+                returnWrapperMap.put('customer_bill_addresses', customerBillingAddressWrapper);
                 System.debug('--- response Wrapper '+returnWrapperMap);
             }
             return returnWrapperMap;
@@ -217,6 +226,8 @@ public without sharing class ProjectHanlder {
 
     public class CustomerAddressWrapper {
         @auraEnabled
+        public String id;
+        @auraEnabled
         public String street;
         @auraEnabled
         public String state;
@@ -224,23 +235,26 @@ public without sharing class ProjectHanlder {
         public String country;
         @auraEnabled
         public String city;
+        @auraEnabled
+        public String gstNumber;
+        @auraEnabled
+        public String type;
         @AuraEnabled
         public String postalCode;
         @AuraEnabled
         public Boolean checked;
-        @AuraEnabled
-        public String gst;
 
-        public CustomerAddressWrapper(String street, String state, String country, String city, String postalCode, Boolean checked, String gst) {
+        public CustomerAddressWrapper(String id, String street, String state, String country, String city, String postalCode, String gstNumber, String type, Boolean checked) {
+            this.id = id;
             this.street = street;
             this.state = state;
             this.country = country;
             this.city = city;
+            this.gstNumber = gstNumber;
             this.postalCode = postalCode;
+            this.type = type;
             this.checked = checked;
-            this.gst = gst;
         }
     }
-
 
 }

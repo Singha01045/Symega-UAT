@@ -2,15 +2,14 @@
     init : function(cmp, event, helper) {
         helper.getRcType(cmp).then(recTypeId =>{
             console.log('recTypeId',recTypeId);
-            
-            var action = cmp.get("c.getAccRecord");
+            var action = cmp.get("c.getOppRecord");
             action.setParams({
-            "accId": cmp.get("v.recordId")
+            "id": cmp.get("v.recordId")
         });
         action.setCallback(this, function(response){
             var state = response.getState();
             if (state === "SUCCESS") {
-                cmp.set("v.accList", response.getReturnValue());
+                cmp.set("v.oppList", response.getReturnValue());
                 var nameFieldValue = cmp.find("recType").set("v.value", recTypeId);
             }
         });
