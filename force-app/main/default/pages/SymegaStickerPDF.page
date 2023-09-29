@@ -1,4 +1,4 @@
-<apex:page applyHtmlTag="false" docType="html-5.0" showHeader="false" sidebar="false" renderAs="pdf" >
+<apex:page applyHtmlTag="false" docType="html-5.0" showHeader="false" sidebar="false" renderAs="pdf" controller="SymegaStickerPDFController" >
     
     <head>
         <style>
@@ -20,22 +20,49 @@
               width: 150px;
               border: 1px solid ;
               padding: 10px;
-              margin: 20px;             
+              margin: 20px;  
             }
+            
+          
             
         </style>
         
     </head>
     <body>
-          <!--apex:image url="{!$Resource.SymegaWaterMark}" width="100%" height="100%"/-->
-         <div>
-             <span>American Style Creame Stone</span><br/>
-             <span>Ref:No  : H000529</span>
-             <span>RAD :</span><br/>
-             <span>MGF DATE:</span>
-        </div>  
+          
         
     
+        <apex:variable var="counter" value="0"/>
+        <apex:repeat value="{!sampLineItemList}" var="item">
+           
+                <apex:repeat value="{!item}" var="sliList">
+                    <apex:variable var="counter" value="{counter + 1}"/>
+                    <div class="col" style="width:100%;" >
+                            <span>American Style Creame Stone</span><br/>
+                            <span style="font-size:12px;">Ref:No  : {!sliList.Product_Code__c}</span><br/>
+                            <span style="font-size:12px;">RAD :</span><br/>
+                            <span style="font-size:12px;">MGF DATE:&nbsp;<apex:outputText value="{0,date,MM/dd/yy}"> <apex:param value="{!sliList.Mfg_Date__c}" /></apex:outputText> </span>
+                     </div>  
+                    <apex:facet name="afterRender">
+                        <!--apex:outputPanel rendered="{!MOD(counter, 3) == 0}">
+                        </apex:outputPanel-->
+                    </apex:facet>
+                </apex:repeat>
+            
+        </apex:repeat>
+   
+        
+        
+          <!--apex:repeat value="{!sampLineItemList}" var="item" rows="3"> 
+                <apex:repeat value="{!item}" var="sliList">
+                    <div class="col" style="width:150px;" >
+                            <span>American Style Creame Stone</span><br/>
+                            <span style="font-size:12px;">Ref:No  : {!sliList.Product_Code__c}</span><br/>
+                            <span style="font-size:12px;">RAD :</span><br/>
+                            <span style="font-size:12px;">MGF DATE:&nbsp;<apex:outputText value="{0,date,MM/dd/yy}"> <apex:param value="{!sliList.Mfg_Date__c}" /></apex:outputText> </span>
+                     </div>  
+                </apex:repeat>
+         </apex:repeat-->
     </body>
   
 </apex:page>

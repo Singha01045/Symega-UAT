@@ -19,6 +19,7 @@
                                                             'Transportation_Terms__c': '',
                                                             'PAN_Number__c': '',
                                                             'GST_number__c': ''}" />
+    <aura:attribute name="accountId" type="Id" />
     
     
     <aura:html tag="style">
@@ -76,7 +77,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                         <!--lightning:input type="text"  label="{!item}" aura:id="{!item}" value="{myObject"/-->
-                        <lightning:recordEditForm recordId="0015j000019XspvAAC" objectApiName="Account" >
+                        <lightning:recordEditForm recordId="{!v.accountId}" objectApiName="Account" >
                             <div class="slds-grid slds-gutters">
                                 <div class="slds-col slds-size_1-of-2">
                                     <lightning:outputField fieldName="Name" />

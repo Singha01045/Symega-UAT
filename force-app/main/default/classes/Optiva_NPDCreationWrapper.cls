@@ -42,5 +42,11 @@ public without sharing class Optiva_NPDCreationWrapper {
 	public String legal_status_us ='';	//US LEGAL STATUS
 	public String organic_cert = '';	//Organic Certifications
 	public String prod_apr_frmat_cust='';	//Product approval format by customer
+    
+    
+    
+    //NEW ADDITIONS 
+    public String account_segment='NA';
+    public String account_segmen2t='NA';
 	
 }

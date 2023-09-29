@@ -173,7 +173,7 @@ public class GetFERTCodeController {
     public static List<OpportunityLineItem> getProductList(string oppId){
         system.debug('oppId ====>' + oppId);
         List<OpportunityLineItem> productList = [SELECT Id, Name, Quantity, UnitPrice, TotalPrice, Primary__c, Secondary__c, Tertiary__c, Customized_Label__c, Symega_Logo__c, Material_Sector__c, Plant__c,
-                                                 If_Organised_set_Micro_as_Long_Term__c FROM OpportunityLineItem WHERE OpportunityId =: oppId];
+                                                 If_Organised_set_Micro_as_Long_Term__c,Opportunity.AccountID FROM OpportunityLineItem WHERE OpportunityId =: oppId];
         return productList;
     }
     
@@ -250,12 +250,12 @@ public class GetFERTCodeController {
         return null;
     }
     
-    public static string updateOppRelatedAccountRecords(String oppId){
+    @AuraEnabled
+    public static Opportunity updateOppRelatedAccountRecords(String oppId){
         try{
             Opportunity oppRec = [SELECT Id,AccountId,Name FROM Opportunity WHERE Id=:oppId];
-            Account accRec = new Account();
-            accRec.Id = oppRec.AccountId;
-            update accRec;
+            
+            return oppRec;
         }
         catch(Exception e){
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());

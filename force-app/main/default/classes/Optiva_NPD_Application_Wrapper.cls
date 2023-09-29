@@ -24,4 +24,9 @@ public without sharing class Optiva_NPD_Application_Wrapper {
 	public String solubility;	//solubility
 	public String sugar;	//brown_sugar
 	public String opp_closedate;	//8/24/2021
+    
+    
+    //NEW ADDITIONS 
+    public Integer pulp_percent = 0 ;
+    public String account = 'NA';
 }

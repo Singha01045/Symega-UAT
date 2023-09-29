@@ -14,6 +14,8 @@
             var state = response.getState();
             if (state === "SUCCESS") {                
                 component.set("v.OppLineItemList", response.getReturnValue());
+                component.set("v.accountId", response.getReturnValue()[0].Opportunity.AccountId);
+                
             }
             else{
                 console.log("Failed with state: " , state);
@@ -164,6 +166,7 @@
     handleUpdate : function(component, event, helper){
         debugger;
         var toastEvent = $A.get("e.force:showToast");
+        
         toastEvent.setParams({
             title : 'Success',
             message: 'Account Updated Successfully!',

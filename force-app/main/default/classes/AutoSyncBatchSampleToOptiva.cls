@@ -8,7 +8,19 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
     }
 
     public Database.QueryLocator Start(Database.BatchableContext bc){    
-        return Database.getQueryLocator('SELECT Id, Contact_Number__c, Company_Name__c, Postal_Code__c, Country__c, State__c, City__c, Street__c, Customers_Contact__r.FirstName, Customers_Contact__r.LastName, Account__r.Name, Application_Name__c,Type_of_PR__c,Approval_Status__c,Sample_Project__c,Sample_Project__r.Owner.Name,Product_ID__c,Product_Spec__c,MSDS__c,Country_of_Compliance__c,Project_Name__c,Legal_Status_as_per_US__c,Proposed_date_of_dispatch__c,Allergen__c,Nutritional__c,Other__c,Target_Date__c,Customer_Launch_Date__c,Required_End_Date__c,Product_approval_format_by_customer__c,Organic_Certification__c,GMO_Status__c,Halal_Certification__c,Kosher_Certification__c,Legal_Status_as_per_EU__c,Legal_Status_as_per_Indian_FSSAI__c,Customer_Cost_in_USE_CIU__c,Specific_inputs_by_customer__c,Allergin_Free_Decleration__c,Sensory_Target_profile_expectation__c,Other_Application_Methods__c,Sample_Size_for_trails__c,Customer_Base_Details__c,Matching_Target_details__c,Expected_Shelf_Life__c,Dosage_Guidelines__c,Supplier_Legal_Status__c,Solublity__c,Current_Shelf_life__c,Wet_Dry__c,Sensory_profiling_Report_Required__c,Sugar__c,Application_Samples_Receipe_Support__c,Expected_Volume_Unit__c,Expected_Annual_Value__c,Confectionary_Type__c,Final_Fat__c,Owner.Name,Submitted_To_SAP_Optiva__c,RecordType.name,Account__c,Quantity__c,Business_potential_value_INR__c,Annual_Volume_Full__c,Opportunity_Close_Date__c,Account__r.Customer_Code_OPTIVA__c,Account__r.Customer_Code_SAP__c,Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Customer_Target_price__c,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c,Project_Reference__c,CreatedBy.Name,CreatedDate,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,End_Use_Applications__c,CurrencyIsoCode,(SELECT Id,Quantity_Unit__c,Quantity__c,Packaging_Unit__c,Packaging_Quantity__c,Additional_Comments__c,Product__r.ProductCode,Product__r.Family, OPTIVA_Recipe__c, OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c,Project_Quotient__c,Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName,Project_Quotient__r.Sample_Project_Application__r.Product_Family__c,Project_Quotient__r.SSC_Code__c FROM Sample_Line_Items__r WHERE Submitted__c=false),Flavour_Legal_Status__c,First_Sample_due_date__c,Flavour_CIU__c,Business_potential_value_INR_New__c,Solubility_Preference__c FROM Project__c WHERE Submit_Sample_To_Optiva__c = true AND Id IN:proIdSet');
+        return Database.getQueryLocator('SELECT Id, Name, Contact_Number__c, Company_Name__c, Postal_Code__c, Country__c, State__c, City__c, Street__c, Customers_Contact__r.FirstName,' +
+                                        'Customers_Contact__r.LastName, Account__r.Name, Application_Name__c,Type_of_PR__c,Approval_Status__c,Sample_Project__c,Sample_Project__r.Owner.Name,' +
+                                        'Product_ID__c,Product_Spec__c,MSDS__c,Country_of_Compliance__c,Project_Name__c,Legal_Status_as_per_US__c,Proposed_date_of_dispatch__c,Allergen__c,Nutritional__c,'+
+                                        'Other__c,Target_Date__c,Customer_Launch_Date__c,Required_End_Date__c,Product_approval_format_by_customer__c,Organic_Certification__c,GMO_Status__c,Halal_Certification__c,'+
+                                        'Kosher_Certification__c,Legal_Status_as_per_EU__c,Legal_Status_as_per_Indian_FSSAI__c,Customer_Cost_in_USE_CIU__c,Specific_inputs_by_customer__c,Allergin_Free_Decleration__c,'+
+                                        'Sensory_Target_profile_expectation__c,Other_Application_Methods__c,Sample_Size_for_trails__c,Customer_Base_Details__c,Matching_Target_details__c,Expected_Shelf_Life__c,Dosage_Guidelines__c,'+
+                                        'Supplier_Legal_Status__c,Solublity__c,Current_Shelf_life__c,Wet_Dry__c,Sensory_profiling_Report_Required__c,Sugar__c,Application_Samples_Receipe_Support__c,Expected_Volume_Unit__c,Expected_Annual_Value__c,'+
+                                        'Confectionary_Type__c,Final_Fat__c,Owner.Name,Submitted_To_SAP_Optiva__c,RecordType.name,Account__c,Quantity__c,Business_potential_value_INR__c,Annual_Volume_Full__c,Opportunity_Close_Date__c,Account__r.Customer_Code_OPTIVA__c,'+
+                                        'Account__r.Customer_Code_SAP__c,Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Customer_Target_price__c,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c,'+
+                                        'Project_Reference__c,CreatedBy.Name,CreatedDate,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,End_Use_Applications__c,CurrencyIsoCode,(SELECT Id,Quantity_Unit__c,Quantity__c,Packaging_Unit__c,Packaging_Quantity__c,'+
+                                        'Additional_Comments__c,Product__r.ProductCode,Product__r.Family, OPTIVA_Recipe__c, OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c,Project_Quotient__c,Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName,'+
+                                        'Project_Quotient__r.Sample_Project_Application__r.Product_Family__c,Project_Quotient__r.SSC_Code__c FROM Sample_Line_Items__r WHERE Submitted__c=false),Flavour_Legal_Status__c,First_Sample_due_date__c,Flavour_CIU__c,Business_potential_value_INR_New__c,Solubility_Preference__c'+
+                                        'FROM Project__c WHERE Submit_Sample_To_Optiva__c = true AND Id IN:proIdSet');
     }
     public void execute(Database.BatchableContext BC, List<Project__c> projects){
         system.debug('projects:: '+projects);
@@ -45,17 +57,17 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                             OpWrapper.first_name = checkIfBlank(project.Lead__r.FirstName);
                             OpWrapper.last_name = checkIfBlank(project.Lead__r.LastName);
                         }else{
-                            OpWrapper.cust_code = project.Account__r.Customer_Code_OPTIVA__c;
+                            OpWrapper.cust_code = checkIfBlank(project.Account__r.Customer_Code_OPTIVA__c);
                             OpWrapper.first_name = project.Customers_Contact__c == null ? checkIfBlank(project.Account__r.Name) : project.Customers_Contact__r.FirstName;
                             OpWrapper.last_name = project.Customers_Contact__c == null ? checkIfBlank(project.Account__r.Name) : project.Customers_Contact__r.LastName;
                         }
 
-                        OpWrapper.project_sf_code = project.Id;    
-                        OpWrapper.cust_code = project.Account__r.Customer_Code_OPTIVA__c;
+                        OpWrapper.project_sf_code = checkIfBlank(project.Id);    
+                        OpWrapper.cust_code = checkIfBlank(project.Account__r.Customer_Code_OPTIVA__c);
 
-                        OpWrapper.project_title = project.Sample_Name__c;
+                        OpWrapper.project_title = checkIfBlank(project.Name) + ':' + checkIfBlank(project.Sample_Name__c);
                         OpWrapper.project_type = 'External';//checkIfBlank(project.Project_Type__c);
-                        OpWrapper.project_category = project.Product_Family__c;//checkIfBlank(project.Project_Category__c);
+                        OpWrapper.project_category = checkIfBlank(project.Product_Family__c);//checkIfBlank(project.Project_Category__c);
                         OpWrapper.project_ref = checkIfBlank(project.Project_Reference__c);
                         if(!String.isBlank(project.Sample_Project__c)){
                             OpWrapper.created_by = checkIfBlank(project.Sample_Project__r.Owner.Name);
@@ -64,18 +76,18 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                         }
 
                        // OpWrapper.created_by = checkIfBlank(project.CreatedBy.Name);
-                        OpWrapper.creation_date = project.CreatedDate.format('dd/MM/yyyy');
+                        OpWrapper.creation_date = project.CreatedDate == null ? 'NA' : project.CreatedDate.format('dd/MM/yyyy');
                         OpWrapper.opp_type_int = 'Sales';//checkIfBlank(project.Opportunity_Type__c);
                         OpWrapper.opp_sub_type_sales = 'Sampling';
                         OpWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
                         OpWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
                         OpWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
 
-                        OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):''; 
-                        OpWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'';
-                        OpWrapper.business_potent_val = project.Business_potential_value_INR_New__c!=null?String.valueOf(project.Business_potential_value_INR_New__c):'';
+                        OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'NA'; 
+                        OpWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'NA';
+                        OpWrapper.business_potent_val = project.Business_potential_value_INR_New__c!=null?String.valueOf(project.Business_potential_value_INR_New__c):'NA';
                         OpWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
-                        OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'';
+                        OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'NA';
 
                         Map<Id,Sample_Line_Item__c> optivaRecipieSLineItems = new Map<Id,Sample_Line_Item__c>();
                         Map<Id,String> withoutOptivaRecipieSLineItems = new Map<Id,String>();
@@ -100,105 +112,105 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                 for(Integer i=0;i<optivaRecipieSLineItems.values().size();i++){
                                     Sample_Line_Item__c sli = project.Sample_Line_Items__r[i];
                                     if(i==0){
-                                        OpWrapper.uom1 = sli.Quantity_Unit__c;
-                                        OpWrapper.tot_qty1 = String.valueOf(sli.Quantity__c);
+                                        OpWrapper.uom1 = checkIfBlank(sli.Quantity_Unit__c);
+                                        OpWrapper.tot_qty1 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units1 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size1 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'';
+                                        OpWrapper.pack_size1 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
                                         OpWrapper.selling_desc1 = checkIfBlank(sli.Additional_Comments__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
-                                            OpWrapper.prod_code1_dev = sli.OPTIVA_Recipe__r.SSC_Code__c;
+                                            OpWrapper.prod_code1_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
                                         }else if(sli.Product__r!=null && sli.Product__r.Family!=null && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family)){
-                                            OpWrapper.prod_code1_dev = sli.Product__r.ProductCode;
+                                            OpWrapper.prod_code1_dev = checkIfBlank(sli.Product__r.ProductCode);
                                         }else{
-                                            OpWrapper.prod_code1_dev = sli.Project_Quotient__r.SSC_Code__c;
+                                            OpWrapper.prod_code1_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
                                         
-                                        OpWrapper.sample_duedate1 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
-                                        OpWrapper.cust_target_price1 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'';
+                                        OpWrapper.sample_duedate1 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
+                                        OpWrapper.cust_target_price1 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
                                     }else if(i==1){
-                                        OpWrapper.uom2 = sli.Quantity_Unit__c;
-                                        OpWrapper.tot_qty2 = String.valueOf(sli.Quantity__c);
+                                        OpWrapper.uom2 = checkIfBlank(sli.Quantity_Unit__c);
+                                        OpWrapper.tot_qty2 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units2 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size2 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'';
+                                        OpWrapper.pack_size2 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
                                         OpWrapper.selling_desc2 = checkIfBlank(sli.Additional_Comments__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
-                                            OpWrapper.prod_code2_dev = sli.OPTIVA_Recipe__r.SSC_Code__c;
+                                            OpWrapper.prod_code2_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
                                         }else if(sli.Product__r!=null && sli.Product__r.Family!=null && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family)){
-                                            OpWrapper.prod_code2_dev = sli.Product__r.ProductCode;
+                                            OpWrapper.prod_code2_dev = checkIfBlank(sli.Product__r.ProductCode);
                                         }else{
-                                            OpWrapper.prod_code2_dev = sli.Project_Quotient__r.SSC_Code__c;
+                                            OpWrapper.prod_code2_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate2 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
-                                        OpWrapper.cust_target_price2 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'';
+                                        OpWrapper.sample_duedate2 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
+                                        OpWrapper.cust_target_price2 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
                                     }else if(i==2){
-                                         OpWrapper.uom3 = sli.Quantity_Unit__c;
-                                        OpWrapper.tot_qty3 = String.valueOf(sli.Quantity__c);
+                                         OpWrapper.uom3 = checkIfBlank(sli.Quantity_Unit__c);
+                                        OpWrapper.tot_qty3 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units3 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size3 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'';
+                                        OpWrapper.pack_size3 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
                                         OpWrapper.selling_desc3 = checkIfBlank(sli.Additional_Comments__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
-                                            OpWrapper.prod_code3_dev = sli.OPTIVA_Recipe__r.SSC_Code__c;
+                                            OpWrapper.prod_code3_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
                                         }else if(sli.Product__r!=null && sli.Product__r.Family!=null  && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family)){
-                                            OpWrapper.prod_code3_dev = sli.Product__r.ProductCode;
+                                            OpWrapper.prod_code3_dev = checkIfBlank(sli.Product__r.ProductCode);
                                         }else{
-                                            OpWrapper.prod_code3_dev = sli.Project_Quotient__r.SSC_Code__c;
+                                            OpWrapper.prod_code3_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate3 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
-                                        OpWrapper.cust_target_price3 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'';
+                                        OpWrapper.sample_duedate3 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
+                                        OpWrapper.cust_target_price3 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
                                     }
                                     else if(i==3){
-                                        OpWrapper.uom4 = sli.Quantity_Unit__c;
-                                        OpWrapper.tot_qty4 = String.valueOf(sli.Quantity__c);
+                                        OpWrapper.uom4 = checkIfBlank(sli.Quantity_Unit__c);
+                                        OpWrapper.tot_qty4 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units4 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size4 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'';
+                                        OpWrapper.pack_size4 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
                                         OpWrapper.selling_desc4 = checkIfBlank(sli.Additional_Comments__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
-                                            OpWrapper.prod_code4_dev = sli.OPTIVA_Recipe__r.SSC_Code__c;
+                                            OpWrapper.prod_code4_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
                                         }else if(sli.Product__r!=null && sli.Product__r.Family!=null  && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family)){
-                                            OpWrapper.prod_code4_dev = sli.Product__r.ProductCode;
+                                            OpWrapper.prod_code4_dev = checkIfBlank(sli.Product__r.ProductCode);
                                         }else{
-                                            OpWrapper.prod_code4_dev = sli.Project_Quotient__r.SSC_Code__c;
+                                            OpWrapper.prod_code4_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate4 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
-                                        OpWrapper.cust_target_price4 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'';
+                                        OpWrapper.sample_duedate4 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
+                                        OpWrapper.cust_target_price4 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
                                     }
                                     else if(i==4){
-                                         OpWrapper.uom5 = sli.Quantity_Unit__c;
-                                        OpWrapper.tot_qty5 = String.valueOf(sli.Quantity__c);
+                                         OpWrapper.uom5 = checkIfBlank(sli.Quantity_Unit__c);
+                                        OpWrapper.tot_qty5 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units5 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size5 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'';
+                                        OpWrapper.pack_size5 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
                                         OpWrapper.selling_desc5 = checkIfBlank(sli.Additional_Comments__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
-                                            OpWrapper.prod_code5_dev = sli.OPTIVA_Recipe__r.SSC_Code__c;
+                                            OpWrapper.prod_code5_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
                                         }else if(sli.Product__r!=null && sli.Product__r.Family!=null  && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family)){
-                                            OpWrapper.prod_code5_dev = sli.Product__r.ProductCode;
+                                            OpWrapper.prod_code5_dev = checkIfBlank(sli.Product__r.ProductCode);
                                         }else{
-                                            OpWrapper.prod_code5_dev = sli.Project_Quotient__r.SSC_Code__c;
+                                            OpWrapper.prod_code5_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate5 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
-                                        OpWrapper.cust_target_price5 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'';
+                                        OpWrapper.sample_duedate5 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
+                                        OpWrapper.cust_target_price5 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
                                     }
                                     else if(i==5){
-                                         OpWrapper.uom6 = sli.Quantity_Unit__c;
-                                        OpWrapper.tot_qty6 = String.valueOf(sli.Quantity__c);
+                                         OpWrapper.uom6 = checkIfBlank(sli.Quantity_Unit__c);
+                                        OpWrapper.tot_qty6 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units6 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size6 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'';
+                                        OpWrapper.pack_size6 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
                                         OpWrapper.selling_desc6 = checkIfBlank(sli.Additional_Comments__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
-                                            OpWrapper.prod_code6_dev = sli.OPTIVA_Recipe__r.SSC_Code__c;
+                                            OpWrapper.prod_code6_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
                                         }else if(sli.Product__r!=null && sli.Product__r.Family!=null  && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family)){
-                                            OpWrapper.prod_code6_dev = sli.Product__r.ProductCode;
+                                            OpWrapper.prod_code6_dev = checkIfBlank(sli.Product__r.ProductCode);
                                         }else{
-                                            OpWrapper.prod_code6_dev = sli.Project_Quotient__r.SSC_Code__c;
+                                            OpWrapper.prod_code6_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate6 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
-                                        OpWrapper.cust_target_price6 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'';
+                                        OpWrapper.sample_duedate6 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
+                                        OpWrapper.cust_target_price6 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
                                     }
                                 }
             
