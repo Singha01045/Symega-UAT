@@ -4,10 +4,10 @@ public without sharing class AutoSyncSampleToOptiva {
         try{
             Map<String,String> responseMap = new Map<String,String>();
 
-            List<Project__c> projects = [Select Id,Submitted_To_SAP_Optiva__c,Account__c,Account__r.Customer_Code_OPTIVA__c,Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c,Project_Reference__c,CreatedBy.Name,
+            List<Project__c> projects = [Select Id,Submitted_To_SAP_Optiva__c,Account__c,Opportunity__r.Account_Billing_Address__c,Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c,Opportunity__r.Account.Customer_Code_OPTIVA__c,Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c,Project_Reference__c,CreatedBy.Name,
             CreatedDate,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,
             End_Use_Applications__c,Currency_Type__c,(Select Id,Quantity_Unit__c,Quantity__c,Packaging_Unit__c,
-            Packaging_Quantity__c,Additional_Comments__c,Product__r.ProductCode, OPTIVA_Recipe__c, OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c From Sample_Line_Items__r) From Project__c Where Submit_Sample_To_Optiva__c = true AND Account__c!=null AND Account__r.Customer_Code_OPTIVA__c!=null];
+            Packaging_Quantity__c,Additional_Comments__c,Product__r.ProductCode, OPTIVA_Recipe__c, OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c From Sample_Line_Items__r) From Project__c Where Submit_Sample_To_Optiva__c = true AND Account__c!=null AND ( Opportunity__r.Account.Customer_Code_OPTIVA__c!=null OR Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c != null)];
 
             
             if(!projects.isEmpty()){
@@ -27,7 +27,7 @@ public without sharing class AutoSyncSampleToOptiva {
                 OpWrapper.last_name = '';
                 OpWrapper.first_name = '';
                 OpWrapper.project_sf_code = project.Id;    
-                OpWrapper.cust_code = project.Account__r.Customer_Code_OPTIVA__c;
+                OpWrapper.cust_code = project.Opportunity__r.Account_Billing_Address__c ? project.Opportunity__r.Account.Customer_Code_OPTIVA__c : project.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c;
 
                 OpWrapper.project_title = project.Sample_Name__c;
                 OpWrapper.project_type = checkIfBlank(project.Project_Type__c);

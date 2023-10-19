@@ -1,0 +1,223 @@
+<aura:component controller="TodayTaskAuraController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <aura:attribute name="taskList" type="list"/>
+    <aura:attribute name="dateDay" type="String"/>
+    <aura:attribute name="dateMonth" type="String"/>
+    <aura:attribute name="dateYear" type="String"/>
+    <aura:attribute name="day" type="String"/>
+    <aura:attribute name="completedVisit" type="Integer"/>
+    <aura:attribute name="pendingVisit" type="Integer"/>
+    <aura:attribute name="selectedDate" type="Date" default=""/>
+    <aura:attribute name="dates" type="list"/>
+    <aura:attribute name="mobileDates" type="list"/>
+    <aura:attribute name="AccountAddressList" type="List"/>
+    <aura:attribute name="AccountMapList" type="List"/>
+    <aura:attribute name="showStartVisitComponent" type="Boolean" default = "false"/>
+    <aura:attribute name="showTodaysTaskComponent" type="Boolean" default = "true"/>
+    <aura:attribute name="currentLatitude" type="String"/>
+    <aura:attribute name="currentLongitude" type="String"/>
+    <aura:attribute name="ShowStartDay" type="Boolean" default = "false"/>
+    <aura:attribute name="ShowEndDay" type="Boolean" default = "true"/>
+    <aura:attribute name="ShowEmptyPage" type="Boolean" default = "false"/>
+    <aura:attribute name="disableVisitButtons" type="Boolean" default = "true"/>
+    <aura:attribute name="MonthTravelExpId" type="String"/>
+    <aura:attribute name="visitRec" type="sObject" default="{sObjecttype : 'Visit__c'}"/>
+    <aura:attribute name="visitIDtoStart" type="String"/>
+    <aura:attribute name="accountAddress" type="String"/> 
+    <aura:attribute name="accIdToShow" type="String"/>
+    <aura:attribute name="SelectedVisitDateFromTaskComp" type="String"/>
+    <aura:registerEvent name="vfEvent" type="c:SendDataToVFPage"/>
+    
+    <aura:attribute name="ShowAmedVistPop" type="Boolean" default = "false"/>
+    <aura:attribute name="visitDescription" type="String"/>
+    <aura:attribute name="visitPlanedDate" type="String"/>
+    <aura:attribute name="selectedVisitPlanedId" type="String"/>
+    <aura:attribute name="taskStatus" type="String" default = "In Progress"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="mapMarkers" type="Object"/>
+    <aura:attribute name="zoomLevel" type="Integer" />
+    <aura:attribute name="dayForFilter" type="String"/>
+    <aura:attribute name="nextCounter" type="Integer" default="0"/>
+    <aura:attribute name="prevCounter" type="Integer" default="0"/>
+    <aura:attribute name="pageReference" type="Object"/>
+    <aura:attribute name="url" type="String"/>
+    <lightning:navigation aura:id="navService"/>
+    <aura:attribute name="siteURL" type="String"/> 
+    <aura:attribute name="SelectedVisitDate" type="String"/>
+    <aura:handler name="fieldVisitComponentEvent" event="c:fieldVisitComponentEvent" action="{!c.handleComponentEvent}"/> 
+    
+    <div class="c-container" style="">
+        <aura:if isTrue="{!v.showTodaysTaskComponent}">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem padding="around-small" size="12" class="todayTaskMainDiv">
+                    <div class="page-section page-header float-child">
+                        <h2 style = "color:#0158A5; font-size: 20px; font-weight: 600;">{!v.dateDay}&nbsp;{!v.dateMonth}, {!v.dateYear} - {!v.day}</h2>
+                    </div>
+                    <div class="page-section page-header float-child">
+                        <div class="buttonContainer">
+                            <lightning:button onclick="{! c.StartVisitDay}" label="Start Day" class="headerButton" disabled="{!v.ShowStartDay}"/>
+                            <lightning:button onclick="{!c.EndVisitDay}" label="End Day" class="headerButton" disabled="{!v.ShowEndDay}"/>
+                            
+                        </div>
+                    </div>
+                    
+                </lightning:layoutItem>
+                <br/>
+                <br/>
+                <div class="dateFilter">
+                <lightning:layoutItem padding="around-small" size="3">
+                    <lightning:icon iconName="utility:left" size="medium" alternativeText="Back" style="display:inline-block;margin-right:-35px;" onclick="{!c.handlePrevClicked}" class="prevButton"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="5">
+                    <center class="mobileCenter">
+                        <ul class="date-list">
+                            <aura:iteration items="{!v.dates}" var="date">
+                                <li class="{!'date-item ' + (date.fullDate == v.selectedDate ? 'selected' : '')}" 
+                                    onclick="{!c.handleDateSelect}" 
+                                    data-date="{!date.fullDate}">
+                                    <p class="{!'sel-item ' + (date.fullDate == v.selectedDate ? 'selected' : '')}">{!date.day} <br/><br/> {!date.month}</p>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                        
+                        <ul class="date-list-mobile">
+                            <aura:iteration items="{!v.mobileDates}" var="date">
+                                <li class="{!'date-item-mobile ' + (date.fullDate == v.selectedDate ? 'selected' : '')}" 
+                                    onclick="{!c.handleDateSelect}" 
+                                    data-date="{!date.fullDate}">
+                                    <p class="{!'sel-item-mobile ' + (date.fullDate == v.selectedDate ? 'selected' : '')}">{!date.day} <br/><br/> {!date.month}</p>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </center>           
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="3">
+                    <lightning:icon iconName="utility:right" size="medium" alternativeText="Next" style="display:inline-block;" onclick="{!c.handleNextClicked}" class="nextButton"/>
+                </lightning:layoutItem>
+                    </div>
+                
+                <lightning:layoutItem padding="around-small" size="12" class="cardDiv">
+                    <lightning:card class = "bodyCard">
+                        <aura:if isTrue = "{!v.ShowEmptyPage}">
+                            <!--center><h1>No Records To Display</h1></center-->
+                            <center>
+                                <img src="{!$Resource.NoTaskImage}" alt="No Task For Today" style="" class="desktopNoTask"/>
+                                <img src="{!$Resource.NoTaskImage1}" alt="No Task For Today" style="" class="mobileNoTask"/>
+                            </center>
+                            <aura:set attribute="else">
+                                <lightning:layout>
+                                    <lightning:layoutItem padding="around-large" size="5" class= "limitVertical">
+                                        <aura:iteration items="{!v.taskList}" var="val">
+                                            <div style=" position: relative; background: #F3F3F3; border-radius: 4px; overflow: hidden; border-left: 3px #A094ED solid; display:block; margin-top:1%">
+                                                <div style="padding:3%; display:inline-block; margin-top: 3vh;">
+                                                    <lightning:icon iconName="standard:contact_list" alternativeText="Utility image" title="Image" />
+                                                </div>
+                                                <div style="padding:2%; display:inline-block;">
+                                                    <h1   style="position: absolute; top: 16%; font-size:16px; font-weight: 620;">{!val.Account__r.Name}</h1>
+                                                </div>
+                                                <div style="padding:2%; display:inline-block;" class= "slds-float_right">
+                                                    <aura:if isTrue = "{!val.Visit_Status__c == 'Assigned'}">
+                                                        <div style = "padding:1%; width: 125%; background: #6CA1E9; border-radius:12px; position: relative;right: 20%; color:white; text-align:center;"> Assigned </div>
+                                                    </aura:if>
+                                                    <aura:if isTrue = "{!val.Visit_Status__c == 'Completed'}">
+                                                        <div style = "padding:1%; width: 125%; background: #6BBD6E; border-radius:12px; position: relative;right: 20%; color:white; text-align:center;"> Completed </div>
+                                                    </aura:if>
+                                                    <aura:if isTrue = "{!val.Visit_Status__c == 'In Progress'}">
+                                                        <div style = "padding:1%; width: 125%; background: #FBB439; border-radius:12px; position: relative;right: 20%; color:white; text-align:center;"> In Progress </div>
+                                                    </aura:if>
+                                                    <aura:if isTrue = "{!val.Visit_Status__c == 'PENDING'}">
+                                                        <div style = "padding:1%; width: 125%;    margin-top: 15%; background: #FBB439; border-radius:12px; position: relative;right: 20%; color:white; text-align:center;"> Pending </div>
+                                                    </aura:if>
+                                                </div>
+                                                <div style=" margin-top: -2%; margin-left: 3%">
+                                                    <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Beat Id:</div>
+                                                    <div style=" padding: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!val.Name}</div>
+                                                    <div style=" padding-left: 14%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Beat Type:</div>
+                                                    <div style=" padding: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!val.KPI_Target__r.KPI_Target_Name__c}</div>
+                                                </div>
+                                                <div style="margin-left: 3%">
+                                                    <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Time:</div>
+                                                    
+                                                    <aura:if isTrue="{!val.Check_In_Time__c == null}">
+                                                        <div style=" padding: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">00:00</div>
+                                                        <aura:set attribute="else">
+                                                            <div style=" padding: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">
+                                                                <!--lightning:formattedDateTime value="{!val.Check_In_Time__c}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" timeZoneName="short" hour12="true"/-->
+                                                                <lightning:formattedDateTime value="{!val.Check_In_Time__c}" hour="2-digit" minute="2-digit" timeZone="UTC"  timeZoneName="short"/>
+                                                            </div>
+                                                        </aura:set>
+                                                    </aura:if> 
+                                                    
+                                                    
+                                                    <div style=" padding-left: 23%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Duration:</div>
+                                                    
+                                                    <div style=" padding: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!val.Duration__c}</div>
+                                                </div>
+                                                <div style=" padding-left: 14%; padding-bottom:2%;padding-top: 2%;">
+                                                    <span style="margin-right: 10%;">                                                    <lightning:button class ="cardButton"  label="Amend" onclick="{!c.handleAmend}" name="{!val.Id}" disabled = "{!v.disableVisitButtons}"/>
+                                                    </span>
+                                                    <lightning:button class ="cardButton" label="Start Visit" onclick="{!c.handleStartVisit}" value="{!val}" disabled ="{!v.disableVisitButtons}"/>
+                                                </div>
+                                            </div>
+                                        </aura:iteration>
+                                    </lightning:layoutItem>
+                                    
+                                    
+                                    
+                                    <lightning:layoutItem flexibility="auto" size="6" padding="around-small" class="mapDiv">
+                                        <div class="custom-box">
+                                            <iframe src="{!v.siteURL}" width="100%" height="500px;" />
+                                            <!--c:MultipleGeolocationAura SelectedVisitDate="{!v.SelectedVisitDateFromTaskComp}"/-->
+                                            <!--lightning:map 
+                                                           mapMarkers="{! v.mapMarkers }" 
+                                                           zoomLevel="{!v.zoomLevel}" /-->
+                                            
+                                        </div>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:set>
+                        </aura:if>
+                        
+                    </lightning:card>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:if>
+        <aura:if isTrue="{!v.showStartVisitComponent}">
+            <div >
+                <c:StartVisit visitId="{!v.visitIDtoStart}" visitRec="{!v.visitRec}" accountAddress="{!v.accountAddress}" accID="{!v.accIdToShow}"/>
+            </div>
+            
+            <!--div class="slds-hidden">
+            <c:startVisit/>
+        </div-->  
+        </aura:if>
+        <aura:if isTrue="{!v.ShowAmedVistPop}">
+            <div>
+                <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" >
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closeModelPop}">
+                                <lightning:icon iconName="utility:close" size="small" variant="neutral"/>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </header>
+                        <center style="background: white;"><b>Amend Visit</b></center>
+                        <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
+                            <div class="row"> 
+                                <lightning:input type="date" aura:id="auraidActialVisitdate" label="Actual visit date" value = "{!v.visitRec.Planned_visit_date__c}"/>
+                                <lightning:input aura:id="visitDescription" label="Visit Description" required="true"  value = "{!v.visitRec.Description__c}"/>
+                            </div>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <div class="slds-align_absolute-center">
+                                <lightning:button label="Cancel" variant="destructive" class="slds-m-top--medium"   onclick="{!c.closeModelPop}"/>
+                                <lightning:button label="Submit" variant="brand" class="slds-m-top--medium" onclick="{!c.updateVisitHandler}"/>
+                            </div>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </aura:if>
+        
+    </div>
+</aura:component>

@@ -1,0 +1,34 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="Scheduler_Insight_MonthYear_handler">
+    
+    <aura:attribute name="selectedMonth" type="String" default="January" />
+    
+    <aura:attribute name="currentMonth" type="String" />
+    <aura:attribute name="currentYear" type="String" />
+    <aura:attribute name="months" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:attribute name="ShowBeatPlannerName" type="Boolean" default="true"/>
+    <aura:attribute name="MonthlyBeatPlanDataList" type="sObject" default="{sObjecttype:'Monthly_Beat_Plan__c'}"/>                                                                      
+    <aura:attribute name="userName" type="String" />
+    
+    
+    <!--<aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent" />-->
+    
+    <div class="slds-m-left_medium slds-m-right_medium mobileBar" style="margin-left:1%">
+        <aura:if isTrue="{!v.ShowBeatPlannerName}">
+        <lightning:layoutItem class="e" size="12" padding="around-large" >
+            <div class="slds-grid   NameBar slds-m-horizontal_medium " >
+                <div class="slds-grid slds-gutters slds-size_12-of-12 slds-p-horizontal_small ">
+                    <div class="slds-col slds-size_11-of-12 MonBeatPlanDetail" >
+                        <h2 class="h2Details"><b>{!v.MonthlyBeatPlanDataList.Month_Name__c}-{!v.MonthlyBeatPlanDataList.Name}-{!v.userName}</b></h2> <br/>
+                        <p class="createDate">Created Date:&nbsp;<lightning:formattedDateTime value="{!v.MonthlyBeatPlanDataList.CreatedDate}" year="numeric" month="numeric" day="numeric"/> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>    <p class="Approved">Approved By: Chandan Kumar</p>
+                    </div>
+                    <div style="margin-top:0.2%" class="slds-col slds-size_1-of-12 ">
+                        <div class="Status" style=""><b class="statusFont">{!v.MonthlyBeatPlanDataList.Status__c}</b></div>
+                    </div>
+                </div>
+                <br/>
+            </div> 
+        </lightning:layoutItem>
+        </aura:if>
+    </div>
+</aura:component>

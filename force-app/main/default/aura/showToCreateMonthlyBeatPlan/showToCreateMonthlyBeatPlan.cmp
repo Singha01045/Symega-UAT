@@ -1,0 +1,64 @@
+<aura:component controller="BeatPlanController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="ShowToCreateBeatPlanne" type="Boolean" default="false"/>
+    <aura:attribute name="StartDatevalue" type="Date" />
+    <aura:attribute name="EndDatevalue" type="Date" />
+    <aura:attribute name="selectedMonthNumber" type="Integer" />
+    <aura:attribute name="RoleAndKPIList" type="List" />
+
+    <aura:attribute name="selectedMonth" type="String" />
+    <aura:attribute name="selectedYear" type="String" />
+    
+    <aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent"/>
+
+    <lightning:layoutItem class="e" size="12" padding="around-large" >
+        <div class="slds-grid   NameBar slds-m-horizontal_medium " >
+            <div class="slds-grid slds-gutters slds-size_12-of-12 slds-p-horizontal_small ">
+                <div class="slds-col slds-size_11-of-12 " >
+                    <h2 style=" display: inline; font-size:150%;width:100%;color:white;"><b>No Beat Plan Available</b></h2> <br/>
+                </div>
+                <div style="margin-top:0.2%; margin-left: -3.5%;" class="slds-col slds-size_1-of-12 ">
+                    <span style="text-align:center;padding-left: 1%;">                   <lightning:button label="New&nbsp;Beat&nbsp;Plan" class="slds-p-left_small" iconName="Utility:add" variant="success" iconPosition="left" onclick="{!c.HandleNewBeatPal}"/> </span>
+                </div>
+            </div>
+            <br/>
+        </div> 
+    </lightning:layoutItem>
+    <aura:if isTrue="{!v.ShowToCreateBeatPlanne}">
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Monthly Beat Planner</h1>
+                </div>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col">
+                                    <lightning:input type="date" name="input2" label="Start Date" value="{!v.StartDatevalue}"/>
+                                </div>
+                                <div class="slds-col">
+                                    <lightning:input type="date" name="input2" label="End Date" value="{!v.EndDatevalue}"/>
+                                </div>
+                            </div>
+                            <br></br>
+                                <aura:iteration items="{!v.RoleAndKPIList}" var="type">
+                                    <div class="slds-grid slds-gutters">
+                                        <div class="slds-col">
+                                            <lightning:input type="text" name="input2" label="" value="{!type.Name}" disabled="true"/>
+                                        </div>
+                                        <div class="slds-col">
+                                            <lightning:input type="number" name="input2" label="" placeholder="Enter" value="{!type.targetvalue}"/>
+                                        </div>
+                                    </div>
+                            </aura:iteration>
+                        </div>
+                    <div class="slds-modal__footer">
+                        <lightning:button label="Cancel"  variant="destructive"  onclick="{!c.HandleCancel}"/>
+                        <lightning:button label="Create"  variant="success"  onclick="{!c.HandleCreate}"/>
+                    </div>
+
+        </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+     </aura:if>
+    
+</aura:component>

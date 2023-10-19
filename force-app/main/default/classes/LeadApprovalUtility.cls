@@ -77,10 +77,10 @@ public without sharing class LeadApprovalUtility {
                     
                     if(leadForApprovalList[0].Owner.UserRole.Name.contains('Business Head')){
                         businessHeadIdList = new List<Id>{ [SELECT Id, ManagerId FROM User WHERE Id =: leadForApprovalList[0].OwnerId].ManagerId};
-                    }
+                            }
                     else{
                         businessHeadIdList = new List<Id>{leadForApprovalList[0].Business_Head__c};
-                    }  
+                            }  
                     
                     leadForApprovalList[0].Approver_Name__c = [SELECT Id, Name FROM User WHERE Id =: businessHeadIdList[0]].Name;
                     update leadForApprovalList[0];
@@ -106,7 +106,7 @@ public without sharing class LeadApprovalUtility {
         }
     }
     
-     /**
+    /**
 * Added by DeaGle
 * Req: Submit Project for business head approval based on role hierarchy. 
 */
@@ -220,7 +220,7 @@ public without sharing class LeadApprovalUtility {
         }
         return new OpportunityApprovalWrapper(userRoleToMDRoleMap, roleIdToMDIdMap);
     }
-   
+    
     
     public static Id getBusinessHeadApproverId(Id currentUserRoleId) {
         if(!String.isBlank(currentUserRoleId)) {
@@ -289,4 +289,174 @@ public without sharing class LeadApprovalUtility {
     }
     
     class LeadApprovalException extends Exception {}
+    
+    @AuraEnabled
+    public static projWrapper getMissingAccountDetails(String projId){
+        List<String> missingReqField = new List<String>();
+        Project__c projRec = new Project__c();
+        try{
+            if(String.isNotBlank(projId))
+                projRec = [SELECT Id, Opportunity__r.AccountId, Name, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Customer_Code_SAP__c,
+                           Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c                       
+                           FROM Project__c WHERE Id=:projId];
+            if(string.isNotBlank(projRec.Opportunity__r.AccountId)){
+                
+                Boolean isAccount = false;
+                 string accValidationsResp = '';
+                
+                if(projRec.Opportunity__r.Account_Billing_Address__c){
+                    isAccount = true;
+                    accValidationsResp = Utility.checkForInitialSubmission(projRec.Opportunity__r.AccountId);
+                }
+                else if(projRec.Opportunity__r.Customer_Billing_Address__c != null){
+                    isAccount = false;
+                    accValidationsResp = Utility.checkForInitialSubmissionAddress(projRec.Opportunity__r.Customer_Billing_Address__c);
+                }
+                
+                projWrapper pWrap = new projWrapper();
+                pWrap.projectRec = projRec;
+               
+                if(accValidationsResp.equalsIgnoreCase('Success')){
+                    pWrap.missingFields = false;
+                    if(isAccount){
+                        Account acc = [SELECT Id, Initial_SAP_Update__c FROM Account WHERE Id =: projRec.Opportunity__r.AccountId];
+                        if(acc.Initial_SAP_Update__c != true){
+                            acc.Initial_SAP_Update__c = true;
+                            update acc;
+                        }
+                    }
+                    else{
+                        Dispatch_Address__c addr = [SELECT Id, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: projRec.Opportunity__r.Customer_Billing_Address__c];
+                        if(addr.Initial_SAP_Update__c != true){
+                            addr.Initial_SAP_Update__c = true;
+                            update addr;
+                        }
+                    }                    
+                }
+                else{
+                    pWrap.missingFields = true;
+                }
+                
+                
+                
+                
+               
+
+                Account accRec = [Select Id, Name, Customer_Type__c, Customer_Contact__c,CurrencyIsoCode,Delivery_Plant__c, 
+                                  BillingCountry, BillingPostalCode, BillingState, BillingCity, BillingStreet, 
+                                  ShippingCountry, ShippingPostalCode, ShippingState, ShippingCity, ShippingStreet,Account_Segment__c 
+                                  From Account Where Id =: projRec.Opportunity__r.AccountId];
+
+                if((accRec.Name == null) || (accRec.Name == '')){
+                missingReqField.add('Name');
+            }
+            
+            if((accRec.BillingCity == null) || (accRec.BillingCity == '')){
+                missingReqField.add('BillingCity');
+            }
+            
+            if((accRec.BillingState == null) || (accRec.BillingState == '')){
+                          missingReqField.add('BillingState');
+
+            }               
+            
+            if((accRec.BillingStreet == null) || (accRec.BillingStreet == '')){
+                missingReqField.add('BillingStreet');
+            }
+            
+            if((accRec.BillingCountry == null) || (accRec.BillingCountry == '')){
+                missingReqField.add('BillingCountry');
+            }
+
+            if((accRec.BillingPostalCode == null) || (accRec.BillingPostalCode == '')){
+                missingReqField.add('BillingPostalCode');
+            }
+
+            if((accRec.Customer_Type__c == null) || (accRec.Customer_Type__c == '')){
+                missingReqField.add('Customer_Type__c');
+            }
+
+            if((accRec.Account_Segment__c == null) || (accRec.Account_Segment__c == '')){
+                missingReqField.add('Account_Segment__c');
+            }
+
+            if((accRec.CurrencyIsoCode == null) || (accRec.CurrencyIsoCode == '')){
+                missingReqField.add('CurrencyIsoCode');
+            }
+
+            
+            if((accRec.Delivery_Plant__c == null) || (accRec.Delivery_Plant__c == '')){
+                missingReqField.add('CurrencyIsoCode');
+            }                  
+                
+                
+                // if((accRec.Name == null) || (accRec.Name =='')){
+                //     missingReqField.add('Name');
+                // }
+
+                // if(accRec.Customer_Contact__c == null){
+                //     missingReqField.add('Customer_Contact__c');
+                // }
+                
+                // if(String.isBlank(accRec.BillingCity)){
+                //     missingReqField.add('BillingCity');
+                // }
+
+                // if(String.isBlank(accRec.BillingStreet)){
+                //     missingReqField.add('BillingStreet');
+                // }
+
+                // if(String.isBlank(accRec.BillingState) && accRec.Customer_Type__c!='Export'){
+                //     missingReqField.add('BillingState');
+                // }
+
+                // if((accRec.BillingPostalCode == null) || (accRec.BillingPostalCode == '')){
+                //     missingReqField.add('BillingPostalCode');
+                // }
+
+                // if((accRec.BillingCountry == null) || (accRec.BillingCountry == '')){
+                //     missingReqField.add('BillingCountry');
+                // }
+                
+                // if(String.isBlank(accRec.ShippingCity)){
+                //     missingReqField.add('ShippingCity');
+                // }
+
+                // if(String.isBlank(accRec.ShippingStreet)){
+                //     missingReqField.add('ShippingStreet');
+                // }
+
+                // if(String.isBlank(accRec.ShippingState) && accRec.Customer_Type__c != 'Export'){
+                //     missingReqField.add('ShippingState');
+                // }
+
+                // if((accRec.ShippingPostalCode == null) || (accRec.ShippingPostalCode == '')){
+                //     missingReqField.add('ShippingPostalCode');
+                // }
+
+                // if((accRec.ShippingCountry == null) || (accRec.ShippingCountry == '')){
+                //     missingReqField.add('ShippingCountry');
+                // }
+
+                system.debug('Missing Field List === >'+missingReqField);
+                pWrap.missingFieldsList = missingReqField;
+
+                return pWrap;
+            }
+            
+        }
+        catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+    public class projWrapper{
+        @AuraEnabled 
+        public List<string> missingFieldsList;
+        @AuraEnabled 
+        public Boolean missingFields;
+        @AuraEnabled 
+        public Project__c projectRec;
+    }
 }

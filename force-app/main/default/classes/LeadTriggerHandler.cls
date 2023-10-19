@@ -41,12 +41,12 @@ public class LeadTriggerHandler {
                 system.debug('Business head approval');
                 
                 system.debug('LeadRec.Business_Head__c -- ' + LeadRec.Business_Head__c);
-                system.debug('LeadRec.UserRole -- ' + freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name.contains('Business Head'));
+                system.debug('LeadRec.UserRole -- ' + freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name);
                 system.debug('LeadRec.Lead_Segment__c -- ' + LeadRec.Lead_Segment__c);
                 system.debug('LeadRec.of_potential_opportunities__c -- ' + LeadRec.of_potential_opportunities__c);
                 system.debug('LeadRec.Total_Addressable_Market__c -- ' + LeadRec.Total_Addressable_Market__c);
                 
-                if((LeadRec.Business_Head__c != null && !freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name.contains('Business Head') || freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name.contains('Business Head')) && LeadRec.Lead_Segment__c != null && LeadRec.of_potential_opportunities__c != null && LeadRec.of_potential_opportunities__c != '0' && LeadRec.Total_Addressable_Market__c != 0) {
+                if(freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name != null && (LeadRec.Business_Head__c != null && !freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name.contains('Business Head') || freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name.contains('Business Head')) && LeadRec.Lead_Segment__c != null && LeadRec.of_potential_opportunities__c != null && LeadRec.of_potential_opportunities__c != '0' && LeadRec.Total_Addressable_Market__c != 0) {
                     LeadApprovalUtility.submitForApprovalToBusinessHead(leadRec.Id);    
                 }else if( (LeadRec.Business_Head__c == null && !freshLeadMap.get(LeadRec.Id).Owner.UserRole.Name.contains('Business Head')) ){
                     LeadRec.Business_Head__c.addError(Constants.LEAD_BUSINESS_HEAD_REQ_ERROR_MSG);

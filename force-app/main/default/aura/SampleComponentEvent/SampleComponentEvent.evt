@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Sample Component Event">
+    <aura:attribute name="Month" type="String" />
+    <aura:attribute name="Year" type="String" />
+</aura:event>

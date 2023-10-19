@@ -8,7 +8,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
     }
 
     public Database.QueryLocator Start(Database.BatchableContext bc){    
-        return Database.getQueryLocator('SELECT Id, Name, Contact_Number__c, Company_Name__c, Postal_Code__c, Country__c, State__c, City__c, Street__c, Customers_Contact__r.FirstName,' +
+        return Database.getQueryLocator('SELECT Id, Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c, Opportunity__r.Account.Customer_Code_OPTIVA__c, Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Name, Opportunity__r.AccountId, Opportunity__r.Account.Customer_Code_OPTIVA__c, Opportunity__r.Account.Customer_Code_SAP__c, Recipe_Cost__c, Processing_condition__c, Preferred_thickness_Viscosity__c, pH__c, Oil_sprinkling_Dust_on__c, Milk_Solids__c, Final_SNF__c, Fat__c, Center_filling_Cream__c, Brix_degrees__c, Additive_Status__c, Acidity__c, of_pulp_if_with_fruit_pulp__c, Name, Start_Date__c, Product_Type__c, Account_Segment__c, Customer_Name__c, Contact_Number__c, Company_Name__c, Postal_Code__c, Country__c, State__c, City__c, Street__c, Customers_Contact__r.FirstName,' +
                                         'Customers_Contact__r.LastName, Account__r.Name, Application_Name__c,Type_of_PR__c,Approval_Status__c,Sample_Project__c,Sample_Project__r.Owner.Name,' +
                                         'Product_ID__c,Product_Spec__c,MSDS__c,Country_of_Compliance__c,Project_Name__c,Legal_Status_as_per_US__c,Proposed_date_of_dispatch__c,Allergen__c,Nutritional__c,'+
                                         'Other__c,Target_Date__c,Customer_Launch_Date__c,Required_End_Date__c,Product_approval_format_by_customer__c,Organic_Certification__c,GMO_Status__c,Halal_Certification__c,'+
@@ -32,10 +32,22 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                 List<Sample_Line_Item__c> slisToUpdate = new List<Sample_Line_Item__c>();
                 for(Project__c project : projects){
 
+                    String customerCodeSAP = '';
+                    String customerCodeOPTIVA = '';
+
+                    if(project.Opportunity__r.Account_Billing_Address__c){
+                        customerCodeSAP = project.Opportunity__r.Account.Customer_Code_SAP__c;
+                        customerCodeOPTIVA = project.Opportunity__r.Account.Customer_Code_OPTIVA__c;
+                    }
+                    else if(project.Opportunity__r.Customer_Billing_Address__c != null){
+                        customerCodeSAP = project.Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c;
+                        customerCodeOPTIVA = project.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c;
+                    }
+
                     System.debug('RecordTypeName--'+project.RecordType.name);
                     if(project.RecordType.name=='Sample'){  
 
-                        if(String.isBlank(project.Account__r.Customer_Code_OPTIVA__c)){
+                        if(String.isBlank(customerCodeOPTIVA)){
                             project.Error_Occured_On_Submitting_To_Optiva__c = true;
                             project.Error_Message_On_Submitting_To_Optiva__c = 'Customer code not found';
                             return;
@@ -53,17 +65,17 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                         OpWrapper.company_name = checkIfBlank(project.Company_Name__c);
                         OpWrapper.pincode = checkIfBlank(project.Postal_Code__c);
                         
-                        if(project.Account__c == null){
+                        if(project.Opportunity__r.AccountId == null){
                             OpWrapper.first_name = checkIfBlank(project.Lead__r.FirstName);
                             OpWrapper.last_name = checkIfBlank(project.Lead__r.LastName);
                         }else{
-                            OpWrapper.cust_code = checkIfBlank(project.Account__r.Customer_Code_OPTIVA__c);
-                            OpWrapper.first_name = project.Customers_Contact__c == null ? checkIfBlank(project.Account__r.Name) : project.Customers_Contact__r.FirstName;
-                            OpWrapper.last_name = project.Customers_Contact__c == null ? checkIfBlank(project.Account__r.Name) : project.Customers_Contact__r.LastName;
+                            OpWrapper.cust_code = checkIfBlank(customerCodeOPTIVA);
+                            OpWrapper.first_name = project.Customers_Contact__c == null ? checkIfBlank(project.Opportunity__r.Account.Name) : project.Customers_Contact__r.FirstName;
+                            OpWrapper.last_name = project.Customers_Contact__c == null ? checkIfBlank(project.Opportunity__r.Account.Name) : project.Customers_Contact__r.LastName;
                         }
 
                         OpWrapper.project_sf_code = checkIfBlank(project.Id);    
-                        OpWrapper.cust_code = checkIfBlank(project.Account__r.Customer_Code_OPTIVA__c);
+                        OpWrapper.cust_code = checkIfBlank(customerCodeOPTIVA);
 
                         OpWrapper.project_title = checkIfBlank(project.Name) + ':' + checkIfBlank(project.Sample_Name__c);
                         OpWrapper.project_type = 'External';//checkIfBlank(project.Project_Type__c);
@@ -245,7 +257,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                             }
                         }
                     }else if(project.RecordType.name=='Project'){
-                        if((project.Product_Family__c.contains(Constants.FLAVOUR_API_NAME) || project.Product_Family__c.contains(Constants.COLOR_API_NAME)) && !String.isBlank(project.Account__r.Customer_Code_OPTIVA__c)){
+                        if((project.Product_Family__c.contains(Constants.FLAVOUR_API_NAME) || project.Product_Family__c.contains(Constants.COLOR_API_NAME)) && !String.isBlank(customerCodeOPTIVA)){
                             System.debug('CALLEDOPTIVA----');
                             Map<String,String> responseMap = new Map<String,String>();
 
@@ -268,19 +280,21 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                             }else{
                                 Utility.handlerErrorException(project.Id,responseMap.toString());
                             }
-                        }else if(!String.isBlank(project.Account__r.Customer_Code_SAP__c)){ //TODO: this should be called if trigger passed account sap code changes, or above should be invoked if optive code changes.
+                        }
+                        else if(!String.isBlank(customerCodeSAP)){ //TODO: this should be called if trigger passed account sap code changes, or above should be invoked if optive code changes.
                             if(!(project.Type_Of_PR__c == 'New Product' && project.Approval_Status__c == 'Under Approval')){
                                 System.debug('CALLEDSAP-----');
                                 SAP_Project_Creation_Callout.createProject(project.Id);
                             }
                             
-                        }else{
+                        }
+                        else{
                             project.Submit_Sample_To_Optiva__c = true;
                             project.Error_Occured_On_Submitting_To_Optiva__c = true;
                             project.Error_Message_On_Submitting_To_Optiva__c = 'Customer code not found';
                         }
                     }else{
-                        if(String.isBlank(project.Account__r.Customer_Code_OPTIVA__c)){
+                        if(String.isBlank(customerCodeOPTIVA)){
                             project.Submit_Sample_To_Optiva__c = true;
                             project.Error_Occured_On_Submitting_To_Optiva__c = true;
                             project.Error_Message_On_Submitting_To_Optiva__c = 'Customer code not found';

@@ -11,7 +11,6 @@
         
     </head>
     <body>
-         <br/>  <br/>  <br/>  <br/>
         
          <table style="width:100%;">
             <tr>
@@ -25,21 +24,21 @@
                       <b>19.08.2023</b> 
                        </p> </td>
                       
-                <td style="padding-right:5px;" >  <span style="float:right;"><apex:image url="{!$Resource.logo}" width="120px" height="30px"/></span> <br/> <br/> 
+                <td style="padding-right:20px;" >  <span style="float:right;"><apex:image url="{!$Resource.logo}" width="120px" height="30px"/></span> <br/> <br/> 
                     <span style="float:right;text-align:center font-size:18px;background-color:orange;">POSSIBILITIES<br/>UNLIMITED</span> <br/> <br/><br/><br/><br/><br/><br/>
                 </td>
               </tr>   
           </table>
               
         <br/>
-        <br/>
+       
         
         <center  style="font-size:19px;">SHIPPER'S CERTIFICATION FOR NON-HAZARDOUS CARGO </center>
         <br/>
         <br/>
         
         <span><b>AWB No. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Airport Of Departure  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Airport Of Destination</b> </span><br/><br/>
-        <span><b>{!projRec.AWB_NO__c} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {!projRec.Airport_Of_Departure__c}  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; {!projRec.Airport_Of_Destination__c}</b> </span>
+        <span><b> {!projRec.AWB_NO__c} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {!projRec.Airport_Of_Departure__c}  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; {!projRec.Airport_Of_Destination__c}</b> </span>
         <br/>
         <br/>
      
@@ -50,16 +49,30 @@
             that the goods are in proper condition for transportation on passenger carrying aircraft<br/><br/>
             (DGR, Para 8.1.23)
         </p>
-       
+       <!--
         <span> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; No. and Kind  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  Description of Goods  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; Net Quantity/Package</span><br/>
         <span> &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; of Pkgs.</span>  <br/> <br/>
           <apex:repeat value="{!sampLineItemList}" var="sliList">
-              <span style="font-size:14px;"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp; 1 CARTON  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {!sliList.Product_Name__c}   &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  {!sliList.Quantity__c} {!sliList.Quantity_Unit__c}  </b></span><br/>
-        </apex:repeat>
+              <span style="font-size:12px;"><b>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp; 1 CARTON  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {!sliList.Product_Name__c}   &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;  {!sliList.Quantity__c} {!sliList.Quantity_Unit__c}  </b></span><br/>
+        </apex:repeat> -->
+         
+        <table style="width:100%">
+          <tr>
+            <td style="font-size:14px; text-align:center; width:33%">No.and Kind of<br/>Pkgs</td>
+            <td style="font-size:14px; text-align:center; width:33%">Description of Goods</td>
+            <td style="font-size:14px; text-align:center; width:33%">Net Quantity/Package</td>
+          </tr>
+            <apex:repeat value="{!sampLineItemList}" var="sliList"> 
+          <tr>
+            <td style="font-size:14px; text-align:center; width:33%"><b> 1 CARTON</b></td>
+            <td style="font-size:14px; text-align:center; width:33%"><b>{!sliList.Product_Name__c}</b></td>
+            <td style="font-size:14px; text-align:center; width:33%"><b>{!sliList.Quantity__c} {!sliList.Quantity_Unit__c}</b> </td>
+          </tr>
+                 </apex:repeat>
+        </table>
         <br/>
         <br/>
-        <br/>
-        <br/>
+        
         <span>For&nbsp;<b>SYMEGA FOOD INGREDIENTS LTD</b></span> <br/>
         <p>
            <b> Authorised Signatory </b><br/>  </p>

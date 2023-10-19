@@ -25,23 +25,50 @@ public class GetFERTCodeController {
     public static String sendFERTCodeReqEmailNotificaiton(string oppId) {
         
         //TODO: Anjali use this method to send notification, this method should be called from button on parent opportunity.
-        String response = '';
-        Opportunity opp = [Select Id,Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c,AccountId,Account.Customer_Code_SAP__c From Opportunity Where Id=:oppId];
-        if(!String.isEmpty(opp.Account.Customer_Code_SAP__c)){
+        String response = '';  //  Owner.Email,
+        Opportunity opp = [Select Id,Name, OwnerId,  Send_Fert_Notification_Email__c,
+                           AccountId, Account.Customer_Code_SAP__c, Account_Billing_Address__c,Customer_Billing_Address__c,
+                           Customer_Billing_Address__r.SAP_Customer_Code__c
+                           From Opportunity Where Id=:oppId];
+
+        String customerCode = '';
+        if(opp.Account_Billing_Address__c){
+            customerCode = opp.Account.Customer_Code_SAP__c;
+        }
+        else if(opp.Customer_Billing_Address__c != null){
+            customerCode = opp.Customer_Billing_Address__r.SAP_Customer_Code__c;
+        }
+
+        if(!String.isEmpty(customerCode)){
             sendFertCodeReqHelper(oppId, opp.OwnerId, opp.Owner.Email);
-                Task taskRec = new Task();
-                taskRec.Subject = 'Update once the FERT is ready by OPS team';
-                taskRec.OwnerId =  opp.OwnerId;
-                taskRec.ActivityDate = System.today(); 
-                taskRec.Status = 'Open';
-                taskRec.WhatId = oppId;
-                insert taskRec;
+            /*Task taskRec = new Task();
+            taskRec.Subject = 'Update once the FERT is ready by OPS team';
+            taskRec.OwnerId =  opp.OwnerId;
+            taskRec.ActivityDate = System.today(); 
+            taskRec.Status = 'Open';
+            taskRec.WhatId = oppId;
+            insert taskRec;*/
             response = 'Success';
         }
         else{
-            String customerValidationRes = Utility.checkSAPCustomerReqField(opp.AccountId);
+            //String customerValidationRes = Utility.checkSAPCustomerReqField(opp.AccountId);
+            String customerValidationRes = Utility.checkForInitialSubmission(opp.AccountId);
             if(customerValidationRes == 'Success'){
-                SAP_CreateCustomerCallout.createCustomer(opp.AccountId);
+                Account acc = [SELECT Id, Initial_SAP_Update__c FROM Account WHERE Id =: opp.AccountId];
+                if(acc.Initial_SAP_Update__c != true){
+                    acc.Initial_SAP_Update__c = true;
+                    update acc;
+                }
+
+                String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId,null); // method signature changed
+                if(resp.equalsIgnoreCase('Success')){
+                    Account accRec = [SELECT Id, SAP_Update_Customer__c FROM Account WHERE Id =: opp.AccountId];
+                    if(accRec.SAP_Update_Customer__c != true){
+                        accRec.SAP_Update_Customer__c = true;
+                        update accRec;
+                    }
+                }
+
                 opp.Send_Fert_Notification_Email__c = true;
                 update opp;
                 response = 'create';
@@ -51,7 +78,7 @@ public class GetFERTCodeController {
             }
             
         } 
-         
+        
         return response;
     }
     
@@ -93,7 +120,7 @@ public class GetFERTCodeController {
                     List<ContentDocumentLink> docLinks  = [SELECT Id, ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId =: oppId ]; 
                     system.debug('docLinks -- ' + docLinks);
                     system.debug('docLinks.size() -- ' + docLinks.size());
-
+                    
                     set<id> cdIdSet = new set<id>();
                     for(ContentDocumentLink cdl : docLinks){
                         cdIdSet.add(cdl.ContentDocumentId);
@@ -103,7 +130,7 @@ public class GetFERTCodeController {
                     system.debug('cVerList -- ' + cVerList);
                     system.debug('cVerList.size() -- ' + cVerList.size());
                     
-
+                    
                     List<Messaging.EmailFileAttachment> attachments = new List<Messaging.EmailFileAttachment>();
                     for (ContentVersion cVer: cVerList) {
                         Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
@@ -112,7 +139,7 @@ public class GetFERTCodeController {
                         //efa.setContentType(cVer.ContentType);
                         attachments.add(efa);
                     }
-
+                    
                     for(String prodFamily : prodFamilyByOppProdsMap.keyset()){
                         
                         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
@@ -146,7 +173,7 @@ public class GetFERTCodeController {
                                 message.setCcAddresses(cC_EmailRecipients);
                             }
                         }
-
+                        
                         if(attachments.size()>0)
                             message.setFileAttachments(attachments);
                         
@@ -192,59 +219,69 @@ public class GetFERTCodeController {
     }
     
     // Method for get Opp related Account Details
-     @AuraEnabled
-    public static List<String> getOppRelatedAccountDetails(String oppId){
+    @AuraEnabled
+    public static Boolean getOppRelatedAccountDetails(String oppId){
         Opportunity opp = new Opportunity();
         Account accRec = new Account();
         List<String> missingReqField = new List<String>();
         try{
             if(String.isNotBlank(oppId))
-                opp = [SELECT Id,AccountId,Name FROM Opportunity WHERE Id=:oppId];
-                if(string.isNotBlank(opp.AccountId)){
-                    accRec = [Select Id,Customer_Type__c,BillingCountry,BillingPostalCode,BillingState,Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c From Account Where ID=:opp.AccountId];
-                   // system.debug('Yes Found Blank accRec.PAN_Number__c ==>'+accRec.PAN_Number__c);
-                    if((accRec.Customer_Type__c == null) || (accRec.Customer_Type__c =='')){
-                        missingReqField.add('Customer_Type__c');
-                        system.debug('Yes Found  accRec.Customer_Type__c ==>'+accRec.Customer_Type__c);
-                    }
-                     if((accRec.BillingCountry == null) || (accRec.BillingCountry == '')){
-                        missingReqField.add('BillingCountry');
-                        system.debug('Yes Found  accRec.BillingCountry ==>'+accRec.BillingCountry);
-                    }
-                    
-                     if((accRec.BillingPostalCode == null) || (accRec.BillingPostalCode == '')){
-                        missingReqField.add('BillingPostalCode');
-                        system.debug('Yes Found  accRec.BillingPostalCode ==>'+accRec.BillingPostalCode);
-                    }
-                    
-                    if((accRec.BillingState == null) || (accRec.BillingState == '')){
-                        missingReqField.add('BillingState');
-                        system.debug('Yes Found  accRec.CustoBillingStatemer_Type__c ==>'+accRec.BillingState);
-                    }
-                     if((accRec.Delivery_Plant__c == null) || (accRec.Delivery_Plant__c == '')){
-                        missingReqField.add('Delivery_Plant__c');
-                        system.debug('Yes Found  accRec.Delivery_Plant__c ==>'+accRec.Delivery_Plant__c);
-                    }
-                     if((accRec.Account_Segment__c == null) || (accRec.Account_Segment__c == '')){
-                        missingReqField.add('Account_Segment__c');
-                        system.debug('Yes Found  accRec.Account_Segment__c ==>'+accRec.Account_Segment__c);
-                    }
-                     if((accRec.Transportation_Terms__c == null) || (accRec.Transportation_Terms__c == '')){
-                        missingReqField.add('Transportation_Terms__c');
-                        system.debug('Yes Found  accRec.Transportation_Terms__c ==>'+accRec.Transportation_Terms__c);
-                    }
-                     if((accRec.PAN_Number__c == null) || (accRec.PAN_Number__c == '')){
-                        missingReqField.add('PAN_Number__c');
-                        system.debug('Yes Found  accRec.PAN_Number__c ==>'+accRec.PAN_Number__c);
-                    }
-                     if((accRec.GST_number__c == null) || (accRec.GST_number__c == '')){
-                        missingReqField.add('GST_number__c');
-                        system.debug('Yes Found  accRec.GST_number__c ==>'+accRec.GST_number__c);
-                    }
-                    system.debug('Missing Field List === >'+missingReqField);
-                    return missingReqField;
+                opp = [SELECT Id, AccountId,Name FROM Opportunity WHERE Id=:oppId];
+            if(string.isNotBlank(opp.AccountId)){
+
+                string accValidationsResp = Utility.checkForInitialSubmission(opp.AccountId);
+                if(accValidationsResp.equalsIgnoreCase('Success')){
+                    return false;
                 }
-        }catch(Exception e){
+                else{
+                    return true;
+                }
+                
+                /*accRec = [Select Id,Customer_Type__c,BillingCountry,BillingPostalCode,BillingState,Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c From Account Where ID=:opp.AccountId];
+                // system.debug('Yes Found Blank accRec.PAN_Number__c ==>'+accRec.PAN_Number__c);
+                if((accRec.Customer_Type__c == null) || (accRec.Customer_Type__c =='')){
+                    missingReqField.add('Customer_Type__c');
+                    system.debug('Yes Found  accRec.Customer_Type__c ==>'+accRec.Customer_Type__c);
+                }
+                if((accRec.BillingCountry == null) || (accRec.BillingCountry == '')){
+                    missingReqField.add('BillingCountry');
+                    system.debug('Yes Found  accRec.BillingCountry ==>'+accRec.BillingCountry);
+                }
+                
+                if((accRec.BillingPostalCode == null) || (accRec.BillingPostalCode == '')){
+                    missingReqField.add('BillingPostalCode');
+                    system.debug('Yes Found  accRec.BillingPostalCode ==>'+accRec.BillingPostalCode);
+                }
+                
+                if((accRec.BillingState == null) || (accRec.BillingState == '')){
+                    missingReqField.add('BillingState');
+                    system.debug('Yes Found  accRec.CustoBillingStatemer_Type__c ==>'+accRec.BillingState);
+                }
+                if((accRec.Delivery_Plant__c == null) || (accRec.Delivery_Plant__c == '')){
+                    missingReqField.add('Delivery_Plant__c');
+                    system.debug('Yes Found  accRec.Delivery_Plant__c ==>'+accRec.Delivery_Plant__c);
+                }
+                if((accRec.Account_Segment__c == null) || (accRec.Account_Segment__c == '')){
+                    missingReqField.add('Account_Segment__c');
+                    system.debug('Yes Found  accRec.Account_Segment__c ==>'+accRec.Account_Segment__c);
+                }
+                if((accRec.Transportation_Terms__c == null) || (accRec.Transportation_Terms__c == '')){
+                    missingReqField.add('Transportation_Terms__c');
+                    system.debug('Yes Found  accRec.Transportation_Terms__c ==>'+accRec.Transportation_Terms__c);
+                }
+                if((accRec.PAN_Number__c == null) || (accRec.PAN_Number__c == '')){
+                    missingReqField.add('PAN_Number__c');
+                    system.debug('Yes Found  accRec.PAN_Number__c ==>'+accRec.PAN_Number__c);
+                }
+                if((accRec.GST_number__c == null) || (accRec.GST_number__c == '')){
+                    missingReqField.add('GST_number__c');
+                    system.debug('Yes Found  accRec.GST_number__c ==>'+accRec.GST_number__c);
+                }
+                system.debug('Missing Field List === >'+missingReqField);
+                return missingReqField;*/
+            }
+        }
+        catch(Exception e){
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
         }
         return null;

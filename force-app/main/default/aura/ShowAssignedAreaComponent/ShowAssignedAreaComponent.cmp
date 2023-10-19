@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <!--lightning:button class="testButton">Test me</lightning:button-->
+    <div class="assignedAreaAndClientSummary" style=" ">
+        <!-- style=" padding-left: 2%; padding-right: 1%; width:70%; background: #F3F3F3;" -->
+        <div >
+            <c:AssignedAreaMap/>        
+        </div>
+        <div>
+            <c:ClientsSummary/>
+        </div>
+        
+    </div>
+</aura:component>

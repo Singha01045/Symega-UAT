@@ -4,7 +4,7 @@ public without sharing class OppSplitParentController {
      public static List<Opportunity> getRecord(String oppId){
        try {
             System.debug('OppId'+oppId);
-            return [Select Id, Name,AccountId,CurrencyIsoCode,TotalOpportunityQuantity,Distributer_Customer__c,Pricebook2Id,End_Use_Application__c,	End_Use_Category__c,(SELECT Id,Name,Quantity,Product2Id,PricebookEntryId,UnitPrice,CurrencyIsoCode,TotalPrice,Packaging_Type__c,FERT_Code__c From OpportunityLineItems), Amount from opportunity where Id=:oppId];
+            return [Select Id, Account_Billing_Address__c, Customer_Billing_Address__c, Account_Shipping_Address__c, Customer_Shipping_Address__c, Shipping_Country__c, Shipping_Postal_Code__c, Shipping_Street__c, Shipping_State__c, Shipping_City__c, Billing_Country__c, Billing_Postal_Code__c, Billing_Street__c, Billing_City__c, Billing_State__c, Actual_Annual_Potential_Value__c, Target_Price_Kg__c, Annual_Volume_Full__c, Annual_Volume_in_units__c, Name,AccountId,CurrencyIsoCode,TotalOpportunityQuantity,Distributer_Customer__c,Pricebook2Id,End_Use_Application__c,	End_Use_Category__c,(SELECT Id,Name,Quantity,Product2Id,PricebookEntryId,UnitPrice,CurrencyIsoCode,TotalPrice,Packaging_Type__c,FERT_Code__c From OpportunityLineItems), Amount from opportunity where Id=:oppId];
         } catch (Exception e) {
             //HandleBusinessException.captureError('OppSplitParentController', 'getRecord', e);
             throw new AuraHandledException(e.getMessage());
@@ -33,23 +33,28 @@ public without sharing class OppSplitParentController {
                 opp.End_Use_Category__c = parentOpp.End_Use_Category__c;
                 opp.End_Use_Application__c = parentOpp.End_Use_Application__c;
                 opp.RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('One Time').getRecordTypeId();
+                
+                opp.Annual_Volume_Full__c = parentOpp.Annual_Volume_Full__c;
+                opp.Annual_Volume_in_units__c = parentOpp.Annual_Volume_in_units__c;
+                opp.Target_Price_Kg__c = parentOpp.Target_Price_Kg__c;
+                opp.Actual_Annual_Potential_Value__c = parentOpp.Actual_Annual_Potential_Value__c;
 
-                opp.Billing_City__c = opWrapper.billCity;
-                opp.Billing_State__c = opWrapper.billState;
-                opp.Billing_Street__c = opWrapper.billStreet;
-                opp.Billing_Postal_Code__c = opWrapper.billCode;
-                opp.Billing_Country__c = opWrapper.billCountry;
+                opp.Billing_City__c = parentOpp.Billing_City__c;
+                opp.Billing_State__c = parentOpp.Billing_State__c;
+                opp.Billing_Street__c = parentOpp.Billing_Street__c;
+                opp.Billing_Postal_Code__c = parentOpp.Billing_Postal_Code__c;
+                opp.Billing_Country__c = parentOpp.Billing_Country__c;
 
-                opp.Shipping_City__c = opWrapper.shipCity;
-                opp.Shipping_State__c = opWrapper.shipState;
-                opp.Shipping_Street__c = opWrapper.shipStreet;
-                opp.Shipping_Postal_Code__c = opWrapper.shipCode;
-                opp.Shipping_Country__c = opWrapper.shipCountry;
+                opp.Shipping_City__c = parentOpp.Shipping_City__c;
+                opp.Shipping_State__c = parentOpp.Shipping_State__c;
+                opp.Shipping_Street__c = parentOpp.Shipping_Street__c;
+                opp.Shipping_Postal_Code__c = parentOpp.Shipping_Postal_Code__c;
+                opp.Shipping_Country__c = parentOpp.Shipping_Country__c;
 
-                opp.Customer_Shipping_Address__c = opWrapper.customShippingAddress;
-                opp.Account_Shipping_Address__c = opWrapper.accountShipAddress;
-                opp.Customer_Billing_Address__c =  opWrapper.customBillingAddress;
-                opp.Account_Billing_Address__c = opWrapper.accountBillAddress;
+                opp.Customer_Shipping_Address__c = parentOpp.Customer_Shipping_Address__c;
+                opp.Account_Shipping_Address__c = parentOpp.Account_Shipping_Address__c;
+                opp.Customer_Billing_Address__c =  parentOpp.Customer_Billing_Address__c;
+                opp.Account_Billing_Address__c = parentOpp.Account_Billing_Address__c;
 
                 if(!String.isEmpty(parentOpp.Distributer_Customer__c)){
                     opp.Distributer_Customer__c = parentOpp.Distributer_Customer__c;
@@ -98,8 +103,8 @@ public without sharing class OppSplitParentController {
                 HandleBusinessException.captureError('OppSplitParentController', 'createOpp', e);
             }
 
-            Opportunity parOpp = new Opportunity(Id=parentOpp.Id,StageName='In-Progress');
-            update parOpp;
+            //Opportunity parOpp = new Opportunity(Id=parentOpp.Id,StageName='In-Progress');
+            //update parOpp;
             
             return [SELECT Id,Account.Name,Name,StageName,RecordType.Name,Type,Amount,TotalOpportunityQuantity,CloseDate,Parent_Opportunity__c,Parent_Opportunity__r.Name FROM Opportunity WHERE RecordType.Name='One Time' AND Id IN:oppIdList];
         } catch (Exception e) {

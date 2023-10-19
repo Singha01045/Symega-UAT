@@ -1,7 +1,7 @@
 <template>
-    <lightning-quick-action-panel>
-        <lightning-card style="height: 100%;width: 100%;">
 
+     <!-- <lightning-quick-action-panel>
+        <lightning-card style="height: 100%;width: 100%;">
             <lightning-card>
                 <div align="center">
                     <div class="loader"></div>
@@ -9,5 +9,59 @@
                 </div>
             </lightning-card>
         </lightning-card>
+    </lightning-quick-action-panel> -->
+
+    <lightning-quick-action-panel>
+        <template if:true={showSpinner}>
+            <div class="exampleHolder slds-align_absolute-center">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={showSpinner}>
+            <template if:true={showAccountPage}>
+
+                Update Account
+
+                <lightning-record-edit-form record-id={accRecId} object-api-name="Account"
+                            onsuccess={handleSuccess} onsubmit ={handleSubmit}>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-output-field field-name="Name">
+                            </lightning-output-field>
+                            <lightning-input-field field-name="Customer_Contact__c">
+                            </lightning-input-field>
+                            <lightning-input-field field-name="BillingCity">
+                            </lightning-input-field>
+                            <lightning-input-field field-name="BillingStreet">
+                            </lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-output-field field-name="Customer_Type__c">
+                            </lightning-output-field>
+                            <lightning-input-field field-name="Delivery_Plant__c">
+                            </lightning-input-field>
+                            <lightning-input-field field-name="Account_Segment__c">
+                            </lightning-input-field>
+                            <lightning-input-field field-name="Transportation_Terms__c">
+                            </lightning-input-field>
+                        </div>
+                    </div>
+                    <lightning-button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Update">
+                    </lightning-button>
+                </lightning-record-edit-form>
+            </template>
+            <template if:false={showAccountPage}>
+                <lightning-card style="height: 100%;width: 100%;">
+                    <lightning-card>
+                        <div align="center">
+                            <div class="loader"></div>
+                            Please wait! Sending Notification...
+                        </div>
+                    </lightning-card>
+            </lightning-card>
+            </template>       
+        </template>
+
     </lightning-quick-action-panel>
 </template>

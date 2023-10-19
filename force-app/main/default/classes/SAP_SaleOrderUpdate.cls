@@ -58,8 +58,9 @@ global without sharing class SAP_SaleOrderUpdate {
                 
                 /*******************    SALE ORDER START   ************************/
                 
-                List<Sales_Order__c> existingSaleOrderList = [SELECT Id, Name, SAP_Reference_Code__c, Remarks__c, Account__c, Account__r.Customer_Code_SAP__c, Service_Rendering_date__c, Submitted_Date__c, Payment_Received__c, Change_in_Dispatch_Date_Reason__c  
-                                                              FROM Sales_Order__c WHERE (Id IN: soByRefCodeMap.keySet() OR SAP_Reference_Code__c IN: soByRefCodeMap.keySet()) AND Account__r.Customer_Code_SAP__c IN: soByCstmrCodeMap.keySet() ];
+                List<Sales_Order__c> existingSaleOrderList = [SELECT Id, Name, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Customer_Code_SAP__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c,
+                                                              SAP_Reference_Code__c, Remarks__c, Account__c, Service_Rendering_date__c, Submitted_Date__c, Payment_Received__c, Change_in_Dispatch_Date_Reason__c  
+                                                              FROM Sales_Order__c WHERE (Id IN: soByRefCodeMap.keySet() OR SAP_Reference_Code__c IN: soByRefCodeMap.keySet()) AND ( Opportunity__r.Account.Customer_Code_SAP__c IN: soByCstmrCodeMap.keySet() OR Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c IN: soByCstmrCodeMap.keySet()) ];
                 system.debug('existingSaleOrderList -- ' + existingSaleOrderList);
                 
                 Map<String, String> accountIdByRefId = new Map<String, String>();
@@ -67,7 +68,17 @@ global without sharing class SAP_SaleOrderUpdate {
                 List<Id> extSOId = new List<Id>();
                 if(existingSaleOrderList.size()>0){
                     for(Sales_Order__c soRec : existingSaleOrderList){
-                        if( (soByRefCodeMap.containsKey(soRec.Id) || soByRefCodeMap.containsKey(soRec.SAP_Reference_Code__c)) && soByCstmrCodeMap.containsKey(soRec.Account__r.Customer_Code_SAP__c) ) {
+
+                        String customerCodeSAP = '';
+
+                        if(soRec.Opportunity__r.Account_Billing_Address__c){
+                            customerCodeSAP = soRec.Opportunity__r.Account.Customer_Code_SAP__c;
+                        }
+                        else if(soRec.Opportunity__r.Customer_Billing_Address__c != null){
+                            customerCodeSAP = soRec.Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c;
+                        }
+
+                        if( (soByRefCodeMap.containsKey(soRec.Id) || soByRefCodeMap.containsKey(soRec.SAP_Reference_Code__c)) && soByCstmrCodeMap.containsKey(customerCodeSAP) ) {
                             String so = '';
                             if(soByRefCodeMap.containsKey(soRec.Id)){
                                 so = soRec.Id;

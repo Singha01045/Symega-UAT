@@ -39,7 +39,7 @@ public without sharing class SAP_CUSTOMER_UPDATE_CALLOUT {
     public static Account getCustomer(String recId){
         return [Select Id,Name,Customer_Code_SAP__c,RecordType.Name,BillingStreet,BillingPostalCode,BillingCity,BillingCountry,BillingState,Owner.Name,Owner.Email,
         Tax_Type__c,GST_number__c,PAN_Number__c,Account_Segment__c,CurrencyIsoCode,Delivery_Plant__c,Customer_Type__c,Payment_terms__c,(Select Id,Name,Email,Phone From Contacts),
-        Tax_Collected_At_Source__c,FSSAI__c,User__r.Name,Transportation_Terms__c From Account Where Id=:recId];
+        Tax_Collected_At_Source__c,FSSAI__c,User__r.Name,User__r.SAP_USER_CODE__c,Transportation_Terms__c,Owner.SAP_USER_CODE__c From Account Where Id=:recId];
     }
 
     public static String getCustomerWrapper(Account acc){
@@ -53,9 +53,11 @@ public without sharing class SAP_CUSTOMER_UPDATE_CALLOUT {
         sWrapper.POSTAL_CODE = acc.BillingPostalCode.replaceAll('\\s+','');
         sWrapper.CITY = acc.BillingCity;
         sWrapper.COUNTRY = Utility.getPickVal('Account','BillingCountryCode').get(acc.BillingCountry);
-        sWrapper.SALES_EMP = acc.Owner.Name;
+        //sWrapper.SALES_EMP = acc.Owner.Name;
+        sWrapper.SALES_EMP = acc.Owner.SAP_USER_CODE__c;
         sWrapper.CUSTOMER_CATEGORY = acc.RecordType.Name;
-        sWrapper.BUSINESS_HEAD_NAME = acc.User__r.Name;
+        //sWrapper.BUSINESS_HEAD_NAME = acc.User__r.Name;
+        sWrapper.BUSINESS_HEAD_NAME = acc.User__r.SAP_USER_CODE__c;
         sWrapper.GSTIN_NUMBER = acc.GST_number__c!=null?acc.GST_number__c:'';
         sWrapper.PAN_NUMBER = acc.PAN_Number__c!=null?acc.PAN_Number__c:'';
         sWrapper.CUSTOMER_GROUP = acc.Account_Segment__c!=null?acc.Account_Segment__c:'';
@@ -66,7 +68,10 @@ public without sharing class SAP_CUSTOMER_UPDATE_CALLOUT {
         sWrapper.FSSAI_NUMBER = acc.FSSAI__c!=null?String.valueOf(acc.FSSAI__c):'';
         sWrapper.TRANSPORTATION_TERMS = acc.Transportation_Terms__c!=null?acc.Transportation_Terms__c:'';
         sWrapper.CUSTOMER_CONTACT_INFO = createConWrapper(acc);
-
+        
+        sWrapper.XCURRENCY = acc.CurrencyIsoCode;
+        sWrapper.TCS = acc.Tax_Collected_At_Source__c!=null?acc.Tax_Collected_At_Source__c:'';
+        
         String body = JSON.serialize(sWrapper);
         body = body.replace('XCURRENCY','CURRENCY');
 

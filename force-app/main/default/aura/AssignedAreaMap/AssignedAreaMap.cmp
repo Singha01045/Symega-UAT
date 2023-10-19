@@ -1,0 +1,24 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="mapMarkers" type="Object"/>
+    <aura:attribute name="zoomLevel" type="Integer" />
+    
+    <!-- handlers-->
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <!-- the map component -->
+    
+    <div class="slds-m-left_medium slds-m-right_medium " >
+        <h2 style="color: #0158A5; font-family: revert; font-size: 150%; font-weight: 550; padding-top:1%; margin-bottom:0.4%">Assigned Area</h2>
+        <div style="mapContainer">
+            <!--lightning:map class="myMap slds-box slds-box_x-small"
+                           style="height: 50vh;"
+                           mapMarkers="{! v.mapMarkers }"
+                           zoomLevel="{!v.zoomLevel}" /-->
+            <img class="myMap slds-box slds-box_x-small" src="{!$Resource.DashboardMap}" alt="User avatar"/>
+        </div>
+    </div>
+    
+    <!-- style=" height:10%; box-shadow: 0px 2px 5px silver; border:solid white; border-radius: 1%;" -->
+    <br/>
+</aura:component>

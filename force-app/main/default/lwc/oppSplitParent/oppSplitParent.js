@@ -2,11 +2,11 @@ import { LightningElement,api,wire,track } from 'lwc';
 import {CloseActionScreenEvent} from 'lightning/actions';
 import createOpp from '@salesforce/apex/OppSplitParentController.createOpp'
 import getOppRecord from '@salesforce/apex/OppSplitParentController.getRecord'
-import getAllAddresses from "@salesforce/apex/OppSplitParentController.getAllCustomerAddress";
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { NavigationMixin } from 'lightning/navigation';
+//import { NavigationMixin } from 'lightning/navigation';
 
-export default class OppSplitParent extends NavigationMixin(LightningElement) {
+
+export default class OppSplitParent extends LightningElement {
     @api recordId;
     oppRecord;
     prodListResp = [];
@@ -21,22 +21,6 @@ export default class OppSplitParent extends NavigationMixin(LightningElement) {
     hasLoaded = false;
     showDetails = false;
     isSplitLeft = true;
-    showNextScreen = false;
-
-    selectedAddressIndex = -1;
-    selectedBilAddressIndex = -1;
-    @track ship_addresses = [];
-    @track bill_addresses = [];
-    error;
-    @track checkedShipAdd;
-    @track checkedBillAdd
-    @track accRecord;
-    @track nextBtn = true;
-
-    accShipAddress = false;
-    accountBillAddress = false;
-    addressId;
-    billAddressId;
 
     tableColums = [
         { label: 'Product', fieldName: 'Name'},
@@ -52,141 +36,107 @@ export default class OppSplitParent extends NavigationMixin(LightningElement) {
     }
 
     getRecordDetails(){
-        getAllAddresses({oppId : this.recordId}).then(data => {
+        debugger;
+        getOppRecord({oppId:this.recordId}).then(data=>{
             if(data){
-                debugger;
-                this.isLoaded = true;
-                let clonedData = JSON.parse(JSON.stringify(data));
-                this.oppRecord = clonedData.Opportunity;
-                if(this.oppRecord.Amount==null || this.oppRecord.TotalOpportunityQuantity==null){
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Field not found',
-                            message: 'Amount and quantity not found',
-                            variant: 'error',
-                        }),
-                    );
-                    this.closePopup();
-                }
-                
-                this.oppRecord.OpportunityLineItems && this.oppRecord.OpportunityLineItems.forEach(prod=>{
-                    let obj = {...prod};
-                    obj.quantityChoosed = obj.Quantity;
-                    obj.amountChoosed = obj.TotalPrice;
-                    obj.remainingQuantity = obj.Quantity;
-                    obj.remainingAmount = obj.TotalPrice;
-                    obj.quantityUnit = obj.Quantity_Unit__c;
-                    obj.PackagingType = obj.Packaging_Type__c;
-                    obj.FERT_Code = obj.FERT_Code__c;
-
-                    delete obj.Packaging_Type__c;
-                    this.prodList.push(obj);
-                })
-
-                console.log('prodList',this.prodList);
-                this.prodListResp = this.prodList;
+            
+                this.oppRecord = data[0];
+                    this.isLoaded = true;
     
-                this.hasLoaded = true;
-                console.log('RecordId',this.recordId);
-                console.log('Data',data);     
-
-                this.ship_addresses = clonedData.customer_ship_addresses;
-                this.bill_addresses = clonedData.customer_bill_addresses;
-                this.selectedAddressIndex = clonedData.ship_selected_index != undefined ? clonedData.ship_selected_index : -1;
-                this.selectedBilAddressIndex = clonedData.bill_selected_index != undefined ? clonedData.bill_selected_index : -1;
-                console.log('RecordId', this.recordId);
-                console.log('Data',clonedData);
-                if(this.ship_addresses && this.bill_addresses ){
-                    this.nextBtn = false;
-                }else{
-                    this.nextBtn = true;
-                }
+                    if(this.oppRecord.Amount==null || this.oppRecord.Amount==0 || this.oppRecord.TotalOpportunityQuantity==null || this.oppRecord.TotalOpportunityQuantity==0){
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Field not found',
+                                message: 'Amount and quantity not found',
+                                variant: 'error',
+                            }),
+                        );
+                        this.closePopup();
+                    }
+                    
+                    this.oppRecord.OpportunityLineItems && this.oppRecord.OpportunityLineItems.forEach(prod=>{
+                        let obj = {...prod};
+                        obj.quantityChoosed = obj.Quantity;
+                        obj.amountChoosed = obj.TotalPrice;
+                        obj.remainingQuantity = obj.Quantity;
+                        obj.remainingAmount = obj.TotalPrice;
+                        obj.quantityUnit = obj.Quantity_Unit__c;
+                        obj.PackagingType = obj.Packaging_Type__c;
+                        obj.FERT_Code = obj.FERT_Code__c;
+    
+                        delete obj.Packaging_Type__c;
+                        this.prodList.push(obj);
+                    })
+    
+                    console.log('prodList',this.prodList);
+                    this.prodListResp = this.prodList;
+        
+                    this.hasLoaded = true;
+                    console.log('RecordId',this.recordId);
+                    console.log('Data',data);       
             }
-       })
+        })
     }
 
-    onAddressSelect(event) {
-        debugger;
-        let addressId = event.currentTarget.dataset.id;
-        let selectedIndex = event.currentTarget.dataset.index;
-         this.checkedShipAdd = event.target.checked;
-         if(this.checkedBillAdd==undefined){
-              this.checkedBillAdd=true;
-          }   
-        if(addressId && selectedIndex ) {
-            if(this.selectedAddressIndex !== -1)
-                this.ship_addresses[this.selectedAddressIndex].checked = false;
-            this.ship_addresses[selectedIndex].checked = true;
-            this.selectedAddressIndex = selectedIndex;
-        }
-         if(this.checkedShipAdd &&  this.checkedBillAdd ){
-                this.nextBtn = false;
-        }else{
-              this.nextBtn = true;
-        }
-        
-    }
+    // @wire(getOppRecord,{oppId:'$recordId'})
+    // recordDetails({data,error}){
+    //     console.log("RecordId------",this.recordId);
+    //     debugger;
+    //     if(data){
+            
+    //         this.oppRecord = data[0];
+    //         //if(this.oppRecord.Child_Opp__c == 0){
+    //             this.isLoaded = true;
 
-    onBillAddressSelect(event) {
-        debugger;
-        let addressId = event.currentTarget.dataset.id;
-        let selectedIndex = event.currentTarget.dataset.index;
-         this.checkedBillAdd = event.target.checked;   
-          if(this.checkedShipAdd==undefined){
-              this.checkedShipAdd=true;
-          }
-        if(addressId && selectedIndex ) {
-            if(this.selectedBilAddressIndex !== -1)
-                this.bill_addresses[this.selectedBilAddressIndex].checked = false;
-            this.bill_addresses[selectedIndex].checked = true;
-            this.selectedBilAddressIndex = selectedIndex;
-        }
-         if(this.checkedShipAdd &&  this.checkedBillAdd ){
-                this.nextBtn = false;
-        }else{
-              this.nextBtn = true;
-        }
-    }
+    //             if(this.oppRecord.Amount==null || this.oppRecord.TotalOpportunityQuantity==null){
+    //                 this.dispatchEvent(
+    //                     new ShowToastEvent({
+    //                         title: 'Field not found',
+    //                         message: 'Amount and quantity not found',
+    //                         variant: 'error',
+    //                     }),
+    //                 );
+    //                 this.closePopup();
+    //             }
+                
+    //             this.oppRecord.OpportunityLineItems && this.oppRecord.OpportunityLineItems.forEach(prod=>{
+    //                 let obj = {...prod};
+    //                 obj.quantityChoosed = obj.Quantity;
+    //                 obj.amountChoosed = obj.TotalPrice;
+    //                 obj.remainingQuantity = obj.Quantity;
+    //                 obj.remainingAmount = obj.TotalPrice;
+    //                 obj.quantityUnit = obj.Quantity_Unit__c;
+    //                 obj.PackagingType = obj.Packaging_Type__c;
+    //                 obj.FERT_Code = obj.FERT_Code__c;
 
-    handleNavigate() {
-        debugger;
-        let index = this.ship_addresses.findIndex((item) => {
-            return item.checked === true;
-        });
+    //                 delete obj.Packaging_Type__c;
+    //                 this.prodList.push(obj);
+    //             })
 
-        let billingIndex = this.bill_addresses.findIndex((item) => {
-            return item.checked === true;
-        });
-        if(index === -1 || billingIndex === -1) {
-            const evt = new ShowToastEvent({
-                title: "No Selection",
-                message: "Please select Shipping and Billing address in-order to proceed.",
-                variant: "Warning",
-            });
-            this.dispatchEvent(evt);
-            return;
-        }
+    //             console.log('prodList',this.prodList);
+    //             this.prodListResp = this.prodList;
+    
+    //             this.hasLoaded = true;
+    //             console.log('RecordId',this.recordId);
+    //             console.log('Data',data);
+    //         //}
 
-        let selectedAddress = this.ship_addresses[index];
-        this.addressId = selectedAddress.id;
-        this.accShipAddress = false;
+    //         // else{
+    //         //     const evt = new ShowToastEvent({
+    //         //         title: 'ERROR',
+    //         //         message: 'You cannot continue with this action if there are child opps associated with it',
+    //         //         variant: 'error',
+    //         //         mode: 'sticky'
+    //         //     });
+    //         //     this.dispatchEvent(evt);             
 
-        let selectedBillingAddress = this.bill_addresses[billingIndex];
-        this.billAddressId = selectedBillingAddress.id;
-        this.accountBillAddress = false;
-        
-        if(selectedAddress.id === 'Shipping') {
-            this.addressId = undefined;
-            this.accShipAddress = true;
-        }
-        
-        if(selectedBillingAddress.id === 'Billing') {
-            this.billAddressId = undefined;
-            this.accountBillAddress = true;
-        }
-        
-        this.showNextScreen = true;
-    }    
+    //         // }            
+    //     }
+
+    //     if(error){
+    //         console.log("Error",error);
+    //     }
+    // }
 
     addNewSplit(){
         debugger;
@@ -255,34 +205,12 @@ export default class OppSplitParent extends NavigationMixin(LightningElement) {
         debugger;
         let cSplits = [];
         this.isLoaded = false;
-
-        let billingAddress = this.bill_addresses.find(item=>item.checked);
-        let shippingAddress = this.ship_addresses.find(item=>item.checked);
-
         this.childSplits.forEach(split=>{
             let closeDate = new Date(split.closeDate);
             let nextOrderDate = new Date(split.nextOrderDate);
 
             split.closeDate = this.formatDate(closeDate);
             split.nextOrderDate = this.formatDate(nextOrderDate);
-            
-            split.billCity = billingAddress.city;
-            split.billState = billingAddress.state;
-            split.billStreet = billingAddress.street;
-            split.billCountry = billingAddress.postalCode;
-            split.billCode = billingAddress.postalCode;
-
-            split.shipCity = shippingAddress.city;
-            split.shipState = shippingAddress.state;
-            split.shipStreet = shippingAddress.street;
-            split.shipCode = shippingAddress.postalCode;
-            split.shipCountry = shippingAddress.country;
-
-            split.customShippingAddress = this.addressId;
-            split.accountShipAddress = this.accShipAddress;
-            split.customBillingAddress = this.billAddressId;
-            split.accountBillAddress = this.accountBillAddress;
-                
             cSplits.push(split);
         })
 
@@ -308,9 +236,9 @@ export default class OppSplitParent extends NavigationMixin(LightningElement) {
     }
 
     formatDate(date){
-        //return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
         return (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
     }
+
 
     showToast(title,message,variant){
         const evt = new ShowToastEvent({
@@ -323,9 +251,20 @@ export default class OppSplitParent extends NavigationMixin(LightningElement) {
 
     refreshPage(){
         this.dispatchEvent(new CloseActionScreenEvent());
+        //window.location.reload();
         if(window && this.recordId) {
             window.location.href='/lightning/r/Opportunity/'+this.recordId+'/view';
         }
+        /* if(this.recordId) {
+            this[NavigationMixin.Navigate]({
+                type: 'standard__recordPage',
+                attributes: {
+                    recordId: this.recordId,
+                    objectApiName: 'Opportunity', // objectApiName is optional
+                    actionName: 'view'
+                }
+            });
+        } */
     }
 
     closeAlert(){

@@ -92,7 +92,7 @@ public without sharing class SampleTriggerHandler {
         String projectRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Sample').getRecordTypeId();
         Map<String,Boolean> checkValues = new Map<String,Boolean>();
         Map<Id,Project__c> samples = new Map<Id,Project__c>();
-        Map<Id,Project__c> projects = new Map<Id,Project__c>([Select Id,Name,Sampling_Quantity_Unit__c,Parent_Project__c,Auto_Submit_Sample__c,Account__r.OwnerId,Expected_Annual_Value__c,End_Use_category__c,End_Use_Applications__c,Account__c,Opportunity_Close_Date__c,Sampling_Quantity_details__c ,CurrencyIsoCode, Account__r.Customer_Contact__r.MailingCity, Account__r.Customer_Contact__r.MailingState, Account__r.Customer_Contact__r.MailingCountry, Account__r.Customer_Contact__r.MailingPostalCode, Account__r.Customer_Contact__r.MailingStreet, Account__r.ShippingCity, Account__r.ShippingState, Account__r.ShippingCountry, Account__r.ShippingPostalCode, Account__r.ShippingStreet, Account__r.Customer_Contact__r.MailingAddress, (Select Id,Product_Name__c,Name,SSC_Code__c,Description__c From Project_Quotients__r) From Project__c Where Id In :projectIds]);
+        Map<Id,Project__c> projects = new Map<Id,Project__c>([Select Id,Name,Opportunity__c,Sampling_Quantity_Unit__c,Parent_Project__c,Auto_Submit_Sample__c,Opportunity__r.Account.OwnerId,Expected_Annual_Value__c,End_Use_category__c,End_Use_Applications__c,Account__c,Opportunity_Close_Date__c,Sampling_Quantity_details__c ,CurrencyIsoCode, Opportunity__r.Account.Customer_Contact__r.MailingCity, Opportunity__r.Account.Customer_Contact__r.MailingState, Opportunity__r.Account.Customer_Contact__r.MailingCountry, Opportunity__r.Account.Customer_Contact__r.MailingPostalCode, Opportunity__r.Account.Customer_Contact__r.MailingStreet, Opportunity__r.Account.ShippingCity, Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingCountry, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.Customer_Contact__r.MailingAddress, (Select Id,Product_Name__c,Name,SSC_Code__c,Description__c From Project_Quotients__r) From Project__c Where Id In :projectIds]);
         Map<Id,List<Sample_Line_Item__c>> projSampleLineItemMap = new Map<Id,List<Sample_Line_Item__c>>();
 
         for(Project__c proj : projects.values()){
@@ -100,6 +100,7 @@ public without sharing class SampleTriggerHandler {
             Project__c sample = new Project__c();
             sample.RecordTypeId = projectRecId;
             sample.Account__c = !String.isEmpty(proj.Account__c)?proj.Account__c:null;
+            sample.Opportunity__c = !String.isEmpty(proj.Opportunity__c)?proj.Opportunity__c:null;
             sample.Sample_Name__c = proj.Name + ' - Sample';
             sample.CurrencyIsoCode = proj.CurrencyIsoCode;
             sample.Opportunity_Close_Date__c = proj.Opportunity_Close_Date__c;
@@ -107,20 +108,20 @@ public without sharing class SampleTriggerHandler {
             sample.End_Use_Applications__c = !String.isEmpty(proj.End_Use_Applications__c)?proj.End_Use_Applications__c : '';
             sample.Expected_Annual_Value__c = proj.Expected_Annual_Value__c ;
             sample.Sample_Project__c = proj.Id;
-            sample.OwnerId = proj.Account__r.OwnerId;
+            sample.OwnerId = proj.Opportunity__r.Account.OwnerId;
             //Add address fields here.
-            if(proj.Account__r.Customer_Contact__c != null && proj.Account__r.Customer_Contact__r.MailingAddress != null) {
-                sample.City__c = proj.Account__r.Customer_Contact__r.MailingCity;
-                sample.State__c = proj.Account__r.Customer_Contact__r.MailingState;
-                sample.Country__c = proj.Account__r.Customer_Contact__r.MailingCountry;
-                sample.Postal_Code__c = proj.Account__r.Customer_Contact__r.MailingPostalCode;
-                sample.Street__c = proj.Account__r.Customer_Contact__r.MailingStreet; 
+            if(proj.Opportunity__r.Account.Customer_Contact__c != null && proj.Opportunity__r.Account.Customer_Contact__r.MailingAddress != null) {
+                sample.City__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCity;
+                sample.State__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingState;
+                sample.Country__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCountry;
+                sample.Postal_Code__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingPostalCode;
+                sample.Street__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet; 
             }else {
-                sample.City__c = proj.Account__r.ShippingCity;
-                sample.State__c = proj.Account__r.ShippingState;
-                sample.Country__c = proj.Account__r.ShippingCountry;
-                sample.Postal_Code__c = proj.Account__r.ShippingPostalCode;
-                sample.Street__c = proj.Account__r.ShippingStreet;
+                sample.City__c = proj.Opportunity__r.Account.ShippingCity;
+                sample.State__c = proj.Opportunity__r.Account.ShippingState;
+                sample.Country__c = proj.Opportunity__r.Account.ShippingCountry;
+                sample.Postal_Code__c = proj.Opportunity__r.Account.ShippingPostalCode;
+                sample.Street__c = proj.Opportunity__r.Account.ShippingStreet;
             }
             
             samples.put(proj.Id,sample);

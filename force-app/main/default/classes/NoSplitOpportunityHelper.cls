@@ -10,7 +10,12 @@ public class NoSplitOpportunityHelper {
                 
                 parentOpportunity = [Select Id, Name, AccountId, CloseDate, Customer_Followup_Date__c, Customer_response__c, Description, SyncedQuoteId,CurrencyIsoCode,
                                      TotalOpportunityQuantity, Probability,LeadSource, Next_Order_Date__c, NextStep, Sample__c,Reason_For_Loss_del__c,Primary_Contact__c,
-                                     StageName, Type,Distributer_Customer__c,End_Use_Application__c,	End_Use_Category__c From Opportunity Where Id = :oppId];
+                                     StageName, Type, Distributer_Customer__c,End_Use_Application__c, End_Use_Category__c,
+                                     Account_Billing_Address__c, Customer_Billing_Address__c, Account_Shipping_Address__c, Customer_Shipping_Address__c, 
+                                     Shipping_Country__c, Shipping_Postal_Code__c, Shipping_Street__c, Shipping_State__c, Shipping_City__c, 
+                                     Billing_Country__c, Billing_Postal_Code__c, Billing_Street__c, Billing_City__c, Billing_State__c, 
+                                     Actual_Annual_Potential_Value__c, Target_Price_Kg__c, Annual_Volume_Full__c, Annual_Volume_in_units__c, End_Use_Application_Other__c	
+                                     From Opportunity Where Id = :oppId];
                 
                 productToBeInserted = [SELECT Id, OpportunityId, SortOrder, ServiceDate, Discount, Quantity, PricebookEntryId, Product2Id, Sales_Order__c,
                                        Primary__c, Secondary__c, Tertiary__c, Customized_Label__c, Symega_Logo__c, Material_Sector__c, Pvt_Label_Selling_Price__c,
@@ -41,7 +46,7 @@ public class NoSplitOpportunityHelper {
                         oneTimeOppRec.StageName  = 'New';
                         oneTimeOppRec.Probability    = parentOpportunity[0].Probability ;
                         oneTimeOppRec.Description = parentOpportunity[0].Description ;
-                        oneTimeOppRec.Sample__c  = parentOpportunity[0].Sample__c ;
+                        //oneTimeOppRec.Sample__c  = parentOpportunity[0].Sample__c ;
                         oneTimeOppRec.SyncedQuoteId  = parentOpportunity[0].SyncedQuoteId ;
                         oneTimeOppRec.Reason_For_Loss_del__c  = parentOpportunity[0].Reason_For_Loss_del__c ;
                         oneTimeOppRec.Customer_response__c  = parentOpportunity[0].Customer_response__c ;
@@ -52,6 +57,30 @@ public class NoSplitOpportunityHelper {
                         oneTimeOppRec.CurrencyIsoCode = parentOpportunity[0].CurrencyIsoCode ;
                         oneTimeOppRec.End_Use_Category__c = parentOpportunity[0].End_Use_Category__c;
                         oneTimeOppRec.End_Use_Application__c = parentOpportunity[0].End_Use_Application__c;
+                        oneTimeOppRec.End_Use_Application_Other__c = parentOpportunity[0].End_Use_Application_Other__c;
+                        
+                        oneTimeOppRec.Annual_Volume_Full__c = parentOpportunity[0].Annual_Volume_Full__c;
+                        oneTimeOppRec.Annual_Volume_in_units__c = parentOpportunity[0].Annual_Volume_in_units__c;
+                        oneTimeOppRec.Target_Price_Kg__c = parentOpportunity[0].Target_Price_Kg__c;
+                        oneTimeOppRec.Actual_Annual_Potential_Value__c = parentOpportunity[0].Actual_Annual_Potential_Value__c;
+                        
+                        oneTimeOppRec.Billing_City__c = parentOpportunity[0].Billing_City__c;
+                        oneTimeOppRec.Billing_State__c = parentOpportunity[0].Billing_State__c;
+                        oneTimeOppRec.Billing_Street__c = parentOpportunity[0].Billing_Street__c;
+                        oneTimeOppRec.Billing_Postal_Code__c = parentOpportunity[0].Billing_Postal_Code__c;
+                        oneTimeOppRec.Billing_Country__c = parentOpportunity[0].Billing_Country__c;
+                        
+                        oneTimeOppRec.Shipping_City__c = parentOpportunity[0].Shipping_City__c;
+                        oneTimeOppRec.Shipping_State__c = parentOpportunity[0].Shipping_State__c;
+                        oneTimeOppRec.Shipping_Street__c = parentOpportunity[0].Shipping_Street__c;
+                        oneTimeOppRec.Shipping_Postal_Code__c = parentOpportunity[0].Shipping_Postal_Code__c;
+                        oneTimeOppRec.Shipping_Country__c = parentOpportunity[0].Shipping_Country__c;
+                        
+                        oneTimeOppRec.Customer_Shipping_Address__c = parentOpportunity[0].Customer_Shipping_Address__c;
+                        oneTimeOppRec.Account_Shipping_Address__c = parentOpportunity[0].Account_Shipping_Address__c;
+                        oneTimeOppRec.Customer_Billing_Address__c =  parentOpportunity[0].Customer_Billing_Address__c;
+                        oneTimeOppRec.Account_Billing_Address__c = parentOpportunity[0].Account_Billing_Address__c;
+                        
                         insert oneTimeOppRec;
                         
                         
@@ -99,7 +128,7 @@ public class NoSplitOpportunityHelper {
             excep.setMessage(ex.getMessage());
             throw excep;
             /*system.debug('Error==>'+ex.getMessage());
-              system.debug('Error@@==>'+ex.getLineNumber());*/
+system.debug('Error@@==>'+ex.getLineNumber());*/
         }
     }
     
@@ -204,8 +233,8 @@ public class NoSplitOpportunityHelper {
                         system.debug('---'+productList);
                         if(!productList.isEmpty()){
                             insert productList;
-                            parentOpportunity[0].StageName = 'In-Progress';
-                            update parentOpportunity[0];
+                            //parentOpportunity[0].StageName = 'In-Progress';
+                            //update parentOpportunity[0];
                             return 'SUCCESS';
                         }                            
                     }
@@ -218,11 +247,11 @@ public class NoSplitOpportunityHelper {
             return ex.getMessage();
             
             /*  AuraHandledException excep = new AuraHandledException('');
-                excep.setMessage(ex.getMessage());
-                throw excep;            
-                system.debug('Error==>'+ex.getMessage());
-                system.debug('Error@@==>'+ex.getLineNumber());
-           */
+excep.setMessage(ex.getMessage());
+throw excep;            
+system.debug('Error==>'+ex.getMessage());
+system.debug('Error@@==>'+ex.getLineNumber());
+*/
         }
     }
     

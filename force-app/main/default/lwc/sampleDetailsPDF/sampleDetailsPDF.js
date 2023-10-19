@@ -1,19 +1,37 @@
 import { LightningElement,api,wire,track } from 'lwc';
-import savePDF from '@salesforce/apex/SampleInvoicePDFController.savePDF'
+import getProjectRecord from '@salesforce/apex/SampleInvoicePDFController.getProjectRecord';
+import savePDF from '@salesforce/apex/SampleInvoicePDFController.savePDF';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import challanLink from '@salesforce/label/c.SampleInvoiceLink'; 
+import exportSampleURL from '@salesforce/label/c.SampleInvoiceLink'; 
+import domesticSampleURL from '@salesforce/label/c.Domestic_Sample_Invoice_URL'; 
+
 export default class SampleDetailsPDF extends LightningElement {
 
     @api recordId;
     @track urlUsed;
        
-     connectedCallback(){
-         debugger;
+    connectedCallback(){
+        debugger;
         setTimeout(() => {
-             this.urlUsed = challanLink + this.recordId;
-         },300);
-     }
+            //this.urlUsed = exportSampleURL + this.recordId;
+            this.getRecord();
+        },300);
+    }
+
+    getRecord(){
+        debugger;
+        getProjectRecord({ smpleId : this.recordId}).then(data=>{
+            debugger;
+            console.log('Data',data);
+            if(data.Shipping_Type__c == 'Export'){
+                this.urlUsed = exportSampleURL + this.recordId;
+            }
+            else if(data.Shipping_Type__c == 'Domestic'){
+                this.urlUsed = domesticSampleURL + this.recordId;
+            }
+        })
+    }
 
     savePDF(){
         debugger;
@@ -38,7 +56,5 @@ export default class SampleDetailsPDF extends LightningElement {
         });
         this.dispatchEvent(evt);
     }
-
-
 
 }

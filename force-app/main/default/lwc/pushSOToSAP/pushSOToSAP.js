@@ -9,6 +9,10 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class PushSOToSAP extends LightningElement {
 
     @api recordId;
+    initiallySubmitted = false;
+    showAccountPage = false;
+    showSpinner = true;
+    accRecId;
 
     connectedCallback(){
         setTimeout(() => {
@@ -18,12 +22,20 @@ export default class PushSOToSAP extends LightningElement {
 
     getRecordDetails(){
         getLineItemDet({recId : this.recordId}).then(data => {
-
-            if(data == false){
+            this.showSpinner = false;
+            if(data.fertCodesPresentForAll == false){
                 this.showToast('Error','FERT Code missing','error');
                 this.closePopup();
-            }else{
-                this.sendSONotification();
+            }
+            else{
+                if(data.accountFieldsMissing == false){
+                    this.sendSONotification();
+                }
+                else{
+                    this.accRecId = data.accRecId;
+                    this.showAccountPage = true;
+                    this.initiallySubmitted = data.initiallySubmitted;
+                }
             }
         })
     }
@@ -77,12 +89,18 @@ export default class PushSOToSAP extends LightningElement {
         setTimeout(()=>window.location.reload(),1500);
     }
 
-     showToast(title,message,variant){
+    showToast(title,message,variant){
         const evt = new ShowToastEvent({
             title: title,
             message: message,
             variant: variant,
         });
         this.dispatchEvent(evt);
+    }
+
+    handleSuccess(){
+        debugger;
+        this.showToast('Success', 'Account updated successfully', 'success');
+        this.showAccountPage = false;
     }
 }

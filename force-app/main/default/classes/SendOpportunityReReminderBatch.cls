@@ -1,7 +1,7 @@
 public without sharing class SendOpportunityReReminderBatch implements Database.Batchable <Sobject>{
     
     public Database.QueryLocator Start(Database.BatchableContext bc){
-        return Database.getQueryLocator ('SELECT Name, CloseDate, StageName, OwnerId FROM Opportunity WHERE StageName != \'Closed Won\' AND Last_Opp_Closure_Reminder_Date__c = LAST_N_DAYS:1 AND RecordType.Name = \'One Time\' ' );
+        return Database.getQueryLocator ('SELECT Name, CloseDate, StageName, OwnerId FROM Opportunity WHERE StageName != \'Closed Won\' AND StageName != \'Closed Lost\' AND Last_Opp_Closure_Reminder_Date__c = LAST_N_DAYS:1 AND RecordType.Name = \'One Time\' ' );
     }
     
     public void Execute(Database.BatchableContext bc, List<Opportunity> oppList){

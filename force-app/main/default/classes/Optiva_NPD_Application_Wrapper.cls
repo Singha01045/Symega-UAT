@@ -27,6 +27,22 @@ public without sharing class Optiva_NPD_Application_Wrapper {
     
     
     //NEW ADDITIONS 
-    public Integer pulp_percent = 0 ;
+    public String pulp_percent = '0.0' ;
     public String account = 'NA';
+    public String account_segment = 'NA';
+    public String acidity_percent = '0.0' ;
+    public String additive_status = 'NA';
+    public String brix = '0';
+    public String center_filling_cream = '0.0';
+    public String cust_name = 'NA';
+    public String fat = '0.0';
+    public String final_snf = '0.0';
+    public String milk_solids = '0.0';
+    public String oil_sprinkle = '0.0';
+    public String pH = '0';
+    public String pref_thick_Visco = '0';
+    public String processing_cond = 'NA';
+    public String prod_type = 'NA';
+    public String recipe_cost = '0.0';
+    public String start_date; //8/24/2021
 }

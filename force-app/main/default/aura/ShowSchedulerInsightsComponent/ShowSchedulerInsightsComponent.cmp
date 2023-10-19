@@ -1,0 +1,32 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="Scheduler_Insight_MonthYear_handler">
+    <aura:attribute name="ShowToCreateMonthlyBeatPlan" type="Boolean" default="false"/>
+    <aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/>
+    <aura:attribute name="selectedMonthNumber" type="Integer" />
+    <aura:attribute name="selectedMonth" type="String" />
+    <aura:attribute name="selectedYear" type="String" />
+    <aura:attribute name="MonthlyBeatPlanDataList" type="sObject" default="{sObjecttype:'Monthly_Beat_Plan__c'}"/>  
+    <aura:attribute name="userName" type="String" />
+    
+    <div class="DashboardScheduler" >
+        <div class="slds-align_absolute-center">
+          <c:SchedulerDayBarComponent/>
+        </div>
+        
+        <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
+        <div>
+          <c:SchedulerInsightsMonthYear MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
+        </div>
+        <div class="monthMargin">
+           <c:SchedulerInsightsProgressRing selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
+        </div>
+        <div class="tableMargin">
+           <c:SchedulerInsightsDataTable/>
+        </div>
+        </aura:if>
+        <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
+            <div style="margin-top:1%; margin-left:1.5%; margin-right:1%">
+                <c:SchedulerInsightNoRecordPage />
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

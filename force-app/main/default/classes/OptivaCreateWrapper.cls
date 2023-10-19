@@ -9,7 +9,7 @@ public without sharing class OptivaCreateWrapper {
         OpWrapper.last_name = 'NA';
         OpWrapper.first_name = 'NA';
         OpWrapper.project_sf_code = checkIfBlank(project.Id);    
-        OpWrapper.cust_code = checkIfBlank(project.Account__r.Customer_Code_OPTIVA__c);
+        OpWrapper.cust_code = project.Opportunity__r.Account_Billing_Address__c ? checkIfBlank(project.Opportunity__r.Account.Customer_Code_OPTIVA__c) : project.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c;
 
         OpWrapper.project_title = checkIfBlank(project.Name) + ':' + checkIfBlank(project.Sample_Name__c);
         OpWrapper.project_type = 'External';//checkIfBlank(project.Project_Type__c);
@@ -94,7 +94,7 @@ public without sharing class OptivaCreateWrapper {
         OpAppWrapper.project_category = checkIfBlank(project.Product_Family__c);//checkIfBlank(project.Project_Category__c);
         OpAppWrapper.opp_type_int = 'Sales';//checkIfBlank(project.Opportunity_Type__c);
         OpAppWrapper.opp_sub_type_sales = 'Application';//checkIfBlank(project.Opportunity_Sub_Type__c);
-        OpAppWrapper.cust_code = checkIfBlank(project.Account__r.Customer_Code_OPTIVA__c);
+        OpAppWrapper.cust_code = project.Opportunity__r.Account_Billing_Address__c ? checkIfBlank(project.Opportunity__r.Account.Customer_Code_OPTIVA__c) : project.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c;
         OpAppWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
         OpAppWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
         OpAppWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'NA';
@@ -113,6 +113,27 @@ public without sharing class OptivaCreateWrapper {
         OpAppWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'NA';
         OpAppWrapper.target_date = project.Target_Date__c!=null?formatDate(project.Target_Date__c):'NA';
 
+
+        //NEW ADDITIONS
+        OpAppWrapper.pulp_percent = project.of_pulp_if_with_fruit_pulp__c != null ? String.valueOf(project.of_pulp_if_with_fruit_pulp__c) : '0';
+        OpAppWrapper.account = checkIfBlank(project.Account__c);
+        OpAppWrapper.account_segment = checkIfBlank(project.Account_Segment__c);
+        OpAppWrapper.acidity_percent = project.Acidity__c != null ? String.valueOf(project.Acidity__c) : '0';
+        OpAppWrapper.additive_status = checkIfBlank(project.Additive_Status__c);
+        OpAppWrapper.brix = project.Brix_degrees__c != null ? String.valueOf(project.Brix_degrees__c) : '0';
+        OpAppWrapper.center_filling_cream = project.Center_filling_Cream__c != null ? String.valueOf(project.Center_filling_Cream__c) : '0';
+        OpAppWrapper.cust_name = checkIfBlank(project.Customer_Name__c);
+        OpAppWrapper.fat = project.Fat__c != null ? String.valueOf(project.Fat__c) : '0';
+        OpAppWrapper.final_snf = project.Final_SNF__c != null ? String.valueOf(project.Final_SNF__c) : '0';
+        OpAppWrapper.milk_solids = project.Milk_Solids__c != null ? String.valueOf(project.Milk_Solids__c) : '0';
+        OpAppWrapper.oil_sprinkle = project.Oil_sprinkling_Dust_on__c != null ? String.valueOf(project.Oil_sprinkling_Dust_on__c) : '0';
+        OpAppWrapper.pH = project.pH__c != null ? String.valueOf(project.pH__c) : '0';
+        OpAppWrapper.pref_thick_Visco = project.Preferred_thickness_Viscosity__c != null ? String.valueOf(project.Preferred_thickness_Viscosity__c) : '0';
+        OpAppWrapper.processing_cond = checkIfBlank(project.Processing_condition__c);
+        OpAppWrapper.prod_type = checkIfBlank(project.Product_Type__c);
+        OpAppWrapper.recipe_cost = project.Recipe_Cost__c != null ? String.valueOf(project.Recipe_Cost__c) : '0';
+        OpAppWrapper.start_date = project.Start_Date__c != null ? formatDate(project.Start_Date__c) : 'NA';
+
         return OpAppWrapper;
     }
 
@@ -127,7 +148,7 @@ public without sharing class OptivaCreateWrapper {
             OpWrapper.project_category = checkIfBlank(project.Product_Family__c);//checkIfBlank(project.Project_Category__c);
             OpWrapper.opp_type_int = 'Development';//checkIfBlank(project.Opportunity_Type__c);
             OpWrapper.opp_sub_type_sales = 'NPD';//checkIfBlank(project.Opportunity_Sub_Type__c);
-            OpWrapper.cust_code = checkIfBlank(project.Account__r.Customer_Code_OPTIVA__c);
+            OpWrapper.cust_code = project.Opportunity__r.Account_Billing_Address__c ? checkIfBlank(project.Opportunity__r.Account.Customer_Code_OPTIVA__c) : project.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c;
             OpWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
             OpWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
             OpWrapper.cust_target_price = project.Customer_Target_price__c!=null?String.valueOf(project.Customer_Target_price__c):'NA';
@@ -165,6 +186,15 @@ public without sharing class OptivaCreateWrapper {
             OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'NA';
             OpWrapper.cust_launch_date = project.Customer_Launch_Date__c!=null?formatDate(project.Customer_Launch_Date__c):'NA';
             OpWrapper.sample_duedate1 = project.First_Sample_due_date__c!=null?formatDate(project.First_Sample_due_date__c):'NA';
+
+
+            //NEW ADDITIONS
+            OpWrapper.account_segment = checkIfBlank(project.Account_Segment__c);
+            OpWrapper.cust_name = checkIfBlank(project.Customer_Name__c);
+            OpWrapper.expec_shelf_life = checkIfBlank(project.Expected_Shelf_Life__c);
+            OpWrapper.prod_type = checkIfBlank(project.Product_Type__c);
+            OpWrapper.start_date = project.Start_Date__c != null ? formatDate(project.Start_Date__c) : 'NA';
+
         }
         return OpWrapper;
     }
@@ -174,7 +204,7 @@ public without sharing class OptivaCreateWrapper {
     }
 
     public static String checkIfBlank(String s){
-        return String.isBlank(s)?'NA':s;
+        return String.isBlank(s) || s == null ? 'NA' : s;
     }
 
 }

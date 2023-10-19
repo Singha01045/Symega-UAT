@@ -47,6 +47,9 @@ public without sharing class Optiva_NPDCreationWrapper {
     
     //NEW ADDITIONS 
     public String account_segment='NA';
-    public String account_segmen2t='NA';
+    public String cust_name = 'NA';
+    public String expec_shelf_life = 'NA';
+    public String prod_type = 'NA';
+    public String start_date; //8/24/2021
 	
 }

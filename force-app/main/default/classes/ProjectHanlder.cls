@@ -30,7 +30,8 @@ public without sharing class ProjectHanlder {
         try {
             if(String.isBlank(id))
                 return null;
-            return [Select Id, Name, AccountId, Account.Name, Account.Customer_Contact__c, Amount,
+            return [Select Id, CloseDate, Primary_Contact__c, End_Use_Application_Other__c, End_Use_Category__c, End_Use_Application__c, Target_Price_Kg__c, Annual_Volume_Full__c, Annual_Volume_in_units__c, Annual_Potential_Value__c, Actual_Annual_Potential_Value__c,
+                    Name, AccountId, Account.Name, Account.Customer_Contact__c, Amount,
                     Billing_City__c, Billing_State__c, Billing_Street__c, Billing_Postal_Code__c, Billing_Country__c, 
                     Shipping_City__c, Shipping_State__c, Shipping_Street__c, Shipping_Postal_Code__c, Shipping_Country__c,
                     CurrencyIsoCode, Proposed_Date_of_Dispatch__c, Pre_carriage_By__c, Port_of_Discharge__c, Place_of_Reciept_by_Pre_Carrier__c,
@@ -46,7 +47,7 @@ public without sharing class ProjectHanlder {
         try {
             if(String.isBlank(id))
                 return null;
-            return [Select Id, Name, CurrencyIsoCode, Proposed_Date_of_Dispatch__c, Pre_carriage_By__c, Port_of_Discharge__c, Place_of_Reciept_by_Pre_Carrier__c,
+            return [Select Id, Name, Target_Price_Kg__c, Annual_Volume_Full__c, Annual_Volume_in_units__c, Annual_Potential_Value__c, Actual_Annual_Potential_Value__c, CurrencyIsoCode, Proposed_Date_of_Dispatch__c, Pre_carriage_By__c, Port_of_Discharge__c, Place_of_Reciept_by_Pre_Carrier__c,
                     Port_of_Loading__c, Vessel_Flight_Name_Voy_No__c, Amount, TotalOpportunityQuantity, AccountId, Freight_charges__c, Include_Freight_Charges__c FROM Opportunity where Id =:id];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());

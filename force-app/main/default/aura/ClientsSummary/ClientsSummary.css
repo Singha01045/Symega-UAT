@@ -1,0 +1,22 @@
+@media (max-width:820px){
+     .THIS .mobileCard{
+         max-width: 37%;
+         margin: 6px;
+         margin-left: 11.5px;
+     } 
+     
+     .THIS .slds-card{
+         min-height:10.3rem;
+     }
+     
+     .THIS .slds-wrap{
+         width:20rem;
+     }
+ }
+ 
+ @media (min-width:820px){
+     .THIS .mobileCard{
+         margin-right:1%; 
+         margin-bottom:1.5%;
+     }
+ }

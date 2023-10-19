@@ -22,6 +22,7 @@ export default class ILogRelatedList extends LightningElement
         { label: 'CreatedDate', fieldName: 'createdDate'},
 
     ];
+    
     @api recordId;
          data = [];
         //columns = columns;

@@ -29,7 +29,6 @@ public without sharing class OptivaCustomerCreation {
         oppWrapper.email = checkIfBlank(acc.Email__c);
         oppWrapper.gstin_number = checkIfBlank(acc.GST_number__c);
         oppWrapper.pan_number = checkIfBlank(acc.PAN_Number__c);
-
         
         String body = JSON.serialize(oppWrapper);
         System.debug('BODY)))))======'+body);

@@ -52,6 +52,8 @@ public without sharing class OpportunityTriggerHandler {
             List<Opportunity> oppUpdateList = new List<Opportunity>();
             List<Opportunity> oppUpdateList2 = new List<Opportunity>();
             
+            List<ApprovalWrapper> bhApprovalOppListAnnual = new List<ApprovalWrapper>();
+            
             if(!newOppList.isEmpty()) {
                 for(opportunity opp : newOppList) {
                     if(freshOppMap.get(opp.Id).RecordType.DeveloperName != 'Parent')
@@ -102,6 +104,34 @@ public without sharing class OpportunityTriggerHandler {
                         oppUpdateList2.add(new Opportunity(Id = opp.Id, Approver_Name__c = userByIdMap.get(mdId).Name));
                         mdApprovalMap.put(opp.Id, new ApprovalWrapper(opp, mdId));
                     }
+                    
+                    
+                    //Annual Value change 
+                    if(businessHeadId != Null && opp.Annual_Value_Approval_Status__c != 'Rejected'){
+                        if(opp.Annual_Potential_Value__c != oldOppMap.get(opp.Id).Annual_Potential_Value__c && opp.Annual_Potential_Value__c > 0 && opp.Actual_Annual_Potential_Value__c > 0){
+                            
+                            Integer considerablePercent = Integer.valueOf(System.Label.Percent_for_Annual_Val_consideration);
+                            system.debug('considerablePercent -- ' + considerablePercent);
+                            system.debug('opp.considerablePercent -- ' + opp.Actual_Annual_Potential_Value__c);
+                            
+                            Decimal PercentOfActualValue = 0.5*opp.Actual_Annual_Potential_Value__c.setScale(2);
+                            system.debug('PercentOfActualValue -- ' + PercentOfActualValue);
+                            
+                            if(opp.Annual_Potential_Value__c > opp.Actual_Annual_Potential_Value__c){
+                                Decimal newAddedValue = opp.Actual_Annual_Potential_Value__c + PercentOfActualValue;
+                                if(newAddedValue == opp.Annual_Potential_Value__c){
+                                    bhApprovalOppListAnnual.add(new ApprovalWrapper(opp, businessHeadId));
+                                }
+                            }
+                            
+                            if(opp.Annual_Potential_Value__c < opp.Actual_Annual_Potential_Value__c){
+                                Decimal newSubValue = opp.Actual_Annual_Potential_Value__c - PercentOfActualValue;
+                                if(newSubValue == opp.Annual_Potential_Value__c){
+                                    bhApprovalOppListAnnual.add(new ApprovalWrapper(opp, businessHeadId));
+                                }
+                            }
+                        }
+                    }
                 }
                 
                 if(!oppUpdateList.isEmpty() && !oppUpdateList2.isEmpty())
@@ -124,7 +154,10 @@ public without sharing class OpportunityTriggerHandler {
                     initiateMDApprovalFuture(mdApprovalMap.keySet());
                 }
                 
-                
+                //Added
+                if(!bhApprovalOppListAnnual.isEmpty()) {
+                    initiateBHApprovalForAnnualValChange(bhApprovalOppListAnnual, oppToapprovalRequestMap);
+                }                
                 
             }
         }
@@ -134,6 +167,21 @@ public without sharing class OpportunityTriggerHandler {
             system.debug('Error>>><<'+ex.getLineNumber());
             HandleBusinessException.captureError('OppTriggerHandler', 'initiateApprovalProcess', ex);
         }
+    }
+    
+    //Added By Anjali
+    private void initiateBHApprovalForAnnualValChange(List<ApprovalWrapper> oppWrpList, Map<Id, Approval.ProcessSubmitRequest> oppToapprovalRequestMap) {
+        for(ApprovalWrapper oppWrp: oppWrpList){
+            
+            Approval.ProcessSubmitRequest approvalReq = new Approval.ProcessSubmitRequest();
+            approvalReq.setComments('Submitting for Business Head Annual Value Approval.');
+            approvalReq.setObjectId(oppWrp.opp.Id);
+            approvalReq.setProcessDefinitionNameOrId('Annual_Potential_Value_Updates_Approval');
+            approvalReq.setNextApproverIds(new List<Id> {oppWrp.approverId});
+            oppToapprovalRequestMap.put(oppWrp.opp.Id, approvalReq);
+        }
+        if(!oppToapprovalRequestMap.isEmpty())
+            approvalInitiator(oppToapprovalRequestMap);
     }
     
     private void initiateManagerApproval(List<ApprovalWrapper> oppWrpList, Map<Id, Approval.ProcessSubmitRequest> oppToapprovalRequestMap) {
@@ -152,6 +200,7 @@ public without sharing class OpportunityTriggerHandler {
         if(!oppToapprovalRequestMap.isEmpty())
             approvalInitiator(oppToapprovalRequestMap);
     }
+    
     
     private void initiateBHApproval(List<ApprovalWrapper> oppWrpList, Map<Id, Approval.ProcessSubmitRequest> oppToapprovalRequestMap) {
         for(ApprovalWrapper oppWrp: oppWrpList){

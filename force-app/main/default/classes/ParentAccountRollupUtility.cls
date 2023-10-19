@@ -6,7 +6,7 @@
 
 public without sharing class ParentAccountRollupUtility {
     
-    @future
+    //@future
     public static void processSummaryCalculationFuture(Set<Id> parentAccIdSet) {
 
         Map<Id, Account> childAccountMap = new Map<Id,Account>([SELECT Id, ParentId, (SELECT Id, StageName, Color_Opportunity__c, CPD_Opportunity__c, Flavor_Opportunity__c, Plant_Based_Opportunity__c, SPD_Opportunity__c FROM Opportunities), Number_of_closed_opportunity__c, Number_of_open_opportunity__c, Number_of_Total_Opportunity__c, Number_Of_Won_Opportunity__c, Number_of_won_opportunity_partially_exec__c, Closed_Opportunity_Value__c, COLOR_Opportunity_Closed_Value__c, CPD_Opportunity_Closed_Value__c, FLAVOR_Opportunity_Closed_Value__c, PLANT_BASED_Opportunity_Closed_Value__c, SPD_Opportunity_Closed_Value__c FROM Account WHERE ParentId IN :parentAccIdSet OR Id IN :parentAccIdSet]);

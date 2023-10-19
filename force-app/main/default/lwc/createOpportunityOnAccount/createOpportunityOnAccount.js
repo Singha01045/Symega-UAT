@@ -3,6 +3,7 @@ import getAllAddresses from "@salesforce/apex/ProjectHanlder.getAllCustomerAddre
 import getAccountDetails from '@salesforce/apex/ProjectHanlder.getAccRecord';
 import getRecordTypeId from '@salesforce/apex/ProjectHanlder.getOppRecordTypeId';
 import { encodeDefaultFieldValues } from 'lightning/pageReferenceUtils';
+import { CloseActionScreenEvent } from 'lightning/actions';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class CreateOpportunityOnAccount extends NavigationMixin(LightningElement) {

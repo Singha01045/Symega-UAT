@@ -20,6 +20,10 @@ public class SAP_CUSTOMER_UPDATE_WRAPPER {
     public String BUSINESS_HEAD_NAME;
     public String ACC_OWNER_EMAIL;
     public String DELIVERY_PLANT;
+    
+    //new 
+    public String XCURRENCY;
+    public String TCS;
 
     public List<CUSTOMER_CONTACT_WRAPPER> CUSTOMER_CONTACT_INFO;
 

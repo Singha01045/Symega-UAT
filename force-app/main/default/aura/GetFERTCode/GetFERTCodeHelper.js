@@ -98,37 +98,36 @@
                            });
         $A.enqueueAction(action);
     },
-
+    
     getOppRelatedAccountData : function(component, event) {
-     debugger;
-     var action = component.get("c.getOppRelatedAccountDetails");
-     action.setParams({
-        oppId : component.get("v.recordId")
-     });
-     action.setCallback(this,function(response){
-      if(response.getState() === "SUCCESS"){
-       if(response.getReturnValue() !=null){
-        var tempArray = [];
-        var data = response.getReturnValue();
-        if(data != null){
-            if(data.length!=0){
-             component.set("v.ShowUpdateAccountPage",true);
-            component.set("v.MissingFieldList",data);   
-            }else{
-               component.set("v.ShowUpdateAccountPage",false);
+        debugger;
+        var action = component.get("c.getOppRelatedAccountDetails");
+        action.setParams({
+            oppId : component.get("v.recordId")
+        });
+        action.setCallback(this,function(response){
+            if(response.getState() === "SUCCESS"){
+                if(response.getReturnValue() !=null){
+                    var tempArray = [];
+                    var missingFields = response.getReturnValue();
+                    if(missingFields == true){
+                        component.set("v.ShowUpdateAccountPage",true);
+                        //component.set("v.MissingFieldList",data);   
+                    }
+                    else{
+                        component.set("v.ShowUpdateAccountPage",false);
+                    }
+                }
+            }else if(response.getState() === "ERROR"){
+                var errors = action.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        alert(errors[0].message);
+                    }
+                }
             }
-        }
-       }
-      }else if(response.getState() === "ERROR"){
-        var errors = action.getError();
-        if (errors) {
-            if (errors[0] && errors[0].message) {
-                alert(errors[0].message);
-            }
-        }
-      }
-     });
-     $A.enqueueAction(action);
+        });
+        $A.enqueueAction(action);
     },
     
 })

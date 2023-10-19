@@ -8,13 +8,13 @@ public without sharing class SAP_SaleOrderCreationRestHandler {
     }
 
     public Map<Id, Opportunity> getOpenOpportunityByCustomer(String customerNumber/* , Set<String> fertCodeSet */) {
-        return new Map<Id, Opportunity> ([SELECT Id,(Select Id, Quantity, Quantity_In_KG__c, Quantity_Unit__c, FERT_Code__c, UnitPrice, PricebookEntryId, OpportunityId, Product2Id, Opportunity.Account.Customer_Code_SAP__c, ProductCode FROM OpportunityLineItems /* WHERE  FERT_Code__c IN : fertCodeSet AND FERT_Code__c != null*/) FROM Opportunity WHERE Account.Customer_Code_SAP__c = : customerNumber AND RecordType.Name='One Time' AND StageName != 'Closed Won' AND StageName != 'Closed Lost']);
+        return new Map<Id, Opportunity> ([SELECT Id,(Select Id, Quantity, Quantity_In_KG__c, Quantity_Unit__c, FERT_Code__c, UnitPrice, PricebookEntryId, OpportunityId, Product2Id, Opportunity.Account_Billing_Address__c, Opportunity.Customer_Billing_Address__c, Opportunity.Customer_Billing_Address__r.SAP_Customer_Code__c, Opportunity.Account.Customer_Code_SAP__c, ProductCode FROM OpportunityLineItems /* WHERE  FERT_Code__c IN : fertCodeSet AND FERT_Code__c != null*/) FROM Opportunity WHERE (Account.Customer_Code_SAP__c = : customerNumber OR Customer_Billing_Address__r.SAP_Customer_Code__c =: customerNumber) AND RecordType.Name='One Time' AND StageName != 'Closed Won' AND StageName != 'Closed Lost']);
     }
 
     public Map<String,OpportunityLineItem> getRequestedProducts(Set<String> fertCodeSet,String customerSAPCode){
         Map<String,OpportunityLineItem> prodCodeSet = new Map<String,OpportunityLineItem>();
 
-        List<OpportunityLineItem> olis =  [Select Id, Quantity, Quantity_In_KG__c, Quantity_Unit__c, FERT_Code__c,UnitPrice,PricebookEntryId,Product2Id,Opportunity.Account.Customer_Code_SAP__c,ProductCode From OpportunityLineItem Where FERT_Code__c IN : fertCodeSet AND Opportunity.Account.Customer_Code_SAP__c = :customerSAPCode AND FERT_Code__c!=null AND Opportunity.RecordType.Name='One Time' AND Opportunity.StageName = 'Closed Won' ORDER BY CreatedDate DESC];
+        List<OpportunityLineItem> olis =  [Select Id, Quantity, Quantity_In_KG__c, Quantity_Unit__c, FERT_Code__c,UnitPrice,PricebookEntryId,Product2Id,Opportunity.Account_Billing_Address__c,Opportunity.Account.Customer_Code_SAP__c,Opportunity.Customer_Billing_Address__r.SAP_Customer_Code__c,Opportunity.Customer_Billing_Address__c,ProductCode From OpportunityLineItem Where FERT_Code__c IN : fertCodeSet AND (Opportunity.Account.Customer_Code_SAP__c = :customerSAPCode OR Opportunity.Customer_Billing_Address__r.SAP_Customer_Code__c =: customerSAPCode) AND FERT_Code__c!=null AND Opportunity.RecordType.Name='One Time' AND Opportunity.StageName = 'Closed Won' ORDER BY CreatedDate DESC];
 
         for(OpportunityLineItem opli : olis){
             if(!prodCodeSet.containsKey(opli.FERT_Code__c)) //pick latest fert for pricing

@@ -1,0 +1,1361 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="Scheduler_Insights_Handler">
+    
+    <aura:attribute name="PaginationList1"  type="boolean" default="false" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="visitList" type="List"/>
+    <aura:attribute name="LeadList" type="List"/>
+    <aura:attribute name="EventList" type="List"/>
+    <aura:attribute name="EmailList" type="List"/>
+    <aura:attribute name="OppList" type="List"/>
+    <aura:attribute name="OppNegoList" type="List"/>
+    <aura:attribute name="QuotList" type="List"/>
+    <aura:attribute name="PurchaseOrderList" type="List"/>
+    <aura:attribute name="InvoiceList" type="List"/>
+    <aura:attribute name="TicketList" type="List"/>
+    <aura:attribute name="FeedbackList" type="List"/>
+    
+    <div class="slds-m-left_medium slds-m-right_medium " >
+        <lightning:tabset selectedTabId="one">
+            <lightning:tab label="Beat Status" id="one">
+                <!---BeatStatus Tab-->
+                
+                <!--Table show CSS for Full Display-->
+                <div class="BeatStatusTable ">
+                    <div class="slds-col slds-size_6-of-12 " style="background-color:white; width:98%; margin-top:-1s%;"  >
+                        <lightning:icon iconName='action:update_status' alternativeText='update_status' size='large' title='update_status' class="slds-m-around_small"></lightning:icon>
+                        <!--Table show CSS for Full Display-->
+                        
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Beat Type</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Route</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Client Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Amount" style="color:#FFFFFF;">Status</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Source" style="color:#FFFFFF;">Assigned Date</div>
+                                        </strong>
+                                    </th>                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.visitList}"  var="visit" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <!--a href="javascript:void(0);" onclick="{!c.navigateToOpportunity}"
+                                                       data-recordid="{!visit.Id}"-->
+                                                <b style="color:#6592FD;">{!visit.KPI_Target__r.Name}</b><!--/a-->
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!visit.Route__c}">{!visit.Route__r.Name}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 10rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!visit.Account__r.Name}">{!visit.Account__r.Name}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="LeadSource">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!visit.Visit_Status__c}">{!visit.Visit_Status__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Status">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!visit.Start_Date_Time__c}">
+                                                <lightning:formattedDateTime value="{!visit.Start_Date_Time__c}" year="numeric" month="numeric" day="numeric"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                    
+                    
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.visitList}"  var="visit" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <b style="color:#6592FD;">Beat Number:&nbsp;{!visit.KPI_Target__r.Name}</b>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" title="{!visit.Route__c}">Route:&nbsp;{!visit.Route__r.Name}</div>
+                                <div>Assigned Date:&nbsp;<lightning:formattedDateTime value="{!visit.Start_Date_Time__c}" year="numeric" month="numeric" day="numeric"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!visit.Account__r.Name}">Client Name:&nbsp;{!visit.Account__r.Name}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" title="{!visit.Visit_Status__c}">Status:&nbsp;{!visit.Visit_Status__c}</div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            <!---Prospects Tab-->
+            <lightning:tab label="Prospects" id="two">
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;">
+                    <lightning:icon iconName='standard:lead' alternativeText='lead' size='large' title='lead' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Client Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">First Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Last Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-word-wrap slds-text-align_left slds-has-flexi-word-wrap"
+                                                 title="Emial" style="color:#FFFFFF;">Email</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Source" style="color:#FFFFFF;">Phone</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Source" style="color:#FFFFFF;">Prospect Stage</div>
+                                        </strong>
+                                    </th>   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.LeadList}"  var="lead" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 9rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">
+                                                
+                                                <b style="color:#6592FD;">{!lead.Company}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!lead.FirstName}">{!lead.FirstName}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!lead.LastName}">{!lead.LastName}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="LeadSource">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 10rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!lead.Email}">{!lead.Email}</div>
+                                        </td>
+                                        <td scope="row" data-label="Status">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!lead.Start_Date_Time__c}">{!lead.Phone}</div>
+                                        </td>
+                                        <td scope="row" data-label="Status">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!lead.Lead_Stage__c}">{!lead.Lead_Stage__c}</div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.LeadList}"  var="lead" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div style="display: inline;">Client Name:&nbsp;</div><b style="color:#6592FD;">{!lead.Company}</b>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" title="{!lead.FirstName}">Name:&nbsp;{!lead.FirstName}&nbsp;{!lead.LastName}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!lead.Email}">Email:&nbsp;{!lead.Email}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!lead.Start_Date_Time__c}">Phone:&nbsp;{!lead.Phone}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!lead.Lead_Stage__c}">Prospect Stage:&nbsp;{!lead.Lead_Stage__c}</div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Meeting" id="three">
+                <!---Meeting Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    <lightning:icon iconName='utility:meet_focus_presenter' alternativeText='meet_focus_presenter' variant='success' size='large' title='meet_focus_presenter' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Client Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Mode</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Meeting Date</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-word-wrap slds-text-align_left slds-has-flexi-word-wrap"
+                                                 title="Emial" style="color:#FFFFFF;">Start Time</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Source" style="color:#FFFFFF;">End Time</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Source" style="color:#FFFFFF;">Meeting Notes</div>
+                                        </strong>
+                                    </th>   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.EventList}"  var="event" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                
+                                                <b style="color:#6592FD;">{!event.Who.Name}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!event.Type}">{!event.Type}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!event.StartDateTime}">
+                                                <lightning:formattedDateTime value="{!event.StartDateTime}" year="numeric" month="numeric" day="numeric"/></div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!event.StartDateTime}">
+                                                <lightning:formattedDateTime value="{!event.StartDateTime}" hour="2-digit" minute="2-digit"/></div>
+                                        </td>
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!event.EndDateTime}">
+                                                <lightning:formattedDateTime value="{!event.EndDateTime}" hour="2-digit" minute="2-digit"/></div>
+                                        </td>
+                                        <td scope="row" data-label="Status">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!event.Description}">{!event.Description}</div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.EventList}"  var="event" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div style="display: inline;">Client Name:&nbsp;</div><b style="color:#6592FD;">{!event.Who.Name}</b>
+                                <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!event.Type}">Mode:&nbsp;{!event.Type}</div>
+                                <div>Meeting Date:&nbsp;<lightning:formattedDateTime value="{!event.StartDateTime}" year="numeric" month="numeric" day="numeric"/></div>
+                                <div>Start Time:&nbsp;<lightning:formattedDateTime value="{!event.StartDateTime}" hour="2-digit" minute="2-digit"/></div>
+                                <div>End Time:&nbsp;<lightning:formattedDateTime value="{!event.EndDateTime}" hour="2-digit" minute="2-digit"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Meeting Notes:&nbsp;{!event.Description}</div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </lightning:tab>
+            
+            <lightning:tab label="Emails" id="four">
+                <!---Email Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;" >
+                    <lightning:icon iconName='utility:email' alternativeText='email' variant='error' size='large' title='email' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Client Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Title</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Description</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-word-wrap slds-text-align_left slds-has-flexi-word-wrap"
+                                                 title="Emial" style="color:#FFFFFF;">Date</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.EmailList}"  var="email" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                
+                                                <b style="color:#6592FD;">{!email.Lead__r.Company}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 10rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!email.Subject}">{!email.Subject}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 10rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!email.TextBody}">{!email.TextBody}</div>
+                                        </td>
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!email.CreatedDate}">
+                                                <lightning:formattedDateTime value="{!email.CreatedDate}" year="numeric" month="numeric" day="numeric"/></div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div> 
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.EmailList}"  var="email" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div style="display: inline;">Client Name:&nbsp;</div><b style="color:#6592FD;">{!email.Lead__r.Company}</b>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Titel:&nbsp;{!email.Subject}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Description:&nbsp;{!email.TextBody}</div>
+                                <div>Date:&nbsp;<lightning:formattedDateTime value="{!email.CreatedDate}" year="numeric" month="numeric" day="numeric"/></div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Proposals" id="five">
+                <!---Proposals Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    <lightning:icon iconName='standard:product_required' alternativeText='product_required' size='large' title='product_required' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Client Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Opportunity Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Opportunity Value</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Proposal State</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Sales Note</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Client Note</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-word-wrap slds-text-align_left slds-has-flexi-word-wrap"
+                                                 title="Emial" style="color:#FFFFFF;">Closure Date</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Influencer</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.OppList}"  var="opp" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 7rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">
+                                                
+                                                <b style="color:#6592FD;">{!opp.Account.Name}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 7rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!opp.Name}">{!opp.Name}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" 
+                                                 title="{!opp.Total_Amount__c}">{!opp.Total_Amount__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!opp.StageName}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!opp.Sales_Note__c}">{!opp.Sales_Note__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!opp.Client_Note__c}">{!opp.Client_Note__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!opp.CloseDate}">
+                                                <lightning:formattedDateTime value="{!opp.CloseDate}" year="numeric" month="numeric" day="numeric"/></div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!opp.Owner.Name}</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.OppList}"  var="opp" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div style="display: inline;">Client Name:&nbsp;</div><b style="color:#6592FD;">{!opp.Account.Name}</b>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" >Opportunity Name:&nbsp;{!opp.Name}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" >Opportunity Value:&nbsp;{!opp.Total_Amount__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Proposal State:&nbsp;<b style="color:#6592FD;">{!opp.StageName}</b></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Sales Note:&nbsp;{!opp.Sales_Note__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Client Note:&nbsp;{!opp.Client_Note__c}</div>
+                                <div>Closure Date:&nbsp;<lightning:formattedDateTime value="{!opp.CloseDate}" year="numeric" month="numeric" day="numeric"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate"><b style="color:#6592FD;">{!opp.Owner.Name}</b></div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Negotiations" id="six">
+                <!---Proposals Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Client Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Opportunity Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Opportunity Value</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Proposal State</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Sales Note</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Client Note</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-word-wrap slds-text-align_left slds-has-flexi-word-wrap"
+                                                 title="Emial" style="color:#FFFFFF;">Closure Date</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Influencer</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.OppNegoList}"  var="opp" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">
+                                                
+                                                <b style="color:#6592FD;">{!opp.Account.Name}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!opp.Name}">{!opp.Name}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" 
+                                                 title="{!opp.Total_Amount__c}">{!opp.Total_Amount__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!opp.StageName}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!opp.Sales_Note__c}">{!opp.Sales_Note__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!opp.Client_Note__c}">{!opp.Client_Note__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!opp.CloseDate}">
+                                                <lightning:formattedDateTime value="{!opp.CloseDate}" year="numeric" month="numeric" day="numeric"/></div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!opp.Owner.Name}</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.OppNegoList}"  var="opp" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div style="display: inline;">Client Name:&nbsp;</div><b style="color:#6592FD;">{!opp.Account.Name}</b>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" >Opportunity Name:&nbsp;{!opp.Name}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" >Opportunity Value:&nbsp;{!opp.Total_Amount__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Proposal State:&nbsp;<b style="color:#6592FD;">{!opp.StageName}</b></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Sales Note:&nbsp;{!opp.Sales_Note__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Client Note:&nbsp;{!opp.Client_Note__c}</div>
+                                <div>Closure Date:&nbsp;<lightning:formattedDateTime value="{!opp.CloseDate}" year="numeric" month="numeric" day="numeric"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate"><b style="color:#6592FD;">{!opp.Owner.Name}</b></div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Quotation" id="sevan">
+                <!---Quotation Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    <lightning:icon iconName='standard:product_quantity_rules' alternativeText='product_quantity_rules' size='large' title='product_quantity_rules' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Client Name</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Deal No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Expiry Date</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Quotation Status</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Quotation Value</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.QuotList}"  var="quo" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">
+                                                
+                                                <b style="color:#6592FD;">{!quo.Account.Name}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!quo.Name}">{!quo.Name}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!quo.ExpirationDate}">
+                                                <lightning:formattedDateTime value="{!quo.ExpirationDate}" year="numeric" month="short" day="numeric"/></div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!quo.Status}">{!quo.Status}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!quo.TotalPrice}</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.QuotList}"  var="quo" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div style="display: inline;">Client Name:&nbsp;</div><b style="color:#6592FD;">{!quo.Account.Name}</b>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Deal:&nbsp;{!quo.Name}</div>
+                                <div>Expiry Date:&nbsp;<lightning:formattedDateTime value="{!quo.ExpirationDate}" year="numeric" month="short" day="numeric"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Quotation Status:&nbsp;{!quo.Status}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Quotation Value:&nbsp;<b style="color:#6592FD;">{!quo.TotalPrice}</b></div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Purchase Order" id="eight">
+                <!---Purchase Order Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    <lightning:icon iconName='standard:orders' alternativeText='orders' size='large' title='orders' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Purchase Order No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Purchase Order Date</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Order Status</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Quantity</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.PurchaseOrderList}"  var="pur" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 8rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!pur.Name}">{!pur.Name}</div>
+                                        </td>
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!pur.PO_Date__c}">
+                                                <lightning:formattedDateTime value="{!pur.PO_Date__c}" year="numeric" month="numeric" day="numeric"/></div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" 
+                                                 title="{!pur.Order_Status__c}">{!pur.Order_Status__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!pur.Quantity__c}</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.PurchaseOrderList}"  var="pur" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Purchase Order No.:&nbsp;{!pur.Name}</div>
+                                <div>Purchase Order Date:&nbsp;<lightning:formattedDateTime value="{!pur.PO_Date__c}" year="numeric" month="numeric" day="numeric"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Order Status:&nbsp;{!pur.Order_Status__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Quantity:&nbsp;<b style="color:#6592FD;">{!pur.Quantity__c}</b></div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Invoices" id="nine">
+                <!---Invoices Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    <lightning:icon iconName='standard:duration_downscale' alternativeText='duration_downscale' size='large' title='duration_downscale' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Invoice No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Invoice Date</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Amount</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Payment Option</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Payment Mode</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.InvoiceList}"  var="invo" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" >
+                                                <b style="color:#6592FD;">{!invo.Name}</b>
+                                            </div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!invo.Invoice_Date__c}">
+                                                <lightning:formattedDateTime value="{!invo.Invoice_Date__c}" year="numeric" month="short" day="numeric"/></div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" 
+                                                 title="{!invo.Amount__c}">{!invo.Amount__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" 
+                                                 title="{!invo.Payment_Option__c}">{!invo.Payment_Option__c}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!invo.Payment_Mode__c}</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.InvoiceList}"  var="invo" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Invoice No.:&nbsp;{!invo.Name}</div>
+                                <div>Invoice Date:&nbsp;<lightning:formattedDateTime value="{!invo.Invoice_Date__c}" year="numeric" month="numeric" day="numeric"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Amount:&nbsp;{!invo.Amount__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Payment Option:&nbsp;{invo.Payment_Option__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Payment Mode:&nbsp;<b style="color:#6592FD;">{!!invo.Payment_Mode__c}</b></div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Tickets" id="ten">
+                <!---Tickets Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    <lightning:icon iconName='standard:article' alternativeText='article' size='large' title='article' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Case No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Case Status</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Subject</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Descriotion</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Case Origin</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Assigned Date</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.TicketList}"  var="tic" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" >
+                                                <b style="color:#6592FD;">{!tic.CaseNumber}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" 
+                                                 title="{!tic.Status}">{!tic.Status}</div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 9rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!tic.Subject}">{!tic.Subject}</div>
+                                        </td>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 9rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">
+                                                <b style="color:#6592FD;">{!tic.Description}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!tic.Origin}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Client Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"
+                                                 title="{!tic.CreatedDate}">
+                                                <lightning:formattedDateTime value="{!tic.CreatedDate}" year="numeric" month="short" day="numeric"/></div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.TicketList}"  var="tic" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Case No.:&nbsp;{!tic.CaseNumber}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Case Status:&nbsp;{!tic.Status}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 9rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Subject:&nbsp;{!tic.Subject}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Descriotion:&nbsp;{!tic.Description}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate"><b style="color:#6592FD;">Case Origin:&nbsp;{!tic.Origin}</b></div>
+                                <div>Assigned Date:&nbsp;<lightning:formattedDateTime value="{!tic.CreatedDate}" year="numeric" month="short" day="numeric"/></div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+            
+            <lightning:tab label="Feedback" id="el">
+                <!---Tickets Tab-->
+                <div class="BeatStatusTable ">
+                <div class="slds-col slds-size_6-of-12 " style="background-color:white;  width:98%; margin-top:-1s%;"  >
+                    <lightning:icon iconName='standard:feedback' alternativeText='feedback' size='large' title='feedback' class="slds-m-around_small"></lightning:icon>
+                    <div class=" ">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
+                            <thead>
+                                <tr class="" style="background-color:#9E7BFF;">
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
+                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Name" style="color:#FFFFFF;">Feedback No.</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="StageName" style="color:#FFFFFF;">Descriotion</div>
+                                        </strong>
+                                    </th>
+                                    <th scope="col" style="background-color:#6CA1E9;">
+                                        <strong>
+                                            <div class="slds-truncate slds-text-align_left slds-has-flexi-truncate"
+                                                 title="Close date" style="color:#FFFFFF;">Feedback Rating</div>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.FeedbackList}"  var="feedback" indexVar="index">
+                                    <tr>
+                                        
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_center"  >
+                                                <div  aura:id="selectAllId" class="slds-truncate" title="">{!index+1}</div>     
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" >
+                                                <b style="color:#6592FD;">{!feedback.Name}</b>
+                                            </div>
+                                        </td>
+                                        <td scope="row" data-label="Route">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 16rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;"
+                                                 title="{!feedback.Description__c}">{!feedback.Description__c}</div>
+                                        </td>
+                                        <td scope="row" data-label="Name">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                                <b style="color:#6592FD;">{!feedback.Feedback_Rating__c}</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+                <!--Card show CSS for Mobile-->
+                <div class="BeatMobile">
+                    <aura:iteration items="{!v.FeedbackList}"  var="feedback" indexVar="index">
+                        <div class="slds-card ">
+                            <div class="cardInfo">
+                                <div class="slds-text-align_left slds-has-flexi-truncate" >Feedback No.:&nbsp;<b style="color:#6592FD;">{!feedback.Name}</b></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 15rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">Descriotion:&nbsp;{!feedback.Description__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate">Feedback Rating:&nbsp;{!feedback.Feedback_Rating__c}</div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+                
+            </lightning:tab>
+        </lightning:tabset>
+    </div>
+</aura:component>

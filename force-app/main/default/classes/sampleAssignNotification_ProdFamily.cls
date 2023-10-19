@@ -2,8 +2,114 @@ public without sharing class sampleAssignNotification_ProdFamily {
     static final String SLI_SUBMITTED = 'Submitted for Sampling';
     static final String OWA_NAME = 'Symega Food Ingredients Limited';
     
-    //@future
+    
+    //NEW
     public static void notifyWithoutRecipeSLI(list<string> sliIdsList){
+        try{
+            if(sliIdsList != NULL){
+                List<Sample_Line_Item__c> slis = [SELECT Id, Name, Product__r.Family, Project_Quotient__r.Sample_Project_Application__r.Product_Family__c, OwnerId FROM Sample_Line_Item__c WHERE Id IN :sliIdsList];
+                system.debug('slis :: ' + slis);
+                
+                Map<String, String> sampleTeamByProdFamily = returnEmailByProdFamilyMap();
+                List<Sample_Assignment_Team__c> smTeamList = [SELECT Id, Name, Team_Type__c FROM Sample_Assignment_Team__c WHERE Team_Type__c != null ];
+                
+                for(Sample_Assignment_Team__c sTeam : smTeamList){
+                    sampleTeamByProdFamily.put(sTeam.Team_Type__c, sTeam.Id);
+                }
+                
+                for (Sample_Line_Item__c sliRecord : slis) {
+                    string family = '';
+                    Id teamId;
+                    
+                    if(sliRecord.Product__r.Family != null){
+                        teamId = sampleTeamByProdFamily.containsKey(sliRecord.Product__r.Family) ? sampleTeamByProdFamily.get(sliRecord.Product__r.Family) : null;
+                    }
+                    else if( sliRecord.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c != null){
+                        teamId = sampleTeamByProdFamily.containsKey(sliRecord.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c) ? sampleTeamByProdFamily.get(sliRecord.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c) : null;
+                    }
+                    if(teamId != null)
+                        sliRecord.Sample_Assignment_Team__c = teamId;
+                    sliRecord.Submitted__c = true;
+                    sliRecord.Sample_Request_Status__c = SLI_SUBMITTED;
+                }
+                Update slis;
+                
+                Map <string, List<string>> mapOfEmailIdsByFamily = new Map <string, List<string>>();
+                List<Sample_Allocation_Team__c> sampleAllocationTeamList = [SELECT Id, Contact__c, Contact__r.Email, Sample_Assignment_Team__c, Sample_Assignment_Team__r.Team_Type__c FROM Sample_Allocation_Team__c];
+                for(Sample_Allocation_Team__c sAllTeam : sampleAllocationTeamList){
+                    if (mapOfEmailIdsByFamily.containsKey(sAllTeam.Sample_Assignment_Team__r.Team_Type__c)) {
+                        mapOfEmailIdsByFamily.get(sAllTeam.Sample_Assignment_Team__r.Team_Type__c).add(sAllTeam.Contact__r.Email); 
+                    }
+                    else{
+                        mapOfEmailIdsByFamily.put(sAllTeam.Sample_Assignment_Team__r.Team_Type__c, new List<string> {sAllTeam.Contact__r.Email});
+                    } 
+                }
+
+                system.debug('mapOfEmailIdsByFamily -- ' + mapOfEmailIdsByFamily);
+
+                Map <string, List<Sample_Line_Item__c>> prodFamilyBySLIMap = new Map <string, List<Sample_Line_Item__c>>();
+                
+                for (Sample_Line_Item__c sliRecord : slis) {
+                    String prodFamily = '';
+                    if(!String.isEmpty(sliRecord.Product__r.Family)){
+                        prodFamily = sliRecord.Product__r.Family;
+                    }
+                    else if(!String.isEmpty(sliRecord.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c)){
+                        prodFamily = sliRecord.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c;
+                    }
+                    
+                    if (prodFamilyBySLIMap.containsKey(prodFamily)) {
+                        prodFamilyBySLIMap.get(prodFamily).add(sliRecord); 
+                    }
+                    else{
+                        prodFamilyBySLIMap.put(prodFamily, new List<Sample_Line_Item__c> {sliRecord});
+                    }    
+                }   
+                
+                List<Messaging.SingleEmailMessage> emailsList = new List<Messaging.SingleEmailMessage>();
+                for (String prodFmly : prodFamilyBySLIMap.keyset()) {
+                    Messaging.SingleEmailMessage sliEmail = new Messaging.SingleEmailMessage();
+                    List <String> emailRecipients = mapOfEmailIdsByFamily.get(prodFmly);
+                        system.debug('emailRecipients'+emailRecipients);
+                    
+                    sliEmail.setToAddresses(emailRecipients);
+                    sliEmail.setSubject('Sample request has been assigned to you.');
+                    sliEmail.setReplyTo(UserInfo.getUserEmail());
+                    
+                    String emailBody = 'Dear ' + prodFmly + ' Team,';
+                    emailBody += ' <br> <br> The following products has been assigned to you for sampling.<br> Total no of products: ' + prodFamilyBySLIMap.get(prodFmly).size() + '<br>';
+                    emailBody += ' Below is the link to access: <br> <br>';
+                    
+                    String recordOwnerList = '';
+                    List <Sample_Line_Item__c> relatedOwnerRec = prodFamilyBySLIMap.get(prodFmly);
+                    
+                    for (Integer i = 0; i < relatedOwnerRec.size(); i++) {
+                        emailBody += '<a href="'+URL.getSalesforceBaseUrl().toExternalForm() +'/'+relatedOwnerRec[i].Id+'">'+ relatedOwnerRec[i].Name +'</a><br>' ;    
+                    }
+                    
+                    emailBody += '<br> Thank You';
+                    sliEmail.setHtmlBody(emailBody);
+                    emailsList.add(sliEmail);
+                } 
+                if(!emailsList.isEmpty()) {
+                    Messaging.sendEmail(emailsList);     
+                }
+
+
+                
+                                
+            }
+        }
+        catch(Exception e){
+            system.debug('ERROR :: ' + e.getMessage() + ' At Line No :: ' + e.getLineNumber());
+            HandleBusinessException.captureError('Sample_submission_class', 'notifyWithoutRecepieSLI', e);
+        }
+    }
+    
+    
+    
+    //@future
+    public static void notifyWithoutRecipeSLI_Prvs(list<string> sliIdsList){
         try{
             if(sliIdsList != NULL){
                 List<Sample_Line_Item__c> slis = [SELECT Id, Name, Product__r.Family, Project_Quotient__r.Sample_Project_Application__r.Product_Family__c, OwnerId FROM Sample_Line_Item__c WHERE Id IN :sliIdsList];
@@ -93,7 +199,7 @@ public without sharing class sampleAssignNotification_ProdFamily {
     
     
     
-    private static Task createTask(String recId, String userId, Date dueDate, String Subject){
+    private static Task createTask(String recId, Id userId, Date dueDate, String Subject){
         try{
             Task tsk = New Task();
             tsk.whatid = recId;

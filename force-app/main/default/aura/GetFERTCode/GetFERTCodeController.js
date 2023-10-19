@@ -12,10 +12,10 @@
         });
         action.setCallback(this, function(response){
             var state = response.getState();
-            if (state === "SUCCESS") {                
+            if (state === "SUCCESS") {  
+                component.set("v.ShowSpinner",false);
                 component.set("v.OppLineItemList", response.getReturnValue());
                 component.set("v.accountId", response.getReturnValue()[0].Opportunity.AccountId);
-                
             }
             else{
                 console.log("Failed with state: " , state);
@@ -157,8 +157,8 @@
             var customerType = source.get("v.value");
             // var inputElement = component.find(auraId);
             // var inputValue = inputElement.get("v.value");
-
-          //  var firstNameJs = component.find(auraId).get("v.value");
+            
+            //  var firstNameJs = component.find(auraId).get("v.value");
             console.log('Value of ' + auraId + ': ' + firstNameJs);
         }
     },
