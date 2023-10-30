@@ -9,7 +9,7 @@ public class BeatPlanController {
     }
     
     @AuraEnabled
-    Public Static void GetAllMonthlyBeatPlanner(String StartDate,String LastDate,List<WrapperClass> WrapperRecList){
+    Public Static String GetAllMonthlyBeatPlanner(String StartDate,String LastDate,List<WrapperClass> WrapperRecList){
          
                 /*String[] arrTest = StartDate.split('T');
                 string[] dateArray = arrTest[0].split('-');
@@ -42,10 +42,21 @@ public class BeatPlanController {
 
         if(StartDate!=null && LastDate!=null){
             //Creating Monthly Beat Plan
+            Map<Integer, String> monthNamebyNumber = new Map<Integer, String>{1=>'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August'
+                , 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'};
+                    String monthName = monthNamebyNumber.get(Date.valueOf(StartDate).month());
+            String year = StartDate.subString(0,4);
+            Id userId = UserInfo.getUserId();
+            List<Monthly_Beat_Plan__c> existingBeatPlan = [SELECT Id, Name FROM Monthly_Beat_Plan__c WHERE Month_Name__c =: monthName AND Month_year__c=:year AND Sales_User__c =: userId];
+            if(existingBeatPlan.size()>0){
+                System.debug('Found Exisiting MBP');
+                return 'ErrorFound';
+            }
             MBP.Start_Date__c=Date.valueOf(StartDate);
             MBP.End_Date__c=Date.valueOf(LastDate);
             MBP.Sales_User__c=UserInfo.getUserId(); 
             insert MBP;
+            System.debug('MBP==> ' + MBP);
 
              Date SelectedDate=Date.valueOf(StartDate);
              date firstDate = SelectedDate.toStartOfMonth();
@@ -121,7 +132,7 @@ public class BeatPlanController {
             }
             
         }
-              
+         return 'Success';     
     }
 
     Public Class WrapperClass{

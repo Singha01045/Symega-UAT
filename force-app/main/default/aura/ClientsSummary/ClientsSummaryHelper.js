@@ -12,10 +12,10 @@
                     var accNTBRecCount = result.accNTBCount;
                     var accLCRecCount = result.accLCCount;
                     var cardData = [
-                        { Title: 'Total Prospects', Description:''  ,cl: '#FFC300' ,Padding: '2%', View: 'View' ,listviewId: '00B2v00000PlWcwEAF', wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'-1%'},
-                        { Title: 'Existing To Business', Description: '' ,cl: '#3498DB' ,Padding: '2%' ,View: 'View' ,listviewId: '00B0k000002citUEAQ',wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'0%'},
-                        { Title: 'New To Business', Description: '' ,cl: '#27AE60' ,Padding: '2%' ,View: 'View' ,listviewId: '00B0k000002citZEAQ',wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'0%'},
-                        { Title: 'Lost Clients', Description: '' ,cl: '#E74C3C' ,Padding: '2%' ,View: 'View' ,listviewId: '00B0k000002citeEAA',wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'-1%'}
+                        { Title: 'Total Prospects', Description:''  ,cl: '#62b7ed' ,Padding: '2%', View: 'View' ,listviewId: '00B2v00000PlWcwEAF', wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'-1%'},
+                        { Title: 'Existing To Business', Description: '' ,cl: '#62b7ed' ,Padding: '2%' ,View: 'View' ,listviewId: '00B0k000002citUEAQ',wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'0%'},
+                        { Title: 'New To Business', Description: '' ,cl: '#62b7ed' ,Padding: '2%' ,View: 'View' ,listviewId: '00B0k000002citZEAQ',wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'0%'},
+                        { Title: 'Lost Clients', Description: '' ,cl: '#62b7ed' ,Padding: '2%' ,View: 'View' ,listviewId: '00B0k000002citeEAA',wi:'70%' ,ml:'14%' ,br:'8px' ,mr:'-1%'}
                     ];
                     var temparray = [];
                     for(var i in cardData){

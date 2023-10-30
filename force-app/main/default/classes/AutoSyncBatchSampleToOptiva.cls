@@ -8,18 +8,18 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
     }
 
     public Database.QueryLocator Start(Database.BatchableContext bc){    
-        return Database.getQueryLocator('SELECT Id, Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c, Opportunity__r.Account.Customer_Code_OPTIVA__c, Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Name, Opportunity__r.AccountId, Opportunity__r.Account.Customer_Code_OPTIVA__c, Opportunity__r.Account.Customer_Code_SAP__c, Recipe_Cost__c, Processing_condition__c, Preferred_thickness_Viscosity__c, pH__c, Oil_sprinkling_Dust_on__c, Milk_Solids__c, Final_SNF__c, Fat__c, Center_filling_Cream__c, Brix_degrees__c, Additive_Status__c, Acidity__c, of_pulp_if_with_fruit_pulp__c, Name, Start_Date__c, Product_Type__c, Account_Segment__c, Customer_Name__c, Contact_Number__c, Company_Name__c, Postal_Code__c, Country__c, State__c, City__c, Street__c, Customers_Contact__r.FirstName,' +
-                                        'Customers_Contact__r.LastName, Account__r.Name, Application_Name__c,Type_of_PR__c,Approval_Status__c,Sample_Project__c,Sample_Project__r.Owner.Name,' +
-                                        'Product_ID__c,Product_Spec__c,MSDS__c,Country_of_Compliance__c,Project_Name__c,Legal_Status_as_per_US__c,Proposed_date_of_dispatch__c,Allergen__c,Nutritional__c,'+
-                                        'Other__c,Target_Date__c,Customer_Launch_Date__c,Required_End_Date__c,Product_approval_format_by_customer__c,Organic_Certification__c,GMO_Status__c,Halal_Certification__c,'+
-                                        'Kosher_Certification__c,Legal_Status_as_per_EU__c,Legal_Status_as_per_Indian_FSSAI__c,Customer_Cost_in_USE_CIU__c,Specific_inputs_by_customer__c,Allergin_Free_Decleration__c,'+
-                                        'Sensory_Target_profile_expectation__c,Other_Application_Methods__c,Sample_Size_for_trails__c,Customer_Base_Details__c,Matching_Target_details__c,Expected_Shelf_Life__c,Dosage_Guidelines__c,'+
-                                        'Supplier_Legal_Status__c,Solublity__c,Current_Shelf_life__c,Wet_Dry__c,Sensory_profiling_Report_Required__c,Sugar__c,Application_Samples_Receipe_Support__c,Expected_Volume_Unit__c,Expected_Annual_Value__c,'+
-                                        'Confectionary_Type__c,Final_Fat__c,Owner.Name,Submitted_To_SAP_Optiva__c,RecordType.name,Account__c,Quantity__c,Business_potential_value_INR__c,Annual_Volume_Full__c,Opportunity_Close_Date__c,Account__r.Customer_Code_OPTIVA__c,'+
-                                        'Account__r.Customer_Code_SAP__c,Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Customer_Target_price__c,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c,'+
-                                        'Project_Reference__c,CreatedBy.Name,CreatedDate,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,End_Use_Applications__c,CurrencyIsoCode,(SELECT Id,Quantity_Unit__c,Quantity__c,Packaging_Unit__c,Packaging_Quantity__c,'+
-                                        'Additional_Comments__c,Product__r.ProductCode,Product__r.Family, OPTIVA_Recipe__c, OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c,Project_Quotient__c,Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName,'+
-                                        'Project_Quotient__r.Sample_Project_Application__r.Product_Family__c,Project_Quotient__r.SSC_Code__c FROM Sample_Line_Items__r WHERE Submitted__c=false),Flavour_Legal_Status__c,First_Sample_due_date__c,Flavour_CIU__c,Business_potential_value_INR_New__c,Solubility_Preference__c'+
+        return Database.getQueryLocator('SELECT Id, Legal_Status__c, Application_product_shelf_life__c, Physical_Form__c, Minimum_order_quantity__c, Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c, Opportunity__r.Account.Customer_Code_OPTIVA__c, Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Name, Opportunity__r.AccountId, Opportunity__r.Account.Customer_Code_SAP__c, Recipe_Cost__c, Processing_condition__c, Preferred_thickness_Viscosity__c, pH__c, Oil_sprinkling_Dust_on__c, Milk_Solids__c, Final_SNF__c, Fat__c, Center_filling_Cream__c, Brix_degrees__c, Additive_Status__c, Acidity__c, of_pulp_if_with_fruit_pulp__c, Name, Start_Date__c, Product_Type__c, Account_Segment__c, Customer_Name__c, Contact_Number__c, Company_Name__c, Postal_Code__c, Country__c, State__c, City__c, Street__c, Customers_Contact__r.FirstName,' +
+                                        'Customers_Contact__r.LastName, Application_Name__c,Type_of_PR__c,Approval_Status__c,Sample_Project__c,Sample_Project__r.Owner.Name, ' +
+                                        'Product_ID__c,Product_Spec__c,MSDS__c,Country_of_Compliance__c,Project_Name__c,Legal_Status_as_per_US__c,Proposed_date_of_dispatch__c,Allergen__c,Nutritional__c, '+
+                                        'Other__c,Target_Date__c,Customer_Launch_Date__c,Required_End_Date__c,Product_approval_format_by_customer__c,Organic_Certification__c,GMO_Status__c,Halal_Certification__c, '+
+                                        'Kosher_Certification__c,Legal_Status_as_per_EU__c,Legal_Status_as_per_Indian_FSSAI__c,Customer_Cost_in_USE_CIU__c,Specific_inputs_by_customer__c,Allergin_Free_Decleration__c, '+
+                                        'Sensory_Target_profile_expectation__c,Other_Application_Methods__c,Sample_Size_for_trails__c,Customer_Base_Details__c,Matching_Target_details__c,Expected_Shelf_Life__c,Dosage_Guidelines__c, '+
+                                        'Supplier_Legal_Status__c,Solublity__c,Current_Shelf_life__c,Wet_Dry__c,Sensory_profiling_Report_Required__c,Sugar__c,Application_Samples_Receipe_Support__c,Expected_Volume_Unit__c,Expected_Annual_Value__c, '+
+                                        'Confectionary_Type__c,Final_Fat__c,Owner.Name,Submitted_To_SAP_Optiva__c,RecordType.name,Quantity__c,Business_potential_value_INR__c,Annual_Volume_Full__c,Opportunity_Close_Date__c, '+
+                                        'Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Customer_Target_price__c,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c, '+
+                                        'Project_Reference__c,CreatedBy.Name,CreatedDate,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,End_Use_Applications__c,CurrencyIsoCode,(SELECT Id,Quantity_Unit__c,Quantity__c,Packaging_Unit__c,Packaging_Quantity__c, '+
+                                        'Additional_Comments__c,Product__r.ProductCode,Product__r.Family, OPTIVA_Recipe__c, OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c,Project_Quotient__c,Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName, '+
+                                        'Project_Quotient__r.Sample_Project_Application__r.Product_Family__c,Project_Quotient__r.SSC_Code__c FROM Sample_Line_Items__r WHERE Submitted__c=false),Flavour_Legal_Status__c,First_Sample_due_date__c,Flavour_CIU__c,Business_potential_value_INR_New__c,Solubility_Preference__c '+
                                         'FROM Project__c WHERE Submit_Sample_To_Optiva__c = true AND Id IN:proIdSet');
     }
     public void execute(Database.BatchableContext BC, List<Project__c> projects){
@@ -283,7 +283,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                         }
                         else if(!String.isBlank(customerCodeSAP)){ //TODO: this should be called if trigger passed account sap code changes, or above should be invoked if optive code changes.
                             if(!(project.Type_Of_PR__c == 'New Product' && project.Approval_Status__c == 'Under Approval')){
-                                System.debug('CALLEDSAP-----');
+                                System.debug('CAzLEDSAP-----');
                                 SAP_Project_Creation_Callout.createProject(project.Id);
                             }
                             
@@ -342,6 +342,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
         if(!projects.isEmpty()){
             //Utility.scheduleAutoSyncSampleToOptiva();
         } */
+        system.debug('Auto Sync Batch Exceuted Successfully!!');
     }
 
     public static String formatDate(Date d){

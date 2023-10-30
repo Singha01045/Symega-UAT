@@ -4,6 +4,10 @@
     <aura:handler event="force:refreshView" action="{!c.doinit}" />
     <aura:attribute name="ShowToCreateMonthlyBeatPlan" type="Boolean" default="false"/>
     <aura:attribute name="ShowMonthlyBeatPlan" type="Boolean" default="false"/>
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="SelectVisitAccountId" type="string"/>
+    <aura:attribute name="title" type="string"/>
+    
     
     <aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/>
     <!--aura:handler name="openParentCmp" event="c:SampleComponentEvent" action="{!c.HandleparentComponent}"/-->
@@ -11,6 +15,7 @@
     <aura:attribute name="Weeklybp" type="Monthly_Beat_Plan__c[]" />
     <aura:attribute name="kpiTargetsName" type="KPI_Target__c[]" />
     <aura:attribute name="weeklyWrapper" type="object[]"/>
+    <aura:attribute name="isShowDaskDesComp" type="Boolean" default="false"/>
     
     <aura:attribute name="selectedMonth" type="String" />
     <aura:attribute name="selectedYear" type="String" />
@@ -61,8 +66,19 @@
         padding: 0;
         }
         .top-button {
-        margin-left:-2rem;
+        margin-right:-3%;
         background-color: #fff;
+        color: #007bff;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: bold;
+        margin-top:7px;
+        }
+        
+        .SendApproval {
+        margin-left:-5rem;
+        background-color:#6BBD6E;
         color: #007bff;
         padding: 6px 12px;
         border-radius: 4px;
@@ -254,8 +270,8 @@
     
     <!-- Html part /-->
     <div style="" class="beatPlannerMain">
-        <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:2%;    margin: 1rem;">Beat Planner</h2>
-        <div class="slds-align_absolute-center">
+        <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:2%; margin: 1rem;">Beat Planner</h2>
+        <div class="slds-align_absolute-center monthlyContainer">
             <c:MonthlyContainer></c:MonthlyContainer>
         </div>
         <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
@@ -274,12 +290,12 @@
                             </aura:iteration>
                         </div>
                     </div>
-                    <div style="width:15%;padding-bottom: 6%;">
+                    <div class="statusDiv">
                         <aura:if isTrue="{!v.mbpStatus=='Approved'}">
-                            <span class="top-button" style="width:3rem;">{!v.mbpStatus}</span>
+                            <span class="top-button" style="width:3rem;margin-left:-12%;margin-bottom:-6%;margin-top:1%;">{!v.mbpStatus}</span>
                             <aura:set attribute="else">
                                 <aura:if isTrue="{!and(v.mbpStatus=='Draft', v.showApprovalButton)}">
-                                    <a class="top-button" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'>Send For Approval
+                                    <a class="top-button SendApproval" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'><span style="color:#fff;">Send For Approval</span>
                                     </a>
                                     <aura:set attribute="else">
                                         <span class="top-button">{!v.mbpStatus}</span>
@@ -301,7 +317,6 @@
                                                 <div>
                                                     <aura:iteration items="{!item.kpiList}" var="ite">
                                                         <li style="margin:10px;">
-                                                            
                                                             <span class="{!ite.dynamicClass}">
                                                                 {!ite.count} - {!ite.kPIName}
                                                             </span>
@@ -326,6 +341,7 @@
                                     </aura:iteration-->
                                 </div>
                             </div>
+                            
                             <div class="callyContainer">
                                 <div  id="calendar"></div> 
                             </div>
@@ -341,4 +357,43 @@
             </div>
         </aura:if>
     </div>
+    
+    
+    
+    
+    <aura:if isTrue="{!v.isShowDaskDesComp}">
+        <!-- Modal/Popup Box starts here-->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box Header Starts here-->
+                <header class="slds-modal__header slds-float_right">
+                    <div class="slds-float_left">
+                      <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                          <lightning:icon iconName='action:description' alternativeText='description' size='small' title='description'></lightning:icon> Task Details</h2>
+                	</div>
+                   </header>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <c:showTaskDescription SelectVisitAccountId="{!v.SelectVisitAccountId}" title="{!v.title}"></c:showTaskDescription>
+                </div>
+                <footer class="slds-modal__footer">
+                    <div class="slds-align_absolute-center">
+                        <lightning:button class="green"
+                                          variant="success"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModel }"/>
+                       
+                    </div>   
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
 </aura:component>

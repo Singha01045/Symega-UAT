@@ -6,25 +6,29 @@
     <aura:attribute name="selectedYear" type="String" />
     <aura:attribute name="MonthlyBeatPlanDataList" type="sObject" default="{sObjecttype:'Monthly_Beat_Plan__c'}"/>  
     <aura:attribute name="userName" type="String" />
+    <aura:attribute name="refresh" type="Boolean" default="true"/>
     
     <div class="DashboardScheduler" >
         <div class="slds-align_absolute-center">
-          <c:SchedulerDayBarComponent/>
+            <c:SchedulerDayBarComponent/>
         </div>
-        
         <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
-        <div>
-          <c:SchedulerInsightsMonthYear MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
-        </div>
-        <div class="monthMargin">
-           <c:SchedulerInsightsProgressRing selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
-        </div>
-        <div class="tableMargin">
-           <c:SchedulerInsightsDataTable/>
-        </div>
+            <div>
+                <c:SchedulerInsightsMonthYear MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
+            </div>
+           <aura:if isTrue = "{!v.refresh}">
+            <div class="monthMargin">
+                <c:SchedulerInsightsProgressRing selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
+            </div>
+            </aura:if>
+            <aura:if isTrue = "{!v.refresh}">
+            <div class="tableMargin">
+                <c:SchedulerInsightsDataTable monthName = "{!v.selectedMonth}" monthYear = "{!v.selectedYear}"/>
+            </div>
+            </aura:if>
         </aura:if>
         <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
-            <div style="margin-top:1%; margin-left:1.5%; margin-right:1%">
+            <div class="noBeat" style="margin-top:1%; margin-left:1.5%; margin-right:1%">
                 <c:SchedulerInsightNoRecordPage />
             </div>
         </aura:if>

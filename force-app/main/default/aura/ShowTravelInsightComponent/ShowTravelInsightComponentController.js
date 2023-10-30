@@ -1,6 +1,6 @@
 ({
 	parentComponentEvent:function(component ,event ,helper) {
-        debugger;
+        
         var MPlist=[];
         var Month = event.getParam("Month");
         var Year = event.getParam("Year"); 

@@ -945,8 +945,8 @@ sendTempReqEmail(tempReqList[0].Id,tempReqList[0].Client__r, emailTemplateList[0
     
     public static String checkForInitialSubmissionAddress(String addressId){
         Dispatch_Address__c addressRec = [	Select Id, Name, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
-                                          Account__r.Tax_Type__c, Account__r.PAN_Number__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, Account__r.Customer_Type__c, Account__r.Payment_terms__c,
-                                          Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c, Account__r.Transportation_Terms__c From Dispatch_Address__c Where Id =: addressId];
+                                          Account__r.Tax_Type__c, Account__r.PAN_Number__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, Account__r.Customer_Type__c, Account__r.Payment_terms__c,Account__r.Owner.Email,
+                                          Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c, Account__r.Transportation_Terms__c,Account__r.RecordType.Name,Account__r.User__r.SAP_USER_CODE__c From Dispatch_Address__c Where Id =: addressId];
         return sapForInitialFieldsCheckAddress(addressRec);
     }
     

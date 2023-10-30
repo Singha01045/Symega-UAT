@@ -12,7 +12,7 @@
         debugger;
         //var monthYear=`${selectedMonnth}-${selectedYear}`;
         
-        if(document.getElementById('calendar') == undefined ){
+        if(document.getElementById('calendar') == undefined){
             let elements = document.getElementsByClassName('callyContainer');
             //elements[0].innerHTML = '<div aura:id="calendar"></div>';
             const newelement = document.createElement('div');
@@ -20,41 +20,58 @@
             newelement.innerHTML = '<div id="calendar"></div>';
             //elements[0].parentNode.replaceChild(newelement, elements[0]); Commented 5:34 For Test
         }
-        
-        var ele = document.getElementById('calendar');
-        $(ele).fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,basicWeek,basicDay'
-            },
-            themeSystem: "standard",
-            
-            defaultDate:formattedDate,
-            editable: true,
-            eventLimit: true,
-            dragScroll: true,
-            droppable: true,
-            events: data,
-            drop: function(info) {
-                debugger;
-                var draggedEvent = JSON.parse(info.draggedEl.getAttribute('data-event'));
-                var date = info.date;  
-                var newEvent = {
-                    id: draggedEvent.id,
-                    title: draggedEvent.title,
-                    start: date
-                };
-                calendar.addEvent(newEvent);
+        else{
+            var fixcallY=component.get("v.showApprovedCal");
+            function myFunction() {
+                var ele = document.getElementById('calendar');
+                $(ele).fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay'
+                    },
+                    themeSystem: "standard",
+                    
+                    defaultDate:formattedDate,
+                    editable: true,
+                    eventLimit: true,
+                    dragScroll: true,
+                    droppable: true,
+                    events: data,
+                    drop: function(info) {
+                        debugger;
+                        var draggedEvent = JSON.parse(info.draggedEl.getAttribute('data-event'));
+                        var date = info.date;  
+                        var newEvent = {
+                            id: draggedEvent.id,
+                            title: draggedEvent.title,
+                            start: date
+                        };
+                        calendar.addEvent(newEvent);
+                        
+                    },
+                    eventDrop: function (event, delta, revertFunc) {
+                        debugger;
+                    },
+                    
+                    eventClick:function(calEvent, event, view){
+                        debugger;
+                        component.set("v.SelectVisitAccountId",calEvent.id);
+                        component.set("v.title",calEvent.title);
+                        component.set("v.isShowDaskDesComp",true);
+                    },
+                });
+                $(ele).fullCalendar('gotoDate', formattedDate);
                 
-            },
-            eventDrop: function (event, delta, revertFunc) {
-                debugger;
+              
+                
             }
-        });
-        $(ele).fullCalendar('gotoDate', formattedDate);
+            setTimeout(myFunction, 3000);
+            
+        }
         
-        this.setEventDraggable(component);
+        
+        
     },
     
     tranformToFullCalendarFormat : function(component,events) {
@@ -192,16 +209,16 @@
             debugger;
             console.log('Dragging is getting called');
             /* initialize the external events
-         
-        -----------------------------------------------------------------*/
+             
+            -----------------------------------------------------------------*/
             
             /* initialize the calendar
-        -----------------------------------------------------------------*/
+            -----------------------------------------------------------------*/
         },
             setupDragAndDrop: function(component, event, helper) {
                 debugger;
                 var draggableEvent = component.find('draggableEvent').getElement();
-                var calendarEl = component.find('calendar').getElement();
+                //var calendarEl = component.find('calendar').getElement();
                 
                 draggableEvent.addEventListener('dragstart', function(e) {
                     e.dataTransfer.setData('text/plain', ''); // Required for dragging
@@ -233,18 +250,18 @@
                 });
             },
                 
-        showToast : function(component, event, helper,titel,type,message) {
-        var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-            title : titel,
-            message: message,
-            duration:' 5000',
-            key: 'info_alt',
-            type: type,
-            mode: 'pester'
-        });
-        toastEvent.fire();
-    },
-                
-                
+                showToast : function(component, event, helper,titel,type,message) {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title : titel,
+                        message: message,
+                        duration:' 5000',
+                        key: 'info_alt',
+                        type: type,
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                },
+                    
+                    
 })

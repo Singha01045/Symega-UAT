@@ -3,7 +3,7 @@
         component.set("v.showtabOne",true);
     },
     ShowFirsttab :function(component, event, helper){
-        debugger;
+        
         
         component.set("v.showtabOne",true);
         component.set("v.showtabTwo",false);
@@ -12,7 +12,7 @@
         component.set("v.showtabfive",false);
     },
     ShowSecondtab :function(component, event, helper){
-        debugger;
+        
         
         component.set("v.showtabOne",false);
         component.set("v.showtabTwo",true);
@@ -22,7 +22,7 @@
         
     },
     Showthirdtab :function(component, event, helper){
-        debugger;
+        
         
         component.set("v.showtabOne",false);
         component.set("v.showtabTwo",false);
@@ -32,7 +32,7 @@
         
     },
     Showfourtab :function(component, event, helper){
-        debugger;
+        
         
         component.set("v.showtabOne",false);
         component.set("v.showtabTwo",false);
@@ -42,7 +42,7 @@
         
     },
     Showfivetab :function(component, event, helper){
-        debugger;
+        
         
         component.set("v.showtabOne",false);
         component.set("v.showtabTwo",false);

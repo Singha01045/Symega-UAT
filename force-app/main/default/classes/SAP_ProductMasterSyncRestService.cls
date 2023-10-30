@@ -75,7 +75,7 @@ global without sharing class SAP_ProductMasterSyncRestService {
                     pvtProductCodeSet.add(quotient.SSC_Code__c);
                 }
                 
-                List<Product2> existingProductList = [SELECT Id, Name, IsActive, ProductCode, Description, Family, Target_Dish__c, QuantityUnitOfMeasure, Product_Sub_Category__c,
+                List<Product2> existingProductList = [SELECT Id, Name, Product_Visibility__c, To_Be_Sold_By__c, IsActive, ProductCode, Description, Family, Target_Dish__c, QuantityUnitOfMeasure, Product_Sub_Category__c,
                                                       Application__c, Product_Used_By__c, Legal_status__c, List_Price__c, HSN_TAX__c, Target_Country__c, End_Application__c, 
                                                       Allergen_Status_Required__c, Product_Profile__c, Max_sampling_Qty__c, Sampling_Qty_UNIT__c, RAD_Application__c
                                                       FROM Product2 WHERE ProductCode IN: sapReqProductMap.keySet()];
@@ -164,7 +164,9 @@ global without sharing class SAP_ProductMasterSyncRestService {
 		extPro.Product_Sub_Category__c = !String.isBlank(sapWrapper.PRODUCTSUBCATEGORY) ? (String)sapWrapper.PRODUCTSUBCATEGORY : extPro.Product_Sub_Category__c;
 		extPro.End_Application__c = !String.isBlank(sapWrapper.ENDAPPLICATION) ? (String)sapWrapper.ENDAPPLICATION : extPro.End_Application__c;
 		extPro.Plant__c = !String.isBlank(sapWrapper.PLANT) ? (String)sapWrapper.PLANT : extPro.Plant__c;
-        extPro.Product_Visibility__c = pvtProductCodeSet.contains(extPro.ProductCode) ? 'Private' : 'Public';
+        //extPro.Product_Visibility__c = pvtProductCodeSet.contains(extPro.ProductCode) ? 'Private' : 'Public';
+        extPro.To_Be_Sold_By__c = !String.isBlank(sapWrapper.TO_BE_SOLD_BY) ? (String)sapWrapper.TO_BE_SOLD_BY : extPro.To_Be_Sold_By__c;
+        extPro.Product_Visibility__c = !String.isBlank(sapWrapper.VISIBILITY) ? (String)sapWrapper.VISIBILITY : extPro.Product_Visibility__c;        
     }
 
     private static String getMultiPickvalFromString(String currentVal, List<String> newValuesList) {

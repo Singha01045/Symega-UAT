@@ -14,12 +14,12 @@
                 <!-- Card markup -->
                 <div class="slds-card ">
                     <header class="slds-card__header" >
-                        <h2 class="slds-text-heading_small" style="text-align: center; font-weight: 650;">{!card.Title}</h2>
+                        <h2 class="slds-text-heading_small cardTitle" style="">{!card.Title}</h2>
                     </header>
                     <div class="slds-card__body">
                         <!-- Add other content for the card -->
                         <div  style="{!'background-color: ' + card.cl + '; padding: ' + card.Padding + '; width: '+card.wi+'; padding:left: '+card.hi+'; margin-left: '+card.ml+'; border-radius: '+card.br+';margin-right: '+card.mr+';'}">
-                            <div style="text-align: center; color: white; font-size: 180%; font-weight: 550;">{!card.Description}</div>
+                            <div style="" class="cardDescription">{!card.Description}</div>
                         </div>
                     </div>
                     <footer class="slds-card__header" >

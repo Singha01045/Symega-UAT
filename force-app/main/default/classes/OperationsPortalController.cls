@@ -5,6 +5,18 @@ public without sharing class OperationsPortalController {
     public string mainReasonForSelPro  {get;set;}
     public string annulaVolInUnits  {get;set;}
     public string transportationTerms  {get;set;}
+    
+    public string packingType {get;set;}
+    public string vegNonVegLabel {get;set;}
+    public string ingredients {get;set;}
+    public string label {get;set;}
+    public string plant {get;set;}
+    public string customerType {get;set;}
+    public string currencyCode {get;set;}
+    public string deliveryPlant {get;set;}
+    public string accountSegmant {get;set;}
+    public string customerAddType {get;set;}
+    
     public OperationsPortalController() {
         
         quantityUnit = JSON.serialize(Utility.getPicklistValues('Sample_Line_Item__c' , 'Quantity_Unit__c'));
@@ -13,6 +25,16 @@ public without sharing class OperationsPortalController {
         mainReasonForSelPro = JSON.serialize(Utility.getPicklistValues('Project__c' , 'Main_reason_for_selecting_product__c'));
         annulaVolInUnits = JSON.serialize(Utility.getPicklistValues('Project__c' , 'Annual_Volume_in_units__c'));
         transportationTerms = JSON.serialize(Utility.getPicklistValues('Account' , 'Transportation_Terms__c'));
+        packingType = JSON.serialize(Utility.getPicklistValues('OpportunityLineItem' , 'Packaging_Type__c'));
+        vegNonVegLabel = JSON.serialize(Utility.getPicklistValues('Product2' , 'Veg_Nonveg_Logo_In_Label__c'));
+        ingredients = JSON.serialize(Utility.getPicklistValues('OpportunityLineItem' , 'Ingredients_List_Declared_With_Customer__c'));
+        label = JSON.serialize(Utility.getPicklistValues('OpportunityLineItem' , 'Label__c'));
+        plant = JSON.serialize(Utility.getPicklistValues('OpportunityLineItem' , 'Plant__c'));
+        customerType = JSON.serialize(Utility.getPicklistValues('Account' , 'Customer_Type__c'));
+        currencyCode = JSON.serialize(Utility.getPicklistValues('Account' , 'CurrencyIsoCode'));
+        deliveryPlant = JSON.serialize(Utility.getPicklistValues('Account' , 'Delivery_Plant__c'));
+        accountSegmant = JSON.serialize(Utility.getPicklistValues('Account' , 'Account_Segment__c'));
+        customerAddType = JSON.serialize(Utility.getPicklistValues('Dispatch_Address__c' , 'Type__c'));
     }
 
     @RemoteAction
@@ -101,7 +123,7 @@ public without sharing class OperationsPortalController {
     @RemoteAction
     public static accountDetailWrapper getSampleDetails(string sampleId, string userHashId){
         try{
-            List<Contact> conRecord = [SELECT Id,Name,Login_Hash_Code__c,Sample_Assignment_Team__r.Team_Type__c FROM Contact WHERE Login_Hash_Code__c =: userHashId];
+            List<Contact> conRecord = [SELECT Id,Name,Login_Hash_Code__c, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r) /*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
             List<Project__c> sampleRec = [SELECT Account__c,Acc_Email__c,Acidity__c,Actual_Date_of_Dispatch__c,Additional_Comments__c,Additive_Status__c,
             Allergen__c,Allergin_Free_Decleration__c,Annual_Value__c,Annual_Volume_Full__c,Annual_Volume_in_units__c,Application_guidelines_if_any__c,
             Application_method__c,Application_Name__c,Application_product_shelf_life__c,Application_Ready__c,Application_reciepe_code__c,
@@ -138,13 +160,18 @@ public without sharing class OperationsPortalController {
                                                   Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c
                                                   FROM Sample_Line_Items__r) FROM Project__c WHERE Id =: sampleId];
             
-            List<Contact> conRec = [SELECT Id,Name,Sample_Assignment_Team__r.Team_Type__c FROM Contact WHERE Login_Hash_Code__c =: userHashId];
+            List<Contact> conRec = [SELECT Id,Name, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
             
             accountDetailWrapper wrapper = new accountDetailWrapper();
-            
-            List<Product2> productList = [SELECT Id,ProductCode,Name,Family FROM Product2 WHERE Family =: conRecord[0].Sample_Assignment_Team__r.Team_Type__c];
-            List<OPTIVA_Recipe__c> opRecipeList = [SELECT Id,Name,SSC_Code__c,Recipe_Family__c FROM OPTIVA_Recipe__c WHERE Recipe_Family__c =: conRecord[0].Sample_Assignment_Team__r.Team_Type__c];
-            List<Project_Quotient__c> proQuotientList = [SELECT Id,Name,SSC_Code__c,Sample_Project_Application__c,Sample_Project_Application__r.Product_Family__c FROM Project_Quotient__c WHERE Sample_Project_Application__r.Product_Family__c =: conRecord[0].Sample_Assignment_Team__r.Team_Type__c];
+            List<String> typeList = new List<String>();
+            for(Sample_Allocation_Team__c st : conRec[0].Account__r){
+                if(st.Sample_Assignment_Team_Type__c != null && st.Sample_Assignment_Team_Type__c != ''){
+                    typeList.add(st.Sample_Assignment_Team_Type__c);
+                }
+            }
+            List<Product2> productList = [SELECT Id,ProductCode,Name,Family FROM Product2 WHERE Family IN : typeList];
+            List<OPTIVA_Recipe__c> opRecipeList = [SELECT Id,Name,SSC_Code__c,Recipe_Family__c FROM OPTIVA_Recipe__c WHERE Recipe_Family__c IN : typeList];
+            List<Project_Quotient__c> proQuotientList = [SELECT Id,Name,SSC_Code__c,Sample_Project_Application__c,Sample_Project_Application__r.Product_Family__c FROM Project_Quotient__c WHERE Sample_Project_Application__r.Product_Family__c IN : typeList];
             wrapper.listOfSamples = sampleRec;
             wrapper.listOfProducts = productList;
             wrapper.listOfOptivaRecipe = opRecipeList;
@@ -201,7 +228,7 @@ public without sharing class OperationsPortalController {
     @RemoteAction
     public static accountDetailWrapper getCustomerDetail(String accId, String hashCode){
         try{
-            List<Contact> conRec = [SELECT Id,Name,Sample_Assignment_Team__r.Team_Type__c,Role__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
+            List<Contact> conRec = [SELECT Id,Name,(SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/,Role__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
             List<Account> accRecord = [SELECT AccountSource,Account_Potential__c,
             Account_Segment__c,Account_Type__c,BillingAddress,BillingCity,BillingCountry,
             BillingCountryCode,BillingGeocodeAccuracy,BillingLatitude,BillingLongitude,
@@ -256,11 +283,14 @@ public without sharing class OperationsPortalController {
     }
 
     @RemoteAction
-    public static Opportunity getOpportunityDetails(string oppId){
+    public static accountDetailWrapper getOpportunityDetails(string oppId){
         try{
-            List<Opportunity> oppRecord = [SELECT AccountId,accShipAdr__c,AgeInDays,Amount,Approval_Status__c,Approved_by_Business_Head__c,Approved_by_Manager__c,
+            List<Account> accRec = New List<Account>();
+            List<Dispatch_Address__c> custAddRecord = New List<Dispatch_Address__c>();
+            List<Contact> conTactList = New List<Contact>();
+            List<Opportunity> oppRecord = [SELECT AccountId,Account_Billing_Address__c,Customer_Billing_Address__c,accShipAdr__c,AgeInDays,Amount,Approval_Status__c,Approved_by_Business_Head__c,Approved_by_Manager__c,
             Approved_by_MD__c,Approver_Name__c,CampaignId,Child_Opp__c,CloseDate,Color_Opportunity__c,ContactId,ContractId,CPD_Opportunity__c,CreatedById,
-            CreatedDate,CurrencyIsoCode,Customer_Followup_Date__c,Customer_response__c,Description,Distributer_Customer__c,Email__c,End_Use_Application__c,
+            Billing_Street__c,Billing_City__c,Billing_State__c,Billing_Country__c,Billing_Postal_Code__c,CreatedDate,CurrencyIsoCode,Customer_Followup_Date__c,Customer_response__c,Description,Distributer_Customer__c,Email__c,End_Use_Application__c,
             End_Use_Category__c,Fiscal,FiscalQuarter,FiscalYear,Fiscal_Year__c,Flavor_Opportunity__c,ForecastCategory,ForecastCategoryName,Freight_charges__c,
             HasOpenActivity,HasOpportunityLineItem,HasOverdueTask,Id,Include_Freight_Charges__c,Initial_Discount_Approved__c,IsClosed,IsDeleted,
             IsPriorityRecord,IsWon,LastActivityDate,LastActivityInDays,LastAmountChangedHistoryId,LastCloseDateChangedHistoryId,LastModifiedById,
@@ -272,7 +302,48 @@ public without sharing class OperationsPortalController {
             SyncedQuoteId,SystemModstamp,TotalOpportunityQuantity,Total_FERT_Products__c,Total_Freight_Charges__c,Total_List_Price__c,Total_Markdown_Price__c,
             Total_Qty_In_Kg__c,Total_Quantity__c,Total_Unit_Price__c,Type,Vessel_Flight_Name_Voy_No__c,RecordType.Name,
             Account.Name,Primary_Contact__r.Name,Pricebook2.Name FROM Opportunity WHERE Id =: oppId];
-            return oppRecord[0];
+            
+            List<OpportunityLineItem> oliList = [SELECT Applied_Volume_Based_Markup__c,Approval_Markdown__c,Art_Work__c,Change_in_Dispatch_Date__c,CreatedById,CreatedDate,CurrencyIsoCode,
+                                 Cusinery_identity__c,Customer_Code__c,Customer_Discount_Applied__c,Customer_Type__c,Customized_Label__c,Description,Discount,Discount_Description__c,
+                                 FERT_Code__c,Fert_Description__c,Id,If_Organised_set_Micro_as_Long_Term__c,Ingredients_List_Declared_With_Customer__c,Ingredient_list__c,IsDeleted,
+                                 Is_Parent_Opportunity__c,Is_PIR_Created__c,Label__c,LastModifiedById,LastModifiedDate,LastReferencedDate,LastViewedDate,ListPrice,ListPriceXQty__c,
+                                 MarkdownXQty__c,MarkDown_Amount__c,Markup_Amount__c,Material_Sector__c,Name,OpportunityId,Order_Quantity__c,Packaging_Quantity__c,Packaging_Type__c,
+                                 Packaging_Unit__c,Planned_Delivery_Date__c,Plant__c,PricebookEntryId,Price_In_KG__c,Primary__c,Product2Id,Product2.Name,ProductCode,Product_Family__c,
+                                 Pvt_Label_Selling_Price__c,Quantity,Quantity_In_KG__c,Quantity_Unit__c,Reveal_Symega_Identity__c,Sales_Order__c,Sales_Remarks__c,
+                                 Sale_Order_Submitted__c,Secondary__c,ServiceDate,Service_Rendering_Date_Reason__c,Service_Rendering_Date__c,SortOrder,SSC_Code_for_Flavours__c,
+                                 Sub_Total__c,Symega_Logo__c,SystemModstamp,Tertiary__c,TotalPrice,Type__c,UnitPrice,UnitPriceXQty__c,Unit_Of_Measure__c,Volume_Based_Amount__c,Product2.Shelf_Life__c, 
+                                 Product2.Allergen_Status_Required__c,Product2.Control_Code_HSN_Code__c,Product2.Veg_Nonveg_Logo_In_Label__c FROM OpportunityLineItem WHERE OpportunityId =: oppId];
+            
+            
+            
+            if(oppRecord[0].AccountId != null && oppRecord[0].Account_Billing_Address__c == true){
+				accRec = [Select Id,Name, Customer_Type__c,CurrencyIsoCode,BillingCity,BillingCountry,BillingStreet,BillingPostalCode,BillingState,Delivery_Plant__c,Account_Segment__c,
+                          Transportation_Terms__c,PAN_Number__c,GST_number__c From Account WHERE Id =: oppRecord[0].AccountId];
+                conTactList = [SELECT Id,Name FROM Contact WHERE AccountId =: accRec[0].Id];
+                                
+            }
+            if(oppRecord[0].Customer_Billing_Address__c != null){
+               custAddRecord = [select Id,Address__city__s,Address__Street__s,Address__PostalCode__s,toLabel(Address__CountryCode__s),toLabel(Address__StateCode__s),Contact__c,Account__c,
+                                Type__c from Dispatch_Address__c WHERE Id =: oppRecord[0].Customer_Billing_Address__c]; 
+                conTactList = [SELECT Id,Name FROM Contact WHERE AccountId =: custAddRecord[0].Account__c];
+            }
+            
+            accountDetailWrapper wrapper = new accountDetailWrapper();
+            wrapper.oppList = oppRecord;
+            if(!accRec.isEmpty()){
+                wrapper.accRecord = accRec[0];
+            }
+            
+            if(!custAddRecord.isEmpty()){
+               wrapper.customerAddRec = custAddRecord[0];
+            }
+            if(!oliList.isEmpty()){
+                wrapper.oppProductList = oliList;
+            }
+            if(!conTactList.isEmpty()){
+                wrapper.conList = conTactList;
+            }
+            return wrapper;
         }catch(Exception e){
             return null;
         }
@@ -304,10 +375,11 @@ public without sharing class OperationsPortalController {
         public Contact conRec { get; set; }
         public List<Opportunity> oppList { get; set; }
         public List<OpportunityLineItem> oppProductList { get; set; }
-        
+        public Dispatch_Address__c customerAddRec {get; set;}
         public list<Product2> listOfProducts { get; set; }
         public list<OPTIVA_Recipe__c> listOfOptivaRecipe { get; set; }
         public list<Project_Quotient__c> listOfProQuotient { get; set; }
+        public list<Contact> conList { get; set; }
     }
 
     @RemoteAction
@@ -700,6 +772,34 @@ public without sharing class OperationsPortalController {
             }
             update accRec;
            return 'SUCCESS'; 
+        }catch(Exception e){
+            return e.getMessage()+e.getLineNumber();
+        }
+    }
+    
+    @RemoteAction
+    public static string updateDetails(Account accRec,Dispatch_Address__c CustomerAddRec){
+        try{
+            if(accRec.Name != ''){
+                update accRec;
+            }
+            if(CustomerAddRec.Name != ''){
+                update CustomerAddRec;
+            }
+            return 'SUCCESS';
+        }catch(Exception e){
+            return e.getMessage()+e.getLineNumber();
+        }
+    }
+    
+    @RemoteAction
+    public static string updateOppProductDetails(List<OpportunityLineItem> listOfOLIToUpdate){
+        try{
+            system.debug('listOfOLIToUpdate ===> '+listOfOLIToUpdate);
+            if(!listOfOLIToUpdate.isEmpty()){
+               update listOfOLIToUpdate; 
+            }
+            return 'SUCCESS';
         }catch(Exception e){
             return e.getMessage()+e.getLineNumber();
         }

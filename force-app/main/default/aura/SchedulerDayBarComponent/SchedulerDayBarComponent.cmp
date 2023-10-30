@@ -15,8 +15,10 @@
         <div class="slds-grid dateBar" >
             
             <!-- Previes Button -->
-            <lightning:buttonIcon class="previousButton" iconName="utility:left"  variant="border-filled" size="large" aura:id="prevBtn" alternativeText="left"
-                                  title="Previous" onclick="{!c.handlePrevClicked}"/>
+            <!--lightning:buttonIcon class="previousButton" iconName="utility:left"  variant="border-filled" size="large" aura:id="prevBtn" alternativeText="left"
+                                  title="Previous" onclick="{!c.handlePrevClicked}"/-->
+            <lightning:button class="mobileAlignPrev" iconName="utility:back" aura:id="prevBtn"  variant='inverse'
+                              title="Previous" onclick="{!c.handlePrevClicked}"/>
             
             <!-- Date Bar -->
             <div class="slds-align_absolute-center desktopDayBar">
@@ -44,8 +46,10 @@
             </div>
             
             <!-- Next Button -->
-            <lightning:buttonIcon  iconName="utility:right"  variant="border-filled" size="large" aura:id="nextBtn" alternativeText="right"
-                                  title="Next" onclick="{!c.handleNextClicked}" disabled="{!v.disableNext}"/>
+            <!--lightning:buttonIcon  iconName="utility:right"  variant="border-filled" size="large" aura:id="nextBtn" alternativeText="right"
+                                  title="Next" onclick="{!c.handleNextClicked}" disabled="{!v.disableNext}"/-->
+            <lightning:button class="mobileAlignNext"  iconName="utility:forward" variant='inverse' aura:id="nextBtn"
+                              title="Next" onclick="{!c.handleNextClicked}" disabled="{!v.disableNext}"/>
         </div>
     </div>
 </aura:component>

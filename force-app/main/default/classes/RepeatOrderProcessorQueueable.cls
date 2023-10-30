@@ -77,6 +77,11 @@ public class RepeatOrderProcessorQueueable implements Queueable {
             if(matchingOpportunity == null) {
                 matchingOpportunity = soCreationHandler.createOpp(customerMap.get(currentOrder.CUSTOMER_CODE), 'Closed Won');
                 matchingOpportunity.Repeat_Order_Created__c = true;
+                matchingOpportunity.Annual_Volume_Full__c = 1;
+                matchingOpportunity.Annual_Volume_in_units__c = 'Kg';
+                matchingOpportunity.Target_Price_Kg__c = 1;
+                matchingOpportunity.End_Use_Category__c = 'Baked Goods';
+                matchingOpportunity.End_Use_Application__c = 'Crackers';
                 insert matchingOpportunity;
             }else {
                 matchingOpportunity.StageName = 'Closed Won';

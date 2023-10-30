@@ -1,6 +1,6 @@
 ({
     helperMethod : function(component ,event ,helper,MonthName,year) {
-        debugger;
+        
         var action = component.get('c.getMonthlyRecord');
         action.setParams({ 
             month:MonthName,

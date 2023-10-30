@@ -5,6 +5,12 @@
     .THIS .BeatMobile {
         display: none;
     }
+    .THIS .paginationButton {
+        margin-Top: 1%;
+    }
+    .THIS .PrevButton {
+        margin-right: 7%;
+    }
 }
 
 @media (min-width:1680px){
@@ -13,6 +19,12 @@
     }
     .THIS .BeatMobile {
         display: none;
+    }
+    .THIS .paginationButton {
+        margin-Top: 1%;
+    }
+    .THIS .PrevButton {
+        margin-right: 7%;
     }
 }
 

@@ -1,6 +1,6 @@
 ({
     getVisitRecs : function(component, event, helper) {
-        
+        debugger;
         var helper = this;
         var today = new Date();
         var selectedDate = component.get('v.selectedDate');        
@@ -20,18 +20,30 @@
         action.setParams({
             visitDate :  formattedDate
         });
+
+        // var action = component.get('c.GetCompletedVisitRecords');
+        // action.setParams({
+        //     visitDate :  formattedDate
+        // });
+
         action.setCallback(this, function(response){ // AccountAddressList
             if(response.getState()==='SUCCESS'){
                 var result = response.getReturnValue();
+                var newVisitList;
                 if(result != null){
                     if(result.visitList != undefined && result.visitList != null && result.visitList != ''){
                         if(result.isApproved == true){
+                            /*for(var i in result.visitList){
+                                 var address = result.visitList[i].Account__r.BillingStreet +','+ result.visitList[i].Account__r.BillingCity + ',' + result.visitList[i].Account__r.BillingState;
+                                var endLat = searchLatAndLngByStreet(address).latitude;
+                                var endLong = searchLatAndLngByStreet(address).longitude;
+                            }*/
                             component.set('v.taskList', result.visitList);
                             component.set('v.completedVisit', result.completedVisit); 
                             component.set('v.pendingVisit', result.pendingVisit);
                             component.set("v.ShowEmptyPage",false);
                             component.set('v.disableVisitButtons', true);
-                            component.set("v.ShowStartDay",result.isApproved);
+                            component.set("v.ShowStartDay",!result.isApproved);
                             if(result.dvpList != undefined && result.dvpList.length != 0){
                                 component.set("v.ShowStartDay",result.isApproved);
                                 component.set("v.ShowEndDay",false);
@@ -98,12 +110,61 @@
         });
         $A.enqueueAction(action);
     },
+
+    loadCompletedTasks: function (component, event, helper) {
+        debugger;
+            var today = new Date();
+            var selectedDate = component.get('v.selectedDate');        
+            var year = today.getFullYear();
+            var month = String(today.getMonth() + 1).padStart(2, '0'); 
+            var day = String(today.getDate()).padStart(2, '0');
+            
+            // Format the date in "YYYY-MM-DD" format
+            var formattedDate = year + '-' + month + '-' + day;
+            if(selectedDate != null && selectedDate != undefined){
+                formattedDate = selectedDate;
+            }
+            component.set('v.SelectedVisitDateFromTaskComp', formattedDate);
+            component.set('v.selectedDate', formattedDate);
+            var action = component.get("c.GetCompletedVisitRecords");
+            action.setParams({ visitDate: formattedDate });
+    
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var responseValue = response.getReturnValue();
+                    if (responseValue) {
+                        component.set("v.completedTaskList", responseValue.completedVisitList);
+                        // component.set("v.completedVisitCount", responseValue.completedVisit);
+                    }
+                } else {
+                    // Handle errors or display a message
+                    console.error("Error: " + state);
+                }
+            });
+    
+            $A.enqueueAction(action);
+        },
+    
     
     MapinitMethod: function (component, event, helper) {
         
         component.set('v.mapMarkers',component.get("v.AccountMapList") );
         component.set('v.zoomLevel', 12);
     },
+    
+    searchLatAndLngByStreet:function(adress) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'address': adress }, (res, status) => {
+      console.log(res, status)
+      if (status == google.maps.GeocoderStatus.OK) {
+        return {
+          latitude: JSON.stringify(res[0].geometry.location.lat()),
+          longitude: JSON.stringify(res[0].geometry.location.lng())
+        }
+      } 
+    });
+},
     showsuccessMessage : function (component, event, helper) {
         
         var toastEvent = $A.get("e.force:showToast");

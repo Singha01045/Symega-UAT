@@ -116,13 +116,20 @@ public without sharing class SampleTriggerHandler {
                 sample.Country__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCountry;
                 sample.Postal_Code__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingPostalCode;
                 sample.Street__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet; 
-            }else {
-                sample.City__c = proj.Opportunity__r.Account.ShippingCity;
-                sample.State__c = proj.Opportunity__r.Account.ShippingState;
-                sample.Country__c = proj.Opportunity__r.Account.ShippingCountry;
-                sample.Postal_Code__c = proj.Opportunity__r.Account.ShippingPostalCode;
-                sample.Street__c = proj.Opportunity__r.Account.ShippingStreet;
             }
+            else {
+                sample.City__c = proj.Opportunity__r.Shipping_City__c;
+                sample.State__c = proj.Opportunity__r.Shipping_State__c;
+                sample.Country__c = proj.Opportunity__r.Shipping_Country__c;
+                sample.Postal_Code__c = proj.Opportunity__r.Shipping_Postal_Code__c;
+                sample.Street__c = proj.Opportunity__r.Shipping_Street__c;
+            }
+            
+            sample.Billing_City__c = proj.Opportunity__r.Billing_City__c;
+            sample.Billing_State__c = proj.Opportunity__r.Billing_State__c;
+            sample.Billing_Country__c = proj.Opportunity__r.Billing_Country__c;
+            sample.Billing_Postal_Code__c = proj.Opportunity__r.Billing_Postal_Code__c;
+            sample.Billing_Street__c = proj.Opportunity__r.Billing_Street__c; 
             
             samples.put(proj.Id,sample);
             checkValues.put(proj.Id,proj.Auto_Submit_Sample__c); 

@@ -13,4 +13,9 @@ public class Optiva_Project_Creation_Wrapper {
     public String other;
     public String prod_code_dev;
     public String target_date;
+    
+    //NEW ADDITIONS
+    public String cust_code;
+    public String created_by;
+    
 }

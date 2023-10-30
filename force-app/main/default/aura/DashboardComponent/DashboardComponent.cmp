@@ -1,5 +1,5 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
-  
+    
     <aura:attribute name="showtabOne" type="boolean" default="true"/>  
     <aura:attribute name="showtabTwo" type="boolean" default="false"/>  
     <aura:attribute name="showtabthree" type="boolean" default="false"/>  
@@ -8,30 +8,30 @@
     <div Style="" class="background">
         <!--div class="slds-grid slds-wrap">
         </div -->
-        <lightning:layout class="container" multipleRows="true" >
+        <lightning:layout class="container " multipleRows="true" >
             <lightning:layoutItem  size="2"  >
-                <div class="cont">
-                <div class="mobileTabsContainer">
-                <div class="mobileTab">
-                <lightning:button variant="bare"  label="Dashboard"  iconName="utility:home" onclick="{!c.ShowFirsttab}" class="custom-button1 slds-p-left_medium "/>
-                </div>
-                <div class="mobileTab">
-                <lightning:button variant="bare"  label="Today's Task"  iconName="utility:list" onclick="{!c.ShowSecondtab}" class="custom-button1 slds-p-left_medium "/>
-                </div>
-                <div class="mobileTab">
-                <lightning:button variant="bare"  label="Beat Planner"  iconName="utility:event" onclick="{!c.Showthirdtab}" class="custom-button1 slds-p-left_medium "/>
-                </div>
-                <div class="mobileTab">
-                <lightning:button variant="bare"  label="Scheduler Insights"  iconName="utility:edit_form" onclick="{!c.Showfourtab}" class="custom-button1 slds-p-left_medium "/>
-                </div>
-                <div class="mobileTab">
-                <lightning:button variant="bare"  label="Travel Insights"  iconName="utility:checkin" onclick="{!c.Showfivetab}" class="custom-button1 slds-p-left_medium "/>
-                </div>
-                </div>
+                <div class="cont slds-m-top_large">
+                    <div class="mobileTabsContainer">
+                        <div class="mobileTab">
+                            <lightning:button variant="bare"  label="Dashboard"  iconName="utility:home" onclick="{!c.ShowFirsttab}" class="custom-button1 slds-p-left_medium "/>
+                        </div>
+                        <div class="mobileTab">
+                            <lightning:button variant="bare"  label="Today's Task"  iconName="utility:list" onclick="{!c.ShowSecondtab}" class="custom-button1 slds-p-left_medium "/>
+                        </div>
+                        <div class="mobileTab">
+                            <lightning:button variant="bare"  label="Beat Planner"  iconName="utility:event" onclick="{!c.Showthirdtab}" class="custom-button1 slds-p-left_medium "/>
+                        </div>
+                        <div class="mobileTab">
+                            <lightning:button variant="bare"  label="Scheduler Insights"  iconName="utility:edit_form" onclick="{!c.Showfourtab}" class="custom-button1 slds-p-left_medium "/>
+                        </div>
+                        <div class="mobileTab">
+                            <lightning:button variant="bare"  label="Travel Insights"  iconName="utility:checkin" onclick="{!c.Showfivetab}" class="custom-button1 slds-p-left_medium "/>
+                        </div>
                     </div>
+                </div>
                 
                 
-                <div class="sidenav">
+                <div class="sidenav slds-m-top_large">
                     <div class="slds-align_absolute-left slds-m-top_small slds-text-heading_large slds-m-left_small"  style="margin-bottom:0%;"  >
                         <!--img src="{!$Resource.LeadhubLogo}"  / -->
                     </div><br/> 
@@ -54,15 +54,15 @@
                 
                 
             </lightning:layoutItem>
-            <lightning:layoutItem class="childPortion" size="10" padding="around-medium">
-                <div>
+            <lightning:layoutItem class="childPortion map-sm" size="10" padding="around-medium">
+                <div class="slds-m-top_large">
                     <lightning:layout>
                         <lightning:layoutItem class="e" size="12"> 
                             <aura:if isTrue="{!v.showtabOne}">
-                               <c:ShowAssignedAreaComponent/>
+                                <c:ShowAssignedAreaComponent/>
                             </aura:if> 
                             <aura:if isTrue="{!v.showtabTwo}">
-                               <c:todayTask/>
+                                <c:todayTask/>
                             </aura:if>
                             <aura:if isTrue="{!v.showtabthree}">
                                 <c:NewBeatPlanner/>
@@ -71,13 +71,15 @@
                                 <c:ShowSchedulerInsightsComponent/>
                             </aura:if>
                             <aura:if isTrue="{!v.showtabfive}">
-                                <c:ShowTravelInsightComponent/>
+                               	<c:ShowTravelInsightComponent/>
                             </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>
                 </div>
             </lightning:layoutItem>
+       
         </lightning:layout>
+     
     </div>
     
 </aura:component>

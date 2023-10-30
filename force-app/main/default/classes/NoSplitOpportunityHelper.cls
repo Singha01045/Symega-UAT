@@ -114,8 +114,8 @@ public class NoSplitOpportunityHelper {
                         system.debug('---'+productList);
                         if(!productList.isEmpty()){
                             insert productList;
-                            parentOpportunity[0].StageName = 'In-Progress';
-                            update parentOpportunity[0];
+                            //parentOpportunity[0].StageName = 'In-Progress';
+                            //update parentOpportunity[0];
                             return 'SUCCESS';
                         }                            
                     }

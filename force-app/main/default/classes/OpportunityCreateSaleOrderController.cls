@@ -23,17 +23,17 @@ public without sharing class OpportunityCreateSaleOrderController {
         string accValidationsResp = '';
         
         if(lineItems[0].Sales_Order__r.Opportunity__r.Account_Billing_Address__c){
-            accValidationsResp = Utility.checkSAPCustomerReqField(lineItems[0].Sales_Order__r.Opportunity__r.AccountId);
+            //accValidationsResp = Utility.checkSAPCustomerReqField(lineItems[0].Sales_Order__r.Opportunity__r.AccountId);
         }
         else if(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c != null){
-            accValidationsResp = Utility.checkSAPCustomerReqFieldAddress(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c);
+            //accValidationsResp = Utility.checkSAPCustomerReqFieldAddress(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c);
         }
         
         if(accValidationsResp.equalsIgnoreCase('success')) {
-            sWrap.accountFieldsMissing = false;
+            sWrap.reqFieldsMissing = false;
         }
         else{
-            sWrap.accountFieldsMissing = true;
+            sWrap.reqFieldsMissing = true;
         }
 
         return sWrap;
@@ -43,7 +43,7 @@ public without sharing class OpportunityCreateSaleOrderController {
         @AuraEnabled
         public boolean initiallySubmitted;
         @AuraEnabled
-        public boolean accountFieldsMissing;
+        public boolean reqFieldsMissing;
         @AuraEnabled
         public Id accRecId;
         @AuraEnabled

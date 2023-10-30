@@ -115,22 +115,21 @@ public without sharing class OptivaCreateWrapper {
 
 
         //NEW ADDITIONS
-        OpAppWrapper.pulp_percent = project.of_pulp_if_with_fruit_pulp__c != null ? String.valueOf(project.of_pulp_if_with_fruit_pulp__c) : '0';
+        OpAppWrapper.per_pulp = project.of_pulp_if_with_fruit_pulp__c != null ? String.valueOf(project.of_pulp_if_with_fruit_pulp__c) : '0';
         OpAppWrapper.account = checkIfBlank(project.Account__c);
-        OpAppWrapper.account_segment = checkIfBlank(project.Account_Segment__c);
-        OpAppWrapper.acidity_percent = project.Acidity__c != null ? String.valueOf(project.Acidity__c) : '0';
+        OpAppWrapper.account_seg = checkIfBlank(project.Account_Segment__c);
+        OpAppWrapper.acidity_per = project.Acidity__c != null ? String.valueOf(project.Acidity__c) : '0';
         OpAppWrapper.additive_status = checkIfBlank(project.Additive_Status__c);
-        OpAppWrapper.brix = project.Brix_degrees__c != null ? String.valueOf(project.Brix_degrees__c) : '0';
-        OpAppWrapper.center_filling_cream = project.Center_filling_Cream__c != null ? String.valueOf(project.Center_filling_Cream__c) : '0';
+        OpAppWrapper.brix_deg = project.Brix_degrees__c != null ? String.valueOf(project.Brix_degrees__c) : '0';
+        OpAppWrapper.center_cream = project.Center_filling_Cream__c != null ? String.valueOf(project.Center_filling_Cream__c) : '0';
         OpAppWrapper.cust_name = checkIfBlank(project.Customer_Name__c);
-        OpAppWrapper.fat = project.Fat__c != null ? String.valueOf(project.Fat__c) : '0';
-        OpAppWrapper.final_snf = project.Final_SNF__c != null ? String.valueOf(project.Final_SNF__c) : '0';
+        OpAppWrapper.fat_per = project.Fat__c != null ? String.valueOf(project.Fat__c) : '0';
+        OpAppWrapper.final_snf_per = project.Final_SNF__c != null ? String.valueOf(project.Final_SNF__c) : '0';
         OpAppWrapper.milk_solids = project.Milk_Solids__c != null ? String.valueOf(project.Milk_Solids__c) : '0';
         OpAppWrapper.oil_sprinkle = project.Oil_sprinkling_Dust_on__c != null ? String.valueOf(project.Oil_sprinkling_Dust_on__c) : '0';
-        OpAppWrapper.pH = project.pH__c != null ? String.valueOf(project.pH__c) : '0';
-        OpAppWrapper.pref_thick_Visco = project.Preferred_thickness_Viscosity__c != null ? String.valueOf(project.Preferred_thickness_Viscosity__c) : '0';
-        OpAppWrapper.processing_cond = checkIfBlank(project.Processing_condition__c);
-        OpAppWrapper.prod_type = checkIfBlank(project.Product_Type__c);
+        OpAppWrapper.ph = project.pH__c != null ? String.valueOf(project.pH__c) : '0';
+        OpAppWrapper.viscocity = project.Preferred_thickness_Viscosity__c != null ? String.valueOf(project.Preferred_thickness_Viscosity__c) : '0';
+        OpAppWrapper.processing_condition = checkIfBlank(project.Processing_condition__c);
         OpAppWrapper.recipe_cost = project.Recipe_Cost__c != null ? String.valueOf(project.Recipe_Cost__c) : '0';
         OpAppWrapper.start_date = project.Start_Date__c != null ? formatDate(project.Start_Date__c) : 'NA';
 
@@ -144,7 +143,7 @@ public without sharing class OptivaCreateWrapper {
             OpWrapper.project_sf_code = checkIfBlank(project.Id);
             OpWrapper.project_title = checkIfBlank(project.Name) + ':' + checkIfBlank(project.Project_Name__c);
             OpWrapper.created_by = checkIfBlank(project.Owner.Name);
-            OpWrapper.project_type = 'External';//checkIfBlank(project.Project_Type__c);
+            OpWrapper.project_type = checkIfBlank(project.Project_Type__c); // 'External';
             OpWrapper.project_category = checkIfBlank(project.Product_Family__c);//checkIfBlank(project.Project_Category__c);
             OpWrapper.opp_type_int = 'Development';//checkIfBlank(project.Opportunity_Type__c);
             OpWrapper.opp_sub_type_sales = 'NPD';//checkIfBlank(project.Opportunity_Sub_Type__c);
@@ -156,15 +155,18 @@ public without sharing class OptivaCreateWrapper {
             OpWrapper.cust_ciu = project.Customer_Cost_in_USE_CIU__c!=null?String.valueOf(project.Customer_Cost_in_USE_CIU__c):'NA';
             OpWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'NA';
             OpWrapper.business_potent_val = project.Business_potential_value_INR_New__c == null ? 0 : project.Business_potential_value_INR_New__c;
-            OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'NA';
+            //OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'0';
+            OpWrapper.curr_year_vol = project.Minimum_order_quantity__c!=null?String.valueOf(project.Minimum_order_quantity__c):'0'; // new
             OpWrapper.sensry_prfle_rpt = checkIfBlank(project.Sensory_profiling_Report_Required__c);
             OpWrapper.appl_smpl_recipe = checkIfBlank(project.Application_Samples_Receipe_Support__c);
-            OpWrapper.physical_form = checkIfBlank(project.Wet_Dry__c);
+            //OpWrapper.physical_form = checkIfBlank(project.Wet_Dry__c);
+            OpWrapper.physical_form = checkIfBlank(project.Physical_Form__c); // new
             OpWrapper.solublity = checkIfBlank(project.Solubility_Preference__c);
             OpWrapper.shelf_life_flvr = checkIfBlank(project.Current_Shelf_life__c);
             OpWrapper.supplier_legal_stat = checkIfBlank(project.Supplier_Legal_Status__c);
             OpWrapper.dosage_guide_cust = checkIfBlank(project.Dosage_Guidelines__c);
-            OpWrapper.shelf_life_appl_prod = checkIfBlank(project.Expected_Shelf_Life__c);
+            //OpWrapper.shelf_life_appl_prod = checkIfBlank(project.Expected_Shelf_Life__c);
+            OpWrapper.shelf_life_appl_prod = checkIfBlank(project.Application_product_shelf_life__c); // new
             OpWrapper.appl_guide = checkIfBlank(project.Other_Application_Methods__c);
             OpWrapper.cust_base_details = checkIfBlank(project.Customer_Base_Details__c);
             OpWrapper.match_target_dtls = checkIfBlank(project.Matching_Target_details__c);
@@ -189,11 +191,8 @@ public without sharing class OptivaCreateWrapper {
 
 
             //NEW ADDITIONS
-            OpWrapper.account_segment = checkIfBlank(project.Account_Segment__c);
-            OpWrapper.cust_name = checkIfBlank(project.Customer_Name__c);
             OpWrapper.expec_shelf_life = checkIfBlank(project.Expected_Shelf_Life__c);
-            OpWrapper.prod_type = checkIfBlank(project.Product_Type__c);
-            OpWrapper.start_date = project.Start_Date__c != null ? formatDate(project.Start_Date__c) : 'NA';
+            OpWrapper.legal_status = checkIfBlank(project.Legal_Status__c);
 
         }
         return OpWrapper;

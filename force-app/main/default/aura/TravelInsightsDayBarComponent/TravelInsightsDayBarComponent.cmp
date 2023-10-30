@@ -11,11 +11,10 @@
     <aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent" />
     
     <div class="slds-m-left_medium slds-m-right_medium " >
-        <h2 class="travelInsightHeading" style="">Travel Insights</h2>
-        <div class="slds-grid filterDiv" style="" >
+        <div class="slds-grid filterDiv monthMaindiv" style="" >
             <aura:if isTrue="{!v.disablePrev}">
-                <lightning:buttonIcon  iconName="utility:left"  variant="border-filled" size="large" aura:id="prevBtn" alternativeText="left"
-                                      title="Previous" onclick="{!c.handlePrevClicked}"/>
+                <lightning:button class="mobileAlignPrev" iconName="utility:back" aura:id="prevBtn"  variant='inverse'
+                              title="Previous" onclick="{!c.handlePrevClicked}"/>
             </aura:if>
             <!-- Date Bar -->
             <div class="monthFilter">
@@ -29,22 +28,21 @@
                 </aura:iteration>
             </div>
             
-            <div class="cont1">
+           
         <div class="monthFilterMobile">
         <aura:iteration items="{!v.MonthListToShowMobile}" var="dateObj">
              <aura:if isTrue="{!dateObj.colormatch}">
-                <lightning:button class="mobileMonth" variant="brand" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
+                <lightning:button  class="monthwidth" variant="brand" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
              <aura:set attribute="else">
-                <lightning:button class="mobileMonth" variant="Neutral" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
+                <lightning:button class="monthwidth" variant="Neutral" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
              </aura:set>
             </aura:if>
         </aura:iteration>
         </div>
-        </div>
             
             <!-- Next Button -->
-            <lightning:buttonIcon class="mobileAlignNext" iconName="utility:right"  variant="border-filled" size="large" aura:id="nextBtn" alternativeText="right"
-                                  title="Next" onclick="{!c.handleNextClicked}" disabled="{!v.disableNext}"/>
+        <lightning:button class="mobileAlignNext"  iconName="utility:forward" variant='inverse' aura:id="nextBtn"
+                              title="Next" onclick="{!c.handleNextClicked}" disabled="{!v.disableNext}"/>
         </div>
     </div>
 </aura:component>

@@ -22,7 +22,12 @@ public without sharing class SAP_ProductMasterWrapper {
 		public String PRODUCTSUBCATEGORY;	//
 		public String ENDAPPLICATION;	//
 		public String PLANT;
-	}
+        
+        //NEW
+        public String TO_BE_SOLD_BY;
+        public String VISIBILITY;
+        
+    }
     
 	public static SAP_ProductMasterWrapper parse(String json){
 		return (SAP_ProductMasterWrapper) System.JSON.deserialize(json, SAP_ProductMasterWrapper.class);

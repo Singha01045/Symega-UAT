@@ -30,7 +30,12 @@
         //var SelectedMonth=component.get("v.selectedMonthNumber");*/
         var startDate=component.get("v.StartDatevalue");
         var EndDate=component.get("v.EndDatevalue");
-
+        
+        if (startDate > EndDate) {
+            alert('Please choose curret date')
+            return;
+        }
+        
         let Month=component.get("v.selectedMonth");
         let Year=component.get("v.selectedYear");
         
@@ -48,6 +53,20 @@
         action.setCallback(this, function(response){
             var state = response.getState();
             if(state == 'SUCCESS') {
+                if(response.getReturnValue() == 'ErrorFound'){
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title : 'Error',
+                        message:'Monthly Beat Plan already available for selected Date Month',
+                        duration:' 3000',
+                        key: 'info_alt',
+                        type: 'error',
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                    //alert('Monthly Beat Plan already available for selected Date Month');
+                    return;
+                }
                 component.set("v.ShowToCreateBeatPlanne",false);
                 var cmpEvent = component.getEvent("sampleCmpEvent");
                 debugger;

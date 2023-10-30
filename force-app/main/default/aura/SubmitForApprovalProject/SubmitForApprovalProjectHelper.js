@@ -49,5 +49,49 @@
                 });
                 $A.enqueueAction(action);
             }));
+    },
+    
+    callSAPCodeUpdate : function(component, userId, sapCode){
+        debugger;
+        console.log('Received parameters: ' + userId + ', ' + sapCode);
+        
+        var action = component.get("c.updateUser");
+        action.setParams({
+            "userId": userId,
+            "userSAPcode": sapCode
+        });
+        action.setCallback(this, function(response) {
+            var serverResponse = response.getReturnValue();
+            if(response.getState() === "SUCCESS") {
+                console.log('success');
+            } 
+            else{
+                 console.log('error');
+            }    
+        });
+        $A.enqueueAction(action);
+    },
+    
+    callAccountUpdate : function(component, accId, deliveryPlant, CustomerType, AccSeg){
+        debugger;
+        console.log('Received parameters: ' + accId + ', ' + deliveryPlant + ', ' + CustomerType + ', ' + AccSeg);
+        
+        var action = component.get("c.updateAccount");
+        action.setParams({
+            "accId": accId,
+            "dlvryPlant": deliveryPlant,
+            "custType": CustomerType,
+            "accSeg" : AccSeg
+        });
+        action.setCallback(this, function(response) {
+            var serverResponse = response.getReturnValue();
+            if(response.getState() === "SUCCESS") {
+                console.log('success');
+            } 
+            else{
+                 console.log('error');
+            }    
+        });
+        $A.enqueueAction(action);
     }
 })

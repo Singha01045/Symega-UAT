@@ -3,6 +3,7 @@ public class TodayTaskAuraController {
     //method for getting all visit records based on date passed
     @AuraEnabled
     public static todaytaskWrapper getAllVisitTodays(String visitDate){
+        System.debug('visitDate-------->'+visitDate);
         List<Visit__c> visitListToShow = new List<Visit__c>();
         try{
             if(String.isNotBlank(visitDate)){
@@ -15,8 +16,8 @@ public class TodayTaskAuraController {
                 Id currentUserId = UserInfo.getUserId();
                 visitListToShow = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  Visit_Time__c,Visit_Status__c,Check_In_Time__c,
                                    Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,
-                                   Account__r.BillingPostalCode,Account__r.BillingCountry,Geo_Location__latitude__s, Geo_Location__longitude__s, Weekly_Beat_Plan__r.Monthly_Beat_Plan__r.Approval_Status__c FROM Visit__c 
-                                   WHERE Planned_visit_date__c=:VisitFormatedDate AND Account__r.BillingStreet !=null AND Account__r.BillingCity !=null AND Assigned_User__c=: currentUserId];
+                                   Account__r.BillingPostalCode,Account__r.BillingCountry,Geo_Location__latitude__s, Geo_Location__longitude__s, Weekly_Beat_Plan__r.Monthly_Beat_Plan__r.Approval_Status__c,Expected_Start_Time__c FROM Visit__c 
+                                   WHERE Planned_visit_date__c=:VisitFormatedDate AND Account__r.BillingStreet !=null AND Account__r.BillingCity !=null AND Assigned_User__c=: currentUserId AND Status__c != 'Completed'];
                 if(visitListToShow.size()>0){
                     integer compVisitCount=0;
                     integer pendingVisitCount =0;
@@ -56,6 +57,84 @@ public class TodayTaskAuraController {
         }
         return null;
     }
+
+
+
+    @AuraEnabled
+    public static todaysCompletedTaskWrapper GetCompletedVisitRecords(String visitDate){
+        System.debug('visitDate------>'+visitDate);
+        List<Visit__c> visitListToShow = new List<Visit__c>();
+        try{
+            if(String.isNotBlank(visitDate)){
+                String[] arrTest = visitDate.split('T');
+                string[] dateArray = arrTest[0].split('-');
+                Integer year = Integer.valueOf(dateArray[0]);
+                Integer month = Integer.valueOf(dateArray[1]);
+                Integer day = Integer.valueOf(dateArray[2]);
+                date VisitFormatedDate = date.newInstance(year, month, day);
+                Id currentUserId = UserInfo.getUserId();
+                visitListToShow = [SELECT Id, Name, Status__c, Account__c, Duration__c,District__c,Actual_visit_date__c, Visit_Objective__c, Taluk__c, Night_stay__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  Visit_Time__c,Visit_Status__c,Check_In_Time__c,
+                                   Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,
+                                   Account__r.BillingPostalCode,Account__r.BillingCountry,Geo_Location__latitude__s, Geo_Location__longitude__s, Weekly_Beat_Plan__r.Monthly_Beat_Plan__r.Approval_Status__c FROM Visit__c 
+                                   WHERE Planned_visit_date__c=:VisitFormatedDate AND Account__r.BillingStreet !=null AND Account__r.BillingCity !=null AND Assigned_User__c=: currentUserId AND Status__c = 'Completed'];
+
+                System.debug('visitListToShow----->'+visitListToShow);
+
+                if(visitListToShow.size()>0){
+                    integer compVisitCount=0;
+                    integer pendingVisitCount =0;
+                    boolean approved = false;
+                    for(Visit__c vs : visitListToShow){
+                        System.debug('Approval Status-->'+ vs.Weekly_Beat_Plan__r.Monthly_Beat_Plan__r.Approval_Status__c);
+                        if(vs.Weekly_Beat_Plan__r.Monthly_Beat_Plan__r.Approval_Status__c != null && vs.Weekly_Beat_Plan__r.Monthly_Beat_Plan__r.Approval_Status__c == 'Approved'){
+                        approved = true;
+                    }
+                        if(vs.Status__c == 'PENDING'){
+                            compVisitCount =  compVisitCount + 1;
+                        }
+                        if(vs.Status__c == 'COMPLETED'){
+                            pendingVisitCount = pendingVisitCount + 1;
+                        }
+                    }
+                    String userId = userInfo.getUserId();
+                    system.debug('userId::'+userId);
+                    List<Day_Visit_Plan__c> dayVisitList = [SELECT Id FROM Day_Visit_Plan__c WHERE Start_Date__c=today AND Service_Executive__c =: userId];
+                    System.debug('dayVisitList === >'+dayVisitList);
+                    System.debug('compVisitCount === >'+compVisitCount);
+                    System.debug('pendingVisitCount === >'+pendingVisitCount);
+                    todaysCompletedTaskWrapper wrap = new todaysCompletedTaskWrapper();
+                    wrap.isApproved = approved;
+                    wrap.completedVisitList = visitListToShow;
+                    wrap.completedVisit = compVisitCount;
+                    wrap.pendingVisit = pendingVisitCount;
+                    if(!dayVisitList.isEmpty()){
+                        wrap.dvpList = dayVisitList;
+                    }
+                    System.debug('wrap Data === >'+wrap);
+                    return wrap;
+                }
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+
+    public class todaysCompletedTaskWrapper{
+        @AuraEnabled
+        public Integer completedVisit;
+        @AuraEnabled
+        public Integer pendingVisit;
+        @AuraEnabled
+        public List<Visit__c> visitList;
+        @AuraEnabled
+        public List<Visit__c> completedVisitList;
+        @AuraEnabled
+        public List<Day_Visit_Plan__c> dvpList;
+        @AuraEnabled
+        public boolean isApproved;
+    }
+    
     
     // ==========================================================================================================================================================================================================
     // Method get Selected Vist Recor Details
@@ -376,7 +455,7 @@ public class TodayTaskAuraController {
         return null;
     }
     
-            @AuraEnabled
+    @AuraEnabled
     public static List<Task> getRelTaskList(String accId){
         List<Task> taskList = new List<Task>();
         String userId = userInfo.getUserId();

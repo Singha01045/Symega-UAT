@@ -83,7 +83,7 @@ export default class CreateProjectAccount extends NavigationMixin(LightningEleme
 
             Opportunity__c : this.recordId,
             Customer_Name__c : this.oppRecord.Account.Name,
-            Project_Name__c	: `${this.oppRecord.Account.Name}-Application`,
+            Project_Name__c	: `${this.oppRecord.Account.Name}-Project`,
             Customers_Contact__c : this.oppRecord.Primary_Contact__c,
             CurrencyIsoCode : this.oppRecord.CurrencyIsoCode,
 

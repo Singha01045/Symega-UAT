@@ -19,8 +19,10 @@ public without sharing class SAP_SO_Creation_Wrapper {
 		public String COUNTRY;	//IN
 		public String POSTAL_CODE;	//560060
 		public String STREET;	//#10, 23rd main, BTM 2nd stage
+        
+        //NEW
+        public String CUST_CODE;	//S-01
 	}
-
 
 	public class SOWrapper{
 		public String REF_CODE;	//1234ABC

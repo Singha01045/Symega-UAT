@@ -110,10 +110,11 @@ public without sharing class SAP_SaleOrderCreationRestHandler {
 
     public void updateCustomerAddress(SAP_SO_Creation_Wrapper.cls_shipping_address shippingAddress, Id accountId){
         
-        List<Dispatch_Address__c> dAdress = [Select Id, Address__Street__s, Address__City__s, Address__PostalCode__s, Address__StateCode__s, Address__CountryCode__s, Account__c From Dispatch_Address__c Where Account__c = :accountId];
+        List<Dispatch_Address__c> dAdress = [Select Id, Address__Street__s, Address__City__s, Address__PostalCode__s, toLabel(Address__StateCode__s), toLabel(Address__CountryCode__s), Account__c From Dispatch_Address__c Where Account__c = :accountId];
         
         if(!isDuplicateAddress(dAdress, shippingAddress.CITY, shippingAddress.STATE, shippingAddress.POSTAL_CODE)){
-            Dispatch_Address__c address = new Dispatch_Address__c(Address__City__s = shippingAddress.city, Address__CountryCode__s = shippingAddress.country, Address__PostalCode__s = shippingAddress.POSTAL_CODE, Address__StateCode__s = shippingAddress.STATE, Address__Street__s = shippingAddress.STREET, Account__c = accountId);
+            Dispatch_Address__c address = new Dispatch_Address__c(Address__City__s = shippingAddress.city, Address__CountryCode__s = shippingAddress.country, Address__PostalCode__s = shippingAddress.POSTAL_CODE, 
+                                                                  Address__StateCode__s = shippingAddress.STATE, Address__Street__s = shippingAddress.STREET, Account__c = accountId, SAP_Customer_Code__c = shippingAddress.CUST_CODE);
             
             System.debug('--- address not found, inserting new address:'+ address);
             insert address;

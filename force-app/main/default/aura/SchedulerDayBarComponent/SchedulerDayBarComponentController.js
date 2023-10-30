@@ -1,6 +1,6 @@
 ({
 	doInit : function(component, event, helper) {
-        debugger;
+        
         let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let date=new Date();
         let year=date.getFullYear();
@@ -45,7 +45,7 @@
 	},
     
     handlePrevClicked:function(component, event, helper) {
-       debugger;
+       
        let FirstIndexMonth;
         var MonthListOnUI=component.get("v.MonthListToShow");
         for(let i=0;i<MonthListOnUI.length;i++){
@@ -104,7 +104,7 @@
         }*/
     },
      handleNextClicked:function(component, event, helper) {
-       debugger;
+       
        let FirstIndexMonth;
          var MonthListOnUI=component.get("v.MonthListToShow");
          for(let i=0;i<MonthListOnUI.length;i++){
@@ -179,7 +179,8 @@
         //Set event attribute value
         cmpEvent.setParams({
             "Month" : Month,
-             "Year":Year
+             "Year":Year,
+            "refresh" : true
         }); 
         cmpEvent.fire(); 
 

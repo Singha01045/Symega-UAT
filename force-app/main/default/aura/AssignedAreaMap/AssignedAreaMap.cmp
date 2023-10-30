@@ -15,7 +15,14 @@
                            style="height: 50vh;"
                            mapMarkers="{! v.mapMarkers }"
                            zoomLevel="{!v.zoomLevel}" /-->
-            <img class="myMap slds-box slds-box_x-small" src="{!$Resource.DashboardMap}" alt="User avatar"/>
+                           <iframe
+                           width="100%"
+                           height="400"
+                           frameborder="0"
+                           style="border: 0"
+                           src="https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/FSLMapToShowBoundaries?core.apexpages.request.devconsole=1"
+                           allowfullscreen="true">
+                         </iframe>
         </div>
     </div>
     

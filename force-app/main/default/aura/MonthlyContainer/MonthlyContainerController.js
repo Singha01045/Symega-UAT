@@ -76,9 +76,11 @@
 	},
     
     handlePrevClicked:function(component, event, helper) {
-       debugger;
        let FirstIndexMonth;
-        var MonthListOnUI=component.get("v.MonthListToShow");
+        const mql = window.matchMedia('(max-width: 820px)');
+		 let mobileView = mql.matches;
+        if(mobileView){
+            var MonthListOnUI=component.get("v.MonthListToShowMobile");
         for(let i=0;i<MonthListOnUI.length;i++){
             if(i==0){
                 FirstIndexMonth=MonthListOnUI[i].month;
@@ -101,6 +103,32 @@
         }
         if(inputMonth!=undefined && inputYear!=undefined)
             helper.getPreviousMonthAndYear(component,event,helper,inputMonth,inputYear); 
+        }else{
+            var MonthListOnUI=component.get("v.MonthListToShow");
+        for(let i=0;i<MonthListOnUI.length;i++){
+            if(i==0){
+                FirstIndexMonth=MonthListOnUI[i].month;
+                break;  
+            }    
+        }
+        let MonthYearArray=FirstIndexMonth.split(' ');
+        
+        let inputMonth; 
+        let inputYear;
+        let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let monthNamesAndValues = [{month:"January",value:1},{month:"February",value:2},{month:"March",value:3}, {month:"April",value:4}, {month:"May",value:5}, {month:"June",value:6},{month:"July",value:7},{month:"August",value:8},{month:"September",value:9},{month:"October",value:10},{month: "November",value:11},{month:"December",value:12}];
+        if(MonthYearArray[0]!=null && MonthYearArray[1]!=null){
+            for(let i=0;i<monthNamesAndValues.length;i++){
+                if(monthNamesAndValues[i].month==MonthYearArray[0]){
+                    inputMonth=monthNamesAndValues[i].value;
+                    inputYear=MonthYearArray[1];
+                }
+            }
+        }
+        if(inputMonth!=undefined && inputYear!=undefined)
+            helper.getPreviousMonthAndYear(component,event,helper,inputMonth,inputYear); 
+        }
+        
         /*let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let date=new Date();
         let year=date.getFullYear();
@@ -135,9 +163,36 @@
         }*/
     },
      handleNextClicked:function(component, event, helper) {
-       debugger;
        let FirstIndexMonth;
-         var MonthListOnUI=component.get("v.MonthListToShow");
+         const mql = window.matchMedia('(max-width: 820px)');
+		 let mobileView = mql.matches;
+         if(mobileView){
+             var MonthListOnUI=component.get("v.MonthListToShowMobile");
+         for(let i=0;i<MonthListOnUI.length;i++){
+             if(i==2){
+                 FirstIndexMonth=MonthListOnUI[i].month;
+                 break;
+             }     
+         }
+         let MonthYearArray=FirstIndexMonth.split(' ');
+         
+         let inputMonth; 
+         let inputYear;
+         let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+         let monthNamesAndValues = [{month:"January",value:1},{month:"February",value:2},{month:"March",value:3}, {month:"April",value:4}, {month:"May",value:5}, {month:"June",value:6},{month:"July",value:7},{month:"August",value:8},{month:"September",value:9},{month:"October",value:10},{month: "November",value:11},{month:"December",value:12}];
+         if(MonthYearArray[0]!=null && MonthYearArray[1]!=null){
+             for(let i=0;i<monthNamesAndValues.length;i++){
+                 if(monthNamesAndValues[i].month==MonthYearArray[0]){
+                     inputMonth=monthNamesAndValues[i].value;
+                     inputYear=MonthYearArray[1];
+                 }
+             }
+         }
+         if(inputMonth!=undefined && inputYear!=undefined)
+             helper.getNextMonthAndYear(component,event,helper,inputMonth,inputYear);  
+         }
+         else{
+             var MonthListOnUI=component.get("v.MonthListToShow");
          for(let i=0;i<MonthListOnUI.length;i++){
              if(i==5){
                  FirstIndexMonth=MonthListOnUI[i].month;
@@ -160,6 +215,8 @@
          }
          if(inputMonth!=undefined && inputYear!=undefined)
              helper.getNextMonthAndYear(component,event,helper,inputMonth,inputYear);  
+         }
+         
         /*let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let date=new Date();
         let year=date.getFullYear();
@@ -191,8 +248,32 @@
         component.set("v.MonthListToShow",TempMonthlist);*/ 
     },
     handleClick:function(component, event, helper) {
-        debugger;
-        var MonthlyList= component.get("v.MonthListToShow");
+        const mql = window.matchMedia('(max-width: 820px)');
+		 let mobileView = mql.matches;
+        if(mobileView){
+            var MonthlyList= component.get("v.MonthListToShowMobile");
+        var selectedMonth = event.getSource().get('v.value');
+        for(let i=0;i<MonthlyList.length;i++){
+            if(MonthlyList[i].month==selectedMonth){
+                MonthlyList[i].colormatch=true;
+            }else{
+                MonthlyList[i].colormatch=false;
+            }
+        }
+        component.set("v.MonthListToShowMobile",MonthlyList); 
+        const str = selectedMonth;
+        let Array=str.split(' ');
+        let Month=Array[0];
+        let Year=Array[1];
+        var cmpEvent = component.getEvent("sampleCmpEvent");
+        //Set event attribute value
+        cmpEvent.setParams({
+            "Month" : Month,
+             "Year":Year
+        }); 
+        cmpEvent.fire(); 
+        }else{
+            var MonthlyList= component.get("v.MonthListToShow");
         var selectedMonth = event.getSource().get('v.value');
         for(let i=0;i<MonthlyList.length;i++){
             if(MonthlyList[i].month==selectedMonth){
@@ -207,13 +288,14 @@
         let Month=Array[0];
         let Year=Array[1];
         var cmpEvent = component.getEvent("sampleCmpEvent");
-        debugger;
         //Set event attribute value
         cmpEvent.setParams({
             "Month" : Month,
              "Year":Year
         }); 
         cmpEvent.fire(); 
+        }
+        
 
 
     }

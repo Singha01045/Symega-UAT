@@ -50,7 +50,7 @@ public without sharing class VisitSchedulerController {
     public static Map<String,Object> getUserVisits(String userId) {
         Map<String, Object> pageData = new Map<String,Object>();
         if(!String.isBlank(userId)) {
-            pageData.put('accountList', [SELECT Id,Name, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, (SELECT Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE OwnerId = :userId LIMIT 15]);
+            pageData.put('accountList', [SELECT Id,Name, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, (SELECT Address__City__s, toLabel(Address__CountryCode__s), Address__PostalCode__s, toLabel(Address__StateCode__s), Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE OwnerId = :userId LIMIT 15]);
             pageData.put('visitList', [Select Id, Name, Account__c, Account__r.Name,Lead__r.Name, Planned_visit_date__c, CheckIn__c, Check_Out__c, Status__c FROM Visit__c WHERE /* Actual_Visit_Date__c >= TODAY AND  */(Account__c != null OR Lead__c!=null) AND Assigned_User__c = :userId AND Actual_Visit_Date__c = null]);
         }
         return pageData;
@@ -65,7 +65,7 @@ public without sharing class VisitSchedulerController {
     @RemoteAction
     public static List<Account> getRepAccounts(String repId, String searchString,String selectedTab) {
         String searchPattern = '%'+String.escapeSingleQuotes(searchString)+'%';
-        return [SELECT Id, Name, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude,(SELECT Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE OwnerId = :repId AND Name LIKE :searchPattern LIMIT 15];
+        return [SELECT Id, Name, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude,(SELECT Address__City__s, toLabel(Address__CountryCode__s), Address__PostalCode__s, toLabel(Address__StateCode__s), Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE OwnerId = :repId AND Name LIKE :searchPattern LIMIT 15];
     }
 
     @RemoteAction

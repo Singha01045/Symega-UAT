@@ -11,7 +11,6 @@
         
     },
     afterScriptsLoaded: function(component,event ,helper){
-        debugger;
         
         //var events = component.get("v.events");
         //console.log('events--------IN',events);
@@ -30,7 +29,6 @@
     },
     
     parentComponentEvent:function(component ,event ,helper) {
-        
         debugger;
         const today = new Date();
         // const year = today.getFullYear();
@@ -69,7 +67,7 @@
                     component.set("v.ShowMonthlyBeatPlan",true);
                     // wrappdata.visitRecList[0].Visit__r
                     component.set("v.Weeklybp",wrappdata.MBPlist.Weekly_Beat_Plans__r);
-                    if(!wrappdata.MBPlist.Weekly_Beat_Plans__r.length > 0)
+                    //if(!wrappdata.MBPlist.Weekly_Beat_Plans__r.length > 0)
                     component.set("v.weeklyWrapper",wrappdata.weeklyWrapper);
                     component.set("v.kpiTargetsName",wrappdata.MBPlist.KPI_Targets__r)
                     component.set("v.recordId",wrappdata.MBPlist.Id);
@@ -85,7 +83,7 @@
                                 TempArray[i].dynamicClass='slds-badge slds-theme_success';
                                 console.log(i + " is even");
                             } else {
-                                TempArray[i].dynamicClass='slds-badge slds-theme_warning';
+                                TempArray[i].dynamicClass='slds-badge slds-badge_inverse';
                                 console.log(i + " is odd");
                             }
                             
@@ -118,8 +116,7 @@
                     }
                     helper.fetchEvents(component,event);
                     //var formatted=component.get("v.formattedDate");
-                    var baseURL = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/MonthlyVisitViewer?id=' + formattedDate; 
-                    // https://symegafood--uat--c.sandbox.vf.force.com/apex/MonthlyVisitViewer?core.apexpages.request.devconsole=1
+                    var baseURL = 'https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/MonthlyVisitViewer?id='+formattedDate;
                     component.set("v.siteURL",baseURL);
                 }else{
                     component.set("v.ShowMonthlyBeatPlan",false);
@@ -150,7 +147,7 @@
     },
     
     sendForApp:function(component ,event ,helper){
-        debugger;
+        
         var recId=event.target.Id;
         var action = component.get("c.initiateApprovalProcess");
         action.setParams({
@@ -191,5 +188,12 @@
         });
         
         $A.enqueueAction(action);
+    },
+    
+    closeModel:function(component ,event ,helper){
+        debugger;
+        component.set("v.isShowDaskDesComp",false);
     }
+    
+    
 })

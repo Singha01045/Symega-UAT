@@ -10,8 +10,9 @@
     <aura:handler event="c:travelTableDataEvent" action="{!c.travelTableDataEvent}"/>
     <div class="slds-m-left_medium slds-m-right_medium " >
         <!---Day Visit Plan Tab-->
+        <div class="BeatDesktop">
                 <div class="slds-col slds-size_6-of-12 " style="background-color:white; width:100%; margin-top:-1s%;"  >
-                    <div class="BeatDesktop">
+                    
                         <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout slds-table_striped">
                             
                             <thead>
@@ -88,20 +89,21 @@
                             
                         </table>
                     </div>
+        </div>
                     
                     <!--Card show CSS for Mobile-->
                 <div class="BeatMobile">
                     <aura:iteration items="{!v.dataList}"  var="visit" indexVar="index">
                         <div class="slds-card ">
                             <div class="cardInfo">
-                                <b style="color:#6592FD;">{!visit.CreatedDateFormatted}</b>
-                                <div class="slds-text-align_left slds-has-flexi-truncate" title="{!visit.Route__c}"><b style="font-weight:600;">Start Date:</b>&nbsp;<lightning:formattedDateTime value="{!visit.Start_Date__c}" year="numeric" month="numeric" day="numeric"/></div>
-                                <div><b style="font-weight:600;">Distance Travelled:</b>&nbsp;{!visit.Total_Distance__c}</div>
-                                <div><b style="font-weight:600;">Edited Distance Travelled:</b>&nbsp;{!visit.Total_Covered_Distance__c}</div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate" ><b style="color:#6592FD;">{!visit.CreatedDateFormatted}</b></div>
+                                <div><b style="font-weight:600;">Start Date:</b>&nbsp;<lightning:formattedDateTime value="{!visit.Start_Date__c}" year="numeric" month="numeric" day="numeric"/></div>
+                                <div><b style="font-weight:600;">Start Time:</b>&nbsp;<lightning:formattedDateTime value="{!visit.Start_Date__c}" hour="2-digit" minute="2-digit"/></div>
+                                <div><b style="font-weight:600;">End Time:</b>&nbsp;<lightning:formattedDateTime value="{!visit.End_Date__c}" hour="2-digit" minute="2-digit"/></div>
+                                <div class="slds-text-align_left slds-has-flexi-truncate"><b>Distance Travelled in KM:</b>&nbsp;{!visit.Total_Distance__c}</div>
                             </div>
                         </div>
                     </aura:iteration>
-                </div>
                 </div>
     </div>
 </aura:component>

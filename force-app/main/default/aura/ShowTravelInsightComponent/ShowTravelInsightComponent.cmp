@@ -1,5 +1,5 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="Scheduler_Insight_MonthYear_handler">
-	<aura:attribute name="ShowToCreateMonthlyBeatPlan" type="Boolean" default="false"/>
+    <aura:attribute name="ShowToCreateMonthlyBeatPlan" type="Boolean" default="false"/>
     <aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/>
     <aura:attribute name="selectedMonthNumber" type="Integer" />
     <aura:attribute name="selectedMonth" type="String" />
@@ -10,17 +10,18 @@
     <aura:attribute name="userName" type="String" />
     <aura:attribute name="dataList" type="List"/>
     
-    <div style="" class="travelInsightMain">
-        <div class="dateFilterMain">
-          <c:TravelInsightsDayBarComponent/>
+    <div style="" class="travelInsightMain slds-m-top_large">
+        <h2 class="slds-m-top_large h2Text slds-m-right_large">Travel Insights</h2>
+        <div class="dateFilterMain   monthlyContainer">
+            <c:TravelInsightsDayBarComponent/>
         </div>
-         <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
-        <div style="margin-top:1%; margin-left:0.5%; margin-right:0.5%">
-          <c:TravelInsightsComponent MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
-        </div>
-        <div style="margin-left:0.5%">
-           <c:TravelDayVisitPlanDataTable dataList="{!v.dataList}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
-        </div>
+        <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
+            <div style="margin-top:1%; margin-left:0.5%; margin-right:0.5%">
+                <c:TravelInsightsComponent MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
+            </div>
+            <div style="margin-left:0%">
+                <c:TravelDayVisitPlanDataTable dataList="{!v.dataList}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
+            </div>
         </aura:if>
         <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
             <div style="margin-top:1%; margin-left:1.5%; margin-right:1%">

@@ -49,7 +49,8 @@ public without sharing class SAP_Project_Creation_Callout {
 
                 proj.Submit_Sample_To_Optiva__c = true;
                 update proj;
-            }else{
+            }
+            else{
                 proj.Submit_Sample_To_Optiva__c = true;
                 proj.Error_Occured_On_Submitting_To_Optiva__c = true;
                 proj.Error_Message_On_Submitting_To_Optiva__c = 'SAP Customer creation response Failure: '+response;
@@ -130,9 +131,9 @@ public without sharing class SAP_Project_Creation_Callout {
         wrapper.COUNTRY_REGULATION = getCountryRegulation(proj.Country_Regulation__c);
         wrapper.COST_IN_USE = proj.Cost_in_use__c;
         wrapper.CUSTOMER_COMMENTS = checkIfBlank(proj.Customer_Comments__c);
-        wrapper.DOSAGE_GUIDELINES = checkIfBlank(proj.Dosage_Guidelines__c);
+        wrapper.DOSAGE_GUIDELINE = checkIfBlank(proj.Dosage_Guidelines__c);
         wrapper.MATCHING_TARGET_DETAILS = checkIfBlank(proj.Matching_Target_details__c);
-        wrapper.PRODUCT_APPROVAL_FORMAT_BY_CUSTOMER = checkIfBlank(proj.Product_approval_format_by_customer__c);
+        wrapper.PRODUCT_APP_CUSTOMER = checkIfBlank(proj.Product_approval_format_by_customer__c);
         wrapper.ADDITIONAL_COMMENTS = checkIfBlank(proj.Additional_Comments__c);
         wrapper.APPLICATION_METHOD = checkIfBlank(proj.Application_method__c);
         wrapper.END_APPLICATION_CATEGORY = checkIfBlank(proj.End_Application_Category__c);
@@ -144,7 +145,7 @@ public without sharing class SAP_Project_Creation_Callout {
         wrapper.IF_PRIVATE_LABEL = checkIfBlank(proj.If_Private_Label__c);//privateLabelToBoolean(proj.If_Private_Label__c);
         wrapper.INGREDIENT_SPECIFIC_IF_ANY = proj.Ingredient_Specific_If_Any__c;
         wrapper.MINIMUM_ORDER_QUANTITY = proj.Minimum_order_quantity__c;
-        wrapper.MINIMUM_ORDER_QUANTITY_UNIT = proj.Minimum_order_quantity_unit__c;
+        //wrapper.MINIMUM_ORDER_QUANTITY_UNIT = proj.Minimum_order_quantity_unit__c;
         wrapper.OTHER_APPLICATION_METHODS = proj.Other_Application_Methods__c;
         wrapper.OTHER_PROJECT_COMPOSITION = checkIfBlank(proj.Other_Project_Composition__c);
         wrapper.PACKAGING_UNIT = checkIfBlank(proj.Packaging_Unit__c);
@@ -158,7 +159,7 @@ public without sharing class SAP_Project_Creation_Callout {
         wrapper.SAMPLING_QUANTITY_UNIT = proj.Sampling_Quantity_Unit__c;
         wrapper.SOLUBILITY_PREFERENCE = checkIfBlank(proj.Solubility_Preference__c);
         wrapper.SOLUBLITY = proj.Solublity__c;
-        wrapper.SPECIFIC_INPUTS_BY_CUSTOMER = proj.Specific_inputs_by_customer__c;
+        wrapper.SPECIFIC_INPUTS_BY_CUSTOME = proj.Specific_inputs_by_customer__c;
         wrapper.SUGAR = proj.Sugar__c!=null?String.valueOf(proj.Sugar__c):'';
         wrapper.SUPPLIER_LEGAL_STATUS = checkIfBlank(proj.Supplier_Legal_Status__c);
         wrapper.TARGET_DATE = proj.Target_Date__c!=null?String.valueOf(proj.Target_Date__c):'';

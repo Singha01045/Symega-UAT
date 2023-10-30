@@ -1,7 +1,8 @@
 public with sharing class  BeatPlannerHelper {
     @auraEnabled
     Public Static FullCalendarController.alldataWrapper  BeetplannerDatareturn(String month,string year){
-        List<Monthly_Beat_Plan__c> MBPlist=[SELECT id,Year__c,Status__c,Start_Date__c,OwnerId,Sales_User__c,Name,Month__c,End_Date__c,Month_Name__c,(SELECT id,Year__c,Name,Week_Identifier__c,Start_Day_of_Week__c,End_Day_of_Week__c,OwnerId,Monthly_Beat_Plan__c FROM Weekly_Beat_Plans__r) FROM Monthly_Beat_Plan__c WHERE Month_year__c=:year AND Month_Name__c=:month];
+        Id currUserId = UserInfo.getUserId();
+        List<Monthly_Beat_Plan__c> MBPlist=[SELECT id,Year__c,Status__c,Start_Date__c,OwnerId,Sales_User__c,Name,Month__c,End_Date__c,Month_Name__c,(SELECT id,Year__c,Name,Week_Identifier__c,Start_Day_of_Week__c,End_Day_of_Week__c,OwnerId,Monthly_Beat_Plan__c FROM Weekly_Beat_Plans__r) FROM Monthly_Beat_Plan__c WHERE Month_year__c=:year AND Month_Name__c=:month AND Sales_User__c=:currUserId];
         system.debug('Monthly_Beat_Plan__c---------->'+MBPlist);
         FullCalendarController.alldataWrapper newwarp = new FullCalendarController.alldataWrapper ();
         newwarp=FullCalendarController.BeetplannerDatareturn(month,year);
@@ -83,6 +84,16 @@ public with sharing class  BeatPlannerHelper {
         }
         insert DocCatListToBeInserted;
     }
+
+    @AuraEnabled
+    Public static list<Visit__c> getTaskdetails(String accountId){
+        System.debug('accountId'+accountId);
+        list<Visit__c> visitrecord=[select Name,Id,KPI_Target__r.Name,Account__c,Duration__c,Description__c,Account__r.Name,Lead__c,Lead__r.Name,Start_Date_Time__c,Route__c,Route__r.Name,Visit_Status__c,Actual_visit_date__c,Planned_visit_date__c,KPI_Target_Name__c,Route_Name__c,Beat_type__c From Visit__c where id =:accountId];
+        System.debug('visitrecord'+visitrecord);
+        return visitrecord;
+        
+    }
+
     
     
     

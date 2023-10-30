@@ -1,7 +1,7 @@
 <apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="OperationsPortalController">
     <html>
         <head>
-             <apex:includeLightning />
+            <apex:includeLightning />
             <c:Libraries2 ></c:Libraries2>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.6/semantic.css"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"/>
@@ -135,8 +135,6 @@
                         
                         <div class="col-md-4">
                             
-                            <button class="blue-btn me-2 mb-5" onclick="loadComponents()"  style="background:teal;" type="button">
-                                Open LWC</button>
                             <button class="blue-btn float-end me-2 mb-5" ng-click="openAuraPopUp()" style="background:teal;" type="button">
                                 Create/Edit Sample Lineitems</button>
                             
@@ -175,7 +173,20 @@
                                                             <tr ng-repeat="SLI in SLIlist">
                                                                 <!--{{SLIlist}}-->
                                                                 <td>{{$index+1}}</td>
-                                                                <td ng-if="(conRec.Sample_Assignment_Team__r.Team_Type__c == SLI.Product_Family__c) || SLI.Id == undefined"><so-dropdown ng-model="productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,productId)">
+                                                                <td ><so-dropdown ng-model="productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,productId)" ng-disabled="SLI.check">
+                                                                    <option value='None'>None</option>
+                                                                    </so-dropdown></td>
+                                                                <td><input type="text" class="form-control" number="SLI.Quantity__c" ng-model="SLI.Quantity__c" ng-change="calculatePUnit(SLI.Quantity__c,SLI.Packaging_Quantity__c,SLI)" ng-disabled="SLI.check"/></td>
+                                                                <td><select class="form-control" ng-model="SLI.Quantity_Unit__c" ng-change="setPackagingUnit(SLI.Quantity_Unit__c,SLI)" ng-disabled="SLI.check">
+                                                                    <option ng-repeat="item in quantityUnit" value="{{item}}">{{item}}</option>
+                                                                    </select></td>
+                                                                <td><input type="text" class="form-control" number="SLI.Packaging_Quantity__c" ng-model="SLI.Packaging_Quantity__c" ng-change="calculatePUnit(SLI.Quantity__c,SLI.Packaging_Quantity__c,SLI)" ng-disabled="SLI.check" /></td>
+                                                                <td>{{SLI.calc}}&nbsp;{{SLI.Packaging_Unit__c}}</td> 
+                                                                <td>{{SLI.OPTIVA_Recipe__r.Regulatory__c}}</td>
+                                                                <td>{{SLI. OPTIVA_Recipe__r.Shelf_Life__c}}</td>
+                                                                <td>{{SLI.Expected_Shelf_Life__c}}</td>
+                                                                <td><input type="text" class="form-control" ng-model="SLI.Customer_Instructions__c" ng-disabled="SLI.check" /></td>
+                                                                <!--td ng-if="(conRec.Sample_Assignment_Team__r.Team_Type__c == SLI.Product_Family__c) || SLI.Id == undefined"><so-dropdown ng-model="productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,productId)">
                                                                     <option value='None'>None</option>
                                                                     </so-dropdown></td>
                                                                 <td ng-if="conRec.Sample_Assignment_Team__r.Team_Type__c != SLI.Product_Family__c && SLI.Project_Quotient__c != undefined">{{SLI.Project_Quotient__r.Name}}</td>
@@ -200,7 +211,7 @@
                                                                 <td ng-if="conRec.Sample_Assignment_Team__r.Team_Type__c == SLI.Product_Family__c || SLI.Id == undefined"><input type="text" class="form-control" ng-model="SLI.Expected_Shelf_Life__c" /></td>
                                                                 <td ng-if="conRec.Sample_Assignment_Team__r.Team_Type__c != SLI.Product_Family__c && SLI.Id != undefined">{{SLI.Expected_Shelf_Life__c}}</td>
                                                                 <td ng-if="conRec.Sample_Assignment_Team__r.Team_Type__c == SLI.Product_Family__c || SLI.Id == undefined"><input type="text" class="form-control" ng-model="SLI.Customer_Instructions__c" /></td>
-                                                                <td ng-if="conRec.Sample_Assignment_Team__r.Team_Type__c != SLI.Product_Family__c && SLI.Id != undefined">{{SLI.Customer_Instructions__c}}</td>
+                                                                <td ng-if="conRec.Sample_Assignment_Team__r.Team_Type__c != SLI.Product_Family__c && SLI.Id != undefined">{{SLI.Customer_Instructions__c}}</td-->
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -539,6 +550,7 @@
             $scope.sampleReqBy = sampleReqBy;
             $scope.mainReasonForSelPro = mainReasonForSelPro;
             $scope.annulaVolInUnits = annulaVolInUnits;
+            $scope.teamTypeList = [];
             
             $scope.getSampleDetails = function(){
                 debugger;
@@ -548,6 +560,7 @@
                     if(event.status && result){
                         debugger;
                         $scope.sampleDetails = result.listOfSamples[0];
+                        $scope.allocationTeam = result.conRec.Account__r;
                         if(result.listOfSamples[0].Opportunity_Close_Date__c != null){
                             $scope.sampleDetails.Opportunity_Close_Date__c = new Date(result.listOfSamples[0].Opportunity_Close_Date__c);
                         }
@@ -565,224 +578,242 @@
                                             $scope.SLIlist[i].productId = $scope.SLIlist[i].Project_Quotient__r.Name;
                                         }else{
                                         }*/
-                                    }
-                                }else{
-                                    $scope.SLIlist.push({
-                                        "Quantity__c":"","Quantity_Unit__c":"","Packaging_Quantity__c":"","Packaging_Unit__c":"","Sample__c":sampleId,"Packaging_Unit__c":"","OPTIVA_Recipe__r.Regulatory__c":"","OPTIVA_Recipe__r.Shelf_Life__c":"","Expected_Shelf_Life__c":"","Customer_Instructions__c":""
-                                    })
-                                }
-                                
-                                $scope.productList = result.listOfProducts;
-                                $scope.optivaRecipeList = result.listOfOptivaRecipe;
-                                $scope.projectQuotientList = result.listOfProQuotient;
-                                
-                                for(var i=0;i<$scope.productList.length;i++){
-                                    $scope.mergedList.push({"Id":$scope.productList[i].Id,"Name":$scope.productList[i].Name});
-                                }
-                                for(var i=0;i<$scope.optivaRecipeList.length;i++){
-                                    $scope.mergedList.push({"Id":$scope.optivaRecipeList[i].Id,"Name":$scope.optivaRecipeList[i].Name});
-                                }
-                                for(var i=0;i<$scope.projectQuotientList.length;i++){
-                                    $scope.mergedList.push({"Id":$scope.projectQuotientList[i].Id,"Name":$scope.projectQuotientList[i].Name});
-                                }
-                                //$scope.mergedList = [].concat($scope.productList, $scope.optivaRecipeList, $scope.projectQuotientList);
-                                $scope.$apply();
                             }
-                        })
-                }
-                $scope.getSampleDetails();
-                
-                $scope.back = function(){
-                    debugger;
-                    var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleLineItemDetailPage';
-                    window.location.replace(window.location.origin + sitePrefix +'?id='+ userHashId);
-                }
-                
-                $scope.openAuraPopUp = function(){
-                    debugger;
-                    var myModal = new bootstrap.Modal(document.getElementById('flipFlop'));
-                    myModal.show('slow');
-                }
-                
-                $scope.myFunc = function() {
-                    debugger;
-                    alert('hi there...!');
-                
-                    // Use the LWC Open Source JavaScript library
-                    // Assuming your LWC is LightningOut enabled
-                    $Lightning.use("c:submitForFertCodeApp", function() {
-                        const container = document.getElementById("compContainer");
-                
-                        // Create a new Lightning Web Component
-                        const lwcElement = document.createElement("c-submit-for-fert-code");
-                        lwcElement.recordId = parentid;
-                
-                        // Append the component to the container
-                        container.appendChild(lwcElement);
-                    });
-                };
-                
-                $scope.onChangeToAssignProduct = function(SLI,productId){
-                    console.log(SLI);
-                    debugger;
-                    if(productId.startsWith('01t')){
-                        SLI.Product__c = productId;
-                        //$scope.productId = SLI.Product__r.Name;
-                    }else if(productId.startsWith('a0S')){
-                        SLI.Project_Quotient__c = productId;
-                        //$scope.productId = SLI.Project_Quotient__r.Name;
-                    }else if(productId.startsWith('a0Y')){
-                        SLI.OPTIVA_Recipe__c = productId;
-                        //$scope.productId = SLI.OPTIVA_Recipe__r.Name;
-                    }else{
-                    }
-                }
-                
-                $scope.saveSLIDetails = function(){
-                    debugger;
-                    for(var i=0;i<$scope.SLIlist.length;i++){
-                        debugger;
-                        if($scope.SLIlist[i].Product__c == undefined && $scope.SLIlist[i].OPTIVA_Recipe__c == undefined && $scope.SLIlist[i].Project_Quotient__c == undefined){
-                            swal("info", "Please add Product.","info");
-                            return;
+                        }else{
+                            $scope.SLIlist.push({
+                                "Quantity__c":"","Quantity_Unit__c":"","Packaging_Quantity__c":"","Packaging_Unit__c":"","Sample__c":sampleId,"Packaging_Unit__c":"","OPTIVA_Recipe__r.Regulatory__c":"","OPTIVA_Recipe__r.Shelf_Life__c":"","Expected_Shelf_Life__c":"","Customer_Instructions__c":""
+                            })
                         }
-                        if($scope.SLIlist[i].Quantity__c == undefined || $scope.SLIlist[i].Quantity__c == ""){
-                            swal("info", "Please enter quantity.","info");
-                            return;
+                        
+                        $scope.productList = result.listOfProducts;
+                        $scope.optivaRecipeList = result.listOfOptivaRecipe;
+                        $scope.projectQuotientList = result.listOfProQuotient;
+                        
+                        for(var i=0;i<$scope.productList.length;i++){
+                            $scope.mergedList.push({"Id":$scope.productList[i].Id,"Name":$scope.productList[i].Name});
                         }
-                        if($scope.SLIlist[i].Quantity_Unit__c == undefined || $scope.SLIlist[i].Quantity_Unit__c == ""){
-                            swal("info", "Please enter quantity unit.","info");
-                            return;
+                        for(var i=0;i<$scope.optivaRecipeList.length;i++){
+                            $scope.mergedList.push({"Id":$scope.optivaRecipeList[i].Id,"Name":$scope.optivaRecipeList[i].Name});
                         }
-                        if($scope.SLIlist[i].Packaging_Quantity__c == undefined || $scope.SLIlist[i].Packaging_Quantity__c == ""){
-                            swal("info", "Please enter packaging quantity.","info");
-                            return;
+                        for(var i=0;i<$scope.projectQuotientList.length;i++){
+                            $scope.mergedList.push({"Id":$scope.projectQuotientList[i].Id,"Name":$scope.projectQuotientList[i].Name});
                         }
-                    }
-                    
-                    for(var i=0;i<$scope.SLIlist.length;i++){
-                        delete ($scope.SLIlist[i]['$$hashKey']);
-                        delete ($scope.SLIlist[i]['calc']);
-                        delete ($scope.SLIlist[i]['productId']);
-                    }
-                    OperationsPortalController.saveSLIDetails($scope.SLIlist,function(result,event){
-                        debugger;
-                        if(event.status && result){
-                            debugger;
-                            swal("success", "Record has been update successfully.","success");
+                        if($scope.allocationTeam != undefined){
+                            for(var i=0;i<$scope.allocationTeam.length;i++){
+                                $scope.teamTypeList.push($scope.allocationTeam[i].Sample_Assignment_Team_Type__c);
+                            }
                         }
+                        for(var i=0;i<$scope.SLIlist.length;i++){
+                            if($scope.teamTypeList.includes($scope.SLIlist[i].Product_Family__c)){
+                               	$scope.SLIlist[i].check = false;
+                            }else{
+                               $scope.SLIlist[i].check = true;
+                               }
+                        }
+                        //$scope.mergedList = [].concat($scope.productList, $scope.optivaRecipeList, $scope.projectQuotientList);
                         $scope.$apply();
-                    })
-                }
-                
-                $scope.addRow=function(){
-                    debugger;
-                    $scope.SLIlist.push({
-                        "Quantity_Unit__c":"","Packaging_Quantity__c":"","Packaging_Unit__c":"","Sample__c":sampleId
-                    });
-                }
-                
-                $scope.calculatePUnit = function(quantity,pquantity,SLI){
-                    debugger;
-                    SLI.calc = quantity/pquantity;
-                }
-                
-                $scope.setPackagingUnit = function(qUnit,SLI){
-                    debugger;
-                    SLI.Packaging_Unit__c = SLI.Quantity_Unit__c;
-                    
-                }
-                
-                $scope.SaveSampleDetails = function(){
-                    debugger;
-                    var year=0;
-                    var month=0;
-                    var day=0;
-                    if($scope.sampleDetails.Opportunity_Close_Date__c!=undefined && $scope.sampleDetails.Opportunity_Close_Date__c!=''){
-                        year = $scope.sampleDetails.Opportunity_Close_Date__c.getUTCFullYear();
-                        month = $scope.sampleDetails.Opportunity_Close_Date__c.getUTCMonth()+1;
-                        day = $scope.sampleDetails.Opportunity_Close_Date__c.getDate();
                     }
-                    $scope.detailrec = {"Sample_Name__c":$scope.sampleDetails.Sample_Name__c,"Customer_Name__c":$scope.sampleDetails.Customer_Name__c,
-                                        "Annual_Volume_in_units__c":$scope.sampleDetails.Annual_Volume_in_units__c,"End_Use_category__c":$scope.sampleDetails.End_Use_category__c,
-                                        "Id":$scope.sampleDetails.Id,"Sample_Requested_by__c":$scope.sampleDetails.Sample_Requested_by__c,
-                                        "Main_reason_for_selecting_product__c":$scope.sampleDetails.Main_reason_for_selecting_product__c,
-                                        "Annual_Volume_Full__c":$scope.sampleDetails.Annual_Volume_Full__c};
-                    OperationsPortalController.SaveSampleDetails($scope.detailrec,year,month,day,function(result,event){
-                        debugger;
-                        if(event.status && result){
-                            swal("success", "Sample Details have been update successfully.","success");   
-                        }
-                        $scope.$apply();
-                    })
-                }
-            })
+                })
+            }
+            $scope.getSampleDetails();
             
-            .directive('soDropdown', ['$timeout', function($timeout) {
-                return {
-                    restrict: 'E',
-                    require: 'ngModel',
-                    replace: true,
-                    transclude: true,
-                    template: function (el, atts) {
-                        var itemName = 'dropdownItem';
-                        var valueField = itemName + '.' + (atts.valueField || 'Id');
-                        var textField = itemName + '.' + (atts.textField || 'Name');
-                        return "<select class='ui search dropdown'>" +
-                            "<div ng-transclude></div>" +
-                            "   <option value='{{" + valueField + "}}' ng-repeat='" + itemName + " in " + atts.dropdownItems + " track by " + valueField + "'>" +
-                            "       {{" + textField + "}}" +
-                            "   </option>" +
-                            "</select>";
-                    },
-                    link: function (scope, el, atts, ngModel) {
-                        $(el).dropdown({
-                            onChange: function (value, text, choice) {
-                                scope.$apply(function () {
-                                    ngModel.$setViewValue(value);
-                                });
-                            }
-                        });
-                        ngModel.$render = function () {
-                            console.log('set value', el, ngModel, ngModel.$viewValue);
-                            $timeout(function () {
-                                $(el).dropdown('set value', ngModel.$viewValue);
-                            });
-                            // $(el).dropdown('set value', ngModel.$viewValue);
-                        };
-                    }
-                };
-            }]);
-        </script>
-        
-       
-        	<div class="modal" id="compContainer">
-                                <div class="modal-dialog" style="min-width:1000px">
-                                    <div class="modal-content">
-                                     <div id="compContainer2">                                           
-                                                    </div>   
-                                        
-                                        <div class="row mt-3">
-                                            <div class="col-md-6 mb-5">
-                                                <button type="button" data-bs-dismiss="modal" ng-click="saveSLIDetails()" class="blue-btn float-end">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-            <script>
-            function loadComponents(){
+            $scope.back = function(){
                 debugger;
-                alert('hi there')
-                var myModal = new bootstrap.Modal(document.getElementById('compContainer'));
-                  myModal.show('slow');
+                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleLineItemDetailPage';
+                window.location.replace(window.location.origin + sitePrefix +'?id='+ userHashId);
+            }
+            
+            $scope.openAuraPopUp = function(){
+                debugger;
+                var myModal = new bootstrap.Modal(document.getElementById('flipFlop'));
+                myModal.show('slow');
+            }
+            
+            $scope.myFunc = function() {
+                debugger;
+                alert('hi there...!');
+                
+                // Use the LWC Open Source JavaScript library
+                // Assuming your LWC is LightningOut enabled
                 $Lightning.use("c:submitForFertCodeApp", function() {
-                    $Lightning.createComponent("c:submitForFertCode",{
-                        recordId:parentId,
-                    },"compContainer2",function(cmp) {});
+                    const container = document.getElementById("compContainer");
+                    
+                    // Create a new Lightning Web Component
+                    const lwcElement = document.createElement("c-submit-for-fert-code");
+                    lwcElement.recordId = parentid;
+                    
+                    // Append the component to the container
+                    container.appendChild(lwcElement);
+                });
+            };
+            
+            $scope.onChangeToAssignProduct = function(SLI,productId){
+                console.log(SLI);
+                debugger;
+                if(productId.startsWith('01t')){
+                    SLI.Product__c = productId;
+                    //$scope.productId = SLI.Product__r.Name;
+                }else if(productId.startsWith('a0S')){
+                    SLI.Project_Quotient__c = productId;
+                    //$scope.productId = SLI.Project_Quotient__r.Name;
+                }else if(productId.startsWith('a0Y')){
+                    SLI.OPTIVA_Recipe__c = productId;
+                    //$scope.productId = SLI.OPTIVA_Recipe__r.Name;
+                }else{
+                }
+            }
+            
+            $scope.saveSLIDetails = function(){
+                debugger;
+                for(var i=0;i<$scope.SLIlist.length;i++){
+                    debugger;
+                    if($scope.SLIlist[i].Product__c == undefined && $scope.SLIlist[i].OPTIVA_Recipe__c == undefined && $scope.SLIlist[i].Project_Quotient__c == undefined){
+                        swal("info", "Please add Product.","info");
+                        return;
+                    }
+                    if($scope.SLIlist[i].Quantity__c == undefined || $scope.SLIlist[i].Quantity__c == ""){
+                        swal("info", "Please enter quantity.","info");
+                        return;
+                    }
+                    if($scope.SLIlist[i].Quantity_Unit__c == undefined || $scope.SLIlist[i].Quantity_Unit__c == ""){
+                        swal("info", "Please enter quantity unit.","info");
+                        return;
+                    }
+                    if($scope.SLIlist[i].Packaging_Quantity__c == undefined || $scope.SLIlist[i].Packaging_Quantity__c == ""){
+                        swal("info", "Please enter packaging quantity.","info");
+                        return;
+                    }
+                }
+                
+                for(var i=0;i<$scope.SLIlist.length;i++){
+                    delete ($scope.SLIlist[i]['$$hashKey']);
+                    delete ($scope.SLIlist[i]['calc']);
+                    delete ($scope.SLIlist[i]['check']);
+                    delete ($scope.SLIlist[i]['productId']);
+                }
+                OperationsPortalController.saveSLIDetails($scope.SLIlist,function(result,event){
+                    debugger;
+                    if(event.status && result){
+                        debugger;
+                        swal("success", "Record has been update successfully.","success");
+                    }
+                    $scope.$apply();
+                })
+            }
+            
+            $scope.addRow=function(){
+                debugger;
+                $scope.SLIlist.push({
+                    "Quantity_Unit__c":"","Packaging_Quantity__c":"","Packaging_Unit__c":"","Sample__c":sampleId
                 });
             }
+            
+            $scope.calculatePUnit = function(quantity,pquantity,SLI){
+                debugger;
+                SLI.calc = quantity/pquantity;
+            }
+            
+            $scope.setPackagingUnit = function(qUnit,SLI){
+                debugger;
+                SLI.Packaging_Unit__c = SLI.Quantity_Unit__c;
+                
+            }
+            
+            $scope.SaveSampleDetails = function(){
+                debugger;
+                var year=0;
+                var month=0;
+                var day=0;
+                if($scope.sampleDetails.Opportunity_Close_Date__c!=undefined && $scope.sampleDetails.Opportunity_Close_Date__c!=''){
+                    year = $scope.sampleDetails.Opportunity_Close_Date__c.getUTCFullYear();
+                    month = $scope.sampleDetails.Opportunity_Close_Date__c.getUTCMonth()+1;
+                    day = $scope.sampleDetails.Opportunity_Close_Date__c.getDate();
+                }
+                $scope.detailrec = {"Sample_Name__c":$scope.sampleDetails.Sample_Name__c,"Customer_Name__c":$scope.sampleDetails.Customer_Name__c,
+                                    "Annual_Volume_in_units__c":$scope.sampleDetails.Annual_Volume_in_units__c,"End_Use_category__c":$scope.sampleDetails.End_Use_category__c,
+                                    "Id":$scope.sampleDetails.Id,"Sample_Requested_by__c":$scope.sampleDetails.Sample_Requested_by__c,
+                                    "Main_reason_for_selecting_product__c":$scope.sampleDetails.Main_reason_for_selecting_product__c,
+                                    "Annual_Volume_Full__c":$scope.sampleDetails.Annual_Volume_Full__c};
+                OperationsPortalController.SaveSampleDetails($scope.detailrec,year,month,day,function(result,event){
+                    debugger;
+                    if(event.status && result){
+                        swal("success", "Sample Details have been update successfully.","success");   
+                    }
+                    $scope.$apply();
+                })
+            }
+        })
         
+        .directive('soDropdown', ['$timeout', function($timeout) {
+            return {
+                restrict: 'E',
+                require: 'ngModel',
+                replace: true,
+                transclude: true,
+                template: function (el, atts) {
+                    var itemName = 'dropdownItem';
+                    var valueField = itemName + '.' + (atts.valueField || 'Id');
+                    var textField = itemName + '.' + (atts.textField || 'Name');
+                    return "<select class='ui search dropdown'>" +
+                        "<div ng-transclude></div>" +
+                        "   <option value='{{" + valueField + "}}' ng-repeat='" + itemName + " in " + atts.dropdownItems + " track by " + valueField + "'>" +
+                        "       {{" + textField + "}}" +
+                        "   </option>" +
+                        "</select>";
+                },
+                link: function (scope, el, atts, ngModel) {
+                    $(el).dropdown({
+                        onChange: function (value, text, choice) {
+                            scope.$apply(function () {
+                                ngModel.$setViewValue(value);
+                            });
+                        }
+                    });
+                    ngModel.$render = function () {
+                        console.log('set value', el, ngModel, ngModel.$viewValue);
+                        $timeout(function () {
+                            $(el).dropdown('set value', ngModel.$viewValue);
+                        });
+                        // $(el).dropdown('set value', ngModel.$viewValue);
+                    };
+                }
+            };
+        }]);
         </script>
+        
+        
+        <div class="modal text-center" id="compContainer">
+            <div class="modal-dialog" style="min-width:1000px">
+                <div class="modal-content">
+                    <div id="compContainer2">                                           
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12 text-center mx-auto">
+                             <button type="button" data-bs-dismiss="modal"  onclick="cancelLWC()" class="blue-btn btn-sm">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        function loadComponents(){
+            debugger;
+            alert('hi there')
+            var myModal = new bootstrap.Modal(document.getElementById('compContainer'));
+            myModal.show('slow');
+            $Lightning.use("c:submitForFertCodeApp", function() {
+                $Lightning.createComponent("c:submitForFertCode",{
+                    recordId:parentId,
+                },"compContainer2",function(cmp) {});
+            });
+        }
+         function cancelLWC(){
+                var myModal =document.getElementById('compContainer2');
+             	myModal.innerHTML = "";
+                myModal.hide('slow');
+             	location.reload();
+            }
+            
+     </script>
     </html>
 </apex:page>

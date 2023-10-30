@@ -1,45 +1,120 @@
 ({
 	doInit : function(component, event, helper) {
         debugger;
-        var action = component.get('c.getAllDateOfSchdeularSight');
-        action.setCallback(this, function(response) {
-            if(response.getState() === "SUCCESS"){
-                var data = response.getReturnValue();
-                if(data.visitRecList !=null && data.visitRecList.length >0){
-                    component.set("v.visitList",data.visitRecList);
-                }
-                if(data.LeadRecList !=null && data.LeadRecList.length >0){
-                    component.set("v.LeadList",data.LeadRecList);
-                }
-                if(data.eventList !=null && data.eventList.length >0){
-                    component.set("v.EventList",data.eventList);
-                }
-                if(data.emailList !=null && data.emailList.length >0){
-                    component.set("v.EmailList",data.emailList);
-                }
-                if(data.oppList !=null && data.oppList.length >0){
-                    component.set("v.OppList",data.oppList);
-                }
-                if(data.oppNegoList !=null && data.oppNegoList.length >0){
-                    component.set("v.OppNegoList",data.oppNegoList);
-                }
-                if(data.quoteList !=null && data.quoteList.length >0){
-                    component.set("v.QuotList",data.quoteList);
-                }
-                if(data.purOrdList !=null && data.purOrdList.length >0){
-                    component.set("v.PurchaseOrderList",data.purOrdList);
-                }
-                if(data.invoList !=null && data.invoList.length >0){
-                    component.set("v.InvoiceList",data.invoList);
-                }
-                if(data.caseList !=null && data.caseList.length >0){
-                    component.set("v.TicketList",data.caseList);
-                }
-                if(data.feedbackList !=null && data.feedbackList.length >0){
-                    component.set("v.FeedbackList",data.feedbackList);
-                }
-            }
-        });
-        $A.enqueueAction(action);
+        helper.helperMethod(component, 1);
+    },
+    
+    BeatStatushandleNext : function(component, event, helper){
+        var pageNumberBeatStatus = component.get("v.BeatStatuspageNumber");
+        component.set("v.BeatStatuspageNumber", pageNumberBeatStatus+1);
+        helper.helperMethod(component, pageNumberBeatStatus+1);
+    },
+     ProspecthandleNext : function(component, event, helper){
+        var pageNumberProspects = component.get("v.ProspectspageNumber");
+        component.set("v.ProspectspageNumber", pageNumberProspects+1);
+        helper.helperMethod(component, pageNumberProspects+1);
+    },
+    MeetinghandleNext : function(component, event, helper){
+        var pageNumberMeeting = component.get("v.MeetingpageNumber");
+        component.set("v.MeetingpageNumber", pageNumberMeeting+1);
+        helper.helperMethod(component, pageNumberMeeting+1);
+    },
+    EmailshandleNext : function(component, event, helper){
+        var pageNumberEmails = component.get("v.EmailspageNumber");
+        component.set("v.EmailspageNumber", pageNumberEmails+1);
+        helper.helperMethod(component, pageNumberEmails+1);
+    },
+    ProposalshandleNext : function(component, event, helper){
+        var pageNumberProposals = component.get("v.ProposalspageNumber");
+        component.set("v.ProposalspageNumber", pageNumberProposals+1);
+        helper.helperMethod(component, pageNumberProposals+1);
+    },
+    NegotiationhandleNext : function(component, event, helper){
+        var pageNumberNegotiation = component.get("v.NegotiationpageNumber");
+        component.set("v.NegotiationpageNumber", pageNumberNegotiation+1);
+        helper.helperMethod(component, pageNumberNegotiation+1);
+    },
+     QuotationhandleNext : function(component, event, helper){
+        var pageNumberQuotation = component.get("v.QuotationpageNumber");
+        component.set("v.QuotationpageNumber", pageNumberQuotation+1);
+        helper.helperMethod(component, pageNumberQuotation+1);
+    },
+    PurchaseOrderhandleNext : function(component, event, helper){
+        var pageNumberPurchaseOrder = component.get("v.PurchaseOrderpageNumber");
+        component.set("v.PurchaseOrderpageNumber", pageNumberPurchaseOrder+1);
+        helper.helperMethod(component, pageNumberPurchaseOrder+1);
+    },
+    InvoiceshandleNext : function(component, event, helper){
+        var pageNumberInvoices = component.get("v.InvoicespageNumber");
+        component.set("v.InvoicespageNumber", pageNumberInvoices+1);
+        helper.helperMethod(component, pageNumberInvoices+1);
+    },
+    TicketshandleNext : function(component, event, helper){
+        var pageNumberTickets = component.get("v.TicketspageNumber");
+        component.set("v.TicketspageNumber", pageNumberTickets+1);
+        helper.helperMethod(component, pageNumberTickets+1);
+    },
+    FeedbackhandleNext : function(component, event, helper){
+        var pageNumberFeedback = component.get("v.FeedbackpageNumber");
+        component.set("v.FeedbackpageNumber", pageNumberFeedback+1);
+        helper.helperMethod(component, pageNumberFeedback+1);
+    },
+    
+    
+    
+    BeatStatushandlePrev : function(component, event, helper){
+        var pageNumberBeatStatus = component.get("v.BeatStatuspageNumber");
+        component.set("v.BeatStatuspageNumber", pageNumberBeatStatus-1);
+          helper.helperMethod(component, pageNumberBeatStatus+1);
+    },
+    ProspecthandlePrev : function(component, event, helper){
+        var pageNumberProspects = component.get("v.ProspectspageNumber");
+        component.set("v.ProspectspageNumber", pageNumberProspects-1);
+          helper.helperMethod(component, pageNumberProspects-1);
+    },
+     MeetinghandlePrev : function(component, event, helper){
+        var pageNumberMeeting = component.get("v.MeetingpageNumber");
+        component.set("v.MeetingpageNumber", pageNumberMeeting-1);
+          helper.helperMethod(component, pageNumberMeeting-1);
+    },
+     EmailshandlePrev : function(component, event, helper){
+        var pageNumberEmails = component.get("v.EmailspageNumber");
+        component.set("v.EmailspageNumber", pageNumberEmails-1);
+          helper.helperMethod(component, pageNumberEmails-1);
+    },
+    ProposalshandlePrev : function(component, event, helper){
+        var pageNumberProposals = component.get("v.ProposalspageNumber");
+        component.set("v.ProposalspageNumber", pageNumberProposals-1);
+          helper.helperMethod(component, pageNumberProposals-1);
+    },
+    NegotiationhandlePrev : function(component, event, helper){
+        var pageNumberNegotiation = component.get("v.NegotiationpageNumber");
+        component.set("v.NegotiationpageNumber", pageNumberNegotiation-1);
+          helper.helperMethod(component, pageNumberNegotiation-1);
+    },
+    QuotationhandlePrev : function(component, event, helper){
+        var pageNumberQuotation = component.get("v.QuotationpageNumber");
+        component.set("v.QuotationpageNumber", pageNumberQuotation-1);
+          helper.helperMethod(component, pageNumberQuotation-1);
+    },
+    PurchaseOrderhandlePrev : function(component, event, helper){
+        var pageNumberPurchaseOrder = component.get("v.PurchaseOrderpageNumber");
+        component.set("v.PurchaseOrderpageNumber", pageNumberPurchaseOrder-1);
+          helper.helperMethod(component, pageNumberPurchaseOrder-1);
+    },
+    InvoiceshandlePrev : function(component, event, helper){
+        var pageNumberInvoices = component.get("v.InvoicespageNumber");
+        component.set("v.InvoicespageNumber", pageNumberInvoices-1);
+          helper.helperMethod(component, pageNumberInvoices-1);
+    },
+    TicketshandlePrev : function(component, event, helper){
+        var pageNumberTickets = component.get("v.TicketspageNumber");
+        component.set("v.TicketspageNumber", pageNumberTickets-1);
+          helper.helperMethod(component, pageNumberTickets-1);
+    },
+    FeedbackhandlePrev : function(component, event, helper){
+        var pageNumberFeedback = component.get("v.FeedbackpageNumber");
+        component.set("v.FeedbackpageNumber", pageNumberFeedback-1);
+          helper.helperMethod(component, pageNumberFeedback-1);
     },
 })

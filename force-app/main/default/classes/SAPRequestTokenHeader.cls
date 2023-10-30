@@ -124,7 +124,8 @@ public without sharing class SAPRequestTokenHeader {
 
     public  Map<String,String> getCSRFToken(String endpoint, String credsName){
         Map<String,String> respMap = new Map<String,String>();
-
+        DateTime sDate = System.now();
+        
         Http http = new Http();
         HttpRequest req = new HttpRequest();
         req.setMethod('GET');
@@ -134,6 +135,8 @@ public without sharing class SAPRequestTokenHeader {
         req.setHeader('Authorization', getAuthrizationHeader(credsName));
 
         HttpResponse resp = http.send(req);
+        DateTime eDate = System.now();
+        //HTTPUtility.createLog(req,resp,sDate,eDate);
 
         String cookies = resp.getHeader('Set-Cookie');
         System.debug('Cookies----'+cookies);
