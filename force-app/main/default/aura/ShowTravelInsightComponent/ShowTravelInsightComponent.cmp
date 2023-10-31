@@ -10,16 +10,16 @@
     <aura:attribute name="userName" type="String" />
     <aura:attribute name="dataList" type="List"/>
     
-    <div style="" class="travelInsightMain slds-m-top_large">
+    <div style="" class="">
         <h2 class="slds-m-top_large h2Text slds-m-right_large">Travel Insights</h2>
-        <div class="dateFilterMain   monthlyContainer">
+        <div class="slds-col slds-size_12-of-12">
             <c:TravelInsightsDayBarComponent/>
         </div>
         <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
-            <div style="margin-top:1%; margin-left:0.5%; margin-right:0.5%">
+            <div style="">
                 <c:TravelInsightsComponent MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
             </div>
-            <div style="margin-left:0%">
+            <div class="slds-col slds-size_12-of-12" style="margin-top:10px;">
                 <c:TravelDayVisitPlanDataTable dataList="{!v.dataList}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
             </div>
         </aura:if>

@@ -206,7 +206,7 @@
                 display: inline-flex;
                 width: 25vw;
                 align-items: center;
-                left: 21%;
+                right: 25%;
                 position: relative;
             }
             
@@ -414,8 +414,8 @@
             .THIS .dateFilter{
                 display: inline-flex;
                 width: 25vw;
+                right: 25%;
                 align-items: center;
-                left: 25%;
                 position: relative;
             }
             

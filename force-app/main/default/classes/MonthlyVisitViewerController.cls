@@ -1,3 +1,11 @@
+/**
+* @author [Dinesh B]
+* @email dinesh.b@utilitarianLab.com
+* @create date 2023-03-20 18:27:29
+* @modify date 2023-03-20 18:27:29
+* @desc [description]
+*/
+
 global class MonthlyVisitViewerController {
     
     public boolean displayPopup {get;set;} 
@@ -148,7 +156,7 @@ global class MonthlyVisitViewerController {
             if(!String.isBlank(routeName)) {
                 String query = '%' +routeName +'%';
                 System.debug('query ===> '+query);
-                pageData.put('accountList', [SELECT Id,Name,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s FROM Account WHERE BillingStreet LIKE : query LIMIT 10]);
+                pageData.put('accountList', [SELECT Id,Name,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s,Geo_Location__c,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,ShippingCity,BillingCity,BillingCountry,BillingPostalCode,BillingState,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE BillingStreet LIKE : query LIMIT 10]);
                 pageData.put('leadList', [Select Id, Name,Street FROM Lead WHERE Street LIKE : query ]);
                 System.debug('User Data ::'+pageData);
                 return pageData;
@@ -172,7 +180,7 @@ global class MonthlyVisitViewerController {
         System.debug('repId ::'+repId);
         //System.debug('searchString ::'+searchString);
         //  String searchPattern = '%'+String.escapeSingleQuotes(searchString)+'%';
-        accList = [SELECT Id, Name,Location__r.Name,owner.name FROM Account WHERE owner.name = :repId AND  Location__r.Name =: location AND owner.name !='jain'  LIMIT 15];
+        accList = [SELECT Id, Name,Location__r.Name,owner.name,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE owner.name = :repId AND  Location__r.Name =: location AND owner.name !='jain'  LIMIT 15];
         System.debug('accList ::'+accList);
         return accList;
     }
@@ -223,7 +231,7 @@ global class MonthlyVisitViewerController {
     }
     
     @RemoteAction
-    global Static String createVisitObjectTypev1(Id SobjectId, string datestring, String geolatitude, String geolongitude){
+    global Static String createVisitObjectTypev1(Id SobjectId, string datestring, String geolatitude, String geolongitude,String StartTime,String EndTime){
         List<Weekly_Beat_Plan__c> WBPRec=new List<Weekly_Beat_Plan__c>();
         System.debug('datestring =====> ' + datestring);
         System.debug('SobjectId :'+SobjectId);
@@ -251,6 +259,10 @@ global class MonthlyVisitViewerController {
             if(WBPRec[0].Id!=null){
                 vs.Weekly_Beat_Plan__c=WBPRec[0].Id; 
             }
+            String[] strStartTimeTimeSplit = StartTime.split(':');
+            vs.Expected_Start_Time__c=Time.newInstance(Integer.valueOf(strStartTimeTimeSplit[0]),Integer.valueOf(strStartTimeTimeSplit[1]),0 ,0);
+            String[] strEndTimeTimeSplit = EndTime.split(':');
+            vs.Expected_End_Time__c=Time.newInstance(Integer.valueOf(strEndTimeTimeSplit[0]),Integer.valueOf(strEndTimeTimeSplit[1]),0 ,0);
             vs.Geo_Location__Latitude__s = Decimal.valueOf(geolatitude);
             vs.Geo_Location__Longitude__s =  Decimal.valueOf(geolongitude);
             insert vs;
@@ -265,6 +277,10 @@ global class MonthlyVisitViewerController {
             if(WBPRec[0].Id!=null){
                 vs.Weekly_Beat_Plan__c=WBPRec[0].Id; 
             }
+            String[] strStartTimeTimeSplit = StartTime.split(':');
+            vs.Expected_Start_Time__c=Time.newInstance(Integer.valueOf(strStartTimeTimeSplit[0]),Integer.valueOf(strStartTimeTimeSplit[1]),0 ,0);
+            String[] strEndTimeTimeSplit = EndTime.split(':');
+            vs.Expected_End_Time__c=Time.newInstance(Integer.valueOf(strEndTimeTimeSplit[0]),Integer.valueOf(strEndTimeTimeSplit[1]),0 ,0);
             vs.Geo_Location__Latitude__s = Decimal.valueOf(geolatitude);
             vs.Geo_Location__Longitude__s =  Decimal.valueOf(geolongitude);
             insert vs;
@@ -292,7 +308,7 @@ global class MonthlyVisitViewerController {
                 return led;
             }else if(sObjName == 'Account'){
                 System.debug('Account Found'); 
-                Account acc = [SELECT Id,Name,Geo_Location__Latitude__s,Geo_Location__Longitude__s FROM Account WHERE Id =: recordId];
+                Account acc = [SELECT Id,Name,Geo_Location__Latitude__s,Geo_Location__Longitude__s,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode FROM Account WHERE Id =: recordId];
                 System.debug('Account Record :::'+acc);
                 return acc;
             }

@@ -1,4 +1,25 @@
 public class TodayTaskAuraController {
+
+
+    @AuraEnabled
+    public static void createVisitActivity(Id opportunityId, Id visitId) {
+        System.debug('opportunityId------>'+opportunityId);
+        System.debug('visitId----->'+visitId);
+        if (opportunityId != null && visitId != null) {
+            Visit_Activity__c visitActivity = new Visit_Activity__c();
+            visitActivity.Opportunity__c = opportunityId;
+            visitActivity.Visit__c = visitId;
+    
+            try {
+                insert visitActivity;
+                System.debug('Visit_Activity__c record created successfully.');
+            } catch (Exception e) {
+                System.debug('Error creating Visit_Activity__c record: ' + e.getMessage());
+            }
+        } else {
+            System.debug('Opportunity Id and/or Visit Id is null. Visit_Activity__c record not created.');
+        }
+    }
     
     //method for getting all visit records based on date passed
     @AuraEnabled

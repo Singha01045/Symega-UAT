@@ -8,23 +8,14 @@
     
     <!-- the map component -->
     
-    <div class="slds-m-left_medium slds-m-right_medium " >
-        <h2 style="color: #0158A5; font-family: revert; font-size: 150%; font-weight: 550; padding-top:1%; margin-bottom:0.4%">Assigned Area</h2>
-        <div style="mapContainer">
-            <!--lightning:map class="myMap slds-box slds-box_x-small"
-                           style="height: 50vh;"
-                           mapMarkers="{! v.mapMarkers }"
-                           zoomLevel="{!v.zoomLevel}" /-->
-                           <iframe
+    <iframe
                            width="100%"
                            height="400"
                            frameborder="0"
                            style="border: 0"
-                           src="https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/FSLMapToShowBoundaries?core.apexpages.request.devconsole=1"
+                           src="https://symegafood--uat--c.sandbox.vf.force.com/apex/FSLMapToShowBoundaries?core.apexpages.request.devconsole=1"
                            allowfullscreen="true">
                          </iframe>
-        </div>
-    </div>
     
     <!-- style=" height:10%; box-shadow: 0px 2px 5px silver; border:solid white; border-radius: 1%;" -->
     <br/>

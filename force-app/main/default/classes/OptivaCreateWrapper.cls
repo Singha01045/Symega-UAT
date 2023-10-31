@@ -191,7 +191,7 @@ public without sharing class OptivaCreateWrapper {
 
 
             //NEW ADDITIONS
-            OpWrapper.expec_shelf_life = checkIfBlank(project.Expected_Shelf_Life__c);
+            OpWrapper.expected_shelf_life = checkIfBlank(project.Expected_Shelf_Life__c);
             OpWrapper.legal_status = checkIfBlank(project.Legal_Status__c);
 
         }

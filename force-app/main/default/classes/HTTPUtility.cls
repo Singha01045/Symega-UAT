@@ -26,7 +26,7 @@ public with sharing class HTTPUtility {
         httpRequest.setEndpoint(endpoint);
         httpRequest.setMethod(method);
         httpRequest.setBody(jsonBody);
-        httpRequest.setTimeout(600);
+        //httpRequest.setTimeout(600);
         
         system.debug('headerMap -- ' + headerMap);
 
@@ -116,21 +116,6 @@ public with sharing class HTTPUtility {
             System.debug('--- e-line-no '+ e.getLineNumber());
             HandleBusinessException.captureError('HttpUtility', 'httpReqHelper', e);
         }
-    }
-
-    public static String getAuthHeader(){
-
-        //sandbox
-        String username = 'clss';
-        String password = 'clss@1234';
-
-        //prod
-        // String username = 'Basis';
-        // String password = 'Integration@4321';
-        
-
-        Blob headerValue = Blob.valueOf(username + ':' + password);
-        return 'Basic ' +EncodingUtil.base64Encode(headerValue);
     }
 
     public static String getSAPCalloutHeader(String calloutName){

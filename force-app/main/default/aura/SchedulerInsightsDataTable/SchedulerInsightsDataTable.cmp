@@ -66,7 +66,7 @@
     
     <aura:attribute name="isLoading" type="Boolean" default="false"/>
     
-    <div class="slds-m-left_medium slds-m-right_medium " >
+    <div class=" " >
         <lightning:tabset selectedTabId="one">
             <lightning:tab label="Beat Status" id="one">
                 <!---BeatStatus Tab-->

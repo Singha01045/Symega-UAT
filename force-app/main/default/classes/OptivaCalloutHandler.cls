@@ -67,7 +67,7 @@ public without sharing class OptivaCalloutHandler {
                         
                         if(!project.Opportunity__r.Account.Submitted_to_SAP__c){
                             system.debug('cust Id -- ' + custId);
-                            String resp = SAP_CreateCustomerCallout.createCustomer(custId, isAccount);
+                            String resp = SAP_CreateCustomerCallout.createCustomer(project.Opportunity__r.AccountId);
                             if(resp.equalsIgnoreCase('Success')){
                                 updateAccountSubmittion(project.Opportunity__r.AccountId,'SAP');
                             }
@@ -82,7 +82,7 @@ public without sharing class OptivaCalloutHandler {
                         
                         if(!project.Opportunity__r.Customer_Billing_Address__r.Submitted_to_SAP__c){
                             system.debug('cust Id -- ' + custId);
-                            String resp = SAP_CreateCustomerCallout.createCustomer(project.Opportunity__r.Customer_Billing_Address__c, isAccount);
+                            String resp = SAP_CreateAddressCustomerCallout.createCustomer(project.Opportunity__r.Customer_Billing_Address__c);
                             if(resp.equalsIgnoreCase('Success')){
                                 updateAddressSubmittion(project.Opportunity__r.Customer_Billing_Address__c,'SAP');
                             }
@@ -484,7 +484,7 @@ public without sharing class OptivaCalloutHandler {
 
 
         //NEW ADDITIONS
-        OpWrapper.expec_shelf_life = checkIfBlank(project.Expected_Shelf_Life__c);
+        OpWrapper.expected_shelf_life = checkIfBlank(project.Expected_Shelf_Life__c);
         OpWrapper.legal_status = checkIfBlank(project.Legal_Status__c);
 
         return JSON.serialize(OpWrapper);

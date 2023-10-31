@@ -256,7 +256,8 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                 }
                             }
                         }
-                    }else if(project.RecordType.name=='Project'){
+                    }
+                    else if(project.RecordType.name=='Project'){
                         if((project.Product_Family__c.contains(Constants.FLAVOUR_API_NAME) || project.Product_Family__c.contains(Constants.COLOR_API_NAME)) && !String.isBlank(customerCodeOPTIVA)){
                             System.debug('CALLEDOPTIVA----');
                             Map<String,String> responseMap = new Map<String,String>();

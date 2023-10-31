@@ -116,7 +116,7 @@
                     }
                     helper.fetchEvents(component,event);
                     //var formatted=component.get("v.formattedDate");
-                    var baseURL = 'https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/MonthlyVisitViewer?id='+formattedDate;
+                    var baseURL = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/MonthlyVisitViewer?id='+formattedDate;
                     component.set("v.siteURL",baseURL);
                 }else{
                     component.set("v.ShowMonthlyBeatPlan",false);
@@ -146,7 +146,8 @@
         
     },
     
-    sendForApp:function(component ,event ,helper){
+    sendForApp: function (component, event, helper) {
+        debugger;
         
         var recId=event.target.Id;
         var action = component.get("c.initiateApprovalProcess");

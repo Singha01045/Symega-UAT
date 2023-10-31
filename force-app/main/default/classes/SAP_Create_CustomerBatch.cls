@@ -13,7 +13,7 @@ public without sharing class SAP_Create_CustomerBatch Implements Database.Batcha
 
         set<Id> successfulAccIdSet = new set<Id>();
         for(String id : setOfCustomer){
-            String response = SAP_CreateCustomerCallout.createCustomer(id, true);
+            String response = SAP_CreateCustomerCallout.createCustomer(id);
             if(response.equalsIgnoreCase('Success')){
                 successfulAccIdSet.add(id);
             }

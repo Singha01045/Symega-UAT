@@ -6,7 +6,7 @@
         <apex:slds />
         <head>
             <meta charset='utf-8' />
-           <apex:stylesheet value="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
+             <apex:stylesheet value="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
             <apex:stylesheet value="{!URLFOR($Resource.Calendar, '/FullCalendarJS/fullcalendar.min.css')}"/>    
             <apex:includeScript value="{!URLFOR($Resource.Calendar, '/FullCalendarJS/moment.min.js')}"/>
             <apex:includeScript value="{!URLFOR($Resource.Calendar, '/FullCalendarJS/jquery.min.js')}"/>
@@ -219,7 +219,64 @@
                         <div class="slds-backdrop slds-backdrop_open"></div>
                     </div>
                 </div>
-            </div>  
+            </div> 
+
+            <!-- address model -->
+            <div id="address-modal" style="display:none;">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
+                         class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="close-modal slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate"></h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <fieldset class="slds-form-element">
+                                <legend class="slds-form-element__legend slds-form-element__label">Available Address</legend>
+                                <div class="slds-form-element__control" id="address-parent">
+                                         <span class="slds-radio">
+                                        <input type="radio" id="radio-61" value="radio-61" name="default" checked="" />
+                                        <label class="slds-radio__label" for="radio-61">
+                                        <span class="slds-radio_faux"></span>
+                                        <span class="slds-form-element__label">Radio Label One</span>
+                                        </label>
+                                        </span>
+                                        <span class="slds-radio">
+                                        <input type="radio" id="radio-62" value="radio-62" name="default" />
+                                        <label class="slds-radio__label" for="radio-62">
+                                        <span class="slds-radio_faux"></span>
+                                        <span class="slds-form-element__label">Radio Label Two</span>
+                                        </label>
+                                        </span>
+                                                                  </div>
+                            </fieldset>
+                            <div class="slds-grid slds-wrap slds-m-top_large">
+                                <div class="slds-col slds-size_4-of-12">
+                                <span>Start Time</span>
+                                            <input type="time" id="time-input-id-47" placeholder="Start time" label="Start time" class="slds-input" />
+                                </div>
+                                 <div class="slds-col slds-size_1-of-12"></div>
+                                <div class="slds-col slds-size_4-of-12">
+                                <span>End Time</span>
+                                            <input type="time" id="time-input-id-48" placeholder="End time" label="Start time" class="slds-input" />
+                                </div>
+                             
+                        </div>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button class="close-modal slds-button slds-button_neutral">Cancel</button>
+                            <button id="save-event" class="slds-button slds-button_brand">Save</button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+                
+            </div> 
         </body>
     </html>
 

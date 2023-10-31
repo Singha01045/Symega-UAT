@@ -2,17 +2,10 @@
     .THIS .sidenav {
         height: 100%;
         width:16%;
-        margin-top:6%;
         font-weight: bold;
         font-size:15px;
         position: fixed;
         color:#9E7BFF;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        margin-right:7%;
-        overflow-y: auto;
-        overflow-x: auto;
         background-color:#FFFFFF;
         
     }

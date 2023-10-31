@@ -269,94 +269,93 @@
     
     
     <!-- Html part /-->
-    <div style="" class="beatPlannerMain">
-        <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:2%; margin: 1rem;">Beat Planner</h2>
-        <div class="slds-align_absolute-center monthlyContainer">
-            <c:MonthlyContainer></c:MonthlyContainer>
-        </div>
-        <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
-            <div style="margin-top:1%;">
-                <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonthNumber}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
-            </div>
-        </aura:if>
-        <aura:if isTrue="{!v.ShowMonthlyBeatPlan}">
-            <div style="max-width: 2000px; margin: 0 auto;">
-                <div class="header NameBar">
-                    <div>
-                        <h1 style="" class="Mainheading">{!v.month}-{!v.mbpName}- Ajeet Kumar</h1>
-                        <div class="leftSidebutton">
-                            <aura:iteration items="{!v.kpiTargetsName}" var="item">
-                                <span>{!item.KPI_Target_Name__c}-{!item.Target_Count__c}</span>
-                            </aura:iteration>
-                        </div>
-                    </div>
-                    <div class="statusDiv">
-                        <aura:if isTrue="{!v.mbpStatus=='Approved'}">
-                            <span class="top-button" style="width:3rem;margin-left:-12%;margin-bottom:-6%;margin-top:1%;">{!v.mbpStatus}</span>
-                            <aura:set attribute="else">
-                                <aura:if isTrue="{!and(v.mbpStatus=='Draft', v.showApprovalButton)}">
-                                    <a class="top-button SendApproval" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'><span style="color:#fff;">Send For Approval</span>
-                                    </a>
-                                    <aura:set attribute="else">
-                                        <span class="top-button">{!v.mbpStatus}</span>
-                                    </aura:set>
-                                </aura:if>
-                            </aura:set>
-                        </aura:if> 
-                    </div>
-                </div>
-                <div class="calendarContainer" style="">
-                    <aura:if isTrue="{!v.showApprovedCal}">
-                        <div class="mainContainer" style="">               
-                            <div class="boxContainer" aura:id="external-events">
-                                <div class="event-container" style="max-height: 650px;padding-top:2%;">
-                                    <aura:iteration items="{!v.weeklyWrapper}" var="item">
-                                        <div class="box draggable-event" id="listCalender" draggable="true">
-                                            <ul>
-                                                <li><span style="font-weight:700;"> {!item.weekName} </span> <span style="font-weight:bold;color:grey;margin-left:4px;">({!item.weekstartAndEndText}) </span></li>
-                                                <div>
-                                                    <aura:iteration items="{!item.kpiList}" var="ite">
-                                                        <li style="margin:10px;">
-                                                            <span class="{!ite.dynamicClass}">
-                                                                {!ite.count} - {!ite.kPIName}
-                                                            </span>
-                                                        </li>
-                                                    </aura:iteration>
-                                                </div>
-                                            </ul>
-                                        </div>
-                                    </aura:iteration>
-                                    
-                                    <!--aura:iteration items="{!v.Weeklybp}" var="item">
-                                        <div class="box draggable-event" id="listCalender" draggable="true">
-                                            <ul>
-                                                <li>Week Name: {!item.Name}</li>
-                                                <li>Start Date: {!item.Start_Day_of_Week__c}</li>
-                                                <li>End Date: {!item.End_Day_of_Week__c}</li>
-                                        </ul>
-                                            <h3>{!item.weektext}</h3>
-                                            <p style="text:bold">({!item.weekDesc})</p>
-                                            
-                                        </div>
-                                    </aura:iteration-->
-                                </div>
-                            </div>
-                            
-                            <div class="callyContainer">
-                                <div  id="calendar"></div> 
-                            </div>
-                        </div>
-                        <!--c:fullcalanderComp month="{!v.selectedMonth}" year="{!v.selectedYear}" aura:id="childComp"/-->
-                    </aura:if> 
-                    <aura:if isTrue="{!v.showUnapprovedCal}">
-                        <iframe src="{!v.siteURL}" width="100%" height="700px;"/>
-                        
-                        <!--c:MonthlyBeanPlanCalnder month="{!v.selectedMonth}" year="{!v.selectedYear}" aura:id="chilcally"/-->
-                    </aura:if>
-                </div>
-            </div>
-        </aura:if>
+    <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:2%; margin: 1rem;">Beat Planner</h2>
+    <div class="slds-col slds-size_12-of-12">
+        <c:MonthlyContainer></c:MonthlyContainer>
     </div>
+    
+    <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
+        <div style="margin-top:1%;">
+            <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonthNumber}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.ShowMonthlyBeatPlan}">
+        <div class="slds-col slds-size_12-of-12" style="margin-top:10px;">
+            <article class="slds-card" style="background: linear-gradient(90.51deg, #6DA2EA 0%, #DDB5FF 100%);border-radius: 10px;">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span style="color: aliceblue;font-size: xx-large;">{!v.month}-{!v.mbpName}- Ajeet Kumar</span>
+                            </h2>
+                        </div>
+                        <div class="slds-no-flex">
+                            <aura:if isTrue="{!v.mbpStatus=='Approved'}">
+                                <span class="top-button" style="width:3rem;margin-left:-12%;margin-bottom:-6%;margin-top:1%;">{!v.mbpStatus}</span>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!and(v.mbpStatus=='Draft', v.showApprovalButton)}">
+                                        <a class="top-button SendApproval" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'><span style="color:#fff;">Send For Approval</span>
+                                        </a>
+                                        <aura:set attribute="else">
+                                            <span class="top-button">{!v.mbpStatus}</span>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <aura:iteration items="{!v.kpiTargetsName}" var="item">
+                        <span class="slds-badge">{!item.KPI_Target_Name__c}-{!item.Target_Count__c}</span>
+                    </aura:iteration>           
+                </div>
+            </article>
+            
+            <div class="" style="margin-top:10px;">
+                <aura:if isTrue="{!v.showApprovedCal}">
+                    <div class="mainContainer" style="">               
+                        <div class="boxContainer" aura:id="external-events">
+                            <div class="event-container" style="max-height: 650px;padding-top:2%;">
+                                <aura:iteration items="{!v.weeklyWrapper}" var="item">
+                                    <div class="box draggable-event" id="listCalender" draggable="true">
+                                        <ul>
+                                            <li><span style="font-weight:700;"> {!item.weekName} </span> <span style="font-weight:bold;color:grey;margin-left:4px;">({!item.weekstartAndEndText}) </span></li>
+                                            <div>
+                                                <aura:iteration items="{!item.kpiList}" var="ite">
+                                                    <li style="margin:10px;">
+                                                        <span class="{!ite.dynamicClass}">
+                                                            {!ite.count} - {!ite.kPIName}
+                                                        </span>
+                                                    </li>
+                                                </aura:iteration>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </aura:iteration>
+                            </div>
+                        </div>
+                        
+                        <div class="callyContainer">
+                            <div  id="calendar"></div> 
+                        </div>
+                    </div>
+                    <!--c:fullcalanderComp month="{!v.selectedMonth}" year="{!v.selectedYear}" aura:id="childComp"/-->
+                </aura:if> 
+                <aura:if isTrue="{!v.showUnapprovedCal}" >
+                    <iframe src="{!v.siteURL}" width="100%" height="700px;"/>
+                    
+                    <!--c:MonthlyBeanPlanCalnder month="{!v.selectedMonth}" year="{!v.selectedYear}" aura:id="chilcally"/-->
+                </aura:if>
+            </div>
+        </div>
+        
+    </aura:if>
+    
+    
+    
     
     
     
@@ -368,10 +367,10 @@
                 <!-- Modal/Popup Box Header Starts here-->
                 <header class="slds-modal__header slds-float_right">
                     <div class="slds-float_left">
-                      <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
-                          <lightning:icon iconName='action:description' alternativeText='description' size='small' title='description'></lightning:icon> Task Details</h2>
-                	</div>
-                   </header>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                            <lightning:icon iconName='action:description' alternativeText='description' size='small' title='description'></lightning:icon> Task Details</h2>
+                    </div>
+                </header>
                 <!--Modal/Popup Box Body Starts here-->
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                     <lightning:buttonIcon iconName="utility:close"
@@ -388,7 +387,7 @@
                                           label="Cancel"
                                           title="Cancel"
                                           onclick="{! c.closeModel }"/>
-                       
+                        
                     </div>   
                 </footer>
             </div>

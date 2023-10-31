@@ -47,7 +47,12 @@ public without sharing class AccountTriggerHandler {
             if((oldMap.get(acc.Id).Customer_Code_SAP__c==null && acc.Customer_Code_SAP__c!=null) || (oldMap.get(acc.Id).Customer_Code_OPTIVA__c==null && acc.Customer_Code_OPTIVA__c!=null)) {
                 registeredAccIds.add(acc.Id);
             }
-            if(isAccChange(oldMap,acc) && acc.SAP_Update_Customer__c){
+            
+            Boolean isAccChange = isAccChange(oldMap,acc);
+            system.debug('acc.SAP_Update_Customer__c --' + acc.SAP_Update_Customer__c);
+            system.debug('acc.isAccChange --' + isAccChange);
+            
+            if(isAccChange && acc.SAP_Update_Customer__c){
                 setOfAccountToUpdate.add(acc.Id);
             }
         }
@@ -70,7 +75,7 @@ public without sharing class AccountTriggerHandler {
         }
         
         if(!setOfAccountToUpdate.isEmpty()){
-            //Database.executeBatch(new SAP_Update_CustomerBatch(setOfAccountToUpdate));
+            Database.executeBatch(new SAP_Update_CustomerBatch(setOfAccountToUpdate));
         }
     }
     

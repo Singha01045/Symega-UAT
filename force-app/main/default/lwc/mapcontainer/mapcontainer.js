@@ -11,8 +11,8 @@ export default class Mapcontainer extends LightningElement {
        'accAddress' : '',
        'currentAddress': ''
    }
-    vfHost = 'https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/GoogleMapIframe';
-    origin = 'https://sales-production--mfgcloud--c.sandbox.vf.force.com';
+    vfHost = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/googleMapIframe';
+    origin = 'https://symegafood--uat--c.sandbox.vf.force.com';
     currentAddress = '';
     connectedCallback(){
         debugger;

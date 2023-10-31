@@ -345,16 +345,16 @@
         component.set("v.dates", dates);
     },
     callMapMethod : function(component, event, helper){
-        
+        debugger;
         var selectedVisitDateFromParentComp = component.get("v.SelectedVisitDate");
-        var baseURL = 'https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
+        var baseURL = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
         //console.log('baseURL === >'+baseURL);
         component.set("v.siteURL",baseURL);
     },
     callMapMethodFromController : function(component, dataFromCont, helper){
         
         var selectedVisitDateFromParentComp = dataFromCont;
-        var baseURL = 'https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
+        var baseURL = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
         //console.log('baseURL === >'+baseURL);
         component.set("v.siteURL",baseURL);
     },

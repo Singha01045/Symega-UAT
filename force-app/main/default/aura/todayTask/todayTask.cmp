@@ -46,31 +46,30 @@
     <aura:attribute name="SelectedVisitDate" type="String"/>
     <aura:handler name="fieldVisitComponentEvent" event="c:fieldVisitComponentEvent" action="{!c.handleComponentEvent}"/> 
     
-    <div class="c-container" style="">
+    <div class="" style="border-radius: 10px;border: 1px solid #ccc;padding: 20px;background-color: #f2f2f2;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <aura:if isTrue="{!v.showTodaysTaskComponent}">
-            <lightning:layout multipleRows="true">
                 <lightning:layoutItem padding="around-small" size="12" class="todayTaskMainDiv">
                     <div class="page-section page-header float-child">
                         <h2 style = "color:#0158A5; font-size: 20px; font-weight: 600;">{!v.dateDay}&nbsp;{!v.dateMonth}, {!v.dateYear} - {!v.day}</h2>
                     </div>
-                        <div class="buttonContainer" style="margin-right: 3%;">
-                            <lightning:button onclick="{!c.StartVisitDay}" label="StartDay" class="headerButton" disabled="{!v.ShowStartDay}"/>
-                            <lightning:button onclick="{!c.EndVisitDay}" label="EndDay" class="headerButton" disabled="{!v.ShowEndDay}"/>
-                            
-                        </div>
+                    <div class="buttonContainer" style="margin-right: 3%;">
+                        <lightning:button onclick="{!c.StartVisitDay}" label="StartDay" class="headerButton" disabled="{!v.ShowStartDay}"/>
+                        <lightning:button onclick="{!c.EndVisitDay}" label="EndDay" class="headerButton" disabled="{!v.ShowEndDay}"/>
+                        
+                    </div>
                     
                 </lightning:layoutItem>
                 <br/>
                 <br/>
-
+                
                 <!--.///////////////////////////////////// previous date designs ///////////////////////////////////////-->
-
-
+                
+                
                 <div class="dateFilter">
                     <!--lightning:icon iconName="utility:left" size="medium" alternativeText="Back" style="display:inline-block;" onclick="{!c.handlePrevClicked}" class="prevButton"/-->
                     <lightning:button class="mobileAlignPrev" iconName="utility:back" aura:id="prevBtn"  variant='inverse'
-                              title="Previous" onclick="{!c.handlePrevClicked}"/>
-                <lightning:layoutItem padding="around-small" size="5" class="mobileDateFil">
+                                      title="Previous" onclick="{!c.handlePrevClicked}"/>
+                    <lightning:layoutItem padding="around-small" size="5" class="mobileDateFil">
                         <ul class="date-list">
                             <aura:iteration items="{!v.dates}" var="date">
                                 <li class="{!'date-item ' + (date.fullDate == v.selectedDate ? 'selected' : '')}" 
@@ -90,190 +89,209 @@
                                 </li>
                             </aura:iteration>
                         </ul>
-                </lightning:layoutItem>
+                    </lightning:layoutItem>
                     <lightning:button class="mobileAlignNext"  iconName="utility:forward" variant='inverse' aura:id="nextBtn"
-                              title="Next" onclick="{!c.handleNextClicked}"/>
+                                      title="Next" onclick="{!c.handleNextClicked}"/>
                     <!--lightning:icon iconName="utility:right" size="medium" alternativeText="Next" style="display:inline-block;" onclick="{!c.handleNextClicked}" class="nextButton"/-->
-                    </div>
-
-                    <!-- ////////////////////////////////////// New Date Designs ///////////////////////////////////////////////// -->
-
-                 
+                </div>
                 
-                <lightning:layoutItem padding="around-small" size="12" class="cardDiv">
-                    <lightning:card class = "bodyCard">
-                        <aura:if isTrue = "{!v.ShowEmptyPage}">
-                            <!--center><h1>No Records To Display</h1></center-->
-                            <center>
-                                <img src="{!$Resource.NoTaskImage}" alt="No Task For Today" style="" class="desktopNoTask"/>
-                                <img src="{!$Resource.NoTaskImage1}" alt="No Task For Today" style="" class="mobileNoTask"/>
-                            </center>
-                            <aura:set attribute="else">
-                                <lightning:layout>
-                                    <lightning:layoutItem padding="around-large" size="5" class= "limitVertical">
-                                        <aura:iteration items="{!v.taskList}" var="val">
-                                            <div style=" position: relative; background: #F3F3F3; border-radius: 4px;margin-bottom:10px; overflow: hidden; border-left: 3px #A094ED solid; display:block; margin-top:1%">
-                                                <div style="position: relative; display: flex; align-items: center;">
-                                                    <div style="padding: 3%; display: inline-block;">
+                <!-- ////////////////////////////////////// New Date Designs ///////////////////////////////////////////////// -->
+                <div class="slds-col slds-size_11-of-12" style="display: flex;justify-content: space-between;">
+                    <aura:if isTrue = "{!v.ShowEmptyPage}">
+                        <center>
+                            <img src="{!$Resource.NoTaskImage}" alt="No Task For Today" style="" class="desktopNoTask"/>
+                            <img src="{!$Resource.NoTaskImage1}" alt="No Task For Today" style="" class="mobileNoTask"/>
+                        </center>
+                        <aura:set attribute="else">
+                            <div class="slds-col slds-size_6-of-12 slds-scrollable" >
+                                <aura:iteration items="{!v.taskList}" var="val">
+                                    <article class="slds-card" style="margin-left:30px;margin-right:30px;border-radius: 10px;border: 1px solid #ccc;padding: 5px;background-color: #fff;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                        <div class="slds-card__header slds-grid">
+                                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                                <div class="slds-media__figure">
+                                                    <span class="slds-icon_container slds-icon-standard-account" title="account">
                                                         <lightning:icon iconName="standard:contact_list" alternativeText="Utility image" title="Image" />
-                                                    </div>
-                                                    <div style="padding: 2%; display: inline-block;">
-                                                        <h1 style="font-size: 16px; font-weight: 620; margin: 0; max-width: 260px; word-wrap: break-word;">{!val.Account__r.Name}</h1>
-                                                    </div>                                                    
-                                                    <div style="position: absolute; right:4%;">
-                                                        <aura:if isTrue="{!val.Visit_Status__c == 'Assigned'}">
-                                                            <div style="padding: 3px; width: 125%; background: #6CA1E9; border-radius: 12px; color: white; text-align: center;"> Assigned </div>
-                                                        </aura:if>
-                                                        <aura:if isTrue="{!val.Visit_Status__c == 'Completed'}">
-                                                            <div style="padding: 3px; width: 125%; background: #6BBD6E; border-radius: 12px; color: white; text-align: center;"> Completed </div>
-                                                        </aura:if>
-                                                        <aura:if isTrue="{!val.Visit_Status__c == 'In Progress'}">
-                                                            <div style="padding: 3px; width: 125%; background: #FBB439; border-radius: 12px; color: white; text-align: center;"> In Progress </div>
-                                                        </aura:if>
-                                                        <aura:if isTrue="{!val.Visit_Status__c == 'PENDING'}">
-                                                            <div style="padding: 3px; width: 125%; background: #FBB439; border-radius: 12px; color: white; text-align: center;"> Pending </div>
-                                                        </aura:if>
-                                                    </div>
-                                                </div>
-                                                <div style=" margin-top: -2%; margin-left:3%">
-                                                    <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Beat Id:</div>
-                                                    <div style=" padding: 1%; justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">{!val.Name}</div>
-                                                    <div style=" position: absolute; right:34%;  justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Beat Type:</div>
-                                                    <div style=" position: absolute; right:22%;  justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">{!val.KPI_Target__r.KPI_Target_Name__c}</div>
-                                                </div>
-                                                <div style="margin-left: 3%">
-                                                    <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Time:</div>
-                                                    
-                                                    <aura:if isTrue="{!val.Check_In_Time__c == null}">
-                                                        <div style=" padding: 1%; justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;"><lightning:formattedDateTime value="{!val.Expected_Start_Time__c}" hour="2-digit" minute="2-digit" timeZone="UTC"  timeZoneName="short"/></div>
-                                                        <aura:set attribute="else">
-                                                            <div style=" padding: 1%; justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">
-                                                                <!--lightning:formattedDateTime value="{!val.Check_In_Time__c}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" timeZoneName="short" hour12="true"/-->
-                                                                <lightning:formattedDateTime value="{!val.Check_In_Time__c}" hour="2-digit" minute="2-digit" timeZone="UTC"  timeZoneName="short"/>
-                                                            </div>
-                                                        </aura:set>
-                                                    </aura:if> 
-                                                    <div style="position: absolute; right:34%; justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Duration:</div>        
-                                                    <div style=" position: absolute; right:30%;  justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">{!val.Duration__c}</div>
-                                                </div>
-                                                <div style=" padding-left: 14%; padding-bottom:2%;padding-top: 2%;">
-                                                    <span style="margin-right: 10%;">                                                   
-                                                         <lightning:button class ="cardButton"  label="Amend" onclick="{!c.handleAmend}" name="{!val.Id}" disabled = "{!v.disableVisitButtons}"/>
+                                                        <span class="slds-assistive-text">account</span>
                                                     </span>
-                                                    <lightning:button class ="cardButton" label="Start Visit" onclick="{!c.handleStartVisit}" value="{!val}" disabled ="{!v.disableVisitButtons}"/>
+                                                </div>
+                                                <div class="slds-media__body">
+                                                    <h2 class="slds-card__header-title">
+                                                        <a href="#" class="slds-card__header-link slds-truncate" title="Accounts">
+                                                            <span>{!val.Account__r.Name}</span>
+                                                        </a>
+                                                    </h2>
+                                                </div>
+                                                <div class="slds-no-flex">
+                                                    <aura:if isTrue="{!val.Visit_Status__c == 'Assigned'}">
+                                                        <span class="slds-badge" style="background: #6CA1E9;color: white;">Assigned</span>
+                                                        
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!val.Visit_Status__c == 'Completed'}">
+                                                        <span class="slds-badge" style="background: #6CA1E9;color: white;">Completed</span>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!val.Visit_Status__c == 'In Progress'}">
+                                                        <span class="slds-badge" style="background: #6CA1E9;color: white;">In Progress</span>
+                                                        
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!val.Visit_Status__c == 'PENDING'}">
+                                                        <span class="slds-badge" style="background: #6CA1E9;color: white;">Pending</span>
+                                                    </aura:if>
+                                                </div>
+                                            </header>
+                                        </div>
+                                        <section class="slds-card__body" style="display: flex;justify-content: space-between;">
+                                            
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Beat Id : </b></span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.Name}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Time : </b>Time : </span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;"><lightning:formattedDateTime value="{!val.Expected_Start_Time__c}" hour="2-digit" minute="2-digit" timeZone="UTC"  timeZoneName="short"/></span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </aura:iteration>
-                                    </lightning:layoutItem>
-
-                                
-                                    <lightning:layoutItem flexibility="auto" size="6" padding="around-small" class="mapDiv">
-                                        <div class="custom-box">
-                                            <iframe src="{!v.siteURL}" width="100%" height="500px;" />
-                                            <!--c:MultipleGeolocationAura SelectedVisitDate="{!v.SelectedVisitDateFromTaskComp}"/-->
-                                            <!--lightning:map 
-                                                           mapMarkers="{! v.mapMarkers }" 
-                                                           zoomLevel="{!v.zoomLevel}" /-->
-                                            
-                                        </div>
-                                    </lightning:layoutItem>
-                                </lightning:layout>
-                            </aura:set>
-                            
-                        </aura:if> 
-                    </lightning:card>
-
-                    <aura:if isTrue="{!not(empty(v.completedTaskList))}">
-                        <table class="slds-table slds-table_cell-buffer slds-table_bordered tableCard">
-                            <thead>
-                                <tr >
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="SN">SN</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Date">Client Name</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Date">Status</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Date">Date</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Beat Id">Beat Id</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="District">District</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Taluk">Taluk</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Night Stay">Night Stay</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Visit Objective">Visit Objective</div>
-                                    </th>
-                                    <th scope="col" style="background-color: #6ca1e9; color: white;">
-                                        <div class="slds-truncate" title="Visit Objective">Visit feedback</div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <aura:iteration items="{!v.completedTaskList}" var="val" indexVar="index">
-                                    <tr class="slds-hint-parent">
-                                        <td style="color: black;" data-label="SN">{!index + 1}</td>
-                                        <td data-label="Date">
-                                            <div class="slds-truncate" title="{!val.Date__c}">{!val.Account__r.Name}</div>
-                                        </td>
-                                        <td data-label="Date">
-                                            <div class="slds-truncate" title="{!val.Date__c}">{!val.Status__c}</div>
-                                        </td>
-                                        <td data-label="Date">
-                                            <div class="slds-truncate" title="{!val.Date__c}">{!val.Actual_visit_date__c}</div>
-                                        </td>
-                                        <td data-label="Beat Id">
-                                            <div class="slds-truncate" title="{!val.Name}">{!val.Name}</div>
-                                        </td>
-                                        <td data-label="District">
-                                            <div class="slds-truncate" title="{!val.District__c}">{!val.District__c}</div>
-                                        </td>
-                                        <td data-label="Taluk">
-                                            <div class="slds-truncate" title="{!val.Taluk__c}">{!val.Taluk__c}</div>
-                                        </td>
-                                        <td data-label="Night Stay">
-                                            <div class="slds-truncate" title="{!val.Night_Stay__c}">{!val.Night_Stay__c}</div>
-                                        </td>
-                                        <td data-label="Visit Objective">
-                                            <div class="slds-truncate" title="{!val.Visit_Objective__c}">{!val.Visit_Objective__c}</div>
-                                        </td>
-                                        <td data-label="Visit Objective">
-                                            <div class="slds-truncate" title="{!val.Visit_Objective__c}">{!val.Visit_feedback__c}</div>
-                                        </td>
-                                    </tr>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Beat Type : </b></span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.KPI_Target__r.KPI_Target_Name__c}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Duration : </b></span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.Duration__c}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <footer class="slds-card__footer">
+                                            <lightning:button class ="cardButton"  label="Amend" onclick="{!c.handleAmend}" name="{!val.Id}" disabled = "{!v.disableVisitButtons}"/>
+                                            <lightning:button class ="cardButton" label="Start Visit" onclick="{!c.handleStartVisit}" value="{!val}" disabled ="{!v.disableVisitButtons}"/>
+                                        </footer>
+                                    </article>
                                 </aura:iteration>
-                            </tbody>
-                        </table>
+                            </div>
+                            
+                            <div class="slds-col slds-size_6-of-12">
+                                
+                                <iframe src="{!v.siteURL}" width="100%" height="500px;" style="border: hidden;border-radius: 5%;border: 1px solid #ccc;padding: 5px;background-color: #fff;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"/>
+                            </div>
+                            
+                        </aura:set>
                     </aura:if>
-                </lightning:layoutItem>
-            </lightning:layout>
+                    
+                    
+                </div>
+                
+                <div class="slds-col slds-size_12-of-12" style="margin-top:5px;">
+                    <aura:if isTrue="{!not(empty(v.completedTaskList))}">
+                        <div class="slds-card" style="margin-left:30px;margin-right:30px;border-radius: 10px;border: 1px solid #ccc;padding: 5px;background-color: #fff;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <section class="slds-card__body">
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered tableCard">
+                                    <thead>
+                                        <tr >
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="SN">SN</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Date">Client Name</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Date">Status</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Date">Date</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Beat Id">Beat Id</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="District">District</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Taluk">Taluk</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Night Stay">Night Stay</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Visit Objective">Visit Objective</div>
+                                            </th>
+                                            <th scope="col" style="background-color: #6ca1e9; color: white;">
+                                                <div class="slds-truncate" title="Visit Objective">Visit feedback</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.completedTaskList}" var="val" indexVar="index">
+                                            <tr class="slds-hint-parent">
+                                                <td style="color: black;" data-label="SN">{!index + 1}</td>
+                                                <td data-label="Date">
+                                                    <div class="slds-truncate" title="{!val.Date__c}">{!val.Account__r.Name}</div>
+                                                </td>
+                                                <td data-label="Date">
+                                                    <div class="slds-truncate" title="{!val.Date__c}">{!val.Status__c}</div>
+                                                </td>
+                                                <td data-label="Date">
+                                                    <div class="slds-truncate" title="{!val.Date__c}">{!val.Actual_visit_date__c}</div>
+                                                </td>
+                                                <td data-label="Beat Id">
+                                                    <div class="slds-truncate" title="{!val.Name}">{!val.Name}</div>
+                                                </td>
+                                                <td data-label="District">
+                                                    <div class="slds-truncate" title="{!val.District__c}">{!val.District__c}</div>
+                                                </td>
+                                                <td data-label="Taluk">
+                                                    <div class="slds-truncate" title="{!val.Taluk__c}">{!val.Taluk__c}</div>
+                                                </td>
+                                                <td data-label="Night Stay">
+                                                    <div class="slds-truncate" title="{!val.Night_Stay__c}">{!val.Night_Stay__c}</div>
+                                                </td>
+                                                <td data-label="Visit Objective">
+                                                    <div class="slds-truncate" title="{!val.Visit_Objective__c}">{!val.Visit_Objective__c}</div>
+                                                </td>
+                                                <td data-label="Visit Objective">
+                                                    <div class="slds-truncate" title="{!val.Visit_Objective__c}">{!val.Visit_feedback__c}</div>
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </aura:if>
+                </div>
         </aura:if>
-   
-
+        
+        
         
         <aura:if isTrue="{!v.showStartVisitComponent}">
             <div >
                 <c:StartVisit visitId="{!v.visitIDtoStart}" visitRec="{!v.visitRec}" accountAddress="{!v.accountAddress}" accID="{!v.accIdToShow}"/>
-            </div>
-            
-            <!--div class="slds-hidden">
-            <c:startVisit/>
-        </div-->  
+            </div>  
         </aura:if>
         <aura:if isTrue="{!not(empty(v.errorMessage))}">
-    <div class="slds-text-color_error">{!v.errorMessage}</div>
-</aura:if>
-
+            <div class="slds-text-color_error">{!v.errorMessage}</div>
+        </aura:if>
+        
         <aura:if isTrue="{!v.ShowAmedVistPop}">
             <div>
                 <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
@@ -287,10 +305,10 @@
                         <center style="background: white;"><b>Amend Visit</b></center>
                         <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
                             <div class="row"> 
-
+                                
                                 <lightning:input type="date" aura:id="auraidActualVisitDate" label="Actual visit date" value="{!v.visitRec.Planned_visit_date__c}"  data-current-date="{!v.currentDate}"/>
-                                                                           
-                                 <lightning:input aura:id="visitDescription" label="Visit Description" required="true"  value = "{!v.visitRec.Description__c}"/>
+                                
+                                <lightning:input aura:id="visitDescription" label="Visit Description" required="true"  value = "{!v.visitRec.Description__c}"/>
                             </div>
                         </div>
                         

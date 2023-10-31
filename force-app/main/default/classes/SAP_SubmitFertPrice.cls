@@ -7,7 +7,7 @@ public without sharing class SAP_SubmitFertPrice {
         String endPoint = 'callout:Fert_SAP'+ System.Label.SAP_Fert_URL;
         String tokenEndPoint = 'callout:Fert_SAP'+System.Label.SAP_Fert_URL;
 
-        Map<String,String> tokenMap = SAPRequestTokenHeader.getInstance().requestAuthToken(tokenEndPoint);
+        Map<String,String> tokenMap = SAPRequestTokenHeader.getInstance().getCSRFToken(tokenEndPoint, Constants.SAP_FERT_AUTH_HEADER);
         String cookies = tokenMap.get('cookies');
         String token = tokenMap.get('token');
 
@@ -26,7 +26,7 @@ public without sharing class SAP_SubmitFertPrice {
         String endPoint = 'callout:Fert_SAP'+ System.Label.SAP_Fert_URL;
         String tokenEndPoint = 'callout:Fert_SAP'+System.Label.SAP_Fert_URL;
 
-        Map<String,String> tokenMap = SAPRequestTokenHeader.getInstance().requestAuthToken(tokenEndPoint);
+        Map<String,String> tokenMap = SAPRequestTokenHeader.getInstance().getCSRFToken(tokenEndPoint, Constants.SAP_FERT_AUTH_HEADER);
         String cookies = tokenMap.get('cookies');
         String token = tokenMap.get('token');
 

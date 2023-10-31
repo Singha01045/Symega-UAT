@@ -8,21 +8,21 @@
     <aura:attribute name="userName" type="String" />
     <aura:attribute name="refresh" type="Boolean" default="true"/>
     
-    <div class="DashboardScheduler" >
-        <div class="slds-align_absolute-center">
-            <c:SchedulerDayBarComponent/>
-        </div>
+    <div class="" >
+        <div class="slds-col slds-size_12-of-12">
+        <c:SchedulerDayBarComponent></c:SchedulerDayBarComponent>
+    </div>
         <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
-            <div>
+            <div class="slds-col slds-size_12-of-12">
                 <c:SchedulerInsightsMonthYear MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
             </div>
            <aura:if isTrue = "{!v.refresh}">
-            <div class="monthMargin">
+            <div class="slds-col slds-size_12-of-12" style="margin-top:10px;">
                 <c:SchedulerInsightsProgressRing selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
             </div>
             </aura:if>
             <aura:if isTrue = "{!v.refresh}">
-            <div class="tableMargin">
+            <div class="slds-col slds-size_12-of-12">
                 <c:SchedulerInsightsDataTable monthName = "{!v.selectedMonth}" monthYear = "{!v.selectedYear}"/>
             </div>
             </aura:if>

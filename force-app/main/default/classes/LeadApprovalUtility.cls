@@ -402,8 +402,8 @@ public without sharing class LeadApprovalUtility {
                 pwrap.isAccount = true;
             }   
             else{
-                Dispatch_Address__c customerAddressRec = [Select ID, Account__c, Type__c, Contact__c, Address__Street__s, Address__CountryCode__s,
-                                                          Address__StateCode__s, Address__PostalCode__s, Address__City__s, CurrencyIsoCode, OwnerId, Account__r.User__c
+                Dispatch_Address__c customerAddressRec = [Select ID, Account__r.Account_Segment__c, Account__r.Customer_Type__c, Account__c, Type__c, Contact__c, Address__Street__s, Address__CountryCode__s,
+                                                          Address__StateCode__s, Address__PostalCode__s, Address__City__s, CurrencyIsoCode, OwnerId, Account__r.User__c, Account__r.Delivery_Plant__c
                                                           From Dispatch_Address__c Where Id =: projRec.Opportunity__r.Customer_Billing_Address__c];
                 userId = customerAddressRec.OwnerId;
                 bhId = customerAddressRec.Account__r.User__c;

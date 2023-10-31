@@ -15,6 +15,13 @@ $(document).ready(function () {
     let Leadgeolongitude;
     let AccountLatitude;
     let AccountLongitude;
+    let AccountId;
+    let dateTime;
+    let addlat;
+    let addlong;
+    let startTime;
+    let endTime;
+    let accMap = new Map();
     let configureCalendar = function () {
         debugger;
         
@@ -23,7 +30,7 @@ $(document).ready(function () {
 	
     }
    
-    let accMap = new Map();
+   
 
     
     
@@ -118,24 +125,43 @@ $(document).ready(function () {
                 dayClick: function (date, jsEvent, view) {
                     jsEvent.preventDefault();
                 },
-                drop: function (date) {
+                drop: function (date ,jsEvent) {
                     visiteDateToApex = date;
-                    
+                   
                     console.log('repVisits.length::'+repVisits.length);
                     debugger;
-                    repVisits.push({ id: $(this).attr("data-accid"), start: date._i });
+                    //repVisits.push({ id: $(this).attr("data-accid"), start: date._i });
+                                      
                     
-                    for (var i = 0; i < repVisits.length; i++) {
-                       
-                        if(repVisits[i].id==currentAccount && repVisits[i].start==apexDate){
-                            alert('there is already visit for this account');
-                        }else{
-                            currentAccount = repVisits[i].id;
-                            // handleAddressSelection(date, this);
+                    for (var i = 0; i < repVisits.length; i++){
+                        if(repVisits[i].start !=null){
+                            if(repVisits[i].start ==visiteDateToApex && repVisits[i].id==AccountId){
+                                
+                            }
+                            else{
+
+                            }
+                            
+                        }
+                        else{
+                            handleAddressSelection(date, this);
                         }
                     }
+
+                    // for (var i = 0; i < repVisits.length; i++) {
+                       
+                    //     if(repVisits[i].id==currentAccount && repVisits[i].start==apexDate){
+                    //         alert('there is already visit for this account');
+                    //         return;
+                    //        // handleAddressSelection(date, this);
+                    //     }else{
+                    //         currentAccount = repVisits[i].id;
+                    //         return;
+                    //        // handleAddressSelection(date, this);
+                    //     }
+                    // }
                     
-                    callGeolocationMethod();
+                    //callGeolocationMethod();
                     if ($('#drop-remove').is(':checked')) {
                         $(this).remove();
                     }
@@ -180,7 +206,7 @@ $(document).ready(function () {
                 // if (key == "Geolocation__Longitude__s") {
                 Leadgeolatitude = result.Geo_Location__Latitude__s;
                 Leadgeolongitude = result.Geolocation__Longitude__s;
-                callVisitAccountCreateRecordMethod();
+                //callVisitAccountCreateRecordMethod();
                 // console.log("Lead Found Lead Method Called")
                 console.log("Account Found Account Method Called")
                 // break;
@@ -215,13 +241,12 @@ $(document).ready(function () {
     function callVisitAccountCreateRecordMethod() {
         debugger;
         let apexDate = visiteDateToApex.toISOString();
-        MonthlyVisitViewerController.createVisitObjectTypev1(currentAccount, apexDate, AccountLatitude, AccountLongitude, function (result, event) {
-            debugger;
+        MonthlyVisitViewerController.createVisitObjectTypev1(AccountId, apexDate, addlat, addlong, startTime,endTime,function (result, event) {
             console.log('--- result Object :' + result);
 
             if(result!=null){
                 let index = repVisits.findIndex(item=>item.id==currentAccount);
-                repVisits[index].id = result;
+                //repVisits[index].id = result;
                 
                 // toastr.success("VISIT CreatedS Successfully!", "Success", {
                 //     closeButton: true,
@@ -229,21 +254,23 @@ $(document).ready(function () {
                 //     positionClass: "toast-top-right"
                 // });
                 // alert("VISIT Created Successfully !")
-                swal ({
+                swal({
                     title: "Good job!",
-                    text:'Visit Created Successfully!' ,  
-                    icon:'success',
-                    button:'Ok',
-                    confirmButtonText: "OK"
-                 })
-                window.location.reload();
+                    text: 'Visit Created Successfully!',
+                    icon: 'success',
+                    buttons: false,
+                    timer: 1000,
+                });
+                //window.location.reload();
             }else{
                 //alert('Error to create visit');
                 swal ({
                     title:"Oops" ,  
                     text:"Something went wrong!" ,  
                     icon:"error",
-                    button:'Ok'
+                    buttons: false,
+                    timer: 1000,
+                   // showCancelButton: true
                 })
             }
         }, { escape: false });
@@ -497,6 +524,7 @@ $(document).ready(function () {
                         let calVisit = {};
                         calVisit.id = result.accountList[i].Id;
                         calVisit.title = result.accountList[i].Name;
+                        accMap.set(result.accountList[i].Id, result.accountList[i]);
                         //  calVisit.start = result.accountList[i].Planned_visit_date__c;
                         //  calVisit.end = result.accountList[i].Planned_visit_date__c;
                         repVisits.push(calVisit);
@@ -504,6 +532,7 @@ $(document).ready(function () {
                     console.log(repVisits);
                     
                     $(result.accountList).each(function (i, e) {
+                       
                         $("#event-container").append(
                             '<div class="fc-event" data-accid="' + result.accountList[i].Id + '">' + result.accountList[i].Name + '</div>'
                         );
@@ -631,7 +660,11 @@ $(document).ready(function () {
         tagKPIToVisit();
     });
 
-    let selectedDate, selectedInstance;
+    $(".close-modal").click(function() {
+        $("#address-modal").hide();
+    });
+
+let selectedDate, selectedInstance;
 let addressMap;
 function handleAddressSelection(date, instance) {
     debugger;
@@ -643,22 +676,23 @@ function handleAddressSelection(date, instance) {
         let account = accMap.get($(instance).attr("data-accid"));
         console.log("Account selected-----",account);
         if(account && account.ShippingCity && account.ShippingCountry && account.ShippingState) {
-            addressMap.set('999', {city: account.ShippingCity, country: account.ShippingCountry, lat: account.ShippingLatitude, long: account.ShippingLongitude, pCode: account.ShippingPostalCode, state: account.ShippingState, street: account.ShippingStreet});
+            addressMap.set('999', {city: account.ShippingCity, country: account.ShippingCountry, lat: account.Geo_Location__Latitude__s, long: account.Geo_Location__Longitude__s, pCode: account.ShippingPostalCode, state: account.ShippingState, street: account.ShippingStreet});
             $("#address-parent").append('<span class="slds-radio"><input type="radio" id="999" value="999" name="address-radio" checked="" /><label class="slds-radio__label" for="999"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.ShippingCity+', <b>Country:</b> '+account.ShippingCountry+', <b>Pin-Code: </b>'+ account.ShippingPostalCode+', <b>State:</b> '+account.ShippingState+', <b>Street: </b> '+account.ShippingStreet+'</span></label></span>');
         }
 
 
         if(account && account.BillingCity && account.BillingCountry && account.BillingState) {
-            addressMap.set('777', {city: account.BillingCity, country: account.BillingCountry, lat: account.BillingLatitude, long: account.BillingLongitude, pCode: account.BillingPostalCode, state: account.BillingState, street: account.BillingStreet});
+            addressMap.set('777', {city: account.BillingCity, country: account.BillingCountry, lat: account.Geo_Location__Latitude__s, long: account.Geo_Location__Longitude__s, pCode: account.BillingPostalCode, state: account.BillingState, street: account.BillingStreet});
             $("#address-parent").append('<span class="slds-radio"><input type="radio" id="777" value="777" name="address-radio" checked="" /><label class="slds-radio__label" for="777"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.BillingCity+', <b>Country:</b> '+account.BillingCountry+', <b>Pin-Code: </b>'+ account.BillingPostalCode+', <b>State:</b> '+account.BillingState+', <b>Street: </b> '+account.BillingStreet+'</span></label></span>');
         }
         if(account && account.Dispatch_Address__r) {
             for(let i = 0; i < account.Dispatch_Address__r.length; i++) {
-                addressMap.set(i+"", {city: account.Dispatch_Address__r[i].City__c, country: account.Dispatch_Address__r[i].Country__c, lat: account.Dispatch_Address__r[i].Geo_Location__latitude__s, long: account.Dispatch_Address__r[i].Geo_Location__longitude__s, pCode: account.Dispatch_Address__r[i].Postal_Code__c, state: account.Dispatch_Address__r[i].State__c, street: account.Dispatch_Address__r[i].Street__c});
-                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Dispatch_Address__r[i].City__c+', <b>Country:</b> '+account.Dispatch_Address__r[i].Country__c+', <b>Pin-Code: </b>'+ account.Dispatch_Address__r[i].Postal_Code__c+', <b>State:</b> '+account.Dispatch_Address__r[i].State__c+', <b>Street: </b> '+account.Dispatch_Address__r[i].Street__c+'</span></label></span>');
+                addressMap.set(i+"", {city: account.Dispatch_Address__r[i].Address__City__s, country: account.Dispatch_Address__r[i].Address__CountryCode__s, lat: account.Dispatch_Address__r[i].Geo_Location__latitude__s, long: account.Dispatch_Address__r[i].Geo_Location__c, pCode: account.Dispatch_Address__r[i].Address__PostalCode__s, state: account.Dispatch_Address__r[i].Address__StateCode__s, street: account.Dispatch_Address__r[i].Address__Street__s});
+                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Dispatch_Address__r[i].Address__City__s+', <b>Country:</b> '+account.Dispatch_Address__r[i].Address__CountryCode__s+', <b>Pin-Code: </b>'+ account.Dispatch_Address__r[i].Address__PostalCode__s+', <b>State:</b> '+account.Dispatch_Address__r[i].State__c+', <b>Street: </b> '+account.Dispatch_Address__r[i].Street__c+'</span></label></span>');
             }
         }
     }
+   
     $("#address-modal").show();
 }
 
@@ -679,6 +713,48 @@ function handleAddressSelection(date, instance) {
     // result.forEach(item=>{
     //     repVisits.push({ id: item.Id, start: item.Actual_visit_date__c,title:item.Account__r.Name});
     // })
+
+    $("#save-event").click(function() {
+        debugger;
+        let radioId = $('input[name="address-radio"]:checked').val();
+        if(radioId && addressMap && addressMap.has(radioId)) {
+            //city: "Bengaluru", country: "India",lat: undefined,long: undefined,pCode: "560076",state: "Karnataka",street: "#SD3, Taj Regency, 7th Main, 12th cross"
+            let addressObj = addressMap.get(radioId);
+            let obj = { start : selectedDate._i, City__c: addressObj.city, Country__c: addressObj.country, Geo_Location__latitude__s: addressObj.lat, Geo_Location__longitude__s: addressObj.long, Postal_Code__c: addressObj.pCode, State__c: addressObj.state, Street__c: addressObj.street};
+            AccountId = $(selectedInstance).attr("data-accid");
+            let dateTime = visiteDateToApex.toISOString();
+            addlat=addressObj.lat;
+            addlong=addressObj.long;
+            let apexDate = visiteDateToApex.toISOString();
+            var startTimeValue = document.getElementById('time-input-id-47').value;
+            var endTimeValue = document.getElementById('time-input-id-48').value;
+            startTime=startTimeValue;
+            endTime=endTimeValue;
+            callVisitAccountCreateRecordMethod(AccountId,apexDate,addlat,addlong,startTime,endTime);
+            console.log('LATLANG',obj);
+            // if(selectedTab=='first'){
+            //     obj.accountId = $(selectedInstance).attr("data-accid");
+            // }else{
+            //     debugger;
+            //     obj.leadId = $(selectedInstance).attr("data-accid");
+            // }
+
+            // repVisits.push(obj);
+
+            // console.log("Visit After saved----",repVisits);
+
+            // // is the "remove after drop" checkbox checked?
+            // if($('#drop-remove').is(':checked')) {
+            //     // if so, remove the element from the "Draggable Events" list
+            //     $(selectedInstance).remove();
+            // }
+            $("#address-modal").hide();
+        }else {
+            alert('something went wrong, please try again later');
+        }
+    });
 });
+
+
 
 

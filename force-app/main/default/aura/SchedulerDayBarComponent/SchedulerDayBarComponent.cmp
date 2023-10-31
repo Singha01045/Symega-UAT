@@ -10,9 +10,10 @@
     <aura:attribute name="disablePrev" type="Boolean" default="true"></aura:attribute>
     <aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent" />
     
-    <div>
-        <h2 class="h2Titel">Scheduler Insights</h2>
-        <div class="slds-grid dateBar" >
+    <div class="slds-card ">
+            <div class="slds-grid slds-wrap slds-col slds-size_8-of-12 slds-align_absolute-center" style="padding-top:10px;padding-bottom:10px;">
+                
+            <div class="slds-grid dateBar" >
             
             <!-- Previes Button -->
             <!--lightning:buttonIcon class="previousButton" iconName="utility:left"  variant="border-filled" size="large" aura:id="prevBtn" alternativeText="left"
@@ -51,5 +52,9 @@
             <lightning:button class="mobileAlignNext"  iconName="utility:forward" variant='inverse' aura:id="nextBtn"
                               title="Next" onclick="{!c.handleNextClicked}" disabled="{!v.disableNext}"/>
         </div>
-    </div>
+            </div>
+    
+            </div>
+    
+    
 </aura:component>

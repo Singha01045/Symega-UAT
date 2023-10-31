@@ -60,7 +60,7 @@ public class GetFERTCodeController {
                     update acc;
                 }
 
-                String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId,null); // method signature changed
+                String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId); // method signature changed
                 if(resp.equalsIgnoreCase('Success')){
                     Account accRec = [SELECT Id, SAP_Update_Customer__c FROM Account WHERE Id =: opp.AccountId];
                     if(accRec.SAP_Update_Customer__c != true){

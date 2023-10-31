@@ -6,13 +6,13 @@
     <!-- You can add more attributes if required -->
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     
-    <div class="slds-m-left_medium slds-m-right_medium">
     <h2 style="color: #0158A5; font-family: revert; font-size: 150%; font-weight: 550; margin-bottom:0.4%">Client Summary</h2>
-    <div class="slds-grid slds-wrap">
-        <aura:iteration items="{!v.cardData}" var="card">
-            <div class="slds-col mobileCard" style="">
+        <div class="slds-grid slds-wrap slds-gutters slds-size_12-of-12">
+            <aura:iteration items="{!v.cardData}" var="card">
+        
+            <div class="slds-col slds-size_3-of-12" style="display:flex;">
                 <!-- Card markup -->
-                <div class="slds-card ">
+                <div class="slds-card " style="width: -webkit-fill-available;">
                     <header class="slds-card__header" >
                         <h2 class="slds-text-heading_small cardTitle" style="">{!card.Title}</h2>
                     </header>
@@ -32,6 +32,6 @@
                 </div>
             </div>
         </aura:iteration>
-    </div>
-    </div>
+        </div>
+    
 </aura:component>

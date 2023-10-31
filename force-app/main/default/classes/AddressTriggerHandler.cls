@@ -43,7 +43,7 @@ public without sharing class AddressTriggerHandler {
         }
         
         if(!setOfAddressToUpdate.isEmpty()){
-            //Database.executeBatch(new SAP_Update_CustomerAddressBatch(setOfAddressToUpdate));
+            Database.executeBatch(new SAP_Update_CustomerAddressBatch(setOfAddressToUpdate));
         }
     }
     

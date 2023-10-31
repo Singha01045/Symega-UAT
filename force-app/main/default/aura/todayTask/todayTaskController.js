@@ -62,7 +62,6 @@
                 var MonthName=monthNames[newDate.getMonth()].slice(0,3);
                 dateObj.month = MonthName;
                 dates.push(dateObj);
-                
             }
             component.set("v.dates", dates);  
         }
