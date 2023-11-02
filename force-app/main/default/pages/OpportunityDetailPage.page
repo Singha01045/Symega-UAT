@@ -235,12 +235,12 @@
                         <span class="required-asterisk" style="color:red;">*</span>
                         <input class="form-control" type="text" ng-model="oppDetails.Freight_charges__c" ng-disabled="true"/>
                     </div>
-                    <div class="col-md-6 mt-3">
+                   <!-- <div class="col-md-6 mt-3">
                         <label class="font-if">Proposed Date Of Dispatch
                         </label>
                         <span class="required-asterisk" style="color:red;">*</span>
                         <input class="form-control" type="date" ng-model="oppDetails.Proposed_Date_of_Dispatch__c" ng-disabled="true"/>
-                    </div>
+                    </div>-->
                     <div class="col-md-6 mt-3">
                         <label class="font-if">End Use Category
                         </label>
@@ -287,7 +287,7 @@
                         <label class="font-if">Include Freight Charges
                         </label>
                         <span class="required-asterisk" style="color:red;">*</span>
-                        <input class="form-control" type="checkbox" ng-model="oppDetails.Include_Freight_Charges__c" ng-disabled="true"/>
+                        <input class="form-check-input" type="checkbox" ng-model="oppDetails.Include_Freight_Charges__c" ng-disabled="true"/>
                     </div>
                     <div class="col-md-6 mt-3">
                         <label class="font-if">Total Qty In Kg
@@ -382,19 +382,19 @@
                         <label class="font-if">Approved by Business Head
                         </label>
                         <span class="required-asterisk" style="color:red;">*</span>
-                        <input class="form-control" type="checkbox" ng-model="oppDetails.Approved_by_Business_Head__c" ng-disabled="true"/>
+                        <input class="form-check-input" type="checkbox" ng-model="oppDetails.Approved_by_Business_Head__c" ng-disabled="true"/>
                     </div>
                     <div class="col-md-6 mt-3 mb-3">
                         <label class="font-if">Approved by Manager
                         </label>
                         <span class="required-asterisk" style="color:red;">*</span>
-                        <input class="form-control" type="checkbox" ng-model="oppDetails.Approved_by_Manager__c" ng-disabled="true"/>
+                        <input class="form-check-input" type="checkbox" ng-model="oppDetails.Approved_by_Manager__c" ng-disabled="true"/>
                     </div>
                     <div class="col-md-6 mt-3 mb-3">
                         <label class="font-if">Approved by MD
                         </label>
                         <span class="required-asterisk" style="color:red;">*</span>
-                        <input class="form-control" type="checkbox" ng-model="oppDetails.Approved_by_MD__c" ng-disabled="true"/>
+                        <input class="form-check-input" type="checkbox" ng-model="oppDetails.Approved_by_MD__c" ng-disabled="true"/>
                     </div>
 
                 </div>
@@ -750,6 +750,17 @@
                                 debugger;
                                 $scope.oppDetails = result.oppList[0];
                                 $scope.OLIList = result.oppProductList;
+                                
+                                 if(result.oppList[0].CloseDate != null){
+                                       $scope.oppDetails.CloseDate = new Date(result.oppList[0].CloseDate);
+                                 }
+                                if(result.oppList[0].Customer_Followup_Date__c != null){
+                                       $scope.oppDetails.Customer_Followup_Date__c = new Date(result.oppList[0].Customer_Followup_Date__c);
+                                 }
+                                // if(result.oppList[0].Proposed_Date_of_Dispatch__c != null){
+                                //       $scope.oppDetails.Proposed_Date_of_Dispatch__c = new Date(result.oppList[0].Proposed_Date_of_Dispatch__c);
+                                // }
+                                
                                 if(result.conList != undefined){
                                     $scope.conList = result.conList;
                                 }
@@ -779,6 +790,7 @@
                                     if($scope.customerAddressRec.Contact__c == undefined){
                                         $scope.showFieldContact = false;
                                     }
+                                    
                                     
                                 }else{
                                     }

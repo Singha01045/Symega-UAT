@@ -315,7 +315,7 @@ export default class SubmitForFertCode extends LightningElement {
     updateOppProdList(){
           debugger;
           updateOppProdList({oppLineList:this.oppProdList,prod2List:this.prod2List}).then(data=>{
-               if(data == 'SUCCESS'){
+               if(data == 'Success'){
                     console.log('Data',data);
                     this.showToast('Success', 'Notification to Sales Ops sent successfully!', 'success');
                     this.closeModal();

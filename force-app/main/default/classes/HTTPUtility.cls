@@ -60,7 +60,12 @@ public with sharing class HTTPUtility {
             createLog(httpRequest,response,sDate,eDate);
 
             if(response.getStatusCode() == 200 || response.getStatusCode() == 201){
+                //Map<String, Object> msgResponse = response.get('message');
+                Map<String, Object> getResult = (Map<String, Object>)JSON.deserializeUntyped(response.getBody());
+                system.debug('String.ValueOf(getResult.get(\'STATUS\')) ' + String.ValueOf(getResult.get('STATUS')));
                 respMap.put('message',response.getBody());
+                respMap.put('msgStatus',String.ValueOf(getResult.get('STATUS')));
+
                 return respMap;
             }
             respMap.put('message',response.getBody());

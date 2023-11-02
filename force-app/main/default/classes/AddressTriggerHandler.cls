@@ -13,11 +13,11 @@ public without sharing class AddressTriggerHandler {
         Set<Id> setOfAddressToUpdate = new Set<Id>();
         Set<Id> registeredAddressIds = new Set<Id>();
         for(Dispatch_Address__c acc : newMap.values()){
-            if(oldMap.get(acc.Id).SAP_Customer_Code__c==null && acc.SAP_Customer_Code__c!=null){
+            if(oldMap.get(acc.Id).Customer_Code_SAP__c==null && acc.Customer_Code_SAP__c!=null){
                 addressIds.add(acc.Id);
             }
             
-            if((oldMap.get(acc.Id).SAP_Customer_Code__c==null && acc.SAP_Customer_Code__c!=null) || (oldMap.get(acc.Id).OPTIVA_Customer_Code__c==null && acc.OPTIVA_Customer_Code__c!=null)) {
+            if((oldMap.get(acc.Id).Customer_Code_SAP__c==null && acc.Customer_Code_SAP__c!=null) || (oldMap.get(acc.Id).OPTIVA_Customer_Code__c==null && acc.OPTIVA_Customer_Code__c!=null)) {
                 registeredAddressIds.add(acc.Id);
             }
             if(isAccChange(oldMap,acc) && acc.SAP_Update_Customer__c){
@@ -29,9 +29,9 @@ public without sharing class AddressTriggerHandler {
         
         if(!addressIds.isEmpty()){
             System.debug('hiii');
-            //GetFERTCodeController.sendFertCodeEmailBulk(accIds); 
-            //OpportunityCreateSaleOrderController.updateOppInBulk(accIds);  
-            //SAP_UpdatePIRCallout.updateOnPIR(accIds);
+            GetFERTCodeController.sendFertCodeEmailBulk(addressIds); 
+            OpportunityCreateSaleOrderController.updateOppInBulk(addressIds);  
+            //SAP_UpdatePIRCallout.updateOnPIR(addressIds);
         }
         
         if(!registeredAddressIds.isEmpty()) {
@@ -49,7 +49,7 @@ public without sharing class AddressTriggerHandler {
     
     
     private static boolean isAccChange(Map<Id,Dispatch_Address__c> oldMap, Dispatch_Address__c acc){
-        if(oldMap.get(acc.Id).Name != null && acc.Name!=null && oldMap.get(acc.Id).Name!=acc.Name && acc.SAP_Customer_Code__c == null
+        if(oldMap.get(acc.Id).Name != null && acc.Name!=null && oldMap.get(acc.Id).Name!=acc.Name && acc.Customer_Code_SAP__c == null
            || oldMap.get(acc.Id).Address__Street__s != null && acc.Address__Street__s!=null && oldMap.get(acc.Id).Address__Street__s!=acc.Address__Street__s 
            || oldMap.get(acc.Id).Address__PostalCode__s != null && acc.Address__PostalCode__s !=null && oldMap.get(acc.Id).Address__PostalCode__s!=acc.Address__PostalCode__s
            || oldMap.get(acc.Id).Address__City__s != null && acc.Address__City__s !=null && oldMap.get(acc.Id).Address__City__s!=acc.Address__City__s

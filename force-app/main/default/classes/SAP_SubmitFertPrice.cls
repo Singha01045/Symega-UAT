@@ -90,7 +90,7 @@ public without sharing class SAP_SubmitFertPrice {
 
 
     public static Opportunity getOpportunity(String oppId){
-        return [Select Id, Name, Customer_Billing_Address__c, Customer_Billing_Address__r.SAP_Customer_Code__c, Account_Billing_Address__c, Account.Customer_Code_SAP__c,(Select Id,Name,FERT_Code__c,CurrencyIsoCode,UnitPrice,Quantity_Unit__c From OpportunityLineItems) From Opportunity Where Id=:oppId];
+        return [Select Id, Name, Customer_Billing_Address__c, Customer_Billing_Address__r.Customer_Code_SAP__c, Account_Billing_Address__c, Account.Customer_Code_SAP__c,(Select Id,Name,FERT_Code__c,CurrencyIsoCode,UnitPrice,Quantity_Unit__c From OpportunityLineItems) From Opportunity Where Id=:oppId];
     }
 
     public static String getFertWrapper(Opportunity opp){
@@ -101,7 +101,7 @@ public without sharing class SAP_SubmitFertPrice {
             customerCodeSAP = opp.Account.Customer_Code_SAP__c;
         }
         else if(opp.Customer_Billing_Address__c != null){
-            customerCodeSAP = opp.Customer_Billing_Address__r.SAP_Customer_Code__c;
+            customerCodeSAP = opp.Customer_Billing_Address__r.Customer_Code_SAP__c;
         }
 
         FertWrapper fWrapper = new FertWrapper();

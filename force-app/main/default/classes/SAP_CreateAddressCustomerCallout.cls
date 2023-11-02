@@ -1,7 +1,7 @@
 public without sharing class SAP_CreateAddressCustomerCallout {
 
     @AuraEnabled
-    public static String createCustomer(String recId){
+    public static String createCustomer(String recId, Boolean initialSubmission){
         String endpoint      = 'callout:SAP_ADDRESS_CREATION'+Constants.SAP_ADDRESS_ENDPOINT;
         String tokenEndPoint = 'callout:SAP_ADDRESS_CREATION'+Constants.SAP_ADDRESS_REQ_TOKEN;
         
@@ -14,7 +14,7 @@ public without sharing class SAP_CreateAddressCustomerCallout {
         
         String body = '';
             Dispatch_Address__c addressRec = getAddress(recId);
-            body = getCustomerWrapperByAddress(addressRec);        
+            body = getCustomerWrapperByAddress(addressRec, initialSubmission);        
         
         System.debug('AUTH TOKEN ------ '+token);
         System.debug('BODY-----'+body);
@@ -40,12 +40,12 @@ public without sharing class SAP_CreateAddressCustomerCallout {
     public static Dispatch_Address__c getAddress(String recId){
         return [Select Id, Name, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, toLabel(Address__StateCode__s), toLabel(Address__CountryCode__s), 
                 Account__r.Tax_Type__c, Account__r.PAN_Number__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, Account__r.Customer_Type__c, Account__r.Payment_terms__c,
-                Account__r.RecordType.Name, SAP_Customer_Code__c, Account__r.User__r.SAP_USER_CODE__c, Account__r.Owner.SAP_USER_CODE__c, Contact__r.Name, Contact__r.Phone, Contact__r.Email,
+                Account__r.RecordType.Name, Customer_Code_SAP__c, Account__r.User__r.SAP_USER_CODE__c, Account__r.Owner.SAP_USER_CODE__c, Contact__r.Name, Contact__r.Phone, Contact__r.Email,
                 Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c, Account__r.Transportation_Terms__c, OwnerId, Owner.Email From Dispatch_Address__c Where Id=:recId];
     }
     
     
-    public static String getCustomerWrapperByAddress(Dispatch_Address__c addressRec){
+    public static String getCustomerWrapperByAddress(Dispatch_Address__c addressRec, Boolean initialSubmission){
         SAP_CUSTOMER_WRAPPER sWrapper = new SAP_CUSTOMER_WRAPPER();
         
         sWrapper.SF_ID = addressRec.Id;
@@ -78,18 +78,18 @@ public without sharing class SAP_CreateAddressCustomerCallout {
         //sWrapper.SALES_EMP = addressRec.Owner.SAP_USER_CODE__c;
         sWrapper.CUSTOMER_CATEGORY = addressRec.Account__r.RecordType.Name;
         //sWrapper.BUSINESS_HEAD_NAME = addressRec.User__r.SAP_USER_CODE__c;
-        sWrapper.TAX_TYPE = addressRec.Account__r.Tax_Type__c!=null ? addressRec.Account__r.Tax_Type__c:'';
-        sWrapper.GSTIN_NUMBER = addressRec.GST_Number__c!=null?addressRec.GST_Number__c:'';
-        sWrapper.PAN_NUMBER = addressRec.Account__r.PAN_Number__c!=null?addressRec.Account__r.PAN_Number__c:'';
+        sWrapper.TAX_TYPE = initialSubmission ? null : addressRec.Account__r.Tax_Type__c!=null ? addressRec.Account__r.Tax_Type__c:'';
+        sWrapper.GSTIN_NUMBER = initialSubmission ? null : addressRec.GST_Number__c!=null?addressRec.GST_Number__c:'';
+        sWrapper.PAN_NUMBER = initialSubmission ? null : addressRec.Account__r.PAN_Number__c!=null?addressRec.Account__r.PAN_Number__c:'';
         sWrapper.CUSTOMER_GROUP = addressRec.Account__r.Account_Segment__c!=null?addressRec.Account__r.Account_Segment__c:'';
         sWrapper.XCURRENCY = addressRec.CurrencyIsoCode;
         sWrapper.DELIVERY_PLANT = addressRec.Account__r.Delivery_Plant__c!=null?addressRec.Account__r.Delivery_Plant__c:'';
         sWrapper.DOMESTIC_EXPORT = addressRec.Account__r.Customer_Type__c!=null?addressRec.Account__r.Customer_Type__c:'';
-        sWrapper.PAYMENT_TERMS = addressRec.Account__r.Payment_terms__c!=null?addressRec.Account__r.Payment_terms__c:'';
-        sWrapper.TCS = addressRec.Account__r.Tax_Collected_At_Source__c!=null?addressRec.Account__r.Tax_Collected_At_Source__c:'';
+        sWrapper.PAYMENT_TERMS = initialSubmission ? null : addressRec.Account__r.Payment_terms__c!=null?addressRec.Account__r.Payment_terms__c:'';
+        sWrapper.TCS = initialSubmission ? null : addressRec.Account__r.Tax_Collected_At_Source__c!=null?addressRec.Account__r.Tax_Collected_At_Source__c:'';
         sWrapper.ACC_OWNER_EMAIL = addressRec.Owner.Email;
-        sWrapper.FSSAI_NUMBER = addressRec.Account__r.FSSAI__c!=null?String.valueOf(addressRec.Account__r.FSSAI__c):'';
-        sWrapper.TRANSPORTATION_TERMS = addressRec.Account__r.Transportation_Terms__c!=null?addressRec.Account__r.Transportation_Terms__c:'';
+        sWrapper.FSSAI_NUMBER = initialSubmission ? null : addressRec.Account__r.FSSAI__c!=null?String.valueOf(addressRec.Account__r.FSSAI__c):'';
+        sWrapper.TRANSPORTATION_TERMS = initialSubmission ? null : addressRec.Account__r.Transportation_Terms__c!=null?addressRec.Account__r.Transportation_Terms__c:'';
         sWrapper.CUSTOMER_CONTACT_INFO = addressRec.Contact__c != null ? createConWrapperByAddress(addressRec) : new List<SAP_CUSTOMER_WRAPPER.cls_CUSTOMER_CONTACT_INFOS>();
         
         String body = JSON.serialize(sWrapper);

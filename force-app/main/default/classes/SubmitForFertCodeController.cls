@@ -173,8 +173,8 @@ public without sharing class SubmitForFertCodeController {
         try{
             update oppLineList;
             update prod2List;
-            //   result = GetFERTCodeController.sendFERTCodeReqEmailNotificaiton(oppLineList[0].OpportunityId);
-            result = 'SUCCESS';
+            result = GetFERTCodeController.sendFERTCodeReqEmailNotificaiton(oppLineList[0].OpportunityId);
+            //result = 'SUCCESS';
         }
         catch(Exception e){
             System.debug('Exception Line Number-->'+e.getLineNumber());

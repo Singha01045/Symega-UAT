@@ -1,6 +1,6 @@
 public without sharing class SAP_CreateCustomerCallout {
     @AuraEnabled
-    public static String createCustomer(String recId){
+    public static String createCustomer(String recId, Boolean initialSubmission){
         String endpoint      = 'callout:Customer_Creation_SAP'+Constants.SAP_CREATE_CUSTOMER_ENDPOINT;
         String tokenEndPoint = 'callout:Customer_Creation_SAP'+Constants.SAP_CREATE_CUSTOMER_REQ_TOKEN;
         
@@ -13,7 +13,7 @@ public without sharing class SAP_CreateCustomerCallout {
         
         String body = '';
         Account acc = getCustomer(recId);
-        body = getCustomerWrapper(acc);
+        body = getCustomerWrapper(acc, initialSubmission);
         
         
         System.debug('AUTH TOKEN ------ '+token);
@@ -42,7 +42,7 @@ public without sharing class SAP_CreateCustomerCallout {
                 Tax_Collected_At_Source__c,FSSAI__c,User__r.Name,User__r.SAP_USER_CODE__c,Transportation_Terms__c, Customer_Contact__r.Name, Customer_Contact__r.Email, Customer_Contact__r.Phone From Account Where Id=:recId];
     }
     
-    public static String getCustomerWrapper(Account acc){
+    public static String getCustomerWrapper(Account acc, Boolean initialSubmission){
         SAP_CUSTOMER_WRAPPER sWrapper = new SAP_CUSTOMER_WRAPPER();
         
         sWrapper.SF_ID = acc.Id;
@@ -78,18 +78,18 @@ public without sharing class SAP_CreateCustomerCallout {
         sWrapper.CUSTOMER_CATEGORY = acc.RecordType.Name;
         //sWrapper.BUSINESS_HEAD_NAME = acc.User__r.Name;
         sWrapper.BUSINESS_HEAD_NAME = acc.User__r.SAP_USER_CODE__c;
-        sWrapper.TAX_TYPE = acc.Tax_Type__c!=null ? acc.Tax_Type__c:'';
-        sWrapper.GSTIN_NUMBER = acc.GST_number__c!=null?acc.GST_number__c:'';
-        sWrapper.PAN_NUMBER = acc.PAN_Number__c!=null?acc.PAN_Number__c:'';
+        sWrapper.TAX_TYPE = initialSubmission ? null : acc.Tax_Type__c!=null ? acc.Tax_Type__c:'';
+        sWrapper.GSTIN_NUMBER = initialSubmission ? null : acc.GST_number__c!=null?acc.GST_number__c:'';
+        sWrapper.PAN_NUMBER = initialSubmission ? null : acc.PAN_Number__c!=null?acc.PAN_Number__c:'';
         sWrapper.CUSTOMER_GROUP = acc.Account_Segment__c!=null?acc.Account_Segment__c:'';
         sWrapper.XCURRENCY = acc.CurrencyIsoCode;
         sWrapper.DELIVERY_PLANT = acc.Delivery_Plant__c!=null?acc.Delivery_Plant__c:'';
         sWrapper.DOMESTIC_EXPORT = acc.Customer_Type__c!=null?acc.Customer_Type__c:'';
-        sWrapper.PAYMENT_TERMS = acc.Payment_terms__c!=null?acc.Payment_terms__c:'';
-        sWrapper.TCS = acc.Tax_Collected_At_Source__c!=null?acc.Tax_Collected_At_Source__c:'';
+        sWrapper.PAYMENT_TERMS = initialSubmission ? null : acc.Payment_terms__c!=null?acc.Payment_terms__c:'';
+        sWrapper.TCS = initialSubmission ? null : acc.Tax_Collected_At_Source__c!=null?acc.Tax_Collected_At_Source__c:'';
         sWrapper.ACC_OWNER_EMAIL = acc.Owner.Email;
-        sWrapper.FSSAI_NUMBER = acc.FSSAI__c!=null?String.valueOf(acc.FSSAI__c):'';
-        sWrapper.TRANSPORTATION_TERMS = acc.Transportation_Terms__c!=null?acc.Transportation_Terms__c:'';
+        sWrapper.FSSAI_NUMBER = initialSubmission ? null : acc.FSSAI__c!=null?String.valueOf(acc.FSSAI__c):'';
+        sWrapper.TRANSPORTATION_TERMS = initialSubmission ? null : acc.Transportation_Terms__c!=null?acc.Transportation_Terms__c:'';
         sWrapper.CUSTOMER_CONTACT_INFO = createConWrapper(acc);
         
         String body = JSON.serialize(sWrapper);

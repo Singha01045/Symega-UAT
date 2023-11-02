@@ -28,15 +28,18 @@ public class GetFERTCodeController {
         String response = '';  //  Owner.Email,
         Opportunity opp = [Select Id,Name, OwnerId,  Send_Fert_Notification_Email__c,
                            AccountId, Account.Customer_Code_SAP__c, Account_Billing_Address__c,Customer_Billing_Address__c,
-                           Customer_Billing_Address__r.SAP_Customer_Code__c
+                           Customer_Billing_Address__r.Customer_Code_SAP__c
                            From Opportunity Where Id=:oppId];
 
         String customerCode = '';
+        Boolean isAccount;
         if(opp.Account_Billing_Address__c){
             customerCode = opp.Account.Customer_Code_SAP__c;
+            isAccount = true;
         }
         else if(opp.Customer_Billing_Address__c != null){
-            customerCode = opp.Customer_Billing_Address__r.SAP_Customer_Code__c;
+            customerCode = opp.Customer_Billing_Address__r.Customer_Code_SAP__c;
+            isAccount = false;
         }
 
         if(!String.isEmpty(customerCode)){
@@ -51,32 +54,59 @@ public class GetFERTCodeController {
             response = 'Success';
         }
         else{
-            //String customerValidationRes = Utility.checkSAPCustomerReqField(opp.AccountId);
-            String customerValidationRes = Utility.checkForInitialSubmission(opp.AccountId);
-            if(customerValidationRes == 'Success'){
-                Account acc = [SELECT Id, Initial_SAP_Update__c FROM Account WHERE Id =: opp.AccountId];
-                if(acc.Initial_SAP_Update__c != true){
-                    acc.Initial_SAP_Update__c = true;
-                    update acc;
-                }
 
-                String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId); // method signature changed
-                if(resp.equalsIgnoreCase('Success')){
-                    Account accRec = [SELECT Id, SAP_Update_Customer__c FROM Account WHERE Id =: opp.AccountId];
-                    if(accRec.SAP_Update_Customer__c != true){
-                        accRec.SAP_Update_Customer__c = true;
-                        update accRec;
+            if(isAccount){
+                //String customerValidationRes = Utility.checkSAPCustomerReqField(opp.AccountId);
+                String customerValidationRes = Utility.checkForInitialSubmission(opp.AccountId);
+                if(customerValidationRes == 'Success'){
+                    Account acc = [SELECT Id, Initial_SAP_Update__c FROM Account WHERE Id =: opp.AccountId];
+                    if(acc.Initial_SAP_Update__c != true){
+                        acc.Initial_SAP_Update__c = true;
+                        update acc;
                     }
-                }
 
-                opp.Send_Fert_Notification_Email__c = true;
-                update opp;
-                response = 'create';
+                    String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId, true); // method signature changed
+                    if(resp.equalsIgnoreCase('Success')){
+                        Account accRec = [SELECT Id, Submitted_to_SAP__c FROM Account WHERE Id =: opp.AccountId];
+                        if(accRec.Submitted_to_SAP__c != true){
+                            accRec.Submitted_to_SAP__c = true;
+                            update accRec;
+                        }
+                    }
+
+                    opp.Send_Fert_Notification_Email__c = true;
+                    update opp;
+                    response = 'create';
+                }
+                else{
+                    response = customerValidationRes;
+                }
             }
             else{
-                response = customerValidationRes;
+                String customerValidationRes = Utility.checkForInitialSubmissionAddress(opp.Customer_Billing_Address__c);
+                if(customerValidationRes == 'Success'){
+                    Dispatch_Address__c addr = [SELECT Id, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: opp.Customer_Billing_Address__c];
+                    if(addr.Initial_SAP_Update__c != true){
+                        addr.Initial_SAP_Update__c = true;
+                        update addr;
+                    }
+
+                    String resp = SAP_CreateAddressCustomerCallout.createCustomer(opp.Customer_Billing_Address__c, true); // method signature changed
+                    if(resp.equalsIgnoreCase('Success')){
+                        Dispatch_Address__c addrRec = [SELECT Id, Submitted_to_SAP__c FROM Dispatch_Address__c WHERE Id =: opp.Customer_Billing_Address__c];
+                        if(addrRec.Submitted_to_SAP__c != true){
+                            addrRec.Submitted_to_SAP__c = true;
+                            update addrRec;
+                        }
+                    }
+                    opp.Send_Fert_Notification_Email__c = true;
+                    update opp;
+                    response = 'create';
+                }
+                else{
+                    response = customerValidationRes;
+                }
             }
-            
         } 
         
         return response;

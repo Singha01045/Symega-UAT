@@ -23,7 +23,7 @@ public without sharing class SAP_CUSTOMER_UPDATE_CALLOUT {
         headerMap.put('Content-Type','application/json');
         headerMap.put('X-CSRF-Token',token);
         headerMap.put('Cookie',cookies);
-        headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_CUSTOMER_AUTH_HEADER));
+        //headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_CUSTOMER_AUTH_HEADER));
 
         Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap,'POST',body,endpoint);
 
@@ -45,7 +45,12 @@ public without sharing class SAP_CUSTOMER_UPDATE_CALLOUT {
     public static String getCustomerWrapper(Account acc){
         SAP_CUSTOMER_UPDATE_WRAPPER sWrapper = new SAP_CUSTOMER_UPDATE_WRAPPER();
         
+        sWrapper.SF_ID = acc.Id;
+        sWrapper.CUSTOMER_NAME_2 = acc.Name.length()<40?'':acc.Name.substring(40,acc.Name.length());
+        sWrapper.STATE = acc.BillingState;
+        sWrapper.TAX_TYPE = acc.Tax_Type__c!=null ? acc.Tax_Type__c:'';   
         sWrapper.CUSTOMER_SAP_CODE = acc.Customer_Code_SAP__c;
+
         sWrapper.CUSTOMER_NAME = acc.Name.length()>40?acc.Name.substring(0,40):acc.Name;
         sWrapper.STREET_2 = acc.BillingStreet;
         sWrapper.STREET_3 = acc.BillingStreet;

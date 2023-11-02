@@ -208,7 +208,16 @@ public class RepeatOrderProcessorQueueable implements Queueable {
             }
             //address processing
             if(currentOrder.SHIPPING_ADDRESS != null && /* !currentOrder.SHIPPING_ADDRESS.size() > 0 && */ customerMap.containsKey(currentOrder.CUSTOMER_CODE)) {
-                soCreationHandler.updateCustomerAddress(currentOrder.SHIPPING_ADDRESS, customerMap.get(currentOrder.CUSTOMER_CODE).Id);
+                String shippingAddrResponse = soCreationHandler.updateCustomerAddress(currentOrder.SHIPPING_ADDRESS, customerMap.get(currentOrder.CUSTOMER_CODE).Id);
+
+                if(shippingAddrResponse == 'success'){
+                    matchingOpportunity.Account_Shipping_Address__c = true;
+                }
+                else if(shippingAddrResponse.startsWith('a0G')){
+                    matchingOpportunity.Customer_Shipping_Address__c = shippingAddrResponse;
+                }
+                update matchingOpportunity;
+
             }
             System.debug('--- matching opp: '+matchingOpportunity);
             // DML's
