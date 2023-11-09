@@ -156,7 +156,7 @@ global class MonthlyVisitViewerController {
             if(!String.isBlank(routeName)) {
                 String query = '%' +routeName +'%';
                 System.debug('query ===> '+query);
-                pageData.put('accountList', [SELECT Id,Name,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s,Geo_Location__c,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,ShippingCity,BillingCity,BillingCountry,BillingPostalCode,BillingState,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE BillingStreet LIKE : query LIMIT 10]);
+                pageData.put('accountList', [SELECT Id,Name,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,ShippingCity,BillingCity,BillingCountry,BillingPostalCode,BillingState,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Customer_Address__r) FROM Account WHERE BillingStreet LIKE : query LIMIT 10]);
                 pageData.put('leadList', [Select Id, Name,Street FROM Lead WHERE Street LIKE : query ]);
                 System.debug('User Data ::'+pageData);
                 return pageData;
@@ -180,7 +180,7 @@ global class MonthlyVisitViewerController {
         System.debug('repId ::'+repId);
         //System.debug('searchString ::'+searchString);
         //  String searchPattern = '%'+String.escapeSingleQuotes(searchString)+'%';
-        accList = [SELECT Id, Name,Location__r.Name,owner.name,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE owner.name = :repId AND  Location__r.Name =: location AND owner.name !='jain'  LIMIT 15];
+        accList = [SELECT Id, Name,Location__r.Name,owner.name,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Customer_Address__r) FROM Account WHERE owner.name = :repId AND  Location__r.Name =: location AND owner.name !='jain'  LIMIT 15];
         System.debug('accList ::'+accList);
         return accList;
     }
@@ -239,14 +239,16 @@ global class MonthlyVisitViewerController {
         System.debug('Object Name ::'+sObjName);
         if(datestring!=null){
             Date selectedDate=Date.valueOf(datestring);
-            Date weekStart = (selectedDate.toStartofWeek()).addDays(1);
+            Integer monthNumber = selectedDate.month();
+            Date weekStart = (selectedDate.toStartofWeek().addDays(1));
             Date WeekEndDate=weekStart.addDays(6);
             system.debug('selectedDate--'+selectedDate);
+            system.debug('monthNumber--'+monthNumber);
             system.debug('weekStart--'+weekStart);
             system.debug('WeekEndDate--'+WeekEndDate);
             Id currentUserId = UserInfo.getUserId();
             if(weekStart!=null || WeekEndDate!=null){
-                WBPRec=[Select Id,Start_Day_of_Week__c,End_Day_of_Week__c From Weekly_Beat_Plan__c Where Start_Day_of_Week__c>=:weekStart AND End_Day_of_Week__c<=:WeekEndDate AND OwnerId =: currentUserId];
+                WBPRec=[Select Id,Start_Day_of_Week__c,End_Day_of_Week__c From Weekly_Beat_Plan__c Where Start_Day_of_Week__c>=:weekStart AND End_Day_of_Week__c<=:WeekEndDate AND OwnerId =: currentUserId AND Month__c =: monthNumber];
                 system.debug('WBPRec--'+WBPRec);
             }
         }

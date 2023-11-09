@@ -71,14 +71,14 @@ Global class BatchClassForOpportunityOwner implements Database.Batchable<sObject
             mymail.setSaveAsActivity(false);
             
             String emailBody = 'Hi ' + userMap.get(keyS).FirstName + ',';
-              emailBody += ' <br> <br> We observe that there is lapsed of the below Opportunities.<br> <br>';
+              emailBody += ' <br> <br> We observe that below Opportunities close date is lapsed.<br> <br>';
            // emailBody += ' <br> <br> The Following Opportunities close date is Today. Please change the date if they are potential.<br>';
             // emailBody += ' <br> <br> The proposed closure date for opportunity created on'+oppMap.get(keyS).CreatedDate + 'for' + oppMap.get(keyS).Account.Name + 'with' + oppMap.get(keyS).Name + 'is' +oppMap.get(keyS).CloseDate + ' we observe that is lapsed.<br>';
             // emailBody += ' <br> <br> Please re-visit the opportunity and update the opportunity close date, if this is still active. .';
             // emailBody += ' <br> <br> Note : If this opportunity is not active update stage as  Closed lost.';
 
             List<Opportunity> relatedOwnerRec = oppMapList.get(keyS);
-            emailBody += '<br><br> <table border="2" style="border-collapse: collapse"><tr><th>Opportunity Name</th><th>Created Date</th><th>Closed Date</th><th>Account Name</th></tr>';  // <td>' + gdResult + '</td><td>' + piResult + '</td></tr>';
+            emailBody += '<br><br> <table border="2" style="border-collapse: collapse"><tr><th>Opportunity Name</th><th>Created Date</th><th>Proposed Closed Date</th><th>Account Name</th></tr>';  // <td>' + gdResult + '</td><td>' + piResult + '</td></tr>';
             for(opportunity oppRec:relatedOwnerRec){
                  String oppName = ' <br><a href="'+URL.getSalesforceBaseUrl().toExternalForm() +'/'+oppRec.Id+'">'+ oppRec.Name +'</a><br>' ;  
                   emailBody += '<tr><td Style="padding-left: 10px;  padding-bottom: 10px;">' + oppName  + '</td><td Style="padding-left: 10px;">' + oppRec.CreatedDate + '</td><td Style="padding-left: 10px;">' + oppRec.CloseDate + '</td><td Style="padding-left: 10px;">' +  oppRec.Account.Name + '</td></tr>'; 

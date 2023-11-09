@@ -49,11 +49,11 @@ global without sharing class UpdateInvoiceOutstandingRestService {
                     if(getWrapperInstByInvNo.containsKey(inv.Invoice_Number__c)){
                         if(inv.Payment_Received__c == null){
                             system.debug('in1 :: ');
-                            inv.Payment_Received__c = getWrapperInstByInvNo.get(inv.Invoice_Number__c).AMOUNT;
+                            inv.Payment_Received__c = getWrapperInstByInvNo.get(inv.Invoice_Number__c).RCVD_AMT;
                         }
                         else{
                             system.debug('in2 :: ');
-                            inv.Payment_Received__c = inv.Payment_Received__c + getWrapperInstByInvNo.get(inv.Invoice_Number__c).AMOUNT;
+                            inv.Payment_Received__c = inv.Payment_Received__c + getWrapperInstByInvNo.get(inv.Invoice_Number__c).RCVD_AMT;
                         }
                         inv.Due_Date__c = !String.isBlank(getWrapperInstByInvNo.get(inv.Invoice_Number__c).RECEIVED_DATE) ? Date.valueOf(getWrapperInstByInvNo.get(inv.Invoice_Number__c).RECEIVED_DATE) : inv.Due_Date__c;
                     }

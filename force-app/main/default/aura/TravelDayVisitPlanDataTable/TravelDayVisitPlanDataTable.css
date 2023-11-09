@@ -2,7 +2,7 @@
     .THIS .BeatMobile{
         display:none;
     }  
-    .THIS .BeatDesktop{
+    .THIS.BeatDesktop{
         display:block;
     } 
 }
@@ -10,7 +10,7 @@
     .THIS .BeatMobile{
         display:none;
     }  
-    .THIS .BeatDesktop{
+    .THIS.BeatDesktop{
         display:block;
     } 
 }
@@ -23,7 +23,7 @@
         overflow-y: scroll;
         max-height: 55vw;
         display:block;
-        min-width: 121%;
+        max-width: 97%;
     }  
     .THIS .cardInfo {
         margin-left: 2%;

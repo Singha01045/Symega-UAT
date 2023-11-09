@@ -39,6 +39,11 @@
         text-align: center;
     } 
     
+     .THIS .monthDetails{
+        color: aliceblue;
+        font-size: xx-large;
+    } 
+    
 }
 @media (min-width:1680px){
     .THIS .NameBar{
@@ -79,6 +84,11 @@
         border-radius: 16px;
         text-align: center;
     } 
+       .THIS .monthDetails{
+        color: aliceblue;
+        font-size: xx-large;
+    } 
+
 }
 @media (max-width:820px){
     .THIS .NameBar{
@@ -108,17 +118,22 @@
     .THIS .MonBeatPlanDetail{
         margin-left: -6%;
     } 
-    .THIS .statusFont{
-        font-size: 78%;
+        .THIS .dateMargin{
+        margin-right: 21%;
     } 
-    .THIS .Status{
-        background-color:#00C6B7; 
-        color:white; 
-        padding-left: 12%; 
-        padding-top: 3%; 
-        border-radius: 16px;
-        text-align: center;
-        min-width: 65px;
-        margin-left: -15px;
+    .THIS .monthDetails{
+        color: aliceblue;
+        font-size: 116%;
+    } 
+    .THIS .top-button {
+        background-color: #fff;
+        color: #007bff;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .THIS .cardDetails{
+        max-width: 97%;
     } 
 }

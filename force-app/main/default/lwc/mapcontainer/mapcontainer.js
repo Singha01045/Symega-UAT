@@ -1,6 +1,7 @@
 import { LightningElement,api,track } from 'lwc';
 import getAccountDetails from '@salesforce/apex/MapcontainerController.getAccountDetails';
 import GoogleMapReverseGeocodeCallout from '@salesforce/apex/MapcontainerController.GoogleMapReverseGeocodeCallout';
+import baseURL from '@salesforce/label/c.orgBaseURLforVFPages';
 export default class Mapcontainer extends LightningElement {
     debugger;
  @api recordId;
@@ -11,8 +12,8 @@ export default class Mapcontainer extends LightningElement {
        'accAddress' : '',
        'currentAddress': ''
    }
-    vfHost = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/googleMapIframe';
-    origin = 'https://symegafood--uat--c.sandbox.vf.force.com';
+    vfHost = baseURL + 'apex/GoogleMapIframe';
+    origin = baseURL;
     currentAddress = '';
     connectedCallback(){
         debugger;

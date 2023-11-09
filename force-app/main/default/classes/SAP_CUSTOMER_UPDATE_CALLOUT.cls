@@ -47,7 +47,7 @@ public without sharing class SAP_CUSTOMER_UPDATE_CALLOUT {
         
         sWrapper.SF_ID = acc.Id;
         sWrapper.CUSTOMER_NAME_2 = acc.Name.length()<40?'':acc.Name.substring(40,acc.Name.length());
-        sWrapper.STATE = acc.BillingState;
+        sWrapper.STATE = Utility.getPickVal('Account','BillingStateCode').get(acc.BillingState);
         sWrapper.TAX_TYPE = acc.Tax_Type__c!=null ? acc.Tax_Type__c:'';   
         sWrapper.CUSTOMER_SAP_CODE = acc.Customer_Code_SAP__c;
 

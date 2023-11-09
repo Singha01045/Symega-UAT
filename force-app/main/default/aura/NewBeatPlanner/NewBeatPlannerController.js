@@ -33,7 +33,8 @@
         const today = new Date();
         // const year = today.getFullYear();
         //const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
+        var day = String(today.getDate() + 1).padStart(2, '0');
+        day = day;
         //var selectedMonnth = component.get("v.month");
         //var selectedYear = component.get("v.year");
         
@@ -72,6 +73,7 @@
                     component.set("v.kpiTargetsName",wrappdata.MBPlist.KPI_Targets__r)
                     component.set("v.recordId",wrappdata.MBPlist.Id);
                     component.set("v.mbpName",wrappdata.MBPlist.Name);
+                    component.set("v.userName",wrappdata.MBPlist.Sales_User__r.Name);
                     component.set("v.month",wrappdata.MBPlist.Month_Name__c);
                     component.set("v.mbpStatus",wrappdata.MBPlist.Status__c);
                     component.set("v.showApprovalButton",wrappdata.showApprovalButton);
@@ -116,7 +118,9 @@
                     }
                     helper.fetchEvents(component,event);
                     //var formatted=component.get("v.formattedDate");
-                    var baseURL = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/MonthlyVisitViewer?id='+formattedDate;
+                    var baseURL = $A.get("$Label.c.orgBaseURLforVFPages");
+                    debugger;
+                    baseURL = baseURL + 'apex/MonthlyVisitViewer?id='+formattedDate;
                     component.set("v.siteURL",baseURL);
                 }else{
                     component.set("v.ShowMonthlyBeatPlan",false);
@@ -146,8 +150,7 @@
         
     },
     
-    sendForApp: function (component, event, helper) {
-        debugger;
+    sendForApp:function(component ,event ,helper){
         
         var recId=event.target.Id;
         var action = component.get("c.initiateApprovalProcess");

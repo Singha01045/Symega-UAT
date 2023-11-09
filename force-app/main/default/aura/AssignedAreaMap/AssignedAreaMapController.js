@@ -1,5 +1,8 @@
 ({
 	init: function (cmp, event, helper) {
+        var refURL = 'apex/FSLMapToShowBoundaries?core.apexpages.request.devconsole=1';
+        var URLforVF = $A.get("$Label.c.orgBaseURLforVFPages") + refURL;
+        cmp.set('v.baseURL', URLforVF);
         cmp.set('v.mapMarkers', [
             {
                 location: {

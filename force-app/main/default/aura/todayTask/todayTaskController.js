@@ -128,6 +128,7 @@
             if(response.getState() === 'SUCCESS'){
                 var result = response.getReturnValue();
                 component.set('v.visitRec', result);
+                component.set('v.visitRecPlannedDate', result.Planned_visit_date__c);
             } 
         });
         $A.enqueueAction(action);
@@ -206,7 +207,7 @@
     updateVisitHandler: function (component, event, helper) {
         debugger;
         var visitRecord = component.get("v.visitRec");
-        var plannedVisitDate = new Date(visitRecord.Planned_visit_date__c);
+        var plannedVisitDate = new Date(component.get('v.visitRecPlannedDate'));
         var selectedDate = new Date(component.find("auraidActualVisitDate").get("v.value"));
     
         if (selectedDate > plannedVisitDate) {
@@ -220,7 +221,8 @@
                 if (response.getState() === "SUCCESS") {
                     var data = response.getReturnValue();
                     if (data != null) {
-                        alert("SUCCESS");
+                        //alert("SUCCESS");
+                        helper.showsuccessMessageForUpdateVisit(component, event, helper);
                     }
                 }
             });
@@ -384,5 +386,13 @@
         helper.loadCompletedTasks(component, event, helper);
         helper.reloadPage(component, event, helper);
     },
+    openMap: function(component, event, helper){
+        var myCmp = component.find("myCmp");
+         component.set("v.isModalOpen", true); 
+       // $A.util.removeClass(myCmp, "hideClass");
+    },
+    closeModel : function(component, event, helper){
+         component.set("v.isModalOpen", false); 
+    }
     
 })

@@ -248,6 +248,7 @@
         component.set("v.MonthListToShow",TempMonthlist);*/ 
     },
     handleClick:function(component, event, helper) {
+        debugger;
         const mql = window.matchMedia('(max-width: 820px)');
 		 let mobileView = mql.matches;
         if(mobileView){

@@ -11,7 +11,7 @@ public without sharing class SAP_SaleOrderCreationRestHandler {
         return new Map<Id, Opportunity> ([SELECT Id,(Select Id, Quantity, Quantity_In_KG__c, Quantity_Unit__c, FERT_Code__c, UnitPrice, PricebookEntryId, OpportunityId, Product2Id, Opportunity.Account_Billing_Address__c, Opportunity.Customer_Billing_Address__c, Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c, Opportunity.Account.Customer_Code_SAP__c, ProductCode FROM OpportunityLineItems /* WHERE  FERT_Code__c IN : fertCodeSet AND FERT_Code__c != null*/) FROM Opportunity WHERE (Account.Customer_Code_SAP__c = : customerNumber OR Customer_Billing_Address__r.Customer_Code_SAP__c =: customerNumber) AND RecordType.Name='One Time' AND StageName != 'Closed Won' AND StageName != 'Closed Lost']);
     }
 
-    public Map<String,OpportunityLineItem> getRequestedProducts(Set<String> fertCodeSet,String customerSAPCode){
+    public Map<String,OpportunityLineItem> getRequestedProductsByCustCode(Set<String> fertCodeSet,String customerSAPCode){
         Map<String,OpportunityLineItem> prodCodeSet = new Map<String,OpportunityLineItem>();
 
         List<OpportunityLineItem> olis =  [Select Id, Quantity, Quantity_In_KG__c, Quantity_Unit__c, FERT_Code__c,UnitPrice,PricebookEntryId,Product2Id,Opportunity.Account_Billing_Address__c,Opportunity.Account.Customer_Code_SAP__c,Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c,Opportunity.Customer_Billing_Address__c,ProductCode From OpportunityLineItem Where FERT_Code__c IN : fertCodeSet AND (Opportunity.Account.Customer_Code_SAP__c = :customerSAPCode OR Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c =: customerSAPCode) AND FERT_Code__c!=null AND Opportunity.RecordType.Name='One Time' AND Opportunity.StageName = 'Closed Won' ORDER BY CreatedDate DESC];
@@ -44,8 +44,8 @@ public without sharing class SAP_SaleOrderCreationRestHandler {
 
     public String checkIfOrderExists(Set<String> soCodeSet) {
         List<String> existingSONumberList = new List<String>();
-        for(Sales_Order__c so: [SELECT SAP_Reference_Code__c FROM Sales_Order__c WHERE SAP_Reference_Code__c IN: soCodeSet]) {
-            existingSONumberList.add(so.SAP_Reference_Code__c);
+        for(Sales_Order__c so: [SELECT SAP_Sales_Order_Number__c  FROM Sales_Order__c WHERE SAP_Sales_Order_Number__c  IN: soCodeSet]) {
+            existingSONumberList.add(so.SAP_Sales_Order_Number__c );
         }
         String responseString = null;
         if(!existingSONumberList.isEmpty()) {
@@ -130,8 +130,8 @@ public without sharing class SAP_SaleOrderCreationRestHandler {
                                                  From Dispatch_Address__c Where Account__c =: accountId AND Customer_Code_SAP__c =: shippingAddress.CUST_CODE];
             
             if(dAdress.size() == 0){
-                Dispatch_Address__c address = new Dispatch_Address__c(Address__City__s = shippingAddress.city, Address__CountryCode__s = shippingAddress.country, Address__PostalCode__s = shippingAddress.POSTAL_CODE, 
-                                                                      Address__StateCode__s = shippingAddress.STATE, Address__Street__s = shippingAddress.STREET, Account__c = accountId, Customer_Code_SAP__c = shippingAddress.CUST_CODE);
+                Dispatch_Address__c address = new Dispatch_Address__c(Type__c = 'Shipping', Address__City__s = shippingAddress.city, Address__CountryCode__s = shippingAddress.country, Address__PostalCode__s = shippingAddress.POSTAL_CODE, 
+                                                                      Address__StateCode__s = Utility.getPickVal('Dispatch_Address__c','Address__StateCode__s').get(shippingAddress.STATE), Address__Street__s = shippingAddress.STREET, Account__c = accountId, Customer_Code_SAP__c = shippingAddress.CUST_CODE);
                 
                 System.debug('--- address not found, inserting new address:'+ address);
                 insert address;
@@ -172,7 +172,9 @@ public without sharing class SAP_SaleOrderCreationRestHandler {
         //add close date = today+30;
         //recordType oneTime
         String oneTimeRecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('One Time').getRecordTypeId();
-        Opportunity opp = new Opportunity(Name=acc.Name+'-opp_repeat_order',AccountId=acc.Id,StageName=StageName,CloseDate=System.today(),RecordTypeId=oneTimeRecordTypeId);
+        Opportunity opp = new Opportunity(Name=acc.Name+'-opp_repeat_order', AccountId=acc.Id, StageName=StageName, CloseDate=System.today(), RecordTypeId=oneTimeRecordTypeId
+                          /*Annual_Volume_Full__c = 1, Annual_Volume_in_units__c = 'Kg', Target_Price_Kg__c = 1, End_Use_Category__c = 'Baked Goods',
+                          End_Use_Application__c = 'Crackers'*/);
         return opp;
     }
 

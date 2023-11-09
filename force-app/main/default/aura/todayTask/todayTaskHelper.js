@@ -135,6 +135,34 @@
                     var responseValue = response.getReturnValue();
                     if (responseValue) {
                         component.set("v.completedTaskList", responseValue.completedVisitList);
+                        if(responseValue.isApproved == true){
+                            /*for(var i in result.visitList){
+                                 var address = result.visitList[i].Account__r.BillingStreet +','+ result.visitList[i].Account__r.BillingCity + ',' + result.visitList[i].Account__r.BillingState;
+                                var endLat = searchLatAndLngByStreet(address).latitude;
+                                var endLong = searchLatAndLngByStreet(address).longitude;
+                            }*/
+                            component.set('v.completedVisit', responseValue.completedVisit); 
+                            component.set('v.pendingVisit', responseValue.pendingVisit);
+                           // component.set("v.ShowEmptyPage",false);
+                            component.set('v.disableVisitButtons', true);
+                            component.set("v.ShowStartDay",!responseValue.isApproved);
+                            if(responseValue.dvpList != undefined && responseValue.dvpList.length != 0){
+                                component.set("v.ShowStartDay",responseValue.isApproved);
+                                component.set("v.ShowEndDay",false);
+                                component.set('v.disableVisitButtons', false);
+                            }else{
+                                component.set("v.ShowStartDay",false);
+                                component.set("v.ShowEndDay",true);
+                                component.set('v.disableVisitButtons', true);
+                            } 
+                        }else{
+                            component.set('v.completedVisit', responseValue.completedVisit); 
+                            component.set('v.pendingVisit', responseValue.pendingVisit);
+                            //component.set("v.ShowEmptyPage",false);
+                            component.set("v.ShowStartDay",true);
+                            component.set("v.ShowEndDay",true)
+                            component.set('v.disableVisitButtons', true);
+                        }
                         // component.set("v.completedVisitCount", responseValue.completedVisit);
                     }
                 } else {
@@ -177,6 +205,22 @@
             mode: 'pester'
         });
         toastEvent.fire();
+    },
+    
+    showsuccessMessageForUpdateVisit : function (component, event, helper) {
+        debugger;
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            title : 'SUCCESS',
+            message: 'Visit date has been successfully updated',
+            duration:' 5000',
+            key: 'info_alt',
+            type: 'success',
+            mode: 'pester'
+        });
+        toastEvent.fire();
+        component.set('v.ShowAmedVistPop', false);
+         $A.get('e.force:refreshView').fire();
     },
     showErrorMessage : function (component, event, helper) {
         var toastEvent = $A.get("e.force:showToast");
@@ -347,14 +391,15 @@
     callMapMethod : function(component, event, helper){
         debugger;
         var selectedVisitDateFromParentComp = component.get("v.SelectedVisitDate");
-        var baseURL = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
+        var baseURL = $A.get("$Label.c.orgBaseURLforVFPages");
+        var baseURL = baseURL + 'apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
         //console.log('baseURL === >'+baseURL);
         component.set("v.siteURL",baseURL);
     },
     callMapMethodFromController : function(component, dataFromCont, helper){
         
         var selectedVisitDateFromParentComp = dataFromCont;
-        var baseURL = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
+        var baseURL = 'https://sales-production--ecommerce--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
         //console.log('baseURL === >'+baseURL);
         component.set("v.siteURL",baseURL);
     },

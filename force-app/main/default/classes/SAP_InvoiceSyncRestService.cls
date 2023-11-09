@@ -82,12 +82,12 @@ global without sharing class SAP_InvoiceSyncRestService {
                 billingDetailsByMaterailMap.put(billing.MATERIAL, billing);
             }
             
-            List<Sales_Order__c> soList = [SELECT Id, SAP_Reference_Code__c, Account__c 
-                                           FROM Sales_Order__c WHERE Id IN: billingDetailsBySO_NoMap.keySet() OR SAP_Reference_Code__c IN: billingDetailsBySO_NoMap.keySet()];
+            List<Sales_Order__c> soList = [SELECT Id, SAP_Sales_Order_Number__c, Account__c 
+                                           FROM Sales_Order__c WHERE Id IN: billingDetailsBySO_NoMap.keySet() OR SAP_Sales_Order_Number__c IN: billingDetailsBySO_NoMap.keySet()];
             Map<String, Sales_Order__c> soBySONoMap = new Map<String, Sales_Order__c>();            
             for(Sales_Order__c so : soList){
-                if(billingDetailsBySO_NoMap.containsKey(so.SAP_Reference_Code__c)){
-                    soBySONoMap.put(so.SAP_Reference_Code__c, so);                   
+                if(billingDetailsBySO_NoMap.containsKey(so.SAP_Sales_Order_Number__c)){
+                    soBySONoMap.put(so.SAP_Sales_Order_Number__c, so);                   
                 }
                 else if(billingDetailsBySO_NoMap.containsKey(so.Id)){
                     soBySONoMap.put(so.Id, so);                   
@@ -96,26 +96,26 @@ global without sharing class SAP_InvoiceSyncRestService {
             system.debug('soList' + soList);
             
             if(!soList.isEmpty()){
-                List<Invoice__c> invList = [SELECT Id, Sales_Order__c, Sales_Order__r.SAP_Reference_Code__c, Invoice_Number__c FROM Invoice__c 
-                                            WHERE (Sales_Order__c IN: billingDetailsBySO_NoMap.keySet() OR Sales_Order__r.SAP_Reference_Code__c IN: billingDetailsBySO_NoMap.keySet() ) AND Invoice_Number__c IN: billingDetailsByBillNoMap.keySet()];
+                List<Invoice__c> invList = [SELECT Id, Sales_Order__c, Sales_Order__r.SAP_Sales_Order_Number__c, Invoice_Number__c FROM Invoice__c 
+                                            WHERE (Sales_Order__c IN: billingDetailsBySO_NoMap.keySet() OR Sales_Order__r.SAP_Sales_Order_Number__c IN: billingDetailsBySO_NoMap.keySet() ) AND Invoice_Number__c IN: billingDetailsByBillNoMap.keySet()];
                 
                 Map<String, Invoice__c> invByBillingNoSONoMap = new Map<String, Invoice__c>();                
                 for(Invoice__c inv : invList){
-                    if(billingDetailsBySO_NoMap.containsKey(inv.Sales_Order__r.SAP_Reference_Code__c)){
-                        invByBillingNoSONoMap.put(inv.Invoice_Number__c + inv.Sales_Order__r.SAP_Reference_Code__c, inv);
+                    if(billingDetailsBySO_NoMap.containsKey(inv.Sales_Order__r.SAP_Sales_Order_Number__c)){
+                        invByBillingNoSONoMap.put(inv.Invoice_Number__c + inv.Sales_Order__r.SAP_Sales_Order_Number__c, inv);
                     }
                     else if(billingDetailsBySO_NoMap.containsKey(inv.Sales_Order__c)){
                         invByBillingNoSONoMap.put(inv.Invoice_Number__c + inv.Sales_Order__c, inv);
                     }
                 }
                 
-                List<OpportunityLineItem> oppLineItemList = [SELECT Id, ProductCode, Sales_Order__r.SAP_Reference_Code__c FROM OpportunityLineItem 
-                                                             WHERE ProductCode IN: billingDetailsByMaterailMap.keySet() AND (Sales_Order__r.SAP_Reference_Code__c IN: billingDetailsBySO_NoMap.keySet() OR Sales_Order__c IN: billingDetailsBySO_NoMap.keySet() )];
+                List<OpportunityLineItem> oppLineItemList = [SELECT Id, ProductCode, Sales_Order__r.SAP_Sales_Order_Number__c FROM OpportunityLineItem 
+                                                             WHERE ProductCode IN: billingDetailsByMaterailMap.keySet() AND (Sales_Order__r.SAP_Sales_Order_Number__c IN: billingDetailsBySO_NoMap.keySet() OR Sales_Order__c IN: billingDetailsBySO_NoMap.keySet() )];
                 
                 Map<String, OpportunityLineItem> itemByCode_SONoMap = new Map<String, OpportunityLineItem>();                
                 for(OpportunityLineItem item : oppLineItemList){
-                    if(billingDetailsBySO_NoMap.containsKey(item.Sales_Order__r.SAP_Reference_Code__c)){
-                        itemByCode_SONoMap.put(item.ProductCode + item.Sales_Order__r.SAP_Reference_Code__c, item);                 
+                    if(billingDetailsBySO_NoMap.containsKey(item.Sales_Order__r.SAP_Sales_Order_Number__c)){
+                        itemByCode_SONoMap.put(item.ProductCode + item.Sales_Order__r.SAP_Sales_Order_Number__c, item);                 
                     }
                     else if(billingDetailsBySO_NoMap.containsKey(item.Sales_Order__c)){
                         itemByCode_SONoMap.put(item.ProductCode + item.Sales_Order__c, item);                 
@@ -140,7 +140,7 @@ global without sharing class SAP_InvoiceSyncRestService {
                 if(!invoiceToBeInsertedMap.values().isEmpty()){
                     insert invoiceToBeInsertedMap.values();
                     for(Invoice__c inv : invoiceToBeInsertedMap.values()){
-                        String sono = [SELECT Id, SAP_Reference_Code__c FROM Sales_Order__c WHERE Id =: inv.Sales_Order__c].SAP_Reference_Code__c;
+                        String sono = [SELECT Id, SAP_Sales_Order_Number__c FROM Sales_Order__c WHERE Id =: inv.Sales_Order__c].SAP_Sales_Order_Number__c;
                         system.debug('sono ' + sono);
                         if(billingDetailsBySO_NoMap.containsKey(sono)){
                             invByBillingNoSONoMap.put(inv.Invoice_Number__c + sono, inv);
@@ -191,7 +191,7 @@ global without sharing class SAP_InvoiceSyncRestService {
         newILI.CurrencyIsoCode = invWrapper.EXPORT_CUR;
         newILI.UOM__c = invWrapper.QTY_UOM;
         newILI.Sales_Unit__c = invWrapper.SALE_UNIT;
-        newILI.Quantity_in_KG__c = !String.isBlank(invWrapper.QTY_KG) ? integer.valueof(invWrapper.QTY_KG) : null;
+        newILI.Quantity_in_KG__c = !String.isBlank(invWrapper.QTY_KG) ? decimal.valueof(invWrapper.QTY_KG) : null;
         newILI.Billing_Date__c = !String.isBlank(invWrapper.BILLING_DATE) ? Date.ValueOf(invWrapper.BILLING_DATE) : null;
         newILI.Net_Value__c = !String.isBlank(invWrapper.NET_VALUE) ? decimal.valueof(invWrapper.NET_VALUE) : null;
         newILI.Taxable_value__c = !String.isBlank(invWrapper.TAXBALE_VALUE) ? decimal.valueof(invWrapper.TAXBALE_VALUE) : null;
@@ -205,6 +205,11 @@ global without sharing class SAP_InvoiceSyncRestService {
         newILI.Total_GST__c = !String.isBlank(invWrapper.TOTAL_GST) ? decimal.valueof(invWrapper.TOTAL_GST) : null;
         newILI.Invoice_Type__c = invWrapper.TRASACTION_TYPE;
         newILI.Invoice_Date__c = !String.isBlank(invWrapper.INVOICE_DATE) ? Date.ValueOf(invWrapper.INVOICE_DATE) : null;
+
+        //new
+        newILI.SGST__c = !String.isBlank(invWrapper.SGST) ? decimal.valueof(invWrapper.SGST) : null;
+        newILI.IGST__c = !String.isBlank(invWrapper.IGST) ? decimal.valueof(invWrapper.IGST) : null;
+        newILI.CGST__c = !String.isBlank(invWrapper.CGST) ? decimal.ValueOf(invWrapper.CGST) : null;
         return newILI;
     }
 }

@@ -7,6 +7,9 @@ public with sharing class SAP_SaleOrderUpdateWrapper {
         public String REF_CODE;
         public String CUSTOMER_CODE;
         public string REMARKS;
+
+        public string SAP_SO_NO; //new
+
         //public string SERVICE_RENDERING_DATE;
         public String SUBMITTED_DATE;//2022-03-29
         //public boolean PAYMENT_RECEIVED;
@@ -29,6 +32,8 @@ public with sharing class SAP_SaleOrderUpdateWrapper {
         public String COUNTRY;
         public String POSTAL_CODE;
         public String STREET;
+
+        public String CUST_CODE; //NEW
     }
     public static SAP_SaleOrderUpdateWrapper parse(String json){
         return (SAP_SaleOrderUpdateWrapper) System.JSON.deserialize(json, SAP_SaleOrderUpdateWrapper.class);

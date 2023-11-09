@@ -10,6 +10,7 @@
     <aura:handler event="c:travelTableDataEvent" action="{!c.travelTableDataEvent}"/>
     <div class="" >
         <!---Day Visit Plan Tab-->
+        <div class="BeatDesktop">
         <div class="slds-col slds-size_12-of-12">
                 <div class="" style="background-color:white; width:100%; margin-top:-1s%;"  >
                     
@@ -90,7 +91,7 @@
                         </table>
                     </div>
         </div>
-                    
+        </div>
                     <!--Card show CSS for Mobile-->
                 <div class="BeatMobile">
                     <aura:iteration items="{!v.dataList}"  var="visit" indexVar="index">

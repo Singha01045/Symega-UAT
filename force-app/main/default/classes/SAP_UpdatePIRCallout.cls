@@ -11,7 +11,7 @@ public class SAP_UpdatePIRCallout {
         List<PIR__c> pirList = getPIRList(recIds);
         
         for(PIR__c pir : pirList){
-            if(String.isBlank(pir.Customer_Name__r.Customer_Code_SAP__c)){
+            if(String.isBlank(pir.Customer_Name__r.Customer_Code_SAP__c) && !pir.Customer_Name__r.Submitted_to_SAP__c){
                 setOfAccId.add(pir.Customer_Name__c);
                 pirWithoutSAPCODE.add(pir);
             }else{
@@ -68,7 +68,7 @@ public class SAP_UpdatePIRCallout {
     }
     
     public static List<PIR__c> getPIRList(List<String> recIds){
-        return [Select Id, Customer_Code__c, Product_Code_HALB__c, Quantity_in_KG__c, Dispatch_Plan__c, Submit_To_SAP__c, OwnerId, Customer_Name__r.Customer_Code_SAP__c From PIR__c Where Id IN: recIds];
+        return [Select Id, Customer_Name__r.Submitted_to_SAP__c, Customer_Code__c, Product_Code_HALB__c, Quantity_in_KG__c, Dispatch_Plan__c, Submit_To_SAP__c, OwnerId, Customer_Name__r.Customer_Code_SAP__c From PIR__c Where Id IN: recIds];
     }
     
     public static string updatePIRWrapper(List<PIR__c> pirList){

@@ -162,6 +162,18 @@ public without sharing class ProjectHanlder {
     }
 
     @AuraEnabled
+    Public static Sample_Line_Item__c getSliRecord(String sampLId){
+        try{
+            if(String.isBlank(sampLId))
+            return null;
+            return [Select Id,CurrencyIsoCode,Product__c,Sample__r.Opportunity__r.Account.Id,Sample__r.Opportunity__r.Account.Name,Line_Item_Name__c,Product__r.Name FROM Sample_Line_Item__c WHERE Id =:sampLId];
+
+        }catch(exception e){
+             throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Product2 getProdRecord(String id){
         try {
             if(String.isBlank(id))

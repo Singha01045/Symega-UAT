@@ -2,6 +2,7 @@
     
     <aura:attribute name="mapMarkers" type="Object"/>
     <aura:attribute name="zoomLevel" type="Integer" />
+    <aura:attribute name="baseURL" type ="String"/>
     
     <!-- handlers-->
     <aura:handler name="init" value="{! this }" action="{! c.init }"/>
@@ -13,7 +14,7 @@
                            height="400"
                            frameborder="0"
                            style="border: 0"
-                           src="https://symegafood--uat--c.sandbox.vf.force.com/apex/FSLMapToShowBoundaries?core.apexpages.request.devconsole=1"
+                           src="{!v.baseURL}"
                            allowfullscreen="true">
                          </iframe>
     

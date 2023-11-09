@@ -153,29 +153,34 @@
                                             <div class="row mt-3 mx-5">
                                                 <div class="col-md-12" style="overflow-x:auto;">
                                                     
-                                                    <table class="table">
+                                                    <table class="table" style="width:300%">
                                                         <thead>
                                                             <tr>
-                                                                <th style="width:2%;">S.No.</th>
+                                                                <th style="width:0%;">S.No.</th>
                                                                 <th style="width:10%;">Product</th>
-                                                                <th style="width:5%;">Quantity</th>
-                                                                <th style="width:5%;">Quantity Unit</th>
-                                                                <th style="width:8%;">Packaging Quantity</th>
-                                                                <th style="width:10%;">Packaging Unit</th>
-                                                                <th style="width:15%;">Regulatory Requirements</th>
-                                                                <th style="width:15%;">Current Shelf Life</th>
-                                                                <th style="width:15%;">Expected Shelf Life</th>
-                                                                <th style="width:15%;">Customer Instructions</th>
-                                                                <th><i class="fas fa-plus-circle icon ps-3" ng-click="addRow()"></i></th>
+                                                                <th style="width:0%;">Quantity</th>
+                                                                <th style="width:0%;">Quantity Unit</th>
+                                                                <th style="width:0%;">Packaging Quantity</th>
+                                                                <th style="width:2%;">Packaging Unit</th>
+                                                                <th style="width:10%;">Regulatory Requirements</th>
+                                                                <th style="width:10%;">Current Shelf Life</th>
+                                                                <th style="width:10%;">Expected Shelf Life</th>
+                                                                <th style="width:10%;">Customer Instructions</th>
+                                                                <th style="width:1%"><i class="fas fa-plus-circle icon ps-3" ng-click="addRow()"></i></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr ng-repeat="SLI in SLIlist">
                                                                 <!--{{SLIlist}}-->
                                                                 <td>{{$index+1}}</td>
-                                                                <td ><so-dropdown ng-model="productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,productId)" ng-disabled="SLI.check">
+                                                                <td ng-if="SLI.check == false"><!--so-dropdown ng-model="SLI.productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,SLI.productId.Id)" ng-disabled="SLI.check">
                                                                     <option value='None'>None</option>
-                                                                    </so-dropdown></td>
+                                                                    </so-dropdown-->
+                                                                <select class="form-control" ng-model="SLI.productId" ng-change="onChangeToAssignProduct(SLI,SLI.productId)" ng-disabled="SLI.check">
+                                                                    <option ng-repeat="item in mergedList" value="{{item.Id}}">{{item.Name}}</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td ng-if="SLI.check == true"><input class="form-control" type="text" ng-model="SLI.Product_Name__c" ng-disabled="SLI.check"/></td>
                                                                 <td><input type="text" class="form-control" number="SLI.Quantity__c" ng-model="SLI.Quantity__c" ng-change="calculatePUnit(SLI.Quantity__c,SLI.Packaging_Quantity__c,SLI)" ng-disabled="SLI.check"/></td>
                                                                 <td><select class="form-control" ng-model="SLI.Quantity_Unit__c" ng-change="setPackagingUnit(SLI.Quantity_Unit__c,SLI)" ng-disabled="SLI.check">
                                                                     <option ng-repeat="item in quantityUnit" value="{{item}}">{{item}}</option>
@@ -561,7 +566,8 @@
             
             $scope.getSampleDetails = function(){
                 debugger;
-                $scope.mergedList = [];
+                $scope.mergedList = [{Id:'--None--', Name:'--None--'}];
+                //productId = {Id:'', Name:''};
                 OperationsPortalController.getSampleDetails(sampleId,userHashId,function(result,event){
                     debugger;
                     if(event.status && result){
@@ -591,14 +597,18 @@
                             $scope.SLIlist = result.listOfSamples[0].Sample_Line_Items__r;
                             for(var i=0;i<$scope.SLIlist.length;i++){
                                 $scope.SLIlist[i].calc = $scope.SLIlist[i].Quantity__c/$scope.SLIlist[i].Packaging_Quantity__c;
-                                /*if($scope.SLIlist[i].Product__c != undefined){
-                                            $scope.SLIlist[i].productId = $scope.SLIlist[i].Product__r.Name;
+                                 if($scope.SLIlist[i].Product__c != undefined){
+                                     $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Product__r.Name;
+                                            $scope.SLIlist[i].productId = $scope.SLIlist[i].Product__c;
                                         }else if($scope.SLIlist[i].OPTIVA_Recipe__c != undefined){
-                                            $scope.SLIlist[i].productId = $scope.SLIlist[i].OPTIVA_Recipe__r.Name;
+                                            $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].OPTIVA_Recipe__r.Name;
+                                            $scope.SLIlist[i].productId = $scope.SLIlist[i].OPTIVA_Recipe__c;
                                         }else if($scope.SLIlist[i].Project_Quotient__c != undefined){
-                                            $scope.SLIlist[i].productId = $scope.SLIlist[i].Project_Quotient__r.Name;
+                                            $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Project_Quotient__r.Name;
+                                            $scope.SLIlist[i].productId = $scope.SLIlist[i].Project_Quotient__c;
                                         }else{
-                                        }*/
+                                            $scope.SLIlist[i].productId = "--None--";
+                                        }
                             }
                         }else{
                             $scope.SLIlist.push({
@@ -711,6 +721,7 @@
                     delete ($scope.SLIlist[i]['calc']);
                     delete ($scope.SLIlist[i]['check']);
                     delete ($scope.SLIlist[i]['productId']);
+                    delete ($scope.SLIlist[i]['ProductNm']);
                 }
                 OperationsPortalController.saveSLIDetails($scope.SLIlist,function(result,event){
                     debugger;

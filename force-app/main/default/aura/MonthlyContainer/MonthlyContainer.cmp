@@ -10,7 +10,7 @@
     <aura:attribute name="disablePrev" type="Boolean" default="true"></aura:attribute>
     <aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent"/>
     
-    <div class="slds-card ">
+    <div class="maincard ">
         <div class="slds-grid slds-wrap slds-col slds-size_8-of-12 slds-align_absolute-center" style="padding-top:10px;padding-bottom:10px;">
             
         <div class="slds-grid dateBar" >

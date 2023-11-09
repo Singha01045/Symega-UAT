@@ -65,17 +65,6 @@
         margin: 0;
         padding: 0;
         }
-        .top-button {
-        margin-right:-3%;
-        background-color: #fff;
-        color: #007bff;
-        padding: 6px 12px;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: bold;
-        margin-top:7px;
-        }
-        
         .SendApproval {
         margin-left:-5rem;
         background-color:#6BBD6E;
@@ -267,9 +256,10 @@
     
     
     
-    
+        <div class="MainComponCard">
+
     <!-- Html part /-->
-    <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:2%; margin: 1rem;">Beat Planner</h2>
+    <h2 class="h2TitelMain" style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:2%; margin: 1rem;">Beat Planner</h2>
     <div class="slds-col slds-size_12-of-12">
         <c:MonthlyContainer></c:MonthlyContainer>
     </div>
@@ -282,18 +272,18 @@
     
     <aura:if isTrue="{!v.ShowMonthlyBeatPlan}">
         <div class="slds-col slds-size_12-of-12" style="margin-top:10px;">
-            <article class="slds-card" style="background: linear-gradient(90.51deg, #6DA2EA 0%, #DDB5FF 100%);border-radius: 10px;">
+            <article class="slds-card nameBar">
                 <div class="slds-card__header slds-grid">
                     <header class="slds-media slds-media_center slds-has-flexi-truncate">
                         
                         <div class="slds-media__body">
                             <h2 class="slds-card__header-title">
-                                <span style="color: aliceblue;font-size: xx-large;">{!v.month}-{!v.mbpName}- Ajeet Kumar</span>
+                                <span class="h2Titel">{!v.month}-{!v.mbpName}- {!v.userName}</span>
                             </h2>
                         </div>
                         <div class="slds-no-flex">
                             <aura:if isTrue="{!v.mbpStatus=='Approved'}">
-                                <span class="top-button" style="width:3rem;margin-left:-12%;margin-bottom:-6%;margin-top:1%;">{!v.mbpStatus}</span>
+                                <span class="top-button" >{!v.mbpStatus}</span>
                                 <aura:set attribute="else">
                                     <aura:if isTrue="{!and(v.mbpStatus=='Draft', v.showApprovalButton)}">
                                         <a class="top-button SendApproval" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'><span style="color:#fff;">Send For Approval</span>
@@ -314,7 +304,7 @@
                 </div>
             </article>
             
-            <div class="" style="margin-top:10px;">
+            <div class="DesktopView" style="margin-top:10px;">
                 <aura:if isTrue="{!v.showApprovedCal}">
                     <div class="mainContainer" style="">               
                         <div class="boxContainer" aura:id="external-events">
@@ -338,6 +328,8 @@
                             </div>
                         </div>
                         
+                        <!-- Calendar -->
+                        
                         <div class="callyContainer">
                             <div  id="calendar"></div> 
                         </div>
@@ -349,6 +341,34 @@
                     
                     <!--c:MonthlyBeanPlanCalnder month="{!v.selectedMonth}" year="{!v.selectedYear}" aura:id="chilcally"/-->
                 </aura:if>
+            </div>
+            
+            <!--mobile View-->
+            <div class="mobileBeatPlan">
+                <lightning:tabset selectedTabId="one">
+                    <lightning:tab label="Beat Plan" id="one">
+                        <div class="boxContainer" aura:id="external-events">
+                            <div class="event-container" style="max-height: 650px;padding-top:2%;">
+                                <aura:iteration items="{!v.weeklyWrapper}" var="item">
+                                    <div class="box draggable-event" id="listCalender" draggable="true">
+                                        <ul>
+                                            <li><span style="font-weight:700;"> {!item.weekName} </span> <span style="font-weight:bold;color:grey;margin-left:4px;">({!item.weekstartAndEndText}) </span></li>
+                                            <div>
+                                                <aura:iteration items="{!item.kpiList}" var="ite">
+                                                    <li style="margin:10px;">
+                                                        <span class="{!ite.dynamicClass}">
+                                                            {!ite.count} - {!ite.kPIName}
+                                                        </span>
+                                                    </li>
+                                                </aura:iteration>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </aura:iteration>
+                            </div>
+                        </div>
+                    </lightning:tab>
+                </lightning:tabset>
             </div>
         </div>
         
@@ -394,5 +414,5 @@
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </aura:if>
-    
+    </div>
 </aura:component>

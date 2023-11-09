@@ -47,9 +47,9 @@ global class BatchClassForOppAutoCloseNotification implements Database.Batchable
             mymail.setSaveAsActivity(false);
             
             String emailBody = 'Hi ' + userMap.get(keyS).FirstName + ',';
-             emailBody += ' <br> <br> we observe that below opps are lapsed and are not updated post our last notification.';
+             emailBody += ' <br> <br>We observe that below Opportunities Close Date is lapsed and are not updated post our last notification.';
            List<Opportunity> relatedOwnerRec = oppMapList.get(keyS);
-            emailBody += '<br><br> <table border="2" style="border-collapse: collapse"><tr><th>Opportunity Name</th><th>Created Date</th><th>Closed Date</th><th>Account Name</th></tr>';  // <td>' + gdResult + '</td><td>' + piResult + '</td></tr>';
+            emailBody += '<br><br> <table border="2" style="border-collapse: collapse"><tr><th>Opportunity Name</th><th>Created Date</th><th>Proposed Closed Date</th><th>Account Name</th></tr>';  // <td>' + gdResult + '</td><td>' + piResult + '</td></tr>';
             for(opportunity oppRec:relatedOwnerRec){
                  String oppName = ' <br><a href="'+URL.getSalesforceBaseUrl().toExternalForm() +'/'+oppRec.Id+'">'+ oppRec.Name +'</a><br>' ;  
                   emailBody += '<tr><td Style="padding-left: 10px;  padding-bottom: 20px;">' + oppName  + '</td><td Style="padding-left: 10px;">' + oppRec.CreatedDate + '</td><td Style="padding-left: 10px;">' + oppRec.CloseDate + '</td><td Style="padding-left: 10px;">' +  oppRec.Account.Name + '</td></tr>'; 

@@ -37,6 +37,7 @@ $(document).ready(function () {
     debugger;
     const queryString = window.location.search;
     let jobAppId = queryString.split("id=").pop();
+    //$scope.jobAppIdNew = queryString.split("id=").pop();
     
     MonthlyVisitViewerController.getcurrentUserRoutes(function (result, event) {
         debugger;
@@ -51,6 +52,7 @@ $(document).ready(function () {
     MonthlyVisitViewerController.fetchPageData(jobAppId,function (result, event) {
         debugger;
         let monthName=jobAppId;
+        //let monthName='2023-November-05';
         console.log('--- result' + result);
         eventss=[...result];
 
@@ -168,7 +170,7 @@ $(document).ready(function () {
                 },
                 eventConstraint: {
                     start: moment().format('YYYY-MM-DD'),
-                    end: '2100-01-01' // hard coded goodness unfortunately
+                    end: '2100-02-01' // hard coded goodness unfortunately
                 }
             });
             $('#calendar').fullCalendar('gotoDate', monthName);
@@ -389,6 +391,7 @@ $(document).ready(function () {
         if (userId == undefined || userId === "" || userId === "Select...")
             $("#upsert-visit").prop('disabled', true);
         $("#event-container").empty();
+        getCalData();
         updateDefaultRepAccounts(userId);
         //  getLocationOnObjectType();
     });
@@ -546,6 +549,23 @@ $(document).ready(function () {
             });
         }
     }
+        
+function getCalData(){
+    MonthlyVisitViewerController.fetchPageData(jobAppId,function (result, event) {
+        debugger;
+        let monthName=jobAppId;
+        console.log('--- result' + result);
+        eventss=[...result];
+
+        if(result!=null){
+            repVisits = [];
+            result.forEach(item=>{
+                repVisits.push({ id: item.Id, start: item.Actual_visit_date__c,title:item.Account__r.Name, kpiId:item.KPI_Target__c});
+            })
+            //repVisits = [...result];
+        }
+        })
+}
     
     function setEventDraggable() {
         /* initialize the external events
@@ -685,10 +705,10 @@ function handleAddressSelection(date, instance) {
             addressMap.set('777', {city: account.BillingCity, country: account.BillingCountry, lat: account.Geo_Location__Latitude__s, long: account.Geo_Location__Longitude__s, pCode: account.BillingPostalCode, state: account.BillingState, street: account.BillingStreet});
             $("#address-parent").append('<span class="slds-radio"><input type="radio" id="777" value="777" name="address-radio" checked="" /><label class="slds-radio__label" for="777"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.BillingCity+', <b>Country:</b> '+account.BillingCountry+', <b>Pin-Code: </b>'+ account.BillingPostalCode+', <b>State:</b> '+account.BillingState+', <b>Street: </b> '+account.BillingStreet+'</span></label></span>');
         }
-        if(account && account.Dispatch_Address__r) {
-            for(let i = 0; i < account.Dispatch_Address__r.length; i++) {
-                addressMap.set(i+"", {city: account.Dispatch_Address__r[i].Address__City__s, country: account.Dispatch_Address__r[i].Address__CountryCode__s, lat: account.Dispatch_Address__r[i].Geo_Location__latitude__s, long: account.Dispatch_Address__r[i].Geo_Location__c, pCode: account.Dispatch_Address__r[i].Address__PostalCode__s, state: account.Dispatch_Address__r[i].Address__StateCode__s, street: account.Dispatch_Address__r[i].Address__Street__s});
-                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Dispatch_Address__r[i].Address__City__s+', <b>Country:</b> '+account.Dispatch_Address__r[i].Address__CountryCode__s+', <b>Pin-Code: </b>'+ account.Dispatch_Address__r[i].Address__PostalCode__s+', <b>State:</b> '+account.Dispatch_Address__r[i].State__c+', <b>Street: </b> '+account.Dispatch_Address__r[i].Street__c+'</span></label></span>');
+        if(account && account.Customer_Address__r) {
+            for(let i = 0; i < account.Customer_Address__r.length; i++) {
+                addressMap.set(i+"", {city: account.Customer_Address__r[i].Address__City__s, country: account.Customer_Address__r[i].Address__CountryCode__s, lat: account.Customer_Address__r[i].Geo_Location__latitude__s, long: account.Customer_Address__r[i].Geo_Location__c, pCode: account.Customer_Address__r[i].Address__PostalCode__s, state: account.Customer_Address__r[i].Address__StateCode__s, street: account.Customer_Address__r[i].Address__Street__s});
+                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Customer_Address__r[i].Address__City__s+', <b>Country:</b> '+account.Customer_Address__r[i].Address__CountryCode__s+', <b>Pin-Code: </b>'+ account.Customer_Address__r[i].Address__PostalCode__s+', <b>State:</b> '+account.Customer_Address__r[i].State__c+', <b>Street: </b> '+account.Customer_Address__r[i].Street__c+'</span></label></span>');
             }
         }
     }

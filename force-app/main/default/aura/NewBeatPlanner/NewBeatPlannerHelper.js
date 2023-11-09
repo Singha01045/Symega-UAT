@@ -31,7 +31,7 @@
                         right: 'month,basicWeek,basicDay'
                     },
                     themeSystem: "standard",
-                    
+                    gotoDate:formattedDate,
                     defaultDate:formattedDate,
                     editable: true,
                     eventLimit: true,
@@ -61,7 +61,7 @@
                         component.set("v.isShowDaskDesComp",true);
                     },
                 });
-                $(ele).fullCalendar('gotoDate', formattedDate);
+                //$(ele).fullCalendar('gotoDate', formattedDate);
                 
               
                 

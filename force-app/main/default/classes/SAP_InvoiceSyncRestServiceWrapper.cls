@@ -26,6 +26,11 @@ public without sharing class SAP_InvoiceSyncRestServiceWrapper {
         public string TOTAL_GST;
         public string TRASACTION_TYPE;
         public string INVOICE_DATE;
+
+        //new
+        public string SGST;
+        public string CGST;
+        public string IGST;
     }
     
     public static SAP_InvoiceSyncRestServiceWrapper parse(string json){

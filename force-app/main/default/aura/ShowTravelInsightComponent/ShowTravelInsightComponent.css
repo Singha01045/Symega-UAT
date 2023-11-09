@@ -37,12 +37,16 @@
 }
 
 @media (max-width:820px){
-    .THIS.travelInsightMain{
+   /* .THIS.travelInsightMain{
         background: #F3F3F3; 
         margin-left: -6%; 
         margin-right: -2%; 
         margin-top: -17%;
+    } */
+      .THIS.MainComponCard{
+        margin-left: -15%; 
     }
+
     .THIS .h2Text{
         color: #0158A5; 
         font-family:revert;

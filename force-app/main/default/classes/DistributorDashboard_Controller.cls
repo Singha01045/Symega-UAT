@@ -520,7 +520,7 @@ public without sharing class DistributorDashboard_Controller {
         if(distributorId!=null)
         {
             
-            String query = 'SELECT Id,Opportunity__r.Name,Distributer_Customer__r.Name,Name,Account__r.Name,Amount__c,Opportunity__r.Account.Name,Submission_Date__c,Submitted_Date__c,Way_Bill_No__c,Expected_Delivery_Date__c,Order_quantity__c,Payment_term__c,Service_Rendering_date__c,Plant__c,Courier__c,Proposed_Execution_Date__c,( Select Account__c,Amount__c,Billed_Quantity__c,CGST__c,Change_in_Dispatch_Date_Reason__c,Courier__c,CurrencyIsoCode,Customer_Payment_Update__c,Dispatch_Date__c,Due_Date__c,Freight_Charges__c,GST__c,IGST__c,Insurance__c,Invoice_Date__c,Name,Invoice_Number__c,Net_Value__c,Number_of_Packs__c,Opportunity__c,Remarks__c,Sales_Order__c,SGST__c,Taxable_value__c,TCS_Value__c,Total_Amount__c,Way_Bill_No__c From Invoice__r) FROM Sales_Order__c where Opportunity__r.AccountId=:distributorId';
+            String query = 'SELECT Id,Opportunity__r.Name,Distributer_Customer__r.Name,Name,Account__r.Name,Amount__c,Opportunity__r.Account.Name,Submission_Date__c,Submitted_Date__c,Way_Bill_No__c,Expected_Delivery_Date__c,Order_quantity__c,Payment_term__c,Service_Rendering_date__c,Plant__c,Courier__c,Proposed_Execution_Date__c,( Select Account__c,Amount__c,Billed_Quantity__c,Total_CGST__c,Change_in_Dispatch_Date_Reason__c,Courier__c,CurrencyIsoCode,Customer_Payment_Update__c,Dispatch_Date__c,Due_Date__c,Freight_Charges__c,Total_GST__c,Total_IGST__c,Insurance__c,Invoice_Date__c,Name,Invoice_Number__c,Net_Value__c,Number_of_Packs__c,Opportunity__c,Remarks__c,Sales_Order__c,Total_SGST__c,Taxable_value__c,TCS_Value__c,Total_Amount__c,Way_Bill_No__c From Invoice__r) FROM Sales_Order__c where Opportunity__r.AccountId=:distributorId';
             if(!customerDisId.equals('All')){
                 query+=' And Distributer_Customer__c=:customerDisId';
             }
@@ -577,9 +577,9 @@ public without sharing class DistributorDashboard_Controller {
                     Order_quantity__c,Payment_term__c,Service_Rendering_date__c,Plant__c,
                     Distributer_Customer__r.Name,
                     Courier__c,Proposed_Execution_Date__c,
-                    ( Select Account__c,Amount__c,Billed_Quantity__c,CGST__c,Change_in_Dispatch_Date_Reason__c,Courier__c,
-                    CurrencyIsoCode,Customer_Payment_Update__c,Dispatch_Date__c,Due_Date__c,Freight_Charges__c,GST__c,IGST__c,Insurance__c,
-                    Invoice_Date__c,Name,Invoice_Number__c,Net_Value__c,Number_of_Packs__c,Opportunity__c,Remarks__c,Sales_Order__c,SGST__c,Taxable_value__c,
+                    ( Select Account__c,Amount__c,Billed_Quantity__c,Total_CGST__c,Change_in_Dispatch_Date_Reason__c,Courier__c,
+                    CurrencyIsoCode,Customer_Payment_Update__c,Dispatch_Date__c,Due_Date__c,Freight_Charges__c,Total_GST__c,Total_IGST__c,Insurance__c,
+                    Invoice_Date__c,Name,Invoice_Number__c,Net_Value__c,Number_of_Packs__c,Opportunity__c,Remarks__c,Sales_Order__c,Total_SGST__c,Taxable_value__c,
                     TCS_Value__c,Total_Amount__c,Way_Bill_No__c From Invoice__r)
                     FROM Sales_Order__c WHERE Opportunity__c=:childOppId];
     }
@@ -707,7 +707,8 @@ public without sharing class DistributorDashboard_Controller {
 
     @RemoteAction
     public static String noSplit(String oppId){
-        return NoSplitOpportunityHelper.createOneTimeOppRec(oppId);
+       // return NoSplitOpportunityHelper.createOneTimeOppRec(oppId);
+       return null;
     }
     
     @RemoteAction
@@ -767,9 +768,9 @@ public without sharing class DistributorDashboard_Controller {
                     Opportunity__r.Account.Name,Submission_Date__c,Submitted_Date__c,Way_Bill_No__c,Expected_Delivery_Date__c,
                     Order_quantity__c,Payment_term__c,Service_Rendering_date__c,Plant__c,
                     Courier__c,Proposed_Execution_Date__c,
-                    ( Select Account__c,Amount__c,Billed_Quantity__c,CGST__c,Change_in_Dispatch_Date_Reason__c,Courier__c,
-                    CurrencyIsoCode,Customer_Payment_Update__c,Dispatch_Date__c,Due_Date__c,Freight_Charges__c,GST__c,IGST__c,Insurance__c,
-                    Invoice_Date__c,Name,Invoice_Number__c,Net_Value__c,Number_of_Packs__c,Opportunity__c,Remarks__c,Sales_Order__c,SGST__c,Taxable_value__c,
+                    ( Select Account__c,Amount__c,Billed_Quantity__c,Total_CGST__c,Change_in_Dispatch_Date_Reason__c,Courier__c,
+                    CurrencyIsoCode,Customer_Payment_Update__c,Dispatch_Date__c,Due_Date__c,Freight_Charges__c,Total_GST__c,Total_IGST__c,Insurance__c,
+                    Invoice_Date__c,Name,Invoice_Number__c,Net_Value__c,Number_of_Packs__c,Opportunity__c,Remarks__c,Sales_Order__c,Total_SGST__c,Taxable_value__c,
                     TCS_Value__c,Total_Amount__c,Way_Bill_No__c From Invoice__r)
                     FROM Sales_Order__c WHERE Id=:so.Id];
 

@@ -17,8 +17,8 @@ public without sharing class AccountTriggerHandler {
             }
         }
         
-        if(!parentAccountIdSet.isEmpty())
-            ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
+        //if(!parentAccountIdSet.isEmpty())
+            //ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
     }
     
     //Deagle~ : v1.1 added to calculate parent account roll-ups
@@ -30,8 +30,8 @@ public without sharing class AccountTriggerHandler {
             }
         }
         
-        if(!parentAccountIdSet.isEmpty())
-            ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
+        //if(!parentAccountIdSet.isEmpty())
+            //ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
     }
     
     public void afterUpdate(Map<Id,Account> oldMap,Map<Id,Account> newMap){
@@ -59,14 +59,14 @@ public without sharing class AccountTriggerHandler {
         
         System.debug('AcccSet'+accIds);
         
-        if(!accIds.isEmpty()){
+        if(accIds.size()>0){
             System.debug('hiii');
             GetFERTCodeController.sendFertCodeEmailBulk(accIds); 
             OpportunityCreateSaleOrderController.updateOppInBulk(accIds);  
             SAP_UpdatePIRCallout.updateOnPIR(accIds);
         }
         
-        if(!registeredAccIds.isEmpty()) {
+        if(registeredAccIds.size()>0) {
             Map<Id,Project__c> allProjectToSMap = new Map<Id,Project__c>([SELECT Id FROM Project__c WHERE Opportunity__r.AccountId IN :registeredAccIds AND Submit_Sample_To_Optiva__c = true]);
             
             if(!allProjectToSMap.isEmpty()) {
@@ -97,7 +97,9 @@ public without sharing class AccountTriggerHandler {
            || oldMap.get(acc.Id).Transportation_Terms__c != null && acc.Transportation_Terms__c !=null && oldMap.get(acc.Id).Transportation_Terms__c!=acc.Transportation_Terms__c
            || oldMap.get(acc.Id).Tax_Collected_At_Source__c != null && acc.Tax_Collected_At_Source__c !=null && oldMap.get(acc.Id).Tax_Collected_At_Source__c!=acc.Tax_Collected_At_Source__c
            || oldMap.get(acc.Id).CurrencyIsoCode != null && acc.CurrencyIsoCode !=null && oldMap.get(acc.Id).CurrencyIsoCode!=acc.CurrencyIsoCode
-           || oldMap.get(acc.Id).RecordTypeId != null && acc.RecordTypeId !=null && oldMap.get(acc.Id).RecordTypeId!=acc.RecordTypeId           
+           || oldMap.get(acc.Id).RecordTypeId != null && acc.RecordTypeId !=null && oldMap.get(acc.Id).RecordTypeId!=acc.RecordTypeId        
+           || oldMap.get(acc.Id).Tax_Type__c != null && acc.Tax_Type__c !=null && oldMap.get(acc.Id).Tax_Type__c!=acc.Tax_Type__c
+           || oldMap.get(acc.Id).Customer_Contact__c != null && acc.Customer_Contact__c !=null && oldMap.get(acc.Id).Customer_Contact__c!=acc.Customer_Contact__c
           ){
               return true;
           }

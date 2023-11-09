@@ -258,12 +258,15 @@ export default class SampleCreationSyncingOptiva extends LightningElement {
             if(result){
                 this.response = result;
                 this.responseMsg = result.message;
-                if(result.status=='Success'){
+                this.responseMsgStatus = result.msgStatus;
+
+                if(result.status=='Success' && result.msgStatus=='S'){
                     this.showToast('Success',`${recTypeName} Synced Successfully!`,'success');
                     //setTimeout(() => window.location.reload(), 2000);
-                }else{
+                }
+                else{
                     this.msgStyle = 'color:red;';
-                    this.showToast('Failed','','warning');
+                    this.showToast('Failed',this.responseMsg,'warning');
                 }
                 this.isLoading = false;
             }

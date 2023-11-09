@@ -59,8 +59,8 @@ global without sharing class SAP_SaleOrderUpdate {
                 /*******************    SALE ORDER START   ************************/
                 
                 List<Sales_Order__c> existingSaleOrderList = [SELECT Id, Name, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Customer_Code_SAP__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c,
-                                                              SAP_Reference_Code__c, Remarks__c, Account__c, Service_Rendering_date__c, Submitted_Date__c, Payment_Received__c, Change_in_Dispatch_Date_Reason__c  
-                                                              FROM Sales_Order__c WHERE (Id IN: soByRefCodeMap.keySet() OR SAP_Reference_Code__c IN: soByRefCodeMap.keySet()) AND ( Opportunity__r.Account.Customer_Code_SAP__c IN: soByCstmrCodeMap.keySet() OR Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c IN: soByCstmrCodeMap.keySet()) ];
+                                                              SAP_Sales_Order_Number__c, Remarks__c, Account__c, Service_Rendering_date__c, Submitted_Date__c, Payment_Received__c, Change_in_Dispatch_Date_Reason__c  
+                                                              FROM Sales_Order__c WHERE (Id IN: soByRefCodeMap.keySet() OR SAP_Sales_Order_Number__c IN: soByRefCodeMap.keySet()) AND ( Opportunity__r.Account.Customer_Code_SAP__c IN: soByCstmrCodeMap.keySet() OR Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c IN: soByCstmrCodeMap.keySet()) ];
                 system.debug('existingSaleOrderList -- ' + existingSaleOrderList);
                 
                 Map<String, String> accountIdByRefId = new Map<String, String>();
@@ -78,19 +78,20 @@ global without sharing class SAP_SaleOrderUpdate {
                             customerCodeSAP = soRec.Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c;
                         }
 
-                        if( (soByRefCodeMap.containsKey(soRec.Id) || soByRefCodeMap.containsKey(soRec.SAP_Reference_Code__c)) && soByCstmrCodeMap.containsKey(customerCodeSAP) ) {
+                        if( (soByRefCodeMap.containsKey(soRec.Id) || soByRefCodeMap.containsKey(soRec.SAP_Sales_Order_Number__c)) && soByCstmrCodeMap.containsKey(customerCodeSAP) ) {
                             String so = '';
                             if(soByRefCodeMap.containsKey(soRec.Id)){
                                 so = soRec.Id;
                             }
-                            else if(soByRefCodeMap.containsKey(soRec.SAP_Reference_Code__c)){
-                                so = soRec.SAP_Reference_Code__c;
+                            else if(soByRefCodeMap.containsKey(soRec.SAP_Sales_Order_Number__c)){
+                                so = soRec.SAP_Sales_Order_Number__c;
                             }
                             
                             extSOId.add(soRec.Id);
                             accountIdByRefId.put(so, soRec.Account__c);
                             soRec.Remarks__c = !String.isBlank(soByRefCodeMap.get(so).REMARKS) ? soByRefCodeMap.get(so).REMARKS : soRec.Remarks__c;
                             soRec.Submitted_Date__c = !String.isBlank(soByRefCodeMap.get(so).SUBMITTED_DATE) ? Date.ValueOf(soByRefCodeMap.get(so).SUBMITTED_DATE) : soRec.Submitted_Date__c;
+                            soRec.SAP_Sales_Order_Number__c = !String.isBlank(soByRefCodeMap.get(so).SAP_SO_NO) ? soByRefCodeMap.get(so).SAP_SO_NO : soRec.SAP_Sales_Order_Number__c;
                         }                        
                     }
                     
@@ -106,7 +107,7 @@ global without sharing class SAP_SaleOrderUpdate {
                         }                        
                     }
                                         
-                    List<OpportunityLineItem> extOppProds = [SELECT Id, ProductCode, Quantity_In_KG__c, Quantity, Sales_Order__c, Sales_Order__r.SAP_Reference_Code__c
+                    List<OpportunityLineItem> extOppProds = [SELECT Id, ProductCode, Quantity_In_KG__c, Quantity, Sales_Order__c, Sales_Order__r.SAP_Sales_Order_Number__c
                                                              FROM OpportunityLineItem WHERE Sales_Order__c IN: extSOId /*AND ProductCode IN: prodsCode*/ ];
                     
                     Map<String, List<OpportunityLineItem>> lineItemListByRefCode = new Map<String, List<OpportunityLineItem>>();
@@ -117,8 +118,8 @@ global without sharing class SAP_SaleOrderUpdate {
                         if(soByRefCodeMap.containsKey(lineItem.Sales_Order__c)){
                             li = lineItem.Sales_Order__c;
                         }
-                        else if(soByRefCodeMap.containsKey(lineItem.Sales_Order__r.SAP_Reference_Code__c)){
-                            li = lineItem.Sales_Order__r.SAP_Reference_Code__c;
+                        else if(soByRefCodeMap.containsKey(lineItem.Sales_Order__r.SAP_Sales_Order_Number__c)){
+                            li = lineItem.Sales_Order__r.SAP_Sales_Order_Number__c;
                         }
                         
                         if (lineItemListByRefCode.containsKey(li)) {
@@ -154,8 +155,8 @@ global without sharing class SAP_SaleOrderUpdate {
                                 if(mp.containsKey(item.Sales_Order__c + item.ProductCode)){
                                     refNo = item.Sales_Order__c + item.ProductCode;
                                 }
-                                else if(mp.containsKey(item.Sales_Order__r.SAP_Reference_Code__c + item.ProductCode)){
-                                    refNo = item.Sales_Order__r.SAP_Reference_Code__c + item.ProductCode;
+                                else if(mp.containsKey(item.Sales_Order__r.SAP_Sales_Order_Number__c + item.ProductCode)){
+                                    refNo = item.Sales_Order__r.SAP_Sales_Order_Number__c + item.ProductCode;
                                 }
                                 if(mp.containsKey(refNo)){
                                     item.Service_Rendering_Date__c = !String.isBlank(mp.get(refNo).SERVICE_RENDERING_DATE) ? Date.valueOf(mp.get(refNo).SERVICE_RENDERING_DATE) : item.Service_Rendering_Date__c;
@@ -186,6 +187,7 @@ global without sharing class SAP_SaleOrderUpdate {
                             newAdrs.Address__CountryCode__s = !String.isBlank(soData.SHIPPING_ADDRESS.COUNTRY) ? soData.SHIPPING_ADDRESS.COUNTRY : '';
                             newAdrs.Address__PostalCode__s = !String.isBlank(soData.SHIPPING_ADDRESS.POSTAL_CODE) ? soData.SHIPPING_ADDRESS.POSTAL_CODE : '';
                             newAdrs.Address__Street__s = !String.isBlank(soData.SHIPPING_ADDRESS.STREET) ? soData.SHIPPING_ADDRESS.STREET : '';
+                            newAdrs.Customer_Code_SAP__c = soData.SHIPPING_ADDRESS.CUST_CODE;
                             newAdrs.Account__c = accountIdByRefId.get(soData.REF_CODE);
                             addressList.add(newAdrs);
                         }

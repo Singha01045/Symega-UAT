@@ -8,7 +8,7 @@
     <aura:attribute name="userName" type="String" />
     <aura:attribute name="refresh" type="Boolean" default="true"/>
     
-    <div class="" >
+    <div class="mainContain" >
         <div class="slds-col slds-size_12-of-12">
         <c:SchedulerDayBarComponent></c:SchedulerDayBarComponent>
     </div>

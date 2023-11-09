@@ -19,7 +19,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         'Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Customer_Target_price__c,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c, '+
                                         'Project_Reference__c,CreatedBy.Name,CreatedDate,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,End_Use_Applications__c,CurrencyIsoCode,(SELECT Id,Quantity_Unit__c,Quantity__c,Packaging_Unit__c,Packaging_Quantity__c, '+
                                         'Additional_Comments__c,Product__r.ProductCode,Product__r.Family, OPTIVA_Recipe__c, OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c,Project_Quotient__c,Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName, '+
-                                        'Project_Quotient__r.Sample_Project_Application__r.Product_Family__c,Project_Quotient__r.SSC_Code__c FROM Sample_Line_Items__r WHERE Submitted__c=false),Flavour_Legal_Status__c,First_Sample_due_date__c,Flavour_CIU__c,Business_potential_value_INR_New__c,Solubility_Preference__c '+
+                                        'Project_Quotient__r.Sample_Project_Application__r.Product_Family__c,Project_Quotient__r.SSC_Code__c, Customer_Preferred_Name__c FROM Sample_Line_Items__r WHERE Submitted__c=false),Flavour_Legal_Status__c,First_Sample_due_date__c,Flavour_CIU__c,Business_potential_value_INR_New__c,Solubility_Preference__c '+
                                         'FROM Project__c WHERE Submit_Sample_To_Optiva__c = true AND Id IN:proIdSet');
     }
     public void execute(Database.BatchableContext BC, List<Project__c> projects){
@@ -128,7 +128,8 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         OpWrapper.tot_qty1 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units1 = checkIfBlank(sli.Packaging_Unit__c);
                                         OpWrapper.pack_size1 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
-                                        OpWrapper.selling_desc1 = checkIfBlank(sli.Additional_Comments__c);
+                                        //OpWrapper.selling_desc1 = checkIfBlank(sli.Additional_Comments__c);
+                                        OpWrapper.selling_desc1 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
                                             OpWrapper.prod_code1_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
@@ -145,7 +146,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         OpWrapper.tot_qty2 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units2 = checkIfBlank(sli.Packaging_Unit__c);
                                         OpWrapper.pack_size2 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
-                                        OpWrapper.selling_desc2 = checkIfBlank(sli.Additional_Comments__c);
+                                        OpWrapper.selling_desc2 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
                                             OpWrapper.prod_code2_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
@@ -161,7 +162,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         OpWrapper.tot_qty3 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units3 = checkIfBlank(sli.Packaging_Unit__c);
                                         OpWrapper.pack_size3 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
-                                        OpWrapper.selling_desc3 = checkIfBlank(sli.Additional_Comments__c);
+                                        OpWrapper.selling_desc3 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
                                             OpWrapper.prod_code3_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
@@ -178,7 +179,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         OpWrapper.tot_qty4 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units4 = checkIfBlank(sli.Packaging_Unit__c);
                                         OpWrapper.pack_size4 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
-                                        OpWrapper.selling_desc4 = checkIfBlank(sli.Additional_Comments__c);
+                                        OpWrapper.selling_desc4 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
                                             OpWrapper.prod_code4_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
@@ -195,7 +196,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         OpWrapper.tot_qty5 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units5 = checkIfBlank(sli.Packaging_Unit__c);
                                         OpWrapper.pack_size5 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
-                                        OpWrapper.selling_desc5 = checkIfBlank(sli.Additional_Comments__c);
+                                        OpWrapper.selling_desc5 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
                                             OpWrapper.prod_code5_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
@@ -212,7 +213,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         OpWrapper.tot_qty6 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units6 = checkIfBlank(sli.Packaging_Unit__c);
                                         OpWrapper.pack_size6 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
-                                        OpWrapper.selling_desc6 = checkIfBlank(sli.Additional_Comments__c);
+                                        OpWrapper.selling_desc6 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
                                             OpWrapper.prod_code6_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);
@@ -296,6 +297,8 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                 project.Error_Message_On_Submitting_To_Optiva__c = '';
                                 project.Sample_Submitted_Date__c = System.today();
                                 project.Status__c = Constants.PROJECT_SUBMITTION_STATUS;
+                                //project.Submitted_for_BH_Approval__c = true;
+                                //project.Submitted_for_Customer_Creation__c = false;
                             }else{
                                 Utility.handlerErrorException(project.Id,responseMap.toString());
                             }

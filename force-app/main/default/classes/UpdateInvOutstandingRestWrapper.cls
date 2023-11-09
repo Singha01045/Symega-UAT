@@ -3,7 +3,7 @@ public without sharing class UpdateInvOutstandingRestWrapper {
     public List<cls_INVOICES> INVOICES;
     public class cls_INVOICES{
         public string INVOICE_NO;
-        public decimal AMOUNT;
+        public decimal RCVD_AMT;
         public String RECEIVED_DATE;
     }
     

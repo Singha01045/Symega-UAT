@@ -79,12 +79,16 @@ public class BeatPlanController {
                 //WBP.Start_Day_of_Week__c=WeekStartDate;
                 //system.debug('WBP.Start_Day_of_Week__c==='+WBP.Start_Day_of_Week__c);
                 integer i= 0;
-                while (startDateTime < endDateEndDateTime) {
+                date lastWeekEndDate;
+                while (startDateTime <= endDateEndDateTime) {
                     System.debug('startDateTime ====> ' + startDateTime);
                     System.debug('endDateEndDateTime ====> ' + endDateEndDateTime);
                         Weekly_Beat_Plan__c WBP=new Weekly_Beat_Plan__c();
                         WBP.Monthly_Beat_Plan__c=MBP.Id;
                         date previousWeekEnddate;
+                    //date lastDateOfMonth = (Date.valueOf(startDateTime)).toStartOfMonth();
+                    system.debug('lastDateOfMonth==> ' + LastDateOfMonth);
+                    system.debug('Date.valueOf(startDateTime)==> ' + Date.valueOf(startDateTime));
                         // if (WBP.End_Day_of_Week__c != null && previousWeekEnddate > Date.valueOf(startDateTime)) {
                         //     WBP.Start_Day_of_Week__c=Date.valueOf(startDateTime);
                         // }
@@ -101,12 +105,21 @@ public class BeatPlanController {
                             }
                             
                             previousWeekEnddate = WBP.End_Day_of_Week__c;
+                            lastWeekEndDate = WBP.End_Day_of_Week__c;
                             system.debug('WBP.Start_Day_of_Week__c==='+WBP.Start_Day_of_Week__c);
                             WBPList.add(WBP);
                             System.debug('WBPList =====> ' + WBPList);
-                        }
+                        } else if(Date.valueOf(startDateTime) == LastDateOfMonth){
+                        WBP.Start_Day_of_Week__c = lastWeekEndDate.addDays(1);
+                        WBP.End_Day_of_Week__c = Date.valueOf(startDateTime);
+                            if(WBP.Start_Day_of_Week__c != WBP.End_Day_of_Week__c){
+                                WBPList.add(WBP);
+                                lastWeekEndDate = WBP.End_Day_of_Week__c;
+                            }
+                    }
                         
                      startDateTime = startDateTime.addDays(1);
+                    
                 }
             }
             system.debug('WBPList---'+WBPList);

@@ -44,6 +44,31 @@ public without sharing class OpportunityLineItemTriggerHandler {
         }
     }
 
+    public void onAfterUpdate(List<OpportunityLineItem> lineItemList, Map<Id, OpportunityLineItem> oldOppLineItemMap) {
+        System.debug('--- lineItemList '+lineItemList);
+        //FERT variables
+        try{
+            Map<Id,Id> opTooppMap = new Map<Id,Id>();
+            Set<Id> productIdSet = new Set<Id>();
+            for(OpportunityLineItem lineItem : lineItemList) {
+                if(lineItem.Is_Parent_Opportunity__c) {
+                    //FERT
+                    opTooppMap.put(lineItem.Id, lineItem.OpportunityId);
+                    productIdSet.add(lineItem.Product2Id);
+                }
+            }
+    
+            if(!opTooppMap.isEmpty()) {
+                checkAndUpdateFERT(opTooppMap, lineItemList, productIdSet);
+            }
+        }
+        catch(DmlException e){
+            System.debug('--- getMessage '+e.getMessage());
+            System.debug('--- getLineNo '+e.getLineNumber());
+            HandleBusinessException.captureError('OpportunityLineItemTriggerHandler', 'onAfterUpdate', e);
+        }
+    }
+
     public void onBeforeInsert(List<OpportunityLineItem> lineItemList) {
         Set<Id> parentOppIdSet = new Set<Id>();
         Map<Id,Set<String>> oppToLinePackageSetMap = new Map<Id,Set<String>>();

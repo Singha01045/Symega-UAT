@@ -10,7 +10,7 @@
     <aura:attribute name="userName" type="String" />
     <aura:attribute name="dataList" type="List"/>
     
-    <div style="" class="">
+    <div style="" class="MainComponCard">
         <h2 class="slds-m-top_large h2Text slds-m-right_large">Travel Insights</h2>
         <div class="slds-col slds-size_12-of-12">
             <c:TravelInsightsDayBarComponent/>

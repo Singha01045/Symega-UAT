@@ -8,9 +8,12 @@ public class FullCalendarController {
     @AuraEnabled
     Public Static alldataWrapper BeetplannerDatareturn(String month,string year){
         string MBPid;
-        List<Monthly_Beat_Plan__c> MBPlist=[SELECT id,Year__c,Status__c,Start_Date__c,OwnerId,Sales_User__c,Name,Month__c,End_Date__c,Month_Name__c,(SELECT id,Year__c,Name,Week_Identifier__c,Start_Day_of_Week__c,End_Day_of_Week__c,OwnerId,Monthly_Beat_Plan__c,Week_Number__c FROM Weekly_Beat_Plans__r),
+        Id currUserId = UserInfo.getUserId();
+        System.debug('month==> ' + month);
+        System.debug('year==> ' + year);
+        List<Monthly_Beat_Plan__c> MBPlist=[SELECT id,Year__c,Status__c,Start_Date__c,OwnerId,Sales_User__c,Sales_User__r.Name,Name,Month__c,End_Date__c,Month_Name__c,(SELECT id,Year__c,Name,Week_Identifier__c,Start_Day_of_Week__c,End_Day_of_Week__c,OwnerId,Monthly_Beat_Plan__c,Week_Number__c FROM Weekly_Beat_Plans__r),
                                             (Select Id,Monthly_Beat_Plan__c,Roles_and_KPI__c,KPI_Target_Name__c,Target_Count__c from KPI_Targets__r WHERE KPI_Target_Name__c !=NULL)
-                                            FROM Monthly_Beat_Plan__c WHERE Month_year__c=:year AND Month_Name__c=:month limit 1];
+                                            FROM Monthly_Beat_Plan__c WHERE Month_year__c=:year AND Month_Name__c=:month AND Sales_User__c=:currUserId limit 1];
         system.debug('Monthly_Beat_Plan__c---------->'+MBPlist);
         alldataWrapper sw = new alldataWrapper();
         

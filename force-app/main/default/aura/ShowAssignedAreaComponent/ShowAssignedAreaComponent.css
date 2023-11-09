@@ -1,5 +1,13 @@
+/*--Mobile CSS Below Please Don't Change anything--*/
 @media (max-width : 820px){
-    .THIS.assignedAreaAndClientSummary{
+    .THIS .mapArea{
+        margin-left: -15%;
+        margin-top: 4%;
+        min-width: 111%;
+    }
+    .THIS .contanerCompo{
+        margin-top:5px;
+        margin-left: -10%;
     }
 }
 
@@ -13,6 +21,9 @@
         height:160%;
         padding-top:9vh;
     }
+    .THIS .contanerCompo{
+        margin-top:5px;
+    }
 }
 
 @media (min-width : 1680px){
@@ -24,5 +35,8 @@
         margin-bottom: -13%; 
         height:160%;
         padding-top:7vh;
+    }
+    .THIS .contanerCompo{
+        margin-top:5px;
     }
 }

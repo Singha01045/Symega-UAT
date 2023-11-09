@@ -23,6 +23,8 @@
         
        
     },
+
+    
     
     handleOppClick: function(component, event, helper){
         debugger;
@@ -81,10 +83,98 @@
         debugger;
         component.set("v.showCreateCase",false);
     },
-    createOpportunityHandle : function(component, event, helper) {
-        debugger;
-        component.set("v.showOpportunityCreate",true);
+
+
+    // createOpportunityHandle: function (component, event, helper) {
+    //         var navService = component.find('navService');
+    //         var pageReference = {
+    //             type: 'standard__objectPage',
+    //             attributes: {
+    //                 objectApiName: 'Opportunity',
+    //                 actionName: 'new'
+    //             }
+    //         };
+    
+    //         navService.navigate(pageReference);
+    // },
+        
+        
+        
+    createTicket: function (component, event, helper) {
+        var navService = component.find('navService');
+        var pageReference = {
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Case',
+                actionName: 'new'
+            }
+        };
+
+        navService.navigate(pageReference);
     },
+
+          
+    createTask: function (component, event, helper) {
+        var navService = component.find('navService');
+        var pageReference = {
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Task',
+                actionName: 'new'
+            }
+        };
+
+        navService.navigate(pageReference);
+    },
+
+    createLogCall: function (component, event, helper) {
+        var navService = component.find('navService');
+        var pageReference = {
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Call_Logs__c',
+                actionName: 'new'
+            }
+        };
+
+        navService.navigate(pageReference);
+    },
+
+    openGoogleMaps: function (component, event, helper) {
+        debugger;
+        var currentLat = component.get("v.currentLatitude");
+        var currentLong = component.get("v.currentLongitude");
+    
+        var userLocation = navigator.geolocation;
+    
+        if (userLocation) {
+            userLocation.getCurrentPosition(
+                function (position) {
+
+                    var userLat = 12.917205;
+                    var userLong = 77.606335;
+
+                    // var userLat = position.coords.latitude;
+                    // var userLong = position.coords.longitude;
+    
+                    if (userLat === currentLat && userLong === currentLong) {
+                        // Handle the case where current location and user location are the same
+                        alert("Current location and user location are the same. Please make sure location services are enabled.");
+                    } else {
+                        var mapsUrl = "https://www.google.com/maps/dir/?api=1&origin=" + currentLat + "," + currentLong + "&destination=" + userLat + "," + userLong + "&travelmode=driving";
+                        window.open(mapsUrl, '_blank');
+                    }
+                },
+                function (error) {
+                    // Handle geolocation error
+                    alert("Geolocation error: " + error.message);
+                }
+            );
+        } else {
+            alert("Geolocation is not supported in your browser or device.");
+        }
+    },
+
     closeOpportunityHandle : function(component, event, helper) {
         debugger;
         component.set("v.showOpportunityCreate",false);
@@ -183,9 +273,51 @@
             component.set('v.spinner', false);
         });
         $A.enqueueAction(action);
-        }
+        } 
+    },
+
+
+    createOpportunityHandle: function (component, event, helper) {
+        debugger;
+        let Fields = ['AccountId', , 'Amount','CloseDate','Name','StageName','Approval_Status__c','Basement_Completion_Amount__c','Batch_No__c','Booking_Amount__c','ContractId','Total_Amount__c','Sub_Stage__c','Status__c','Product_Team__c','Sales_Note__c'];
+        component.set("v.SobjectApiName", 'Opportunity');
+        component.set("v.fields", Fields);
+        component.set("v.ShowModal", true);
         
     },
+
+    onCancel: function (component, event, helper) {
+        component.set("v.ShowModal", false);
+
+    },
+    
+
+    handleSuccess: function (component, event, helper) {
+        debugger;
+        var opportunityId = event.getParam("id");
+        console.log('OpportunityId', opportunityId);
+        var visitId = component.get("v.visitId");
+        var action = component.get("c.createVisitActivity");
+        action.setParams({
+            opportunityId: opportunityId,
+            visitId: visitId
+        });
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.ShowModal", false);
+
+                console.log("Visit_Activity__c record created successfully.");
+
+            } else {
+                console.error("Error creating Visit_Activity__c record: " + response.getError()[0].message);
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    
     createCaseHandle : function(component, event, helper) {
         debugger;
         component.set('v.spinner', true);

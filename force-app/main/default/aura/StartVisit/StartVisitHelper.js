@@ -2,7 +2,8 @@
     getVisitRecord : function(component, event, helper){
         debugger;
         var visitRecId = component.get('v.visitId');
-        var baseURL = 'https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/docCategories?id='+visitRecId;
+        var baseURL = $A.get("$Label.c.orgBaseURLforVFPages");
+        baseURL = baseURL + 'apex/docCategories?id='+visitRecId;
         //console.log('baseURL === >'+baseURL);
         component.set("v.siteURL",baseURL);
         var action = component.get('c.getSelectedVisitDetails');

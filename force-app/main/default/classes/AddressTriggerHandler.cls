@@ -7,21 +7,53 @@ public without sharing class AddressTriggerHandler {
         return accTriggerInstance;     
     }
     
+    public void afterInsert(List<Dispatch_Address__c> newList){
+        try{
+            for(Dispatch_Address__c dAdd : newList){
+                if(dAdd.Contact__c != null && !String.isBlank(dAdd.Account_SAP_Code__c) && dAdd.Account_SAP_Code__c != null && !dAdd.Submitted_to_SAP__c)
+                    callFutureForAddress(dAdd.Id);
+            }
+
+        }
+        catch(Exception e){
+            system.debug('Address Callout on Insertion Failed due to -- ' + e.getMessage());
+            system.debug('Address Callout on Insertion Failed At Line No -- ' + e.getLineNumber());
+
+        }
+    }
+
+    @future(callout=true)
+    private static void callFutureForAddress(Id caId){
+        String resp = SAP_CreateAddressCustomerCallout.createCustomer(caId, true);
+        if(resp.equalsIgnoreCase('Success')){
+            Dispatch_Address__c addrRec = [SELECT Id, Submitted_to_SAP__c FROM Dispatch_Address__c WHERE Id =: caId];
+            if(addrRec.Submitted_to_SAP__c != true){
+                addrRec.Submitted_to_SAP__c = true;
+                update addrRec;
+            }
+        }
+    } 
+
+
     public void afterUpdate(Map<Id,Dispatch_Address__c> oldMap,Map<Id,Dispatch_Address__c> newMap){
         System.debug('CALLLEEDDDD');
         List<Id> addressIds = new List<Id>();
         Set<Id> setOfAddressToUpdate = new Set<Id>();
         Set<Id> registeredAddressIds = new Set<Id>();
-        for(Dispatch_Address__c acc : newMap.values()){
-            if(oldMap.get(acc.Id).Customer_Code_SAP__c==null && acc.Customer_Code_SAP__c!=null){
-                addressIds.add(acc.Id);
+        for(Dispatch_Address__c addr : newMap.values()){
+
+            if(addr.Contact__c != null && addr.Contact__c != oldMap.get(addr.Id).Contact__c && !addr.Submitted_to_SAP__c && !String.isBlank(addr.Account_SAP_Code__c) && addr.Account_SAP_Code__c != null)
+                callFutureForAddress(addr.Id);
+
+            if(oldMap.get(addr.Id).Customer_Code_SAP__c==null && addr.Customer_Code_SAP__c!=null){
+                addressIds.add(addr.Id);
             }
             
-            if((oldMap.get(acc.Id).Customer_Code_SAP__c==null && acc.Customer_Code_SAP__c!=null) || (oldMap.get(acc.Id).OPTIVA_Customer_Code__c==null && acc.OPTIVA_Customer_Code__c!=null)) {
-                registeredAddressIds.add(acc.Id);
+            if((oldMap.get(addr.Id).Customer_Code_SAP__c==null && addr.Customer_Code_SAP__c!=null) || (oldMap.get(addr.Id).OPTIVA_Customer_Code__c==null && addr.OPTIVA_Customer_Code__c!=null)) {
+                registeredAddressIds.add(addr.Id);
             }
-            if(isAccChange(oldMap,acc) && acc.SAP_Update_Customer__c){
-                setOfAddressToUpdate.add(acc.Id);
+            if(isAddressChange(oldMap,addr) && addr.SAP_Update_Customer__c){
+                setOfAddressToUpdate.add(addr.Id);
             }
         }
         
@@ -29,8 +61,8 @@ public without sharing class AddressTriggerHandler {
         
         if(!addressIds.isEmpty()){
             System.debug('hiii');
-            GetFERTCodeController.sendFertCodeEmailBulk(addressIds); 
-            OpportunityCreateSaleOrderController.updateOppInBulk(addressIds);  
+            GetFERTCodeController.sendFertCodeEmailBulkAddress(addressIds); 
+            OpportunityCreateSaleOrderController.updateOppInBulkAddress(addressIds);  
             //SAP_UpdatePIRCallout.updateOnPIR(addressIds);
         }
         
@@ -48,7 +80,7 @@ public without sharing class AddressTriggerHandler {
     }
     
     
-    private static boolean isAccChange(Map<Id,Dispatch_Address__c> oldMap, Dispatch_Address__c acc){
+    private static boolean isAddressChange(Map<Id,Dispatch_Address__c> oldMap, Dispatch_Address__c acc){
         if(oldMap.get(acc.Id).Name != null && acc.Name!=null && oldMap.get(acc.Id).Name!=acc.Name && acc.Customer_Code_SAP__c == null
            || oldMap.get(acc.Id).Address__Street__s != null && acc.Address__Street__s!=null && oldMap.get(acc.Id).Address__Street__s!=acc.Address__Street__s 
            || oldMap.get(acc.Id).Address__PostalCode__s != null && acc.Address__PostalCode__s !=null && oldMap.get(acc.Id).Address__PostalCode__s!=acc.Address__PostalCode__s

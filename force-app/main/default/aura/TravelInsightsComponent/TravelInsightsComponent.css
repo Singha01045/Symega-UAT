@@ -36,6 +36,11 @@
         text-align: center;
         
     }
+       .THIS .monthDetails{
+        color: aliceblue;
+        font-size: xx-large;
+    } 
+
 }
 @media (min-width:1680px){
     .THIS .NameBar{
@@ -75,6 +80,11 @@
         text-align: center;
         
     }
+     .THIS .monthDetails{
+        color: aliceblue;
+        font-size: xx-large;
+    } 
+
 }
 
 @media (max-width:820px){
@@ -119,4 +129,12 @@
         min-width: 80px;
         margin-left: -15px;
     } 
+     .THIS .cardDetails{
+        max-width: 97%;
+    } 
+    .THIS .monthDetails{
+        color: aliceblue;
+        font-size: 116%;
+    } 
+
 }
