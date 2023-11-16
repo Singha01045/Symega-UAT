@@ -15,13 +15,13 @@ global class SAP_InventorySyncRestService {
             String responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Inventory updated successfully'));
             RestContext.response.responseBody = Blob.valueOf(responseBody);
 
-            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/inventoryupdateapi','POST',200,processingStartTime,System.now());
+            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/inventoryupdateapi','POST',200,processingStartTime,System.now(), '');
 
         }catch(Exception e){
             String responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Failure', e.getMessage()));
             RestContext.response.responseBody = Blob.valueOf(responseBody);
 
-            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/inventoryupdateapi','POST',400,processingStartTime,System.now());
+            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/inventoryupdateapi','POST',400,processingStartTime,System.now(), '');
 
             System.debug('Error ::'+e.getMessage() + ' && Error Line No :'+e.getLineNumber());
         }

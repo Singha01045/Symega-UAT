@@ -2,10 +2,12 @@ public with sharing class OpportunityHanlder {
     public OpportunityHanlder() {}
 
     @AuraEnabled
-    public static List<Opportunity> getRecord(String oppId){
+    public static Opportunity getRecord(String oppId){
+        System.debug('oppId--->'+oppId);
         try {
             System.debug('OppId'+oppId);
-            return [Select Id, Name, AccountId,TotalOpportunityQuantity, Amount, CurrencyIsoCode from opportunity where Id=:oppId];
+            return [Select Id, Name, AccountId,TotalOpportunityQuantity, Amount, CurrencyIsoCode,Billing_Street__c,Billing_City__c,Billing_State__c,Billing_Country__c,Billing_Postal_Code__c,
+             Shipping_Street__c , Shipping_City__c,Shipping_State__c,Shipping_Country__c,Shipping_Postal_Code__c   from opportunity where Id=:oppId];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

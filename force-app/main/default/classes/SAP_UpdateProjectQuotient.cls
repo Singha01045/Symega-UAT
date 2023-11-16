@@ -20,13 +20,13 @@ global without sharing class SAP_UpdateProjectQuotient {
             if(getResponse == 'Success'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Quotients created'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/pro_quotient_update', 'POST', 200, processingStartTime, System.now()); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/pro_quotient_update', 'POST', 200, processingStartTime, System.now(), projectId); //Log 
             }
             else{
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Something went wrong'));
                 RestContext.response.statusCode = 400;
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/pro_quotient_update', 'POST', 200, processingStartTime, System.now()); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/pro_quotient_update', 'POST', 200, processingStartTime, System.now(), projectId); //Log 
             }
         }
     }

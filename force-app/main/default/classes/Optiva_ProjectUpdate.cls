@@ -24,17 +24,17 @@ global without sharing class Optiva_ProjectUpdate {
             String responseBody;
             if(getResponse == 'Success'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Project updated successfully'));
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/project_update/*', 'POST', 200, processingStartTime, System.now()); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/project_update/*', 'POST', 200, processingStartTime, System.now(), projectId); //Log this request
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
             }
             else if(getResponse == 'err'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Project Id is blank'));
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/project_update/*', 'POST', 400, processingStartTime, System.now()); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/project_update/*', 'POST', 400, processingStartTime, System.now(), projectId); //Log this request
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
             }
             else{
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', getResponse));
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/project_update/*', 'POST', 400, processingStartTime, System.now()); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/project_update/*', 'POST', 400, processingStartTime, System.now(), projectId); //Log this request
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
             }
         }

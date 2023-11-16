@@ -34,6 +34,7 @@ export default class CreateApplicationAccount extends NavigationMixin(LightningE
             let recordTypeId = result;
             let defaultValues = encodeDefaultFieldValues({
                 Opportunity__c : this.recordId,
+                Account__c :   this.oppRecord.AccountId,
                 Customer_Name__c : this.oppRecord.Account.Name,
                 Application_Name__c	: `${this.oppRecord.Account.Name}-Application`,
                 Customers_Contact__c : this.oppRecord.Primary_Contact__c,

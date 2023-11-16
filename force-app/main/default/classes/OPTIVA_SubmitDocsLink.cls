@@ -23,31 +23,31 @@ global without sharing class OPTIVA_SubmitDocsLink {
                 if(getResponse == 'Success') {
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Document Synced Successfully'));
                     RestContext.response.responseBody = Blob.valueOf(responseBody);
-                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 200, processingStartTime, System.now()); //Log this request
+                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 200, processingStartTime, System.now(), techDocId); //Log this request
                 }
                 else if(getResponse == 'nothing'){
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Please provide all the data to be synced'));
                     RestContext.response.responseBody = Blob.valueOf(responseBody);
                     RestContext.response.statusCode = 400;
-                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now()); //Log this request
+                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now(), techDocId); //Log this request
                 }
                 else if(getResponse == 'No Project'){
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Project does not exist'));
                     RestContext.response.responseBody = Blob.valueOf(responseBody);
                     RestContext.response.statusCode = 400;
-                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now()); //Log this request
+                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now(), techDocId); //Log this request
                 }
                 else{
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', getResponse));
                     RestContext.response.responseBody = Blob.valueOf(responseBody);
                     RestContext.response.statusCode = 400;
-                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now()); //Log this request
+                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now(), techDocId); //Log this request
                 }
             }else {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'invalid body'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
                 RestContext.response.statusCode = 400;
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now()); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/doc_linksync/*', 'POST', 400, processingStartTime, System.now(), techDocId); //Log this request
             }
         }
         catch(Exception e){

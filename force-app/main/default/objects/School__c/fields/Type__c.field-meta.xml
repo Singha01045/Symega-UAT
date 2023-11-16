@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Type of Institution</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Day School</fullName>
+                <default>false</default>
+                <label>Day School</label>
+            </value>
+            <value>
+                <fullName>Pre School</fullName>
+                <default>false</default>
+                <label>Pre School</label>
+            </value>
+            <value>
+                <fullName>Boarding School</fullName>
+                <default>false</default>
+                <label>Boarding School</label>
+            </value>
+            <value>
+                <fullName>Residential School</fullName>
+                <default>false</default>
+                <label>Residential School</label>
+            </value>
+            <value>
+                <fullName>Day cum Residential</fullName>
+                <default>false</default>
+                <label>Day cum Residential</label>
+            </value>
+            <value>
+                <fullName>PU College</fullName>
+                <default>false</default>
+                <label>PU College</label>
+            </value>
+            <value>
+                <fullName>Online School</fullName>
+                <default>false</default>
+                <label>Online School</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

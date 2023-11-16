@@ -42,8 +42,8 @@ public without sharing class AddressTriggerHandler {
         Set<Id> registeredAddressIds = new Set<Id>();
         for(Dispatch_Address__c addr : newMap.values()){
 
-            if(addr.Contact__c != null && addr.Contact__c != oldMap.get(addr.Id).Contact__c && !addr.Submitted_to_SAP__c && !String.isBlank(addr.Account_SAP_Code__c) && addr.Account_SAP_Code__c != null)
-                callFutureForAddress(addr.Id);
+            // if(addr.Contact__c != null && addr.Contact__c != oldMap.get(addr.Id).Contact__c && !addr.Submitted_to_SAP__c && String.isBlank(addr.Customer_Code_SAP__c) && !String.isBlank(addr.Account_SAP_Code__c) && addr.Account_SAP_Code__c != null)
+            //     callFutureForAddress(addr.Id);
 
             if(oldMap.get(addr.Id).Customer_Code_SAP__c==null && addr.Customer_Code_SAP__c!=null){
                 addressIds.add(addr.Id);

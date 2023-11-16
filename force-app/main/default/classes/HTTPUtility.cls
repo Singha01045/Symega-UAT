@@ -15,7 +15,7 @@ public with sharing class HTTPUtility {
         return httpUtilityInstance;    
     }
 
-    public Map<String,String> httpReqHelper(Map<String,String> headerMap, String method, String jsonBody, String endPoint) {
+    public Map<String,String> httpReqHelper(Map<String,String> headerMap, String method, String jsonBody, String endPoint, Id refId) {
         
         System.debug('ReqJsonBody----'+jsonBody);
 
@@ -57,7 +57,7 @@ public with sharing class HTTPUtility {
             respMap.put('code',String.valueOf(response.getStatusCode()));
             respMap.put('status',response.getStatusCode() == 200 || response.getStatusCode() == 201?'Success':'Failure');
 
-            createLog(httpRequest,response,sDate,eDate);
+            createLog(httpRequest,response,sDate,eDate,refId);
 
             if(response.getStatusCode() == 200 || response.getStatusCode() == 201){
                 //Map<String, Object> msgResponse = response.get('message');
@@ -83,12 +83,15 @@ public with sharing class HTTPUtility {
     }
 
 
-    public static void createLog(HttpRequest httpReq, HttpResponse httpRes,DateTime sTime, DateTime eTime) {
+    public static void createLog(HttpRequest httpReq, HttpResponse httpRes,DateTime sTime, DateTime eTime, Id refId) {
         Integration_Log__c logger = new Integration_Log__c();
 
         logger.Integration_Type__c = 'CALLOUT';
         logger.Start_Date_And_Time__c = sTime;
         logger.End_Date_And_Time__c = eTime;
+        
+        //new
+        logger.Reference_Id__c = refId;
 
         if(httpReq != null) {
             logger.HTTP_Method__c = httpReq.getMethod();
@@ -102,7 +105,7 @@ public with sharing class HTTPUtility {
         insert logger;
     }
 
-    public void createServiceLogger(String reqBody, String resBody, String endPoint, String method, Integer statusCode, DateTime startDatetime, DateTime endDateTime) {
+    public void createServiceLogger(String reqBody, String resBody, String endPoint, String method, Integer statusCode, DateTime startDatetime, DateTime endDateTime, Id refId) {
         try {
             if(symegaConfig != null && symegaConfig.Enable_Apex_Service_Logger__c) {
                 Integration_Log__c logger = new Integration_Log__c();
@@ -114,6 +117,10 @@ public with sharing class HTTPUtility {
                 logger.Response_Status_Code__c = statusCode;
                 logger.Start_Date_And_Time__c = startDatetime;
                 logger.End_Date_And_Time__c = endDatetime;
+
+                //new
+                logger.Reference_Id__c = refId;
+
                 insert logger;
             }
         }catch(DMLException e){

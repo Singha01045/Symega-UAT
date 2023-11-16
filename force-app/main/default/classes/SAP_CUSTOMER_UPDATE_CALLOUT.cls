@@ -25,7 +25,7 @@ public without sharing class SAP_CUSTOMER_UPDATE_CALLOUT {
         headerMap.put('Cookie',cookies);
         //headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_CUSTOMER_AUTH_HEADER));
 
-        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap,'POST',body,endpoint);
+        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap,'POST',body,endpoint, recId);
 
         System.debug('ResponseMapXXX----'+respMap);
 

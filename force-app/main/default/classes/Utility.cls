@@ -1143,7 +1143,10 @@ missingFields += ' Owner SAP Code, ';
     
     
     public static String checkSAPCustomerReqField(String accId){
-        Account acc = [Select Id,Initial_SAP_Update__c,Tax_Type__c,Payment_terms__c,Tax_Collected_At_Source__c,FSSAI__c,Customer_Type__c,BillingCountry,BillingPostalCode,BillingState,Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c From Account Where Id =:accId];
+        Account acc = [Select Id,Name,Customer_Contact__c,Initial_SAP_Update__c,Tax_Type__c,Payment_terms__c,Tax_Collected_At_Source__c,FSSAI__c,Customer_Type__c,
+                       BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c,
+                       Owner.SAP_USER_CODE__c, RecordType.Name,User__r.SAP_USER_CODE__c, CurrencyIsoCode, Owner.Email
+                       From Account Where Id =:accId];
         return sapAccountMFieldsCheck(acc);
     }
     

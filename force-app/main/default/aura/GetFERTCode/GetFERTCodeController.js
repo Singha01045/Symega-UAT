@@ -39,7 +39,7 @@
         if(EmptyProdcount == 0){
             helper.updateOLI(component) 
             .then($A.getCallback(function(res){
-                var action = component.get("c.sendFERTCodeReqEmailNotificaiton");
+                var action = component.get("c.sendFERTCodeReqEmailNotificaiton_Old");
                 action.setParams
                 ({ 
                     "oppId": component.get("v.recordId")

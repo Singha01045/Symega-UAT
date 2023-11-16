@@ -5,7 +5,8 @@ public without sharing class OperationsPortalController {
     public string mainReasonForSelPro  {get;set;}
     public string annulaVolInUnits  {get;set;}
     public string transportationTerms  {get;set;}
-    
+    public string sampleStatusValues  {get;set;}
+    public List<SampleStatusWrapper> statusWrapper {get; set;}
     public string packingType {get;set;}
     public string vegNonVegLabel {get;set;}
     public string ingredients {get;set;}
@@ -35,6 +36,7 @@ public without sharing class OperationsPortalController {
         deliveryPlant = JSON.serialize(Utility.getPicklistValues('Account' , 'Delivery_Plant__c'));
         accountSegmant = JSON.serialize(Utility.getPicklistValues('Account' , 'Account_Segment__c'));
         customerAddType = JSON.serialize(Utility.getPicklistValues('Dispatch_Address__c' , 'Type__c'));
+        sampleStatusValues = JSON.serialize(Utility.getPicklistValues('Sample_Line_Item__c' , 'Sample_Request_Status__c'));
     }
 
     @RemoteAction
@@ -70,6 +72,7 @@ public without sharing class OperationsPortalController {
     public static accountDetailWrapper getCustomerDetails(string hashCode){
         try{
             system.debug('hashCode ====> '+hashCode);
+            Set<Id> setOfSampleAssignment = New Set<Id>();
             Set<Id> setOfAccountIds = New Set<Id>();
             Set<Id> setOfSampleIds = New Set<Id>();
             Set<Id> setOfOppIds = New Set<Id>();
@@ -79,7 +82,20 @@ public without sharing class OperationsPortalController {
             List<Project__c> listOfSamples = New List<Project__c>();
 
             Contact conRecord = [SELECT Id,Name,Role__c,Login_Hash_Code__c,FirstName,LastName,Email,Phone,Password__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
-            List<Sample_Line_Item__c> listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c FROM Sample_Line_Item__c WHERE Contact__r.Login_Hash_Code__c =: hashCode];
+            system.debug('conRecord ====> '+conRecord);
+            
+            List<Sample_Allocation_Team__c> listOfAllocationTeam = [SELECT Id,Name,Sample_Assignment_Team__c FROM Sample_Allocation_Team__c WHERE Contact__r.Login_Hash_Code__c =: hashCode];
+            system.debug('listOfAllocationTeam ====> '+listOfAllocationTeam);
+            if(!listOfAllocationTeam.isEmpty()){
+                for(Sample_Allocation_Team__c SAT : listOfAllocationTeam){
+                    if(SAT.Sample_Assignment_Team__c != null){
+                        setOfSampleAssignment.add(SAT.Sample_Assignment_Team__c);
+                    }
+                }
+            }
+            system.debug('setOfSampleAssignment ====> '+setOfSampleAssignment);
+            
+            List<Sample_Line_Item__c> listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true];
             system.debug('listOfAllSLI ====> '+listOfAllSLI);
             accountDetailWrapper wrapper = new accountDetailWrapper();
             wrapper.listOfSLI = listOfAllSLI;
@@ -105,7 +121,7 @@ public without sharing class OperationsPortalController {
                 oppLIneItems = [SELECT Id,Name,OpportunityId,Product2Id,Product2.Name,Quantity,ListPrice,UnitPrice,TotalPrice,Price_In_KG__c,Quantity_In_KG__c FROM OpportunityLineItem WHERE OpportunityId IN : setOfOppIds];
             }
             if(!setOfSampleIds.isEmpty()){
-                listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c From Project__c WHERE Id IN : setOfSampleIds];
+                listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,Sample_Requested_by__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true];
             }
             wrapper.accList = allCustomerList;
             wrapper.accRecord = Null;
@@ -131,7 +147,7 @@ public without sharing class OperationsPortalController {
             Business_potential_value_INR_New__c,Business_potential_value_INR__c,Category_Buyer__c,Category_description_as_per_FSSAI__c,
             Center_filling_Cream__c,City__c,Company_Name__c,Confectionary_Type__c,Contact_Number__c,Cost_in_Use_target__c,Cost_in_use__c,
             Country_of_Compliance__c,Country_Regulation__c,Country__c,Courier__c,CreatedById,CreatedDate,Critical__c,CurrencyIsoCode,Currency_Type__c,
-            Current_Cost__c,Current_Packaging__c,Current_RM_FG_Code__c,Current_Shelf_life__c,Current_Supplier_Name__c,Customers_Contact__c,
+            Current_Cost__c,Current_Packaging__c,Current_RM_FG_Code__c,Current_Shelf_life__c,Current_Supplier_Name__c,Customers_Contact__c, Customers_Contact__r.Name,
             Customer_Base_Details__c,Customer_Brand_details__c,Customer_Comments__c,Customer_Cost_in_USE_CIU__c,Customer_Launch_Date__c,
             Customer_Name__c,Customer_Target_price__c,Dispatch_Details__c,Distributer_Customer__c,Documentation_Support__c,Dosage_guidelines_by_customer__c,
             Dosage_Guidelines__c,End_Application_Category__c,End_Use_Applications__c,End_use_application_other__c,End_Use_category__c,Error_Message_On_Submitting_To_Optiva__c,
@@ -228,6 +244,8 @@ public without sharing class OperationsPortalController {
     @RemoteAction
     public static accountDetailWrapper getCustomerDetail(String accId, String hashCode){
         try{
+            List<ContentDistribution> filesList = OperationsPortalController.getAccRelatedFiles(accId);
+            
             List<Contact> conRec = [SELECT Id,Name,(SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/,Role__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
             List<Account> accRecord = [SELECT AccountSource,Account_Potential__c,
             Account_Segment__c,Account_Type__c,BillingAddress,BillingCity,BillingCountry,
@@ -276,6 +294,7 @@ public without sharing class OperationsPortalController {
             wrapper.accRecord = (accRecord.size() > 0) ? accRecord[0] : null;
             wrapper.listOfSamples = listOfAllSampleRecords;
             wrapper.conRec = conRec[0];
+            wrapper.filesList = filesList;
             return wrapper;
         }catch(Exception e){
             return null;
@@ -312,7 +331,7 @@ public without sharing class OperationsPortalController {
                                  Pvt_Label_Selling_Price__c,Quantity,Quantity_In_KG__c,Quantity_Unit__c,Reveal_Symega_Identity__c,Sales_Order__c,Sales_Remarks__c,
                                  Sale_Order_Submitted__c,Secondary__c,ServiceDate,Service_Rendering_Date_Reason__c,Service_Rendering_Date__c,SortOrder,SSC_Code_for_Flavours__c,
                                  Sub_Total__c,Symega_Logo__c,SystemModstamp,Tertiary__c,TotalPrice,Type__c,UnitPrice,UnitPriceXQty__c,Unit_Of_Measure__c,Volume_Based_Amount__c,Product2.Shelf_Life__c, 
-                                 Product2.Allergen_Status_Required__c,Product2.Control_Code_HSN_Code__c,Product2.Veg_Nonveg_Logo_In_Label__c FROM OpportunityLineItem WHERE OpportunityId =: oppId];
+                                 Product2.Allergen_Status_Required__c,Product2.HSN_Code__c,Product2.Veg_Nonveg_Logo_In_Label__c FROM OpportunityLineItem WHERE OpportunityId =: oppId];
             
             
             
@@ -360,7 +379,7 @@ public without sharing class OperationsPortalController {
             Price_In_KG__c,Primary__c,Product2Id,ProductCode,Product_Family__c,Pvt_Label_Selling_Price__c,Quantity,Quantity_In_KG__c,Quantity_Unit__c,
             Repeat_Order_Details__c,Sales_Order__c,Secondary__c,ServiceDate,Service_Rendering_Date_Reason__c,Service_Rendering_Date__c,SortOrder,Sub_Total__c,
             Symega_Logo__c,SystemModstamp,Tertiary__c,TotalPrice,UnitPrice,UnitPriceXQty__c,Volume_Based_Amount__c,Volume_Based_Unit__c,
-            Opportunity.Name,Product2.Name,Sales_Order__r.Name FROM OpportunityLineItem WHERE Id =: oliId];
+            Opportunity.Name,Product2.Name,Sales_Order__r.Name, (SELECT Id,Name,Comment__c,Comment_By__r.Name FROM Comments__r) FROM OpportunityLineItem WHERE Id =: oliId];
             return oppProdRecord[0];
         }catch(Exception e){
             return null;
@@ -380,6 +399,12 @@ public without sharing class OperationsPortalController {
         public list<OPTIVA_Recipe__c> listOfOptivaRecipe { get; set; }
         public list<Project_Quotient__c> listOfProQuotient { get; set; }
         public list<Contact> conList { get; set; }
+        public List<ContentDistribution> filesList {get; set;}
+    }
+    
+     public class SampleStatusWrapper{
+        public String cssClass { get; set; }
+         public String statusVal {get; set;}
     }
 
     @RemoteAction
@@ -551,7 +576,7 @@ public without sharing class OperationsPortalController {
                     setOfSampleIds.add(samp.Id);
                 }
             }
-            List<Project__c> listOfSample = [SELECT Id,Name,Sample_Name__c,Record_Type_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c FROM Project__c WHERE Sample_Name__c LIKE :('%' + serachKey + '%') AND Id IN : setOfSampleIds];
+            List<Project__c> listOfSample = [SELECT Id,Name,Sample_Name__c,Record_Type_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Account__r.Name,Account__c FROM Project__c WHERE Sample_Name__c LIKE :('%' + serachKey + '%') AND Id IN : setOfSampleIds];
             return listOfSample;
         }catch(Exception e){
             return null;
@@ -637,7 +662,6 @@ public without sharing class OperationsPortalController {
                     fileData.VersionData = ref.getContentAsPdf();
                     fileData.PathOnClient = listOfSamples[0].Shipping_Type__c+'Invoice' + '.pdf'; // Set the file path
                     fileData.FirstPublishLocationId = parentId;
-                    
                     fileDataList.add(fileData);
             	}
                 insert fileDataList;
@@ -646,6 +670,12 @@ public without sharing class OperationsPortalController {
                 set<Id> cvIdSet = new set<Id>();
             for (ContentVersion fileData : fileDataList) {
                 cvIdSet.add(fileData.Id);
+                insert new ContentDistribution(
+                    Name = fileData.Title,
+                    ContentVersionId = fileData.Id,
+                    PreferencesAllowViewInBrowser= true
+                    
+                );
             }
             system.debug('cvIdSet -- ' + cvIdSet);
             
@@ -674,6 +704,7 @@ public without sharing class OperationsPortalController {
             // Create ContentDocumentLink records using the ContentDocumentIds
             for (Id parentId : listOfSampleIds) {
                 String contentDocumentId = parentIdToContentDocumentIdMap.get(parentId);
+                System.debug('contentDocumentId==> ' + contentDocumentId);
                 String uniqueKey = contentDocumentId + '_' + parentId;
                 
                 if (!uniqueContentDocumentLinks.contains(uniqueKey)) {
@@ -687,10 +718,141 @@ public without sharing class OperationsPortalController {
             }
             
             Database.upsert(contentDocumentLinks, false); // Upsert ContentDocumentLink records
+                System.debug('contentDocumentLinks==> ' + contentDocumentLinks);
             }
-            return 'SUCCESS';
+            return listOfSampleIds[0];
         }catch(Exception e){
            return e.getMessage()+e.getLineNumber(); 
+        }
+    }
+    
+    // Method to display Invoice PDF Preview upon successful generation
+    // Author -: Vaibhav Kumar Chauhan
+    // Organisation -: Utilitarian Labs Pvt. Ltd.
+    // Date of Creation -: 15-Nov-2023
+    // Last Updated on-: 15-Nov-2023
+    
+    @RemoteAction
+    public static List<ContentDistribution> getGeneratedInvoice(String recordId){
+        try{
+            if(recordId != null && recordId != ''){
+                List<ContentDocumentLink> files = [SELECT Id, ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.LatestPublishedVersion.Title, ContentDocument.CreatedDate FROM ContentDocumentLink WHERE LinkedEntityId = :recordId ORDER BY ContentDocument.CreatedDate DESC LIMIT 1];
+                System.debug('files[0].ContentDocumentId ==> ' + files[0].ContentDocumentId);
+                List<ContentDistribution> contDist = [SELECT Id, ContentDownloadUrl, ContentVersionId, DistributionPublicUrl FROM ContentDistribution WHERE ContentDocumentId =:files[0].ContentDocumentId LIMIT 1];
+            	System.debug('contDist ==> ' + contDist);
+                return contDist;
+            }else{
+                return null;
+            }
+        }catch(exception e){
+             System.debug(e.getMessage()+e.getLineNumber()); 
+            return null;
+        }
+    } 
+    
+    // Method to get all the Files attached under Account (Customer Tab)
+    // Author -: Vaibhav Kumar Chauhan
+    // Organisation -: Utilitarian Labs Pvt. Ltd.
+    // Date of Creation -: 15-Nov-2023
+    // Last Updated on-: 15-Nov-2023
+    
+    @RemoteAction
+    public static List<ContentDistribution> getAccRelatedFiles(String recordId){
+        try{
+            if(recordId != null && recordId != ''){
+                Set<Id> contentDocumentIdSet = new Set<Id>();
+                List<ContentDocumentLink> files = [SELECT Id, ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.LatestPublishedVersion.Title, ContentDocument.CreatedDate FROM ContentDocumentLink WHERE LinkedEntityId = :recordId ORDER BY ContentDocument.CreatedDate DESC];
+                if(!files.isEmpty()){
+                 for(ContentDocumentLink conDocLinkRec : files){
+                    contentDocumentIdSet.add(conDocLinkRec.ContentDocumentId);
+                }
+                    System.debug('contentDocumentIdSet ==> ' + contentDocumentIdSet);
+                }
+                List<ContentDistribution> contDist = [SELECT Id,Name, ContentDownloadUrl, ContentVersionId, DistributionPublicUrl FROM ContentDistribution WHERE ContentDocumentId IN:contentDocumentIdSet];
+            	System.debug('contDist ==> ' + contDist);
+                return contDist;
+            }else{
+                return null;
+            }
+        }catch(exception e){
+             System.debug(e.getMessage()+e.getLineNumber()); 
+            return null;
+        }
+    } 
+    
+    // Method to save Invoice PDF under the account on saving from preview popup
+    // Author -: Vaibhav Kumar Chauhan
+    // Organisation -: Utilitarian Labs Pvt. Ltd.
+    // Date of Creation -: 15-Nov-2023
+    // Last Updated on-: 15-Nov-2023
+    
+    @RemoteAction
+    public static String saveInvoiceUnderAccount(String recordId, String contentVersionId){
+        try{
+            String PDFName;
+            if(recordId != null && recordId != ''){
+                Project__c sampleRec = [SELECT Id,Name,Shipping_Type__c,Account__c,Opportunity__r.AccountId FROM Project__c WHERE Id =: recordId];
+                String accId = sampleRec.Opportunity__r.AccountId;
+                List<ContentVersion> fileDataList = new List<ContentVersion>();
+                List<ContentDocumentLink> contentDocumentLinks = new List<ContentDocumentLink>();
+                if(sampleRec.Shipping_Type__c == 'Domestic'){
+                    PDFName = 'SampleInvoiceDomesticPDF';
+                }else{
+                   PDFName = 'SampleInvoicePDF'; 
+                }
+                PageReference ref;
+                if(PDFName == 'SampleInvoiceDomesticPDF'){
+                        ref = Page.SampleInvoiceDomesticPDF;
+                    }else{
+                       ref = Page.SampleInvoicePDF; 
+                    }
+                ref.getParameters().put('id', accId);
+                    system.debug('ref -- ' + ref);
+                    system.debug('ref.getParameters() -- ' + ref.getParameters());
+                ContentVersion fileData = new ContentVersion();
+                    fileData.Title = sampleRec.Shipping_Type__c+'Invoice';
+                    fileData.PathOnClient = sampleRec.Shipping_Type__c+'Invoice' + '.pdf'; // Set the file path
+                    if(sampleRec.Shipping_Type__c == null){
+                        fileData.Title = 'Invoice';
+                        fileData.PathOnClient ='Invoice' + '.pdf'; // Set the file path
+                    }
+                    fileData.VersionData = ref.getContentAsPdf();
+                    fileData.FirstPublishLocationId = accId;
+                    fileDataList.add(fileData);
+                	
+                insert fileDataList;
+                System.debug('fileDataList==> ' + fileDataList);
+                return 'SUCCESS';
+            }else{
+                return 'ERROR';
+            }
+        }catch(exception e){
+             System.debug(e.getMessage()+e.getLineNumber()); 
+            return e.getMessage()+e.getLineNumber();
+        }
+    } 
+    
+    // Method to display File upon clicking view on Customer Detail Page
+    // Author -: Vaibhav Kumar Chauhan
+    // Organisation -: Utilitarian Labs Pvt. Ltd.
+    // Date of Creation -: 15-Nov-2023
+    // Last Updated on-: 15-Nov-2023
+    
+    @RemoteAction
+    public static List<ContentDistribution> getFileRecordUnderAccount(String recordId){
+        try{
+            if(recordId != null && recordId != ''){
+                //List<ContentDocumentLink> files = [SELECT Id, ContentDocumentId, ContentDocument.LatestPublishedVersionId, ContentDocument.LatestPublishedVersion.Title, ContentDocument.CreatedDate FROM ContentDocumentLink WHERE LinkedEntityId = :recordId ORDER BY ContentDocument.CreatedDate DESC LIMIT 1];
+                //System.debug('files[0].ContentDocumentId ==> ' + files[0].ContentDocumentId);
+                List<ContentDistribution> contDist = [SELECT Id, ContentDownloadUrl, ContentVersionId, DistributionPublicUrl FROM ContentDistribution WHERE Id =:recordId LIMIT 1];
+            	System.debug('contDist ==> ' + contDist);
+                return contDist;
+            }else{
+                return null;
+            }
+        }catch(exception e){
+             System.debug(e.getMessage()+e.getLineNumber()); 
+            return null;
         }
     }
     
@@ -733,6 +895,17 @@ public without sharing class OperationsPortalController {
             return com.Id;
         }catch(Exception e){
             return e.getMessage()+e.getLineNumber();
+        }
+    }
+
+    @RemoteAction
+    public static List<Comment__c> getReplies(string comId){
+        try{
+            List<Comment__c> comList = [SELECT Id,Name,Comment_By__c,Sample_Line_Item__c,Comment__c,Comments__c, Reply__c,Comment_By__r.Name FROM Comment__c WHERE Comments__c =: comId];
+            return comList;
+        }catch(Exception e){
+            System.debug('e.getMessage()+e.getLineNumber() ==> ' + e.getMessage()+e.getLineNumber());
+            return null;
         }
     }
     

@@ -37,6 +37,29 @@
         </head>
 
         <body ng-app="sample_app" ng-controller="sample_ctrl" style="background-color: white; !important;">
+
+			<div class="modal" id="filePreview">
+                            <div class="modal-dialog" style="min-width:120rem">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">
+                                            <div class="d-flex" style="background:unset;">
+                                                <h3 style="text-align: center"><b>{{selectedFile.userDocument.Name}}</b></h3>
+                                            </div>
+                                        </h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <iframe style="width:100%;height:75vh;border: 0px;border-radius: 10px;" id="file_frame" title="File"></iframe>
+                                    </div>
+										<div class="col-md-4 cancelSaveBtnDiv">
+                        <button class="blue-btn me-2 mb-5" ng-click="saveInvoiceUnderAccount()" type="button">Save</button>
+                        <button class="blue-btn me-2 mb-5" data-bs-dismiss="modal" type="button">Cancel</button>
+                    </div>
+                                </div>
+                            </div>
+                        </div>
+
             <div class="loadingSection" ng-if="showSpinner">
                 <div class="loadingBackground"></div>
                 <div>
@@ -48,13 +71,13 @@
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
-                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;">
+                    <a class="nav-link selectedTabOnSLIDetailPage" ng-click="showCustomerssPage()" style="color:white;" id="customerTab">
                         Customer
                     </a>
-                    <a class="nav-link" ng-click="showSamplesPage()" style="color:white;">
+                    <a class="nav-link" ng-click="showSamplesPage()" style="color:white;" id="sampleTab">
                         Samples
                     </a>
-                    <a class="nav-link" ng-click="showSamplesSLI()" style="color:white;">
+                    <a class="nav-link" ng-click="showSamplesSLI()" style="color:white;" id="sampleProdTab">
                         Sample Products
                     </a>
 
@@ -92,13 +115,13 @@
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
-                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;">
+                    <a class="nav-link selectedTabOnSLIDetailPage" ng-click="showCustomerssPage()" style="color:white;" id="customerTab">
                         Customer
                     </a>
-                    <a class="nav-link" ng-click="showOpportunitySection()" style="color:white;">
+                    <a class="nav-link" ng-click="showOpportunitySection()" style="color:white;" id="opportunityTab">
                         Opportunity
                     </a>
-                    <a class="nav-link" ng-click="showOLISectionList()" style="color:white;">
+                    <a class="nav-link" ng-click="showOLISectionList()" style="color:white;" id="oppProdTab">
                         Opportunity Products
                     </a>
 
@@ -135,7 +158,7 @@
                 </div>
             </nav>
 
-            <div class="row mt-3 mx-5" ng-show="showCustomerDetails">
+            <div class="row mt-3 mx-5 " ng-show="showCustomerDetails" >
                 <div class="col-md-12">
                     <h3 class="pb-3 color-theme"><b>Customers :</b></h3>
                 </div>
@@ -174,8 +197,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="pe-5 float-end" ng-click="handleNext()">Next</a>
-                        <a class="pe-5 float-end" ng-click="handlePrevious('Account')">Previous</a>
+                        <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                        <button class="paginationButton" ng-click="handlePrevious('Account')">&#10229; Previous</button>
                     </div>
                 </div>
             </div>
@@ -204,6 +227,7 @@
                                 <th></th>
                                 <th>S.No.</th>
                                 <th>Name</th>
+                                <th>Customer</th>
                                 <th>Status</th>
                                 <th>Shipping Type</th>
                                 <th>Product Family</th>
@@ -215,7 +239,8 @@
                             <tr ng-repeat="sample in listOfSamples3">
                                 <td><input type="checkbox" ng-model="sample.selected" ng-change="onClickOfSample(sample.Id,$index)" /></td>
                                 <td>{{$index+1}}</td>
-                                <td><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
+                                <td style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
+                                <td style="cursor:pointer;" ng-click="onClickOpenCustomerDetail(sample.Account__c)" data-id="{{sample.Account__c}}"><a href="#">{{sample.Account__r.Name}}</a></td>
                                 <td>{{sample.Status__c}}</td>
                                 <td>{{Shipping_Type__c}}</td>
                                 <td>{{sample.Product_Family__c}}</td>
@@ -227,8 +252,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="pe-5 float-end" ng-click="handleNext()">Next</a>
-                        <a class="pe-5 float-end" ng-click="handlePrevious('Sample')">Previous</a>
+                        <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                        <button class="paginationButton" ng-click="handlePrevious('Sample')">&#10229; Previous</button>
                     </div>
                 </div>
             </div>
@@ -254,7 +279,8 @@
                                 <th>S.No.</th>
                                 <th>Sample LineItem No.</th>
                                 <th>Product</th>
-                                <th>Sample Type</th>
+                                <th>Product Code</th>
+                                <th>Dispatch Date</th>
                                 <th>Sample Request Status</th>
                                 <th>Product Family</th>
                             </tr>
@@ -264,7 +290,8 @@
                                 <td>{{$index+1}}</td>
                                 <td><a href="#" ng-click="onClickOpenSLIDetailPage(SLI.Id)">{{SLI.Name}}</a></td>
                                 <td>{{SLI.Product__r.Name}}</td>
-                                <td>{{SLI.Sample_Type__c}}</td>
+                                <td>{{SLI.Product_Code__c}}</td>
+                                <td>{{SLI.Actual_date_of_dispatch__c| date:'yyyy-MM-dd'}}</td>
                                 <td>{{SLI.Sample_Request_Status__c}}</td>
                                 <td>{{SLI.Product_Family__c}}</td>
                             </tr>
@@ -273,8 +300,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="pe-5 float-end" ng-click="handleNext()">Next</a>
-                        <a class="pe-5 float-end" ng-click="handlePrevious('SLI')">Previous</a>
+                        <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                        <button class="paginationButton" ng-click="handlePrevious('SLI')">&#10229; Previous</button>
                     </div>
                 </div>
             </div>
@@ -325,8 +352,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="pe-5 float-end" ng-click="handleNext()">Next</a>
-                        <a class="pe-5 float-end" ng-click="handlePrevious('Opportunity')">Previous</a>
+                        <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                        <button class="paginationButton" ng-click="handlePrevious('Opportunity')">&#10229; Previous</button>
                     </div>
                 </div>
             </div>
@@ -377,13 +404,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="pe-5 float-end" ng-click="handleNext()">Next</a>
-                        <a class="pe-5 float-end" ng-click="handlePrevious('OLI')">Previous</a>
+                        <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                        <button class="paginationButton" ng-click="handlePrevious('OLI')">&#10229; Previous</button>
                     </div>
                 </div>
             </div>
 
-            <div class="row box-shadow-2" ng-show="showProfile" style="margin-top:15rem!important;margin-right:40rem!important;margin-left:40rem!important;">
+            <div class="row box-shadow-2" ng-show="showProfile" style="margin-top:10rem!important;margin-right:24rem!important;margin-left:24rem!important;">
                 <div class="row mt-5 mx-1">
                     <div class="col-md-12">
                         <h3 class="pb-3 color-theme"><b>EDIT PROFILE</b></h3>
@@ -412,23 +439,25 @@
                 <div class="col-md-6 mt-3 mb-5">
                     <label class="font-if">Password
                     </label>
-                    <input class="form-control" type="text" ng-model="conDetails.Password__c"/>
+                    <input class="form-control" type="password" ng-model="conDetails.Password__c"/>
                 </div>
-                <div class="col-md-6 mt-3 mb-5">
+                <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
                     <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
                         <i class="fa-solid fa-check me-2"></i>Update</button>
                     <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
-                        <i class="fa-solid fa-arrow-left me-2"></i>Previous</button>
+                        <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
                 </div>
             </div>
+
         </body>
 
         <script>
             var userHashId = '{!$CurrentPage.parameters.id}';
             var app = angular.module('sample_app', []);
-            app.controller('sample_ctrl', function ($scope,$rootScope){
+            app.controller('sample_ctrl', function ($scope,$sce,$rootScope){
                 debugger;
                 $scope.showCustomerDetails = true;
+                $scope.showPDF = false;
                 $scope.customerDetPage = false;
                 $scope.showSpinner = false;
                 $scope.showProfile = false;
@@ -460,6 +489,14 @@
                             $scope.accDetails2 = result.accList;
                             $scope.listOfSamples = result.listOfSamples;
                             $scope.listOfSamples2 = result.listOfSamples;
+                            if(result.listOfSLI != undefined){
+                                for(var i=0;i<result.listOfSLI.length;i++){
+                                    if(result.listOfSLI[i].Actual_date_of_dispatch__c != null){
+                                    result.listOfSLI[i].Actual_date_of_dispatch__c = new Date(result.listOfSLI[i].Actual_date_of_dispatch__c);
+                                	} 
+                                }
+                            }
+                            
                             $scope.listOfSLI = result.listOfSLI;
                             $scope.listOfSLI2 = result.listOfSLI;
                             $scope.conName = result.conRec.Name;
@@ -490,6 +527,21 @@
                     })
                 }
                 $scope.getCustomerDetails();
+                
+                $scope.filePreviewHandler = function(fileContent){
+    debugger;
+    $scope.selectedFile = fileContent;
+ 
+    console.log('selectedFile---', $scope.selectedFile);
+ 
+    $('#file_frame').attr('src', $scope.selectedFile[0].DistributionPublicUrl);
+ 
+    var myModal = new bootstrap.Modal(document.getElementById('filePreview'))        
+    myModal.show('slow') ;
+    $scope.$apply();
+ 
+    //.ContentDistribution.DistributionPublicUrl
+}
                 
                  $scope.paginateData = function() {
                     debugger;
@@ -524,6 +576,15 @@
                          $scope.currentPage += 1;
                          $scope.paginateData($scope.accDetails);
                      }
+                 }
+
+                 $scope.handleCustomerClick = function(e){
+                    debugger;
+                    let customerId = event.currentTarget.getAttribute("data-id");
+                    // //var currPageURL = window.location.href;
+                    // var userIDPortal = {!$CurrentPage.parameters.id}';
+                    // var baseURL = "https://symegafood--uat.sandbox.my.salesforce-sites.com/operations/CustomerDetailPageOP?id=" + userIDPortal + "&accId=" + customerId;
+                    // window.location.assign("baseURL");
                  }
                  
                  $scope.handlePrevious = function(name){
@@ -592,6 +653,24 @@
                 }
                 $scope.showCustomerssPage = function(){
                     debugger;
+                    var customerTab = document.getElementById("customerTab");
+                    customerTab.classList.add("selectedTabOnSLIDetailPage");
+                    var opportunityTab = document.getElementById("opportunityTab");
+                    if(opportunityTab!= null && opportunityTab != undefined){
+						opportunityTab.classList.remove("selectedTabOnSLIDetailPage");
+					}
+                    var oppProdTab = document.getElementById("oppProdTab");
+                    if(oppProdTab!= null && oppProdTab != undefined){
+                    oppProdTab.classList.remove("selectedTabOnSLIDetailPage");
+					}
+                    var sampleTab = document.getElementById("sampleTab");
+                    if(sampleTab!= null && sampleTab != undefined){
+                    sampleTab.classList.remove("selectedTabOnSLIDetailPage");
+					}
+                    var sampleProdTab = document.getElementById("sampleProdTab");
+                    if(sampleProdTab!= null && sampleProdTab != undefined){
+                    sampleProdTab.classList.remove("selectedTabOnSLIDetailPage");
+					}
                     $scope.showCustomerDetails = true;
                     $scope.customerDetPage = false;
                     $scope.showProfile = false;
@@ -603,6 +682,12 @@
                 
                 $scope.showSamplesPage = function(){
                     debugger;
+                    var customerTab = document.getElementById("customerTab");
+                    customerTab.classList.remove("selectedTabOnSLIDetailPage");
+                    var sampleTab = document.getElementById("sampleTab");
+                    sampleTab.classList.add("selectedTabOnSLIDetailPage");
+                    var sampleProdTab = document.getElementById("sampleProdTab");
+                    sampleProdTab.classList.remove("selectedTabOnSLIDetailPage");
                     $scope.showCustomerDetails = false;
                     $scope.customerDetPage = false;
                     $scope.showProfile = false;
@@ -612,6 +697,12 @@
 
                 $scope.showSamplesSLI = function(){
                     debugger;
+                    var customerTab = document.getElementById("customerTab");
+                    customerTab.classList.remove("selectedTabOnSLIDetailPage");
+                    var sampleTab = document.getElementById("sampleTab");
+                    sampleTab.classList.remove("selectedTabOnSLIDetailPage");
+                    var sampleProductTab = document.getElementById("sampleProdTab");
+                    sampleProductTab.classList.add("selectedTabOnSLIDetailPage");
                     $scope.showCustomerDetails = false;
                     $scope.customerDetPage = false;
                     $scope.showProfile = false;
@@ -621,6 +712,12 @@
 
                 $scope.showOpportunitySection = function(){
                     debugger;
+                    var customerTab = document.getElementById("customerTab");
+                    customerTab.classList.remove("selectedTabOnSLIDetailPage");
+                    var opportunityTab = document.getElementById("opportunityTab");
+                    opportunityTab.classList.add("selectedTabOnSLIDetailPage");
+                    var oppProdTab = document.getElementById("oppProdTab");
+                    oppProdTab.classList.remove("selectedTabOnSLIDetailPage");
                     $scope.showCustomerDetails = false;
                     $scope.customerDetPage = false;
                     $scope.showProfile = false;
@@ -632,6 +729,12 @@
 
                 $scope.showOLISectionList = function(){
                     debugger;
+                    var customerTab = document.getElementById("customerTab");
+                    customerTab.classList.remove("selectedTabOnSLIDetailPage");
+                    var opportunityTab = document.getElementById("opportunityTab");
+                    opportunityTab.classList.remove("selectedTabOnSLIDetailPage");
+                    var oppProdTab = document.getElementById("oppProdTab");
+                    oppProdTab.classList.add("selectedTabOnSLIDetailPage");
                     $scope.showCustomerDetails = false;
                     $scope.customerDetPage = false;
                     $scope.showProfile = false;
@@ -676,9 +779,10 @@
 
             $scope.backProfile = function(){
                 debugger;
-                $scope.showListViewOfSLI=true;
-                $scope.showDetailPageSLI=false;
+                //$scope.showListViewOfSLI=true;
+                //$scope.showDetailPageSLI=false;
                 $scope.showProfile = false;
+                $scope.showCustomerDetails=true;
             }
 
             $scope.saveDetails = function(){
@@ -802,6 +906,7 @@
             $scope.DomesticSamples = [];
             $scope.ExportSamples = [];
             $scope.generateInvoice = function(){
+                $scope.showSpinner = true;
                 debugger;
                 for(var i=0;i<$scope.samples.length;i++){
                     if($scope.samples[i].Shipping_Type__c == 'Domestic'){
@@ -819,11 +924,34 @@
                     debugger;
                     if(event.status && result){
                         debugger;
-                        swal("success", "Invoice generated for selected Samples.","success");
+                        $scope.sampleRecId = result;
+                        //swal("success", "Invoice generated for selected Samples.","success");
+                        OperationsPortalController.getGeneratedInvoice(result, function(result,event){
+                        if(event.status && result){
+                        $scope.invoiceToDisplay = result;
+                            $scope.contentVersionId = result[0].ContentVersionId;
+                            $scope.showSpinner = false;
+                            $scope.filePreviewHandler(result);
+                        }
+                        })
                     }
                     $scope.$apply();
                 })
             }
+            
+            $scope.saveInvoiceUnderAccount = function(){
+                debugger;
+                if($scope.sampleRecId != null && $scope.sampleRecId != undefined && $scope.sampleRecId != '' && $scope.contentVersionId != null && $scope.contentVersionId != undefined && $scope.contentVersionId != ''){
+                	OperationsPortalController.saveInvoiceUnderAccount($scope.sampleRecId, $scope.contentVersionId, function(result,event){
+                    	debugger;
+                        if(event.status && result == 'SUCCESS'){
+                        	swal("success", "Invoice saved under Account for selected Samples.","success");
+                        }
+                    })
+                }else{
+                	swal("info", "Some Data is Missing","info");    
+                }
+                }
         })
         </script>
     </html>

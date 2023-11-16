@@ -61,20 +61,21 @@ public class GetFERTCodeController {
                 if(!opp.Account.Submitted_to_SAP__c){
                     //String customerValidationRes = Utility.checkSAPCustomerReqField(opp.AccountId);
                     if(customerValidationRes == 'Success'){
-                        Account acc = [SELECT Id, Initial_SAP_Update__c FROM Account WHERE Id =: opp.AccountId];
-                        if(acc.Initial_SAP_Update__c != true){
-                            acc.Initial_SAP_Update__c = true;
-                            update acc;
-                        }
+                        // Account accRec = [SELECT Id, Submitted_to_SAP__c FROM Account WHERE Id =: opp.AccountId];
+                        // String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId, true); // method signature changed
+                        // if(resp.equalsIgnoreCase('Success')){
+                        //     if(accRec.Submitted_to_SAP__c != true){
+                        //         accRec.Submitted_to_SAP__c = true;
+                        //         update accRec;
+                        //     }
+                        // }
 
-                        String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId, true); // method signature changed
-                        if(resp.equalsIgnoreCase('Success')){
-                            Account accRec = [SELECT Id, Submitted_to_SAP__c FROM Account WHERE Id =: opp.AccountId];
-                            if(accRec.Submitted_to_SAP__c != true){
-                                accRec.Submitted_to_SAP__c = true;
-                                update accRec;
-                            }
-                        }
+                        // if(accRec.Initial_SAP_Update__c != true){
+                        //     accRec.Initial_SAP_Update__c = true;
+                        //     update accRec;
+                        // }
+
+                        callFutureForAccount(opp.AccountId);
 
                         opp.Send_Fert_Notification_Email__c = true;
                         update opp;
@@ -92,11 +93,7 @@ public class GetFERTCodeController {
                 String customerValidationRes = Utility.checkForInitialSubmissionAddress(opp.Customer_Billing_Address__c);
                 if(!opp.Customer_Billing_Address__r.Submitted_to_SAP__c){
                     if(customerValidationRes == 'Success'){
-                        Dispatch_Address__c addr = [SELECT Id, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: opp.Customer_Billing_Address__c];
-                        if(addr.Initial_SAP_Update__c != true){
-                            addr.Initial_SAP_Update__c = true;
-                            update addr;
-                        }
+                        //Dispatch_Address__c addr = [SELECT Id, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: opp.Customer_Billing_Address__c];
                         
                         callFutureForAddress(opp.Customer_Billing_Address__c);
 
@@ -108,6 +105,12 @@ public class GetFERTCodeController {
                                 update addrRec;
                             }
                         }*/
+
+                        // if(addr.Initial_SAP_Update__c != true){
+                        //     addr.Initial_SAP_Update__c = true;
+                        //     update addr;
+                        // }
+                        
                         opp.Send_Fert_Notification_Email__c = true;
                         update opp;
                         response = 'create';
@@ -128,14 +131,36 @@ public class GetFERTCodeController {
     
     @future(callout=true)
     public static void callFutureForAddress(Id caId){
+        Dispatch_Address__c addrRec = [SELECT Id, Submitted_to_SAP__c, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: caId];
         String resp = SAP_CreateAddressCustomerCallout.createCustomer(caId, true);
         if(resp.equalsIgnoreCase('Success')){
-            Dispatch_Address__c addrRec = [SELECT Id, Submitted_to_SAP__c FROM Dispatch_Address__c WHERE Id =: caId];
             if(addrRec.Submitted_to_SAP__c != true){
                 addrRec.Submitted_to_SAP__c = true;
                 update addrRec;
             }
         }
+        if(addrRec.Initial_SAP_Update__c != true){
+            addrRec.Initial_SAP_Update__c = true;
+            update addrRec;
+        }
+    }
+
+    @future(callout=true)
+    public static void callFutureForAccount(Id accId){
+        Account accRec = [SELECT Id, Submitted_to_SAP__c, Initial_SAP_Update__c FROM Account WHERE Id =: accId];
+        String resp = SAP_CreateCustomerCallout.createCustomer(accId, true);
+        if(resp.equalsIgnoreCase('Success')){
+            if(accRec.Submitted_to_SAP__c != true){
+                accRec.Submitted_to_SAP__c = true;
+                update accRec;
+            }
+        }
+
+        if(accRec.Initial_SAP_Update__c != true){
+            accRec.Initial_SAP_Update__c = true;
+            update accRec;
+        }
+
     }
 
     public static void sendFertCodeEmailBulkAddress(List<Id> addrId){

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>End_Use_category__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Choose end use category and the end use application will be based on category opted.</inlineHelpText>
+    <label>End Use category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Beverages</fullName>
+                <default>false</default>
+                <label>Beverages</label>
+            </value>
+            <value>
+                <fullName>Baked Goods</fullName>
+                <default>false</default>
+                <label>Baked Goods</label>
+            </value>
+            <value>
+                <fullName>Breakfast Cereals</fullName>
+                <default>false</default>
+                <label>Breakfast Cereals</label>
+            </value>
+            <value>
+                <fullName>Chilled and Frozen Foods</fullName>
+                <default>false</default>
+                <label>Chilled and Frozen Foods</label>
+            </value>
+            <value>
+                <fullName>Confectionery</fullName>
+                <default>false</default>
+                <label>Confectionery</label>
+            </value>
+            <value>
+                <fullName>Dairy and Alternatives</fullName>
+                <default>false</default>
+                <label>Dairy and Alternatives</label>
+            </value>
+            <value>
+                <fullName>Distributor</fullName>
+                <default>false</default>
+                <label>Distributor</label>
+            </value>
+            <value>
+                <fullName>Food Service</fullName>
+                <default>false</default>
+                <label>Food Service</label>
+            </value>
+            <value>
+                <fullName>Noodles and Pasta</fullName>
+                <default>false</default>
+                <label>Noodles and Pasta</label>
+            </value>
+            <value>
+                <fullName>Snacks</fullName>
+                <default>false</default>
+                <label>Snacks</label>
+            </value>
+            <value>
+                <fullName>Soups</fullName>
+                <default>false</default>
+                <label>Soups</label>
+            </value>
+            <value>
+                <fullName>Sauces and Meals</fullName>
+                <default>false</default>
+                <label>Sauces and Meals</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>Others</fullName>
+                <default>false</default>
+                <label>Others</label>
+            </value>
+            <value>
+                <fullName>All</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>All</label>
+            </value>
+            <value>
+                <fullName>Bakery</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Bakery</label>
+            </value>
+            <value>
+                <fullName>Beverage</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Beverage</label>
+            </value>
+            <value>
+                <fullName>Dairy</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Dairy</label>
+            </value>
+            <value>
+                <fullName>Oral Care</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Oral Care</label>
+            </value>
+            <value>
+                <fullName>Pharma</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Pharma</label>
+            </value>
+            <value>
+                <fullName>Savoury</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Savoury</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

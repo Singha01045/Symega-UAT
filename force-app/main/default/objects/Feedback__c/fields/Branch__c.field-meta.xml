@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Branch__c</fullName>
+    <externalId>false</externalId>
+    <label>Branch</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Noida Sector 16</fullName>
+                <default>false</default>
+                <label>Noida Sector 16</label>
+            </value>
+            <value>
+                <fullName>Sector 63, Noida</fullName>
+                <default>false</default>
+                <label>Sector 63, Noida</label>
+            </value>
+            <value>
+                <fullName>Pitampura</fullName>
+                <default>false</default>
+                <label>Pitampura</label>
+            </value>
+            <value>
+                <fullName>South Ex.</fullName>
+                <default>false</default>
+                <label>South Ex.</label>
+            </value>
+            <value>
+                <fullName>Ghaziabad</fullName>
+                <default>false</default>
+                <label>Ghaziabad</label>
+            </value>
+            <value>
+                <fullName>Gurugram</fullName>
+                <default>false</default>
+                <label>Gurugram</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

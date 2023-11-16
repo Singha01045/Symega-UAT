@@ -34,6 +34,7 @@ public class TodayTaskAuraController {
                 Integer month = Integer.valueOf(dateArray[1]);
                 Integer day = Integer.valueOf(dateArray[2]);
                 date VisitFormatedDate = date.newInstance(year, month, day);
+                System.debug('VisitFormatedDate-->'+VisitFormatedDate);
                 Id currentUserId = UserInfo.getUserId();
                 visitListToShow = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  Visit_Time__c,Visit_Status__c,Check_In_Time__c,
                                    Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,

@@ -5,10 +5,13 @@
     <aura:attribute name="EndDatevalue" type="Date" />
     <aura:attribute name="selectedMonthNumber" type="Integer" />
     <aura:attribute name="RoleAndKPIList" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <!--aura:attribute name="currentMonthNumber" type="Integer" /-->
     
     <aura:attribute name="selectedMonth" type="String" />
     <aura:attribute name="selectedYear" type="String" />
     
+  
     <aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent"/>
     
     <lightning:layoutItem class="e" size="12" padding="around-large" >
@@ -17,7 +20,7 @@
                 <div class="slds-col slds-size_11-of-12 " >
                     <h2 style=" display: inline; font-size:150%;width:100%;color:white;"><b>No Beat Plan Available</b></h2> <br/>
                 </div>
-                <div class="slds-col addButton  slds-size_2-of-12 ">
+                <div aura:id="changeIt" class="slds-col addButton  slds-size_2-of-12 ">
                         <!--a class="" onclick="{!c.HandleNewBeatPal}" style="background-color:green;padding:7px 3px 7px 10px;border-radius:2px; width:4rem;"><span style="color:#fff;font-size: 15px;"><lightning:icon iconName='utility:add' alternativeText='add' variant='inverse' size='x-small' title='add' style="margin-right:3px;margin-bottom:2px;"></lightning:icon>Add Beat Plan</span>
                         </a-->
                     	<a class="SendApproval" Id="{!v.recordId}"  onclick="{!c.HandleNewBeatPal}" iconName='standard:approval'><span style="color:#fff;">+ Add Beat Plan</span>
@@ -29,6 +32,7 @@
             <br/>
         </div> 
     </lightning:layoutItem>
+    
     <aura:if isTrue="{!v.ShowToCreateBeatPlanne}">
         <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">

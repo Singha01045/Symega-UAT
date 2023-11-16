@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reason_for_selecting_the_product</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( ISPICKVAL (Main_reason_for_selecting_product__c, &quot;Others (Please Specify)&quot;),
+     ISBLANK(  Specify_other_reason__c  ) = TRUE )</errorConditionFormula>
+    <errorDisplayField>Specify_other_reason__c</errorDisplayField>
+    <errorMessage>Capture the reason for choosing others</errorMessage>
+</ValidationRule>

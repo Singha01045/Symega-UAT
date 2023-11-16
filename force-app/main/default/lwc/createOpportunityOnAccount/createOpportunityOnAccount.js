@@ -163,6 +163,8 @@ export default class CreateOpportunityOnAccount extends NavigationMixin(Lightnin
                 CurrencyIsoCode : this.accRecord.CurrencyIsoCode,
                 LeadSource : this.accRecord.AccountSource,
 
+                Primary_Contact__c : this.accRecord.Customer_Contact__c,
+
                 Billing_City__c : billingAddress.city,
                 Billing_State__c : billingAddress.state,
                 Billing_Street__c : billingAddress.street,

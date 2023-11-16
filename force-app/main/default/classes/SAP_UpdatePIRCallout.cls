@@ -51,7 +51,7 @@ public class SAP_UpdatePIRCallout {
         headerMap.put('Cookie',cookies);
         headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_PIR_AUTH_HEADER));
         
-        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap, 'POST', body, endPoint);
+        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap, 'POST', body, endPoint, pirList[0].Id);
         
         if(respMap.get('code') =='200' || respMap.get('code')=='201'){
             return 'Success';

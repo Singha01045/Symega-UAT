@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>End_Use_Applications__c</fullName>
+    <externalId>false</externalId>
+    <label>End Use Applications</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>End_Use_category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Potato Chips</fullName>
+                <default>false</default>
+                <label>Potato Chips</label>
+            </value>
+            <value>
+                <fullName>Finger/Extruded Snacks</fullName>
+                <default>false</default>
+                <label>Finger/Extruded Snacks</label>
+            </value>
+            <value>
+                <fullName>Pellets/Fryums</fullName>
+                <default>false</default>
+                <label>Pellets/Fryums</label>
+            </value>
+            <value>
+                <fullName>Puffed Snacks</fullName>
+                <default>false</default>
+                <label>Puffed Snacks</label>
+            </value>
+            <value>
+                <fullName>Tortilla Chips</fullName>
+                <default>false</default>
+                <label>Tortilla Chips</label>
+            </value>
+            <value>
+                <fullName>Namkeens and Other traditional</fullName>
+                <default>false</default>
+                <label>Namkeens and Other traditional</label>
+            </value>
+            <value>
+                <fullName>Popcorn</fullName>
+                <default>false</default>
+                <label>Popcorn</label>
+            </value>
+            <value>
+                <fullName>Nuts, Seeds and Trail Mixes</fullName>
+                <default>false</default>
+                <label>Nuts, Seeds and Trail Mixes</label>
+            </value>
+            <value>
+                <fullName>White Noodles</fullName>
+                <default>false</default>
+                <label>White Noodles</label>
+            </value>
+            <value>
+                <fullName>Brown Noodles</fullName>
+                <default>false</default>
+                <label>Brown Noodles</label>
+            </value>
+            <value>
+                <fullName>Atta/Oats/Multigrain Noodles</fullName>
+                <default>false</default>
+                <label>Atta/Oats/Multigrain Noodles</label>
+            </value>
+            <value>
+                <fullName>Pasta</fullName>
+                <default>false</default>
+                <label>Pasta</label>
+            </value>
+            <value>
+                <fullName>Oats-based</fullName>
+                <default>false</default>
+                <label>Oats-based</label>
+            </value>
+            <value>
+                <fullName>Millets-based</fullName>
+                <default>false</default>
+                <label>Millets-based</label>
+            </value>
+            <value>
+                <fullName>Grain-based</fullName>
+                <default>false</default>
+                <label>Grain-based</label>
+            </value>
+            <value>
+                <fullName>Instant</fullName>
+                <default>false</default>
+                <label>Instant</label>
+            </value>
+            <value>
+                <fullName>Cook-up</fullName>
+                <default>false</default>
+                <label>Cook-up</label>
+            </value>
+            <value>
+                <fullName>RTD</fullName>
+                <default>false</default>
+                <label>RTD</label>
+            </value>
+            <value>
+                <fullName>Biscuits and Cookies</fullName>
+                <default>false</default>
+                <label>Biscuits and Cookies</label>
+            </value>
+            <value>
+                <fullName>Crackers</fullName>
+                <default>false</default>
+                <label>Crackers</label>
+            </value>
+            <value>
+                <fullName>Bread and Bread Products</fullName>
+                <default>false</default>
+                <label>Bread and Bread Products</label>
+            </value>
+            <value>
+                <fullName>Cakes and Pastries</fullName>
+                <default>false</default>
+                <label>Cakes and Pastries</label>
+            </value>
+            <value>
+                <fullName>Wafers</fullName>
+                <default>false</default>
+                <label>Wafers</label>
+            </value>
+            <value>
+                <fullName>Creams and fills</fullName>
+                <default>false</default>
+                <label>Creams and fills</label>
+            </value>
+            <value>
+                <fullName>Candies and Lollipop</fullName>
+                <default>false</default>
+                <label>Candies and Lollipop</label>
+            </value>
+            <value>
+                <fullName>Medicated Confectionery (Lozenges)</fullName>
+                <default>false</default>
+                <label>Medicated Confectionery (Lozenges)</label>
+            </value>
+            <value>
+                <fullName>Mints</fullName>
+                <default>false</default>
+                <label>Mints</label>
+            </value>
+            <value>
+                <fullName>Toffees, Caramels and Noughat</fullName>
+                <default>false</default>
+                <label>Toffees, Caramels and Noughat</label>
+            </value>
+            <value>
+                <fullName>Pastilles, Jellies and Chews</fullName>
+                <default>false</default>
+                <label>Pastilles, Jellies and Chews</label>
+            </value>
+            <value>
+                <fullName>Gums</fullName>
+                <default>false</default>
+                <label>Gums</label>
+            </value>
+            <value>
+                <fullName>Chocolate Confectionery</fullName>
+                <default>false</default>
+                <label>Chocolate Confectionery</label>
+            </value>
+            <value>
+                <fullName>Sweet Spreads</fullName>
+                <default>false</default>
+                <label>Sweet Spreads</label>
+            </value>
+            <value>
+                <fullName>Snack bars</fullName>
+                <default>false</default>
+                <label>Snack bars</label>
+            </value>
+            <value>
+                <fullName>Milk and Milk Alternatives</fullName>
+                <default>false</default>
+                <label>Milk and Milk Alternatives</label>
+            </value>
+            <value>
+                <fullName>Cheese and Alternatives</fullName>
+                <default>false</default>
+                <label>Cheese and Alternatives</label>
+            </value>
+            <value>
+                <fullName>Ice creams and Frozen Desserts</fullName>
+                <default>false</default>
+                <label>Ice creams and Frozen Desserts</label>
+            </value>
+            <value>
+                <fullName>Spoonable Yogurt</fullName>
+                <default>false</default>
+                <label>Spoonable Yogurt</label>
+            </value>
+            <value>
+                <fullName>Drinking Yoghurt</fullName>
+                <default>false</default>
+                <label>Drinking Yoghurt</label>
+            </value>
+            <value>
+                <fullName>Flavoured Milk</fullName>
+                <default>false</default>
+                <label>Flavoured Milk</label>
+            </value>
+            <value>
+                <fullName>Butter</fullName>
+                <default>false</default>
+                <label>Butter</label>
+            </value>
+            <value>
+                <fullName>Beer</fullName>
+                <default>false</default>
+                <label>Beer</label>
+            </value>
+            <value>
+                <fullName>Spirits</fullName>
+                <default>false</default>
+                <label>Spirits</label>
+            </value>
+            <value>
+                <fullName>Juice Drinks</fullName>
+                <default>false</default>
+                <label>Juice Drinks</label>
+            </value>
+            <value>
+                <fullName>Carbonated Beverages</fullName>
+                <default>false</default>
+                <label>Carbonated Beverages</label>
+            </value>
+            <value>
+                <fullName>Sports Beverages</fullName>
+                <default>false</default>
+                <label>Sports Beverages</label>
+            </value>
+            <value>
+                <fullName>Energy Drinks</fullName>
+                <default>false</default>
+                <label>Energy Drinks</label>
+            </value>
+            <value>
+                <fullName>Malt Beverages</fullName>
+                <default>false</default>
+                <label>Malt Beverages</label>
+            </value>
+            <value>
+                <fullName>Powdered Soft Drinks</fullName>
+                <default>false</default>
+                <label>Powdered Soft Drinks</label>
+            </value>
+            <value>
+                <fullName>Table Sauces and Dips</fullName>
+                <default>false</default>
+                <label>Table Sauces and Dips</label>
+            </value>
+            <value>
+                <fullName>Cooking Sauces / Gravies</fullName>
+                <default>false</default>
+                <label>Cooking Sauces / Gravies</label>
+            </value>
+            <value>
+                <fullName>Savoury Spreads</fullName>
+                <default>false</default>
+                <label>Savoury Spreads</label>
+            </value>
+            <value>
+                <fullName>Cooking Pastes</fullName>
+                <default>false</default>
+                <label>Cooking Pastes</label>
+            </value>
+            <value>
+                <fullName>Marinades</fullName>
+                <default>false</default>
+                <label>Marinades</label>
+            </value>
+            <value>
+                <fullName>Mealkit</fullName>
+                <default>false</default>
+                <label>Mealkit</label>
+            </value>
+            <value>
+                <fullName>Sausages</fullName>
+                <default>false</default>
+                <label>Sausages</label>
+            </value>
+            <value>
+                <fullName>Patties &amp; Nuggets</fullName>
+                <default>false</default>
+                <label>Patties &amp; Nuggets</label>
+            </value>
+            <value>
+                <fullName>Processed vegetables</fullName>
+                <default>false</default>
+                <label>Processed vegetables</label>
+            </value>
+            <value>
+                <fullName>Snacks</fullName>
+                <default>false</default>
+                <label>Snacks</label>
+            </value>
+            <value>
+                <fullName>QSR</fullName>
+                <default>false</default>
+                <label>QSR</label>
+            </value>
+            <value>
+                <fullName>HoReCa</fullName>
+                <default>false</default>
+                <label>HoReCa</label>
+            </value>
+            <value>
+                <fullName>Institutional Catering</fullName>
+                <default>false</default>
+                <label>Institutional Catering</label>
+            </value>
+            <value>
+                <fullName>Symega label</fullName>
+                <default>false</default>
+                <label>Symega label</label>
+            </value>
+            <value>
+                <fullName>Customer label</fullName>
+                <default>false</default>
+                <label>Customer label</label>
+            </value>
+            <value>
+                <fullName>Flavourant</fullName>
+                <default>false</default>
+                <label>Flavourant</label>
+            </value>
+            <value>
+                <fullName>Pharmaceutical</fullName>
+                <default>false</default>
+                <label>Pharmaceutical</label>
+            </value>
+            <value>
+                <fullName>Spices and Blends</fullName>
+                <default>false</default>
+                <label>Spices and Blends</label>
+            </value>
+            <value>
+                <fullName>Distributor</fullName>
+                <default>false</default>
+                <label>Distributor</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>Others</fullName>
+                <default>false</default>
+                <label>Others</label>
+            </value>
+            <value>
+                <fullName>Alcoholic Beverages</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Alcoholic Beverages</label>
+            </value>
+            <value>
+                <fullName>Beverage Concentrate (Beverage mix)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Beverage Concentrate (Beverage mix)</label>
+            </value>
+            <value>
+                <fullName>Beverages</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Beverages</label>
+            </value>
+            <value>
+                <fullName>Biscuits</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Biscuits</label>
+            </value>
+            <value>
+                <fullName>Bread Crumbs</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Bread Crumbs</label>
+            </value>
+            <value>
+                <fullName>Breakfast Cereal</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Breakfast Cereal</label>
+            </value>
+            <value>
+                <fullName>Bubble Gum</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Bubble Gum</label>
+            </value>
+            <value>
+                <fullName>Cake</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cake</label>
+            </value>
+            <value>
+                <fullName>Cakes</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cakes</label>
+            </value>
+            <value>
+                <fullName>Candy (Deposited)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Candy (Deposited)</label>
+            </value>
+            <value>
+                <fullName>Candy (HBC)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Candy (HBC)</label>
+            </value>
+            <value>
+                <fullName>Chew Candy</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Chew Candy</label>
+            </value>
+            <value>
+                <fullName>Chew Toffee</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Chew Toffee</label>
+            </value>
+            <value>
+                <fullName>Chewing Gum</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Chewing Gum</label>
+            </value>
+            <value>
+                <fullName>Chocolates</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Chocolates</label>
+            </value>
+            <value>
+                <fullName>Coated Gums</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Coated Gums</label>
+            </value>
+            <value>
+                <fullName>Coatings(colours)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Coatings(colours)</label>
+            </value>
+            <value>
+                <fullName>Coffee-Tea Beverages (Powder)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Coffee-Tea Beverages (Powder)</label>
+            </value>
+            <value>
+                <fullName>Coffee-Tea beverages (RTD)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Coffee-Tea beverages (RTD)</label>
+            </value>
+            <value>
+                <fullName>Cookies</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cookies</label>
+            </value>
+            <value>
+                <fullName>Cream Biscuits</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cream Biscuits</label>
+            </value>
+            <value>
+                <fullName>Eclairs</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Eclairs</label>
+            </value>
+            <value>
+                <fullName>Fruit Juice (with Juice concentrate)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Fruit Juice (with Juice concentrate)</label>
+            </value>
+            <value>
+                <fullName>Fruit Juice (without Juice concentrate)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Fruit Juice (without Juice concentrate)</label>
+            </value>
+            <value>
+                <fullName>Ice Cream</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Ice Cream</label>
+            </value>
+            <value>
+                <fullName>Jellies</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Jellies</label>
+            </value>
+            <value>
+                <fullName>Mayonnaise</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Mayonnaise</label>
+            </value>
+            <value>
+                <fullName>Noodles</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Noodles</label>
+            </value>
+            <value>
+                <fullName>Nutritional Beverages</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Nutritional Beverages</label>
+            </value>
+            <value>
+                <fullName>Oral Care</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Oral Care</label>
+            </value>
+            <value>
+                <fullName>Poultry/Seafood</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Poultry/Seafood</label>
+            </value>
+            <value>
+                <fullName>Powder Soft drinks (PSD)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Powder Soft drinks (PSD)</label>
+            </value>
+            <value>
+                <fullName>Sauces</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Sauces</label>
+            </value>
+            <value>
+                <fullName>Savoury - Culinary</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Savoury - Culinary</label>
+            </value>
+            <value>
+                <fullName>Soft Drinks (Carbonated)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Soft Drinks (Carbonated)</label>
+            </value>
+            <value>
+                <fullName>Toast (Rusk)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Toast (Rusk)</label>
+            </value>
+            <value>
+                <fullName>Toffee</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Toffee</label>
+            </value>
+            <value>
+                <fullName>Wafer</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Wafer</label>
+            </value>
+            <value>
+                <fullName>Yogurt</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Yogurt</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Breakfast Cereals</controllingFieldValue>
+            <valueName>Oats-based</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Breakfast Cereals</controllingFieldValue>
+            <valueName>Millets-based</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Breakfast Cereals</controllingFieldValue>
+            <valueName>Grain-based</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Breakfast Cereals</controllingFieldValue>
+            <controllingFieldValue>Chilled and Frozen Foods</controllingFieldValue>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <controllingFieldValue>Food Service</controllingFieldValue>
+            <controllingFieldValue>Noodles and Pasta</controllingFieldValue>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <controllingFieldValue>Soups</controllingFieldValue>
+            <controllingFieldValue>Sauces and Meals</controllingFieldValue>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <controllingFieldValue>Baked Goods</controllingFieldValue>
+            <controllingFieldValue>Others</controllingFieldValue>
+            <valueName>Others</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chilled and Frozen Foods</controllingFieldValue>
+            <valueName>Sausages</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chilled and Frozen Foods</controllingFieldValue>
+            <valueName>Patties &amp; Nuggets</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chilled and Frozen Foods</controllingFieldValue>
+            <valueName>Processed vegetables</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chilled and Frozen Foods</controllingFieldValue>
+            <valueName>Snacks</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <valueName>Milk and Milk Alternatives</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <valueName>Cheese and Alternatives</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <valueName>Ice creams and Frozen Desserts</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <valueName>Spoonable Yogurt</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <valueName>Drinking Yoghurt</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <valueName>Flavoured Milk</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dairy and Alternatives</controllingFieldValue>
+            <valueName>Butter</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Distributor</controllingFieldValue>
+            <valueName>Distributor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Distributor</controllingFieldValue>
+            <valueName>Retail</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food Service</controllingFieldValue>
+            <valueName>QSR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food Service</controllingFieldValue>
+            <valueName>HoReCa</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Food Service</controllingFieldValue>
+            <valueName>Institutional Catering</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Noodles and Pasta</controllingFieldValue>
+            <valueName>White Noodles</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Noodles and Pasta</controllingFieldValue>
+            <valueName>Brown Noodles</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Noodles and Pasta</controllingFieldValue>
+            <valueName>Atta/Oats/Multigrain Noodles</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Noodles and Pasta</controllingFieldValue>
+            <valueName>Pasta</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Potato Chips</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Finger/Extruded Snacks</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Pellets/Fryums</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Puffed Snacks</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Tortilla Chips</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Namkeens and Other traditional</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Popcorn</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Snacks</controllingFieldValue>
+            <valueName>Nuts, Seeds and Trail Mixes</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Soups</controllingFieldValue>
+            <valueName>Instant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Soups</controllingFieldValue>
+            <valueName>Cook-up</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Soups</controllingFieldValue>
+            <valueName>RTD</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sauces and Meals</controllingFieldValue>
+            <valueName>Table Sauces and Dips</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sauces and Meals</controllingFieldValue>
+            <valueName>Cooking Sauces / Gravies</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sauces and Meals</controllingFieldValue>
+            <valueName>Savoury Spreads</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sauces and Meals</controllingFieldValue>
+            <valueName>Cooking Pastes</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sauces and Meals</controllingFieldValue>
+            <valueName>Marinades</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sauces and Meals</controllingFieldValue>
+            <valueName>Mealkit</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Candies and Lollipop</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Medicated Confectionery (Lozenges)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Mints</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Toffees, Caramels and Noughat</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Pastilles, Jellies and Chews</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Gums</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Chocolate Confectionery</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Sweet Spreads</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Confectionery</controllingFieldValue>
+            <valueName>Snack bars</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Beer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Spirits</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Juice Drinks</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Carbonated Beverages</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Sports Beverages</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Energy Drinks</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Malt Beverages</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Beverages</controllingFieldValue>
+            <valueName>Powdered Soft Drinks</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Retail</controllingFieldValue>
+            <valueName>Symega label</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Retail</controllingFieldValue>
+            <valueName>Customer label</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Baked Goods</controllingFieldValue>
+            <valueName>Biscuits and Cookies</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Baked Goods</controllingFieldValue>
+            <valueName>Crackers</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Baked Goods</controllingFieldValue>
+            <valueName>Bread and Bread Products</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Baked Goods</controllingFieldValue>
+            <valueName>Cakes and Pastries</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Baked Goods</controllingFieldValue>
+            <valueName>Wafers</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Baked Goods</controllingFieldValue>
+            <valueName>Creams and fills</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Others</controllingFieldValue>
+            <valueName>Flavourant</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Others</controllingFieldValue>
+            <valueName>Pharmaceutical</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Others</controllingFieldValue>
+            <valueName>Spices and Blends</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

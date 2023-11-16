@@ -1,8 +1,36 @@
 ({       
+    
+    
+    doinit : function(component, event, helper) {
+        debugger;
+        var months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+        const today = new Date();
+        let month = today.getMonth() + 1;
+        var selectedMonthName = component.get("v.selectedMonthNumber");     
+  var selectedMonthNumber = (months.indexOf(selectedMonthName) + 1);
+        if(selectedMonthNumber < month){
+            var cmpTarget = component.find('changeIt');
+            $A.util.addClass(cmpTarget, 'removeAddplanButton');
+        }
+    },
     HandleNewBeatPal:function(component, event, helper) {
         debugger;
         component.set("v.ShowToCreateBeatPlanne",true);
         var action = component.get("c.AllRolesXKPICurrentUser");
+        
         action.setCallback(this, function(response){
             var state = response.getState();
             var result = response.getReturnValue();

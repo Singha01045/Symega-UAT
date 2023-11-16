@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Address_Null</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( 
+   RecordType.Name == &apos;Sample&apos;, NOT(ISNULL(Customers_Contact__c)),
+   OR( 
+       ISNULL(Customers_Contact__r.MailingCity), 
+       ISNULL(Customers_Contact__r.MailingCountry), 
+       ISNULL(Customers_Contact__r.MailingPostalCode),
+       ISNULL(Customers_Contact__r.MailingState),
+       ISNULL(Customers_Contact__r.MailingStreet)
+   )
+)</errorConditionFormula>
+    <errorMessage>The contact attached with the Sample doesn&apos;t have complete Address. Please add all the fields and re-try.</errorMessage>
+</ValidationRule>

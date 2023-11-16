@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Main_reason_for_selecting_product__c</fullName>
+    <externalId>false</externalId>
+    <label>Main reason for selecting product</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Price within range</fullName>
+                <default>false</default>
+                <label>Price within range</label>
+            </value>
+            <value>
+                <fullName>Customer specific on code</fullName>
+                <default>false</default>
+                <label>Customer specific on code</label>
+            </value>
+            <value>
+                <fullName>Regular product with good reviews</fullName>
+                <default>false</default>
+                <label>Regular product with good reviews</label>
+            </value>
+            <value>
+                <fullName>Technical aspects (Solubility/Legal Status/State)</fullName>
+                <default>false</default>
+                <label>Technical aspects (Solubility/Legal Status/State)</label>
+            </value>
+            <value>
+                <fullName>Campaign Promotion</fullName>
+                <default>false</default>
+                <label>Campaign Promotion</label>
+            </value>
+            <value>
+                <fullName>New Product with great feedback</fullName>
+                <default>false</default>
+                <label>New Product with great feedback</label>
+            </value>
+            <value>
+                <fullName>Others (please specify)</fullName>
+                <default>false</default>
+                <label>Others (please specify)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

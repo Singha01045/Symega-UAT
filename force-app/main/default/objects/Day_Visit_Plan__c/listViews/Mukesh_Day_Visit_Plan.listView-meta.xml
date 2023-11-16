@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mukesh_Day_Visit_Plan</fullName>
+    <columns>NAME</columns>
+    <columns>Service_Executive__c</columns>
+    <columns>Monthly_Travel_Expense__c</columns>
+    <columns>Total_Distances__c</columns>
+    <columns>Total_Covered_Distance__c</columns>
+    <columns>Start_Date__c</columns>
+    <columns>End_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Executive__c</field>
+        <operation>equals</operation>
+        <value>Mukesh Chawla</value>
+    </filters>
+    <filters>
+        <field>Start_Date__c</field>
+        <operation>equals</operation>
+        <value>LAST_MONTH</value>
+    </filters>
+    <label>Mukesh - Day Visit Plan</label>
+</ListView>

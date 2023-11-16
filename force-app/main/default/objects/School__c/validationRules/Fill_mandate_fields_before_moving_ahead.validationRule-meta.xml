@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fill_mandate_fields_before_moving_ahead</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( 
+    OR( ISNULL(City__c), ISNULL( Principal_Email__c)
+    ,  ISPICKVAL(Grade_Range__c, &apos;&apos;)
+    ),
+    ISCHANGED(Status__c), ISPICKVAL(Status__c, &apos;Registration Completed&apos;)
+)</errorConditionFormula>
+    <errorMessage>Please fill City, Principal Email, Grade Range, Playground in-order to proceed.</errorMessage>
+</ValidationRule>

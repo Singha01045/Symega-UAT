@@ -78,7 +78,7 @@
     },
     
     handleDateSelect: function (component, event, helper) {
-        
+        debugger;
         const selectedDate = event.currentTarget.dataset.date;
         component.set("v.selectedDate", selectedDate);
         component.set("v.SelectedVisitDate", selectedDate);

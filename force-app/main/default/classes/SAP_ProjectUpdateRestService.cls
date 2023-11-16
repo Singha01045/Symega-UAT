@@ -20,20 +20,20 @@ global without sharing class SAP_ProjectUpdateRestService {
                 if(projectId != null) {
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Project updated succesfully:'+projectId));
                     RestContext.response.responseBody = Blob.valueOf(responseBody);
-                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 200, processingStartTime, System.now()); //Log 
+                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 200, processingStartTime, System.now(), projectId); //Log 
                 }
                 else {
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Could not update Project'));
                     RestContext.response.responseBody = Blob.valueOf(responseBody);
                     RestContext.response.statusCode = 400;
-                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 400, processingStartTime, System.now()); //Log 
+                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 400, processingStartTime, System.now(), projectId); //Log 
                 }
             }
         }else {
             responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Bad Request'));
             RestContext.response.responseBody = Blob.valueOf(responseBody);
             RestContext.response.statusCode = 400;
-            HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 400, processingStartTime, System.now()); //Log 
+            HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 400, processingStartTime, System.now(), ''); //Log 
         }
     }
 

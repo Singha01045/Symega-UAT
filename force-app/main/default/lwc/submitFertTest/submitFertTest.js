@@ -7,7 +7,7 @@ import updateAccRecord from '@salesforce/apex/SubmitForFertCodeController.update
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class SubmitFertTest extends LightningElement {
-     @api recordId;
+ @api recordId;
  @track oppProdList = [];
  @track accordionList =[];
 
@@ -34,6 +34,7 @@ export default class SubmitFertTest extends LightningElement {
  @track primList = [];
  @track secondList = [];
  @track tertList = [];
+ @track uomList =[];
 
 
   idValueMap = new Map();
@@ -123,13 +124,15 @@ export default class SubmitFertTest extends LightningElement {
 
                     if( data.oliList[0].Opportunity.Account_Billing_Address__c){
                       this.custNo =     data.oliList[0].Opportunity.Account.Customer_Code_SAP__c ;
+                    }else{
+                          this.custNo =  data.oliList[0].Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c;
                     }
                      
-                         this.billStreet =         data.oliList[0].Opportunity.Billing_Street__c;
-                         this.billCity   =    data.oliList[0].Opportunity.Billing_City__c;
-                         this.billCountry  =     data.oliList[0].Opportunity.Billing_Country__c;
-                         this.billState  =     data.oliList[0].Opportunity.Billing_State__c;
-                         this.billPostCode  =     data.oliList[0].Opportunity.Billing_Postal_Code__c;
+                         this.billStreet    =  data.oliList[0].Opportunity.Billing_Street__c;
+                         this.billCity      =  data.oliList[0].Opportunity.Billing_City__c;
+                         this.billCountry   =  data.oliList[0].Opportunity.Billing_Country__c;
+                         this.billState     =  data.oliList[0].Opportunity.Billing_State__c;
+                         this.billPostCode  =  data.oliList[0].Opportunity.Billing_Postal_Code__c;
 
                          this.custName = data.oliList[0].Opportunity.Account.Name ;
                          console.log('  this.custName ---->',  this.custName );
@@ -230,6 +233,7 @@ export default class SubmitFertTest extends LightningElement {
                let Arr8 = data.Primary__c.Primary__c;
                let Arr9 = data.Secondary__c.Secondary__c;
                let Arr10 = data.Tertiary__c.Tertiary__c;
+               let Arr11 = data.Unit_Of_Measure__c.Unit_Of_Measure__c;
 
                 let option=[]
                 for(var i=0; i < Arr.length; i++){
@@ -295,11 +299,13 @@ export default class SubmitFertTest extends LightningElement {
                for(var i=0; i < Arr10.length; i++){
                     option10.push({label:Arr10[i],value:Arr10[i]});
                }
-               this.tertList =  option8;
+               this.tertList =  option10;
 
-
-               
-
+                let option11=[]
+               for(var i=0; i < Arr11.length; i++){
+                    option11.push({label:Arr11[i],value:Arr11[i]});
+               }
+               this.uomList =  option11;
 
                 console.log('  this.options---->',JSON.stringify(this.options));
                 console.log('  this.options1---->',JSON.stringify(this.options1));

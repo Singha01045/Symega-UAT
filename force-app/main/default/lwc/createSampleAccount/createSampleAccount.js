@@ -59,6 +59,7 @@ export default class CreateSampleAccount extends NavigationMixin(LightningElemen
             // Customer_Contact__c : this.accRecord.Customer_Contact__c ? this.accRecord.Customer_Contact__c : null
 
             Opportunity__c : this.recordId,
+            Account__c :   this.oppRecord.AccountId,
             Customer_Name__c : this.oppRecord.Account.Name,
             Sample_Name__c	: `${this.oppRecord.Account.Name}-Sample`,
             Customers_Contact__c : this.oppRecord.Primary_Contact__c,

@@ -141,51 +141,60 @@
                                             </div>
                                         </header>
                                     </div>
-                                    <section class="slds-card__body cardinformation" style="">
+                                    <section class="slds-card__body " style="">
+                                        <div class="Desktopcardinformation">
+                                            <div class="slds-col cardleftInformation slds-size_6-of-12">
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Beat Id : </b></span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.Name}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Time : </b></span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;"><lightning:formattedDateTime value="{!val.Expected_Start_Time__c}" hour="2-digit" minute="2-digit" timeZone="UTC"  timeZoneName="short"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col cardRightInformation slds-size_6-of-12">
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Beat Type : </b></span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.KPI_Target__r.KPI_Target_Name__c}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-form-element slds-form-element__row" style="display: flex;">
+                                                    <div>
+                                                        <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Duration : </b></span>
+                                                    </div>
+                                                    
+                                                    <div class="slds-form-element__control">
+                                                        <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.Duration__c}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         
-                                        <div class="slds-col cardleftInformation slds-size_6-of-12">
-                                            <div class="slds-form-element slds-form-element__row" style="display: flex;">
-                                                <div>
-                                                    <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Beat Id : </b></span>
-                                                </div>
-                                                
-                                                <div class="slds-form-element__control">
-                                                    <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.Name}</span>
-                                                </div>
-                                            </div>
-                                            <div class="slds-form-element slds-form-element__row" style="display: flex;">
-                                                <div>
-                                                    <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Time : </b></span>
-                                                </div>
-                                                
-                                                <div class="slds-form-element__control">
-                                                    <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;"><lightning:formattedDateTime value="{!val.Expected_Start_Time__c}" hour="2-digit" minute="2-digit" timeZone="UTC"  timeZoneName="short"/></span>
-                                                </div>
-                                            </div>
+                                        <div class="Mobiletopcardinformation">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Beat Id &nbsp;:</b>&nbsp;<b style="color: crimson;">{!val.Name}</b></div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Time &nbsp;:</b>&nbsp;<lightning:formattedDateTime value="{!val.Expected_Start_Time__c}" hour="2-digit" minute="2-digit" timeZone="UTC"  timeZoneName="short"/></div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Beat Type &nbsp;:</b>&nbsp;{!val.KPI_Target__r.KPI_Target_Name__c}</div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Duration &nbsp;:</b>&nbsp;{!val.Duration__c}</div>
                                         </div>
-                                        <div class="slds-col cardRightInformation slds-size_6-of-12">
-                                            <div class="slds-form-element slds-form-element__row" style="display: flex;">
-                                                <div>
-                                                    <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Beat Type : </b></span>
-                                                </div>
-                                                
-                                                <div class="slds-form-element__control">
-                                                    <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.KPI_Target__r.KPI_Target_Name__c}</span>
-                                                </div>
-                                            </div>
-                                            <div class="slds-form-element slds-form-element__row" style="display: flex;">
-                                                <div>
-                                                    <span class="slds-form-element__label" style="font-size: small;margin-left: 60px;"><b>Duration : </b></span>
-                                                </div>
-                                                
-                                                <div class="slds-form-element__control">
-                                                    <span class="slds-form-element__static" style="font-size: small;margin-top: 3px;">{!val.Duration__c}</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </section>
                                     <footer class="slds-card__footer">
-                                        <lightning:button class ="cardButton"  label="Amend" onclick="{!c.handleAmend}" name="{!val.Id}" disabled = "{!v.disableVisitButtons}"/>
+                                        <lightning:button class ="cardButton"  label="Amend" onclick="{!c.handleAmend}" name="{!val.Id}" disabled = "{!v.disableVisitButtons}"/>&nbsp;&nbsp;
                                         <lightning:button class ="cardButton" label="Start Visit" onclick="{!c.handleStartVisit}" value="{!val}" disabled ="{!v.disableVisitButtons}"/>
                                     </footer>
                                 </article>
@@ -226,7 +235,7 @@
                                             <div class="slds-backdrop slds-backdrop_open"></div>
                                         </aura:if>
                                     </div>
-                                    <lightning:icon onclick="{! c.openMap }"  iconName='action:map' alternativeText='map' size='small' title='map'></lightning:icon>
+                                    <lightning:icon class="floatingMapButton" onclick="{! c.openMap }"  iconName='action:map' alternativeText='map' size='small' title='map'></lightning:icon>
                                 
                                 <aura:set attribute="else">
                                     <div >
@@ -242,7 +251,7 @@
                 
             </div>
             
-            <div class="slds-col slds-size_12-of-12" style="margin-top:5px;">
+            <div class="slds-col slds-size_12-of-12 DesktopDataTableView" style="margin-top:5px;">
                 <aura:if isTrue="{!not(empty(v.completedTaskList))}">
                     <div class="slds-card" style="margin-left:30px;margin-right:30px;border-radius: 10px;border: 1px solid #ccc;padding: 5px;background-color: #fff;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                         <section class="slds-card__body">
@@ -319,6 +328,29 @@
                         </section>
                     </div>
                 </aura:if>
+            </div>
+            
+            <div class="dataTableMobile">
+                
+                <aura:iteration items="{!v.completedTaskList}"  var="val" indexVar="index">
+                    <div>
+                        <h2 style="font-weight: 600;">Completed Visit &nbsp;:</h2>
+                    </div>
+                    <div class="slds-card cardmargin">
+                        <div class="cardInfo">
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Sr No. &nbsp;:</b>&nbsp;<b style="color: crimson;">{!index+1}</b></div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Client Name &nbsp;:</b>&nbsp;{!val.Account__r.Name}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Status &nbsp;:</b>&nbsp;{!val.Status__c}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Date &nbsp;:</b>&nbsp;{!val.Actual_visit_date__c}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Beat Id &nbsp;:</b>&nbsp;{!val.Name}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>District &nbsp;:</b>&nbsp;{!val.District__c}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Taluk &nbsp;:</b>&nbsp;{!val.Taluk__c}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Night Stay &nbsp;:</b>&nbsp;{!val.Night_Stay__c}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Visit Objective &nbsp;:</b>&nbsp;{!val.Visit_Objective__c}</div>
+                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Visit feedback &nbsp;:</b>&nbsp;{!val.Visit_feedback__c}</div>
+                        </div>
+                    </div>
+                </aura:iteration>
             </div>
         </aura:if>
         

@@ -24,7 +24,7 @@ public class SAP_UpdateFERTCallout {
         headerMap.put('X-CSRF-Token',token);
         headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_FERT_AUTH_HEADER));
 
-        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap, 'POST', body, endPoint);
+        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap, 'POST', body, endPoint, recIds[0]);
 
         if(respMap.get('code')!='200' || respMap.get('code')!='201'){
             return 'Failed - API STATUS CODE - '+respMap.get('code')+respMap.get('message');

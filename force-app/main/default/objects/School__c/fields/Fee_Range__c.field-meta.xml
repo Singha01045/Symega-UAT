@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fee_Range__c</fullName>
+    <externalId>false</externalId>
+    <label>Fee Range</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>&lt; 30K</fullName>
+                <default>false</default>
+                <label>&lt; 30K</label>
+            </value>
+            <value>
+                <fullName>30K to 50K</fullName>
+                <default>false</default>
+                <label>30K to 50K</label>
+            </value>
+            <value>
+                <fullName>50K to 70K</fullName>
+                <default>false</default>
+                <label>50K to 70K</label>
+            </value>
+            <value>
+                <fullName>70k to 1Lac</fullName>
+                <default>false</default>
+                <label>70k to 1Lac</label>
+            </value>
+            <value>
+                <fullName>1 Lac to 2 Lac</fullName>
+                <default>false</default>
+                <label>1 Lac to 2 Lac</label>
+            </value>
+            <value>
+                <fullName>&gt; 2 Lac</fullName>
+                <default>false</default>
+                <label>&gt; 2 Lac</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

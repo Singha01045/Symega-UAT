@@ -18,12 +18,12 @@ global without sharing class Optiva_ApplicationUpdate {
             system.debug('appWrapper :: ' + appWrapper);
             if(updateApplication(appWrapper, appWrapper.product_outcome, applicationId)) {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Application updated successfully'));
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/application_update/*', 'POST', 200, processingStartTime, System.now()); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/application_update/*', 'POST', 200, processingStartTime, System.now(), applicationId); //Log this request
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
             }
             else {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Something went wrong'));
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/application_update/*', 'POST', 400, processingStartTime, System.now()); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/application_update/*', 'POST', 400, processingStartTime, System.now(), applicationId); //Log this request
                 RestContext.response.statusCode = 400;
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
             }

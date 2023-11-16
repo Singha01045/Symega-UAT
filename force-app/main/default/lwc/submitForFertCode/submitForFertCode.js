@@ -142,12 +142,12 @@ export default class SubmitForFertCode extends LightningElement {
                     if(this.oppProdList.length!=0){
                     
                          for(let i=0;i<this.oppProdList.length;i++){
-                              let ProdRecord=  {Id:null,Plant__c:null,Control_Code_HSN_Code__c:null,Shelf_Life__c:null,Allergen_Status_Required__c:null,Veg_Nonveg_Logo_In_Label__c:null}
+                              let ProdRecord=  {Id:null,Plant__c:null,HSN_Code__c:null,Shelf_Life__c:null,Allergen_Status_Required__c:null,Veg_Nonveg_Logo_In_Label__c:null}
                               if(this.oppProdList[i].Product2Id){
 
                                    ProdRecord.Id=this.oppProdList[i].Product2Id;
                                    ProdRecord.Plant__c = this.oppProdList[i].Product2.Plant__c;
-                                   ProdRecord.Control_Code_HSN_Code__c = this.oppProdList[i].Product2.Control_Code_HSN_Code__c;
+                                   ProdRecord.HSN_Code__c = this.oppProdList[i].Product2.HSN_Code__c;
                                    ProdRecord.Shelf_Life__c = this.oppProdList[i].Product2.Shelf_Life__c;
                                    ProdRecord.Allergen_Status_Required__c =  this.oppProdList[i].Product2.Allergen_Status_Required__c;
                                    ProdRecord.Veg_Nonveg_Logo_In_Label__c = this.oppProdList[i].Product2.Veg_Nonveg_Logo_In_Label__c;

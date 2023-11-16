@@ -27,7 +27,7 @@
                     <aura:if isTrue="{!dateObj.colormatch}">
                         <lightning:button class="monthbox" variant="brand" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
                         <aura:set attribute="else">
-                            <lightning:button variant="Neutral" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
+                            <lightning:button class="monthbox" variant="Neutral" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
                         </aura:set>
                     </aura:if>
                 </aura:iteration>

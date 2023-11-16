@@ -120,9 +120,17 @@
                 </div>
             </nav>
 
-            <div class="row mx-5">
-                <div class="row box-shadow-2 mb-5">
-                    <div class="row mt-5 mx-1">
+            <div class="container-fluid mx-5">
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <div class="tab">
+                            <button class="tablinks selectedTab" ng-click="onClickOfDetails()" id="DetailTab">Details</button>
+                            <button class="tablinks" ng-click="onClickOfComments()" id="CommentsTab">Comments</button>
+                          </div>
+                    </div>
+                </div>
+                <div class="row box-shadow-2 mb-5 tabContentSLIDetPage" ng-show="showDetailPage">
+                    <div class="row mt-5">
                         <div class="col-md-12">
                             <h3 class="pb-3 color-theme"><b>BASIC DETAILS</b></h3>
                         </div>
@@ -424,6 +432,152 @@
                         <input class="form-control" type="text" ng-model="oliDetails.Repeat_Order_Details__c" ng-disabled="true"/>
                     </div>
                 </div>
+
+                <div class="row tabContentSLIDetPage" ng-show="showComments">
+                    <div class="col-md-12">
+                        <h3 class="pb-3 color-theme"><b>Comments :</b></h3>
+                    </div>
+                        <div class="col-md-12">
+                            <button class="blue-btn float-end me-2 mb-5" ng-click="openPopUp()" type="button">
+                                New</button>
+                            </div>
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Comment No.</th>
+                                    <th>Comment</th>
+                                    <th>Commentted By</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="com in listOfComments">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{com.Name}}</td>
+                                    <td>{{com.Comment__c}}</td>
+                                    <td>{{com.Comment_By__r.Name}}</td>
+                                    <td><button type="button" data-bs-dismiss="modal" style="background:green;" class="blue-btn" ng-click="openReplyPopUp($index,com.Id)"><i class="fa fa-reply" aria-hidden="true"></i>Reply</button>
+                                        <div class="modal" id="flipFlop2{{$index}}">
+                                                <div class="modal-dialog" style="min-width:1000px">
+                                                  <div class="modal-content">
+                                              
+                                                    <div class="modal-header">
+                                                      <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                                        <h3 class="color-theme2" style="color:green;">
+                                                            <b>Add Reply</b>
+                                                        </h3>
+                                                    </div></h4> 
+                                                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                              
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                {{cmnt.Reply__c}}
+                                                        <ng-ckeditor ng-model="cmnt.Reply__c" ng-config="config" ></ng-ckeditor>
+                                                    </div>
+                                                    </div>
+                                                    <div class="row mt-3">
+                                                        <div class="col-md-12">
+                                                        <button type="button" data-bs-dismiss="modal" class="blue-btn float-end" ng-click="saveReply()">Save</button>
+                                                    </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <button type="button" data-bs-dismiss="modal" style="background:rgb(179, 69, 5))" class="blue-btn" ng-click="openViewReplyPopUp($index,com.Id)">View Reply</button>
+                                    <div class="modal" id="viewReplyBox{{$index}}">
+                                        <div class="modal-dialog" style="min-width:1000px">
+                                            <div class="modal-content">
+                                        
+                                            <div class="modal-header">
+                                                <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                                <h3 class="color-theme2" style="color:green;">
+                                                    <b>View Reply</b>
+                                                </h3>
+                                            </div></h4> 
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                        
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No.</th>
+                                                                    <th>Comment No.</th>
+                                                                    <th>Comment</th>
+                                                                    <th>Commentted By</th>
+                                                                    <!--th>Action</th-->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="com in listOfReplies">
+                                                                    <td>{{$index+1}}</td> 
+                                                                    <td>{{com.Name}}</td>
+                                                                    <td>{{com.Reply__c}}</td>
+                                                                    <td>{{com.Comment_By__r.Name}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                            </div>
+                                            </div>
+                                            <!--div class="row mt-3">
+                                                <div class="col-md-12">
+                                                <button type="button" data-bs-dismiss="modal" class="blue-btn float-end" ng-click="saveReply()">Save</button>
+                                            </div>
+                                            </div-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                                   <div class="row">
+                        <div class="col-md-12">
+                            <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                            <button class="paginationButton" ng-click="handlePrevious()">&#10229; Previous</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="flipFlop">
+                    <div class="modal-dialog" style="min-width:1000px">
+                      <div class="modal-content">
+                  
+                        <div class="modal-header">
+                          <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                            <h3>
+                                <b>Add Comment</b>
+                            </h3>
+                        </div></h4> 
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                  
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                            <ng-ckeditor ng-model="come.Comment__c" ng-config="config" ></ng-ckeditor>
+                        </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                            <button type="button" data-bs-dismiss="modal" class="blue-btn float-end" ng-click="saveComment()">Save</button>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
             </div>
             <div class="col-md-6 mt-3">
                 <button class="blue-btn float-end me-2 mb-5" ng-click="back()" type="button">
@@ -434,10 +588,11 @@
         <script>
             var userHashId = '{!$CurrentPage.parameters.id}';
             var oliId = '{!$CurrentPage.parameters.oliId}';
-            var app = angular.module('oliDet_App', []);
+            var app = angular.module('oliDet_App', ['ng.ckeditor']);
             app.controller('oliDet_ctrl', function ($scope){
                 debugger;
-
+                $scope.showDetailPage = true;
+                $scope.showComments = false;
                 $scope.getOppProductDetails = function(){
                         debugger;
                         OperationsPortalController.getOppProductDetails(oliId,function(result,event){
@@ -445,6 +600,21 @@
                             if(event.status && result){
                                 debugger;
                                 $scope.oliDetails = result;
+                                if(result.Comments__r != undefined){
+                                    $scope.listOfComments = result.Comments__r;
+                                if($scope.listOfComments.length > 0){
+                                    for(var i=0;i<$scope.listOfComments.length;i++){
+                                        if($scope.listOfComments[i].Comment__c != undefined || $scope.listOfComments[i].Comment__c != ''){
+                                            //alert($scope.listOfComments[i].Comment__c);
+                                            $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c.replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+                                            //.replaceAll('&amp;amp;','&').replaceAll('&amp;gt;','>').replaceAll('lt;','<').replaceAll('gt;','>').replaceAll('&amp;','&').replaceAll('amp;','&').replaceAll('&quot;','\'') : $scope.listOfComments[i].Comment__c;
+                                        }
+                                    }
+                                }
+                                    $scope.listOfComments2 = result.listOfComments;
+                                $scope.totalRecords = $scope.listOfComments.length;
+                            	$scope.totalPages = Math.ceil($scope.totalRecords / $scope.pageSize);
+                                }
                                 $scope.$apply();
                             }
                         })
@@ -455,6 +625,105 @@
                         debugger;
                         var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleLineItemDetailPage';
                         window.location.replace(window.location.origin + sitePrefix +'?id='+ userHashId);
+                    }
+
+                    $scope.paginateData = function() {
+                    debugger;
+                     const startIndex = ($scope.currentPage - 1) * $scope.pageSize;
+                     const endIndex = startIndex + $scope.pageSize;
+                     $scope.listOfComments3 = $scope.listOfComments.slice(startIndex, endIndex);
+                }
+                
+                $scope.handleNext = function(){
+                     debugger;
+                     if ($scope.currentPage < $scope.totalPages){
+                         $scope.currentPage += 1;
+                         $scope.paginateData($scope.listOfComments);
+                     }
+                 }
+                
+                $scope.handlePrevious = function(){
+                     debugger;
+                     if ($scope.currentPage > 1){
+                         this.currentPage -= 1;
+                         this.paginateData(this.listOfComments);
+                     }
+                 }
+
+                 $scope.onClickOfDetails = function(){
+                        debugger;
+                        var detailTab = document.getElementById("DetailTab");
+                        detailTab.classList.add("selectedTab");
+                        var CommentsTab = document.getElementById("CommentsTab");
+                        CommentsTab.classList.remove("selectedTab");
+                        $scope.showDetailPage = true;
+                        $scope.showComments = false;
+                    }
+
+                    $scope.onClickOfComments = function(){
+                        debugger;
+                        var detailTab = document.getElementById("DetailTab");
+                        detailTab.classList.remove("selectedTab");
+                        var CommentsTab = document.getElementById("CommentsTab");
+                        CommentsTab.classList.add("selectedTab");
+                        $scope.showDetailPage = false;
+                        $scope.showComments = true;
+                    }
+                    
+                    $scope.openPopUp = function () {
+                    debugger;
+                    var myModal = new bootstrap.Modal(document.getElementById('flipFlop'));
+                    myModal.show('slow');
+                    $scope.$apply();
+    			}
+                    
+                    $scope.openReplyPopUp = function(index,comId){
+                        debugger;
+                        $scope.comId = comId;
+                        var myModal = new bootstrap.Modal(document.getElementById('flipFlop2' + index));
+                        myModal.show('slow');
+                        $scope.$apply();
+                    }
+
+                    $scope.openViewReplyPopUp = function(index,comId){
+                    debugger;
+                    $scope.showSpinner = true;
+                    $scope.comId = comId;
+                    OperationsPortalController.getReplies(comId,function(result,event){
+                    if(event.status && result){
+                        $scope.listOfReplies = result;
+                        $scope.showSpinner = false;
+                        var myModal = new bootstrap.Modal(document.getElementById('viewReplyBox' + index));
+                        myModal.show('slow');
+                        $scope.$apply();
+                    }
+                    })
+                }
+
+                $scope.saveComment = function(){
+                        debugger;
+                        OperationsPortalController.saveComment($scope.come,userHashId,oliId,function(result,event){
+                            debugger;
+                            if(event.status && result){
+                                swal("success", "Comment added successfully.","success");
+                                $scope.come.Comment__c = "";
+                                $scope.getOppProductDetails();
+                                $scope.$apply();
+                            }
+                        })
+                    }
+                    
+                    $scope.saveReply = function(){
+                        debugger;
+                        OperationsPortalController.saveReply($scope.cmnt,userHashId,$scope.comId,function(result,event){
+                            debugger;
+                            if(event.status && result){
+                                swal("success", "Reply added successfully.","success");
+                                $scope.cmnt.Reply__c = "";
+                                $scope.getOppProductDetails();
+                                $scope.$apply();
+                            }
+                        })
                     }
             })
         </script>

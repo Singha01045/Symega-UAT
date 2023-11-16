@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JOSN_Project</fullName>
+    <columns>CREATED_DATE</columns>
+    <columns>NAME</columns>
+    <columns>EndPoint__c</columns>
+    <columns>HTTP_Method__c</columns>
+    <columns>Request_Body__c</columns>
+    <columns>Integration_Type__c</columns>
+    <columns>Response_Status_Code__c</columns>
+    <columns>Processing_Time_in_MilliSeconds__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>OWNER.LAST_NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>EndPoint__c</field>
+        <operation>equals</operation>
+        <value>callout:Project_Creation_SAP/zproject/webproj?sap-client=500</value>
+    </filters>
+    <label>JOSN Project</label>
+</ListView>

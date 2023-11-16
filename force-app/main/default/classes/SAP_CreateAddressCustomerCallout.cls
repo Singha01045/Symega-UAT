@@ -25,7 +25,7 @@ public without sharing class SAP_CreateAddressCustomerCallout {
         headerMap.put('Cookie',cookies);
         headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_Address_AUTH));
         
-        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap,'POST',body,endpoint);
+        Map<String,String> respMap = HTTPUtility.getInstance().httpReqHelper(headerMap,'POST',body,endpoint, recId);
         
         System.debug('ResponseMapXXX----'+respMap);
         

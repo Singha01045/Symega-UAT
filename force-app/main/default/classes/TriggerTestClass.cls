@@ -13,7 +13,9 @@ private class TriggerTestClass{
     @isTest(SeeAllData=true)
     private static void run1(){
         Database.SaveResult dsr;
-        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today());
+        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today(), 
+                                          Annual_Volume_Full__c = 78, Annual_Volume_in_units__c = 'Kg', 
+                                          Target_Price_Kg__c = 67890, End_Use_Application__c = 'Beer', End_Use_Category__c = ' Beverages');
         insert opp;
         opp.StageName = 'New';
         update opp;
@@ -22,7 +24,8 @@ private class TriggerTestClass{
     @isTest(SeeAllData=true)
     private static void run2(){
         Database.SaveResult dsr;
-        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today());
+        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today(), Annual_Volume_Full__c = 78, Annual_Volume_in_units__c = 'Kg', 
+                                          Target_Price_Kg__c = 67890, End_Use_Application__c = 'Beer', End_Use_Category__c = ' Beverages');
         insert opp;
         Quote qt = new Quote(Name='ABC');
         qt.OpportunityId = opp.Id;
@@ -33,7 +36,8 @@ private class TriggerTestClass{
     @isTest(SeeAllData=true)
     private static void run3(){
         Database.SaveResult dsr;
-        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today());
+        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today(), Annual_Volume_Full__c = 78, Annual_Volume_in_units__c = 'Kg', 
+                                          Target_Price_Kg__c = 67890, End_Use_Application__c = 'Beer', End_Use_Category__c = ' Beverages');
         insert opp;
         
         Pricebook2 book = new Pricebook2(IsActive=true, Name='Std Book');
@@ -53,10 +57,11 @@ private class TriggerTestClass{
         
         OpportunityLineItem OLI = new OpportunityLineItem(Quantity=20.00, Packaging_Type__c='Bulk', TotalPrice=200);
         OLI.OpportunityId=opp.id;
-        OLI.PricebookEntryId = standardPBE.id;
+        //OLI.Product2Id = prod.Id;
+        OLI.PricebookEntryId = standardPBE.id; 
         insert OLI;
-        OLI.Quantity = 1;
-        update OLI;
+        //OLI.Quantity = 1;
+        //update OLI;
     }
     
     @isTest(SeeAllData=true)
@@ -71,7 +76,8 @@ private class TriggerTestClass{
     @isTest(SeeAllData=true)
     private static void run5(){
         Database.SaveResult dsr;
-        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today());
+        Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today(), Annual_Volume_Full__c = 78, Annual_Volume_in_units__c = 'Kg', 
+                                          Target_Price_Kg__c = 67890, End_Use_Application__c = 'Beer', End_Use_Category__c = ' Beverages');
         insert opp;
         
         Pricebook2 book = new Pricebook2(IsActive=true, Name='Std Book');
@@ -89,8 +95,9 @@ private class TriggerTestClass{
         entry.Product2Id=prod.Id;	
         insert entry;
         
-        OpportunityLineItem oppLineItem = new OpportunityLineItem(Packaging_Type__c = 'Private Label', OpportunityId = opp.Id, Discount = 67, Quantity = 45, TotalPrice=678);
+        OpportunityLineItem oppLineItem = new OpportunityLineItem(Packaging_Type__c = 'Bulk', OpportunityId = opp.Id, Discount = 67, Quantity = 45, TotalPrice=678);
         oppLineItem.PricebookEntryId = standardPBE.id;
+        oppLineItem.Product2Id = prod.Id;
         insert oppLineItem;
         
         Sales_Order__c saleOrder = new Sales_Order__c(Name='ABC', Opportunity__c = opp.Id);
@@ -98,6 +105,11 @@ private class TriggerTestClass{
         
         Account acc = new Account(Name = 'ACC-INVOICE');
         insert acc;
+        
+        Dispatch_Address__c dAdd = new Dispatch_Address__c(Account__c = acc.Id, Type__c = 'Shipping', Address__Street__s = 'test street', 
+                                                           Address__City__s = 'Bangalore' , Address__PostalCode__s = '67891', 
+                                                           Address__StateCode__s = 'KA', Address__CountryCode__s = 'IN');
+        insert dAdd;
         
         Invoice__c invoice = new Invoice__c(Sales_Order__c = saleOrder.Id, Account__c = acc.Id, Invoice_Number__c = '4sj');
         insert invoice;
@@ -108,6 +120,22 @@ private class TriggerTestClass{
         returnObj.Quantity__c = 1;
         update returnObj;
     }
+    
+    @isTest(SeeAllData=true)
+    private static void run6(){
+        Database.SaveResult dsr;
+        Account acc = new Account(Name = 'ACC-INVOICE');
+        insert acc;
+        
+        Dispatch_Address__c dAdd = new Dispatch_Address__c(Account__c = acc.Id, Type__c = 'Shipping', Address__Street__s = 'test street', 
+                                                           Address__City__s = 'Bangalore' , Address__PostalCode__s = '67891', 
+                                                           Address__StateCode__s = 'KA', Address__CountryCode__s = 'IN');
+        
+        insert dAdd;
+        dAdd.Type__c = 'Billing';
+        update dAdd;        
+    }
+    
     
     /*@isTest(SeeAllData=true)
     private static void insertOppProd(){

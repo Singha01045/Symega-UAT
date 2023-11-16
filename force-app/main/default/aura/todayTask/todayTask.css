@@ -38,6 +38,7 @@ margin-left: 2%;
     .THIS .mapButtonclass {
         display : none;
     }
+    
     .THIS .heading {
         background-color: rgba(0, 112, 210, 0.9);
     }
@@ -181,6 +182,7 @@ margin-left: 2%;
         background-color: #6BBD6E;
         color: #fff;
         border-radius:7px;
+        min-width: 100px;
     }
     
     .THIS .cardButton:disabled {
@@ -231,7 +233,7 @@ margin-left: 2%;
                 display: inline-flex;
                 width: 25vw;
                 align-items: center;
-                left: 21%;
+                left: -29%;
                 position: relative;
             }
             
@@ -246,6 +248,22 @@ margin-left: 2%;
             .THIS .newcard{
                 display: flex;
                 justify-content: space-between;
+            }
+            .THIS .dataTableMobile{
+                display:none;
+            }
+            .THIS .Mobiletopcardinformation{
+                display:none;
+            }
+            .THIS .mobileAlignPrev{
+                background-color:#1589EE;
+                margin-right:7px;
+            }
+            
+            .THIS .mobileAlignNext{
+                background-color:#1589EE;
+                margin-left:7px;
+                
             }
             
         }
@@ -403,19 +421,15 @@ margin-left: 2%;
                 font-weight: 500;
                 border: none;
             }
-            
-            
             .THIS .sel-item {
                 position: relative; 
                 top: 18%; 
             }
-            
-            
-            
             .THIS .cardButton {
                 background-color: #6BBD6E;
                 color: #fff;
                 border-radius:7px;
+                min-width: 100px;
             }
             
             .THIS .cardButton:disabled {
@@ -466,7 +480,7 @@ margin-left: 2%;
                         display: inline-flex;
                         width: 25vw;
                         align-items: center;
-                        left: 25%;
+                        left: -29%;
                         position: relative;
                     }
                     
@@ -482,6 +496,22 @@ margin-left: 2%;
                         display: flex;
                         justify-content: space-between;
                     }
+                    .THIS .dataTableMobile{
+                        display:none;
+                    }
+                    .THIS .Mobiletopcardinformation{
+                        display:none;
+                    }
+                    .THIS .mobileAlignPrev{
+                        background-color:#1589EE;
+                        margin-right:7px;
+                    }
+                    
+                    .THIS .mobileAlignNext{
+                        background-color:#1589EE;
+                        margin-left:7px;
+                        
+                    }
                     
                 }
                 
@@ -490,14 +520,36 @@ margin-left: 2%;
                         display: inline-flex;
                         width: 60vw;
                         position: relative;
-                        left: 20vw;
+                        left: -2vw;
                     }
                     .THIS .mainCardDetails{
-                        min-width: 125%;
-                        margin-left: -11%;
+                        min-width: 129%;
+                        margin-left: -10%;
                         overflow-y: scroll;
                         max-height: 70vw;
-                    
+                        
+                    }
+                    .THIS .DesktopDataTableView{
+                        display:none;
+                    }
+                    .THIS .Desktopcardinformation{
+                        display:none;
+                    }
+                    .THIS .Mobiletopcardinformation{
+                        margin-left: 9%;
+                    }
+                    .THIS .dataTableMobile{
+                        margin-top: 2%;
+                    }
+                    .THIS .cardmargin{
+                        background-color: aliceblue;
+                        margin-left: 2%;
+                        margin-top: 1%;
+                    }
+                    .THIS .cardInfo{
+                        margin-left: 2%;
+                        margin-top: 1%;
+                        margin-bottom: 1%;
                     }
                     
                     .THIS .hideClass{
@@ -526,7 +578,6 @@ margin-left: 2%;
                         padding: 5px;
                         background-color: #fff;
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                        min-width: 89%;
                     }
                     .THIS.mainContainer {
                         border-radius: 10px;
@@ -540,7 +591,7 @@ margin-left: 2%;
                     
                     .THIS .mobileDateFil{
                         width: fit-content;
-                        left: 9px;
+                        left: 1px;
                         position: relative;
                     }
                     
@@ -618,7 +669,7 @@ margin-left: 2%;
                             
                             .THIS .dateFilter{
                                 display: inline-flex;
-                                margin-left: 7%;
+                                margin-left: 10%;
                                 align-items: center;
                                 margin-top: -5%;
                                 margin-bottom: 10%;
@@ -647,6 +698,7 @@ margin-left: 2%;
                                 background-color: #6BBD6E;
                                 color: #fff;
                                 border-radius:7px;
+                                min-width: 100px;
                             }
                             
                             .THIS .cardButton:disabled {
@@ -676,6 +728,8 @@ margin-left: 2%;
                                 margin-right: 1%;
                                 background-color: #6BBD6E;
                                 color:white;
+                                min-width: 160px;
+                                margin-left: 5%;
                             } 
                             
                             .THIS .headerButton:disabled {
@@ -695,17 +749,17 @@ margin-left: 2%;
                                 margin-top: 3.2%;
                                 margin-bottom: -13%;
                             }
-                        }
-                        
-                        .THIS .mobileAlignPrev{
-                            background-color:#1589EE;
-                            margin-right:7px;
+                            .THIS .mobileAlignPrev{
+                                background-color:#1589EE;
+                                margin-right:7px;
+                                max-height: 26px;
+                                max-width: 42px;
+                            }
                             
-                        }
-                        
-                        .THIS .mobileAlignNext{
-                            background-color:#1589EE;
-                            
-                            margin-left:7px;
-                            
+                            .THIS .mobileAlignNext{
+                                background-color:#1589EE;
+                                max-height: 26px;
+                                margin-left:7px;
+                                max-width: 42px;
+                            }
                         }

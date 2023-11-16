@@ -88,18 +88,18 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                         }
 
                        // OpWrapper.created_by = checkIfBlank(project.CreatedBy.Name);
-                        OpWrapper.creation_date = project.CreatedDate == null ? 'NA' : project.CreatedDate.format('dd/MM/yyyy');
+                        OpWrapper.creation_date = project.CreatedDate == null ? '' : project.CreatedDate.format('dd/MM/yyyy');
                         OpWrapper.opp_type_int = 'Sales';//checkIfBlank(project.Opportunity_Type__c);
                         OpWrapper.opp_sub_type_sales = 'Sampling';
                         OpWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
                         OpWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
                         OpWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
 
-                        OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'NA'; 
-                        OpWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'NA';
-                        OpWrapper.business_potent_val = project.Business_potential_value_INR_New__c!=null?String.valueOf(project.Business_potential_value_INR_New__c):'NA';
+                        OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):''; 
+                        OpWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'0';
+                        OpWrapper.business_potent_val = project.Business_potential_value_INR_New__c!=null?String.valueOf(project.Business_potential_value_INR_New__c):'0';
                         OpWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
-                        OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'NA';
+                        OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'0';
 
                         Map<Id,Sample_Line_Item__c> optivaRecipieSLineItems = new Map<Id,Sample_Line_Item__c>();
                         Map<Id,String> withoutOptivaRecipieSLineItems = new Map<Id,String>();
@@ -122,12 +122,12 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
             
                             if(!optivaRecipieSLineItems.isEmpty()){
                                 for(Integer i=0;i<optivaRecipieSLineItems.values().size();i++){
-                                    Sample_Line_Item__c sli = project.Sample_Line_Items__r[i];
+                                    Sample_Line_Item__c sli = optivaRecipieSLineItems.values()[i]; //project.Sample_Line_Items__r[i];
                                     if(i==0){
                                         OpWrapper.uom1 = checkIfBlank(sli.Quantity_Unit__c);
                                         OpWrapper.tot_qty1 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units1 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size1 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                                        OpWrapper.pack_size1 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                                         //OpWrapper.selling_desc1 = checkIfBlank(sli.Additional_Comments__c);
                                         OpWrapper.selling_desc1 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
@@ -139,13 +139,13 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                             OpWrapper.prod_code1_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
                                         
-                                        OpWrapper.sample_duedate1 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                                        OpWrapper.cust_target_price1 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                                        OpWrapper.sample_duedate1 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                                        OpWrapper.cust_target_price1 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                                     }else if(i==1){
                                         OpWrapper.uom2 = checkIfBlank(sli.Quantity_Unit__c);
                                         OpWrapper.tot_qty2 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units2 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size2 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                                        OpWrapper.pack_size2 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                                         OpWrapper.selling_desc2 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
@@ -155,13 +155,13 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         }else{
                                             OpWrapper.prod_code2_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate2 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                                        OpWrapper.cust_target_price2 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                                        OpWrapper.sample_duedate2 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                                        OpWrapper.cust_target_price2 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                                     }else if(i==2){
                                          OpWrapper.uom3 = checkIfBlank(sli.Quantity_Unit__c);
                                         OpWrapper.tot_qty3 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units3 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size3 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                                        OpWrapper.pack_size3 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                                         OpWrapper.selling_desc3 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
@@ -171,14 +171,14 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         }else{
                                             OpWrapper.prod_code3_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate3 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                                        OpWrapper.cust_target_price3 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                                        OpWrapper.sample_duedate3 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                                        OpWrapper.cust_target_price3 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                                     }
                                     else if(i==3){
                                         OpWrapper.uom4 = checkIfBlank(sli.Quantity_Unit__c);
                                         OpWrapper.tot_qty4 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units4 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size4 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                                        OpWrapper.pack_size4 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                                         OpWrapper.selling_desc4 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
@@ -188,14 +188,14 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         }else{
                                             OpWrapper.prod_code4_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate4 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                                        OpWrapper.cust_target_price4 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                                        OpWrapper.sample_duedate4 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                                        OpWrapper.cust_target_price4 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                                     }
                                     else if(i==4){
                                          OpWrapper.uom5 = checkIfBlank(sli.Quantity_Unit__c);
                                         OpWrapper.tot_qty5 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units5 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size5 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                                        OpWrapper.pack_size5 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                                         OpWrapper.selling_desc5 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
@@ -205,14 +205,14 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         }else{
                                             OpWrapper.prod_code5_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate5 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                                        OpWrapper.cust_target_price5 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                                        OpWrapper.sample_duedate5 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                                        OpWrapper.cust_target_price5 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                                     }
                                     else if(i==5){
                                          OpWrapper.uom6 = checkIfBlank(sli.Quantity_Unit__c);
                                         OpWrapper.tot_qty6 = checkIfBlank(String.valueOf(sli.Quantity__c));
                                         OpWrapper.no_units6 = checkIfBlank(sli.Packaging_Unit__c);
-                                        OpWrapper.pack_size6 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                                        OpWrapper.pack_size6 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                                         OpWrapper.selling_desc6 = checkIfBlank(sli.Customer_Preferred_Name__c);
                                         
                                         if(!String.isEmpty(sli.OPTIVA_Recipe__r.SSC_Code__c)){
@@ -222,8 +222,8 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                         }else{
                                             OpWrapper.prod_code6_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                                         }
-                                        OpWrapper.sample_duedate6 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                                        OpWrapper.cust_target_price6 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                                        OpWrapper.sample_duedate6 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                                        OpWrapper.cust_target_price6 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                                     }
                                 }
             
@@ -309,7 +309,8 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                             project.Error_Occured_On_Submitting_To_Optiva__c = true;
                             project.Error_Message_On_Submitting_To_Optiva__c = 'Customer code not found';
                         }
-                    }else{
+                    }
+                    else{
                         if(String.isBlank(customerCodeOPTIVA)){
                             project.Submit_Sample_To_Optiva__c = true;
                             project.Error_Occured_On_Submitting_To_Optiva__c = true;

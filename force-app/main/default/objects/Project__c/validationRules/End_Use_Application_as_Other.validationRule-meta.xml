@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>End_Use_Application_as_Other</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( 
+    ISPICKVAL(End_Use_Applications__c, &apos;Others&apos;),  
+    ISPICKVAL( End_Use_category__c , &apos;Others&apos;),  
+    End_use_application_other__c != &apos;Others&apos; 
+   )</errorConditionFormula>
+    <errorMessage>Please fill &apos;Others&apos; as End Use Application Other field</errorMessage>
+</ValidationRule>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conga_Link__c</fullName>
+    <externalId>false</externalId>
+    <formula>&apos;https://www.appextremes.com/apps/Conga/PM.aspx&apos;&amp;
+&apos;?SessionId=SESSION_ID&apos; &amp;
+&apos;&amp;ServerUrl=&apos;&amp; $Api.Partner_Server_URL_290 &amp;
+&apos;&amp;Id=&apos;&amp;Id &amp;
+&apos;&amp;TemplateId=a5DN0000000EaEO&apos; &amp;
+&apos;&amp;QueryId=[Accounts]a55N0000000O07Q&amp;DS7=1&apos; &amp;
+&apos;&amp;LRTF=1&apos;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Conga Link</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plant__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter plant details</inlineHelpText>
+    <label>Plant</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>SAVOURY SPD 1001</fullName>
+                <default>false</default>
+                <label>SAVOURY SPD 1001</label>
+            </value>
+            <value>
+                <fullName>COLOURS - 1301</fullName>
+                <default>false</default>
+                <label>COLOURS - 1301</label>
+            </value>
+            <value>
+                <fullName>FOOD SERVICE</fullName>
+                <default>false</default>
+                <label>FOOD SERVICE</label>
+            </value>
+            <value>
+                <fullName>FLAVOURS - 1201</fullName>
+                <default>false</default>
+                <label>FLAVOURS - 1201</label>
+            </value>
+            <value>
+                <fullName>SAVOURY CPD - 1101</fullName>
+                <default>false</default>
+                <label>SAVOURY CPD - 1101</label>
+            </value>
+            <value>
+                <fullName>SPL FOOD DIV 1004</fullName>
+                <default>false</default>
+                <label>SPL FOOD DIV 1004</label>
+            </value>
+            <value>
+                <fullName>SAVOURY PEPSICO</fullName>
+                <default>false</default>
+                <label>SAVOURY PEPSICO</label>
+            </value>
+            <value>
+                <fullName>R &amp; D SAVOURY - 1501</fullName>
+                <default>false</default>
+                <label>R &amp; D SAVOURY - 1501</label>
+            </value>
+            <value>
+                <fullName>BREAKFAST MIX DIV</fullName>
+                <default>false</default>
+                <label>BREAKFAST MIX DIV</label>
+            </value>
+            <value>
+                <fullName>INDORE DEPOT - 1402</fullName>
+                <default>false</default>
+                <label>INDORE DEPOT - 1402</label>
+            </value>
+            <value>
+                <fullName>GURGAON DEPOT - 1401</fullName>
+                <default>false</default>
+                <label>GURGAON DEPOT - 1401</label>
+            </value>
+            <value>
+                <fullName>BANGALORE DEPO-1403</fullName>
+                <default>false</default>
+                <label>BANGALORE DEPO-1403</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

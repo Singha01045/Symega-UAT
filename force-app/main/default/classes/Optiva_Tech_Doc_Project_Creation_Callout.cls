@@ -29,12 +29,14 @@ public without sharing class Optiva_Tech_Doc_Project_Creation_Callout {
                 responseMap.put('status','Success');
                 responseMap.put('code',String.valueOf(resp.getStatusCode()));
                 responseMap.put('message',resp.getBody());
+                HttpUtility.createLog(req,resp,startDate,endDate,pro.Id);
                 return responseMap;
-            }else{
+            }
+            else{
                 HandleBusinessException.captureCalloutError('Optiva_NPDCreationCallout','createProject',reqBody,resp.getStatusCode(),resp.getBody());    
             }
     
-            HttpUtility.createLog(req,resp,startDate,endDate);
+            
             responseMap.put('status','Failure');
             responseMap.put('code',String.valueOf(resp.getStatusCode()));
             responseMap.put('message',resp.getBody());
@@ -68,7 +70,7 @@ public without sharing class Optiva_Tech_Doc_Project_Creation_Callout {
             
             // 21/10/2022
             opWrapper.project_sf_code = pro.Id;
-            opWrapper.project_title = pro.Project_Name__c;
+            opWrapper.project_title = pro.Name + ':' + pro.Project_Name__c;
             opWrapper.project_type = 'External';
             opWrapper.project_category = 'Flavour';
             opWrapper.opp_type_int = 'Sales';

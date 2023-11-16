@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Role_Should_be_Operation_Team</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT( ISPICKVAL( Contact__r.Contact_Role__c , &apos;Operation Team&apos;) )</errorConditionFormula>
+    <errorDisplayField>Contact__c</errorDisplayField>
+    <errorMessage>Please select a Sales Opration Team Member</errorMessage>
+</ValidationRule>

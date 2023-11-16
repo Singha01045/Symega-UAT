@@ -203,7 +203,7 @@ public without sharing class ProjectHanlder {
             List<CustomerAddressWrapper> customerBillingAddressWrapper = new List<CustomerAddressWrapper>();
             System.debug('--- custId'+custId);
             if(!String.isBlank(custId)) {
-                Account customerAcc = [SELECT Id, Name, CurrencyIsoCode, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, GST_Number__c, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :custId];
+                Account customerAcc = [SELECT Id, Name, Customer_Contact__c, CurrencyIsoCode, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, GST_Number__c, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :custId];
                 
                 if(customerAcc != null && !String.isBlank(customerAcc.BillingCountry)) {
                     customerBillingAddressWrapper.add(new CustomerAddressWrapper('Billing', customerAcc.BillingStreet, customerAcc.BillingState, customerAcc.BillingCountry, customerAcc.BillingCity, customerAcc.BillingPostalCode, customerAcc.GST_Number__c, 'Billing', true));

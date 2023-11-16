@@ -399,7 +399,8 @@
     callMapMethodFromController : function(component, dataFromCont, helper){
         
         var selectedVisitDateFromParentComp = dataFromCont;
-        var baseURL = 'https://sales-production--ecommerce--c.sandbox.vf.force.com/apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
+        var baseURL = $A.get("$Label.c.orgBaseURLforVFPages");
+        var baseURL = baseURL + 'apex/MultipleGeolocationVF?id='+selectedVisitDateFromParentComp;
         //console.log('baseURL === >'+baseURL);
         component.set("v.siteURL",baseURL);
     },

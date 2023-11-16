@@ -3,13 +3,33 @@ import getOppRecord from '@salesforce/apex/OpportunityHanlder.getRecord'
 import getAllAddresses from "@salesforce/apex/OpportunityHanlder.getAllCustomerAddress";
 import { NavigationMixin } from 'lightning/navigation';
 import { CloseActionScreenEvent } from 'lightning/actions';
+import CreateSaleOrder from '@salesforce/label/c.CreateSaleOrder';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { encodeDefaultFieldValues } from 'lightning/pageReferenceUtils';
 
 export default class CreateSalesOrder extends NavigationMixin(LightningElement){
+
+    label = {
+        CreateSaleOrder
+    };
     
     @api recordId;
-    oppRecord;
+     oppRecord;
+     // billing
+     oppBillingCity;
+     oppBillingStreet;
+     oppBillingState;
+     oppBillingCountry;
+     oppBillingPostal
+     
+     //shipping
+      oppShippingCity;
+      oppShippingCountry;
+      oppShippingState;
+      oppShippingStreet;
+      oppShippingPostal;
+
+
     selectedAddressIndex = -1;
     selectedBilAddressIndex = -1;
     @track ship_addresses = [];
@@ -24,7 +44,7 @@ export default class CreateSalesOrder extends NavigationMixin(LightningElement){
 
     connectedCallback(){
         setTimeout(() => {
-           // this.getRecordDetails();
+            this.getRecordDetails();
             this.getRecordDetails1();
         }, 300);
     }
@@ -32,10 +52,24 @@ export default class CreateSalesOrder extends NavigationMixin(LightningElement){
     getRecordDetails(){
         getOppRecord({oppId:this.recordId}).then(data=>{
             if(data){
-                this.oppRecord = data[0];
+              
+                this.oppRecord =  data;
+                //billing
+                this.oppBillingCity = data.Billing_City__c;
+                this.oppBillingStreet = data.Billing_Street__c;
+                this.oppBillingState = data.Billing_State__c;
+                this.oppBillingCountry = data.Billing_Country__c;
+                this.oppBillingPostal = data.Billing_Postal_Code__c;
+                //shipping
+                this.oppShippingCity = data.Shipping_City__c;
+                this.oppShippingCountry = data.Shipping_Country__c;
+                this.oppShippingState =  data.Shipping_State__c;
+                this.oppShippingStreet = data.Shipping_Street__c;
+                this.oppShippingPostal =  data.Shipping_Postal_Code__c;
+
                 console.log('RecordId',this.recordId);
                 console.log('Data',data);
-                this.openCreateRecordForm();
+              //  this.openCreateRecordForm();
             }
         })
     }
@@ -121,49 +155,55 @@ export default class CreateSalesOrder extends NavigationMixin(LightningElement){
     //         console.log("Error",error);
     //     }
     // }
-    
+
     handleNavigate() {
         debugger;
-        let index = this.ship_addresses.findIndex((item) => {
-            return item.checked === true;
-        });
-
-        let billingIndex = this.bill_addresses.findIndex((item) => {
-            return item.checked === true;
-        });
-        if(index === -1 || billingIndex === -1) {
-            const evt = new ShowToastEvent({
-                title: "No Selection",
-                message: "Please select Shipping and Billing address in-order to proceed.",
-                variant: "Warning",
-            });
-            this.dispatchEvent(evt);
-            return;
-        }
-
-        let selectedAddress = this.ship_addresses[index];
-        let addressId = selectedAddress.id;
-        let accShipAddress = false;
-
-        let selectedBillingAddress = this.bill_addresses[billingIndex];
-        let billAddressId = selectedBillingAddress.id;
-        let accountBillAddress = false;
+        this.openCreateRecordForm();
+    }
+    
+    // handleNavigate() {
+    //     debugger;
         
-        if(selectedAddress.id === 'Shipping') {
-            addressId = undefined;
-            accShipAddress = true;
-        }
+    //     let index = this.ship_addresses.findIndex((item) => {
+    //         return item.checked === true;
+    //     });
+
+    //     let billingIndex = this.bill_addresses.findIndex((item) => {
+    //         return item.checked === true;
+    //     });
+    //     if(index === -1 || billingIndex === -1) {
+    //         const evt = new ShowToastEvent({
+    //             title: "No Selection",
+    //             message: "Please select Shipping and Billing address in-order to proceed.",
+    //             variant: "Warning",
+    //         });
+    //         this.dispatchEvent(evt);
+    //         return;
+    //     }
+
+    //     let selectedAddress = this.ship_addresses[index];
+    //     let addressId = selectedAddress.id;
+    //     let accShipAddress = false;
+
+    //     let selectedBillingAddress = this.bill_addresses[billingIndex];
+    //     let billAddressId = selectedBillingAddress.id;
+    //     let accountBillAddress = false;
         
-        if(selectedBillingAddress.id === 'Billing') {
-            billAddressId = undefined;
-            accountBillAddress = true;
-        }
+    //     if(selectedAddress.id === 'Shipping') {
+    //         addressId = undefined;
+    //         accShipAddress = true;
+    //     }
+        
+    //     if(selectedBillingAddress.id === 'Billing') {
+    //         billAddressId = undefined;
+    //         accountBillAddress = true;
+    //     }
         
     
-      //  this.openCreateRecordForm(addressId, accShipAddress, billAddressId, accountBillAddress);
-       //   this.openCreateRecordForm();
-        this.getRecordDetails();
-    }    
+    //   //  this.openCreateRecordForm(addressId, accShipAddress, billAddressId, accountBillAddress);
+    //    //   this.openCreateRecordForm();
+    //     this.getRecordDetails();
+    // }    
     
      closeAction(){
         this.dispatchEvent(new CloseActionScreenEvent());

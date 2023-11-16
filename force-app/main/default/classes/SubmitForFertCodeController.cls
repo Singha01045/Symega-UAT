@@ -33,11 +33,11 @@ public without sharing class SubmitForFertCodeController {
         
         try{
             List<string> missingFieldsList = new List<string>();
-            List<OpportunityLineItem> oppLineItemList = [SELECT ID, Name, Product2Id,Packaging_Type__c, Art_Work__c, OpportunityId, Opportunity.Customer_Billing_Address__c, Opportunity.Account_Billing_Address__c, 
+            List<OpportunityLineItem> oppLineItemList = [SELECT ID, Name,Product2.Name, Product2Id,Packaging_Type__c, Art_Work__c, OpportunityId, Opportunity.Customer_Billing_Address__c, Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c, Opportunity.Account_Billing_Address__c, 
                                                          Opportunity.Account.Customer_Code_SAP__c, Opportunity.AccountId, Opportunity.Account.Name, Opportunity.Billing_Country__c, Opportunity.Billing_State__c, 
                                                          Opportunity.Billing_Street__c, Opportunity.Billing_City__c, Opportunity.Billing_Postal_Code__c,Quantity,Fert_Description__c,Unit_Of_Measure__c,ProductCode,
                                                          Packaging_Quantity__c, Product2.Shelf_Life__c, Product2.Allergen_Status_Required__c,Product2.Veg_Nonveg_Logo_In_Label__c,Ingredients_List_Declared_With_Customer__c,
-                                                         Customized_Label__c,Ingredient_list__c,Reveal_Symega_Identity__c,Cusinery_identity__c,Label__c,Sales_Remarks__c, Product2.Plant__c,Product2.Control_Code_HSN_Code__c,
+                                                         Customized_Label__c,Ingredient_list__c,Reveal_Symega_Identity__c,Cusinery_identity__c,Label__c,Sales_Remarks__c, Product2.Plant__c,Product2.HSN_Code__c,
                                                          Primary__c,Secondary__c,Tertiary__c FROM OpportunityLineItem WHERE OpportunityId =: OppId];
             System.debug('oppLineItemList---->'+oppLineItemList);
             
@@ -161,11 +161,13 @@ public without sharing class SubmitForFertCodeController {
 
          if(FieldApi_Name=='Tertiary__c'){
             Map<String,List<String>> getPickListValuesIntoList= getPickListValuesIntoList(ObjectName,FieldApi_Name); 
-            ObjectName_FieldApiName_PickListValue.put('Tertiary__c',getPickListValuesIntoList);
-            
+            ObjectName_FieldApiName_PickListValue.put('Tertiary__c',getPickListValuesIntoList);     
+              ObjectName='OpportunityLineItem';FieldApi_Name='Unit_Of_Measure__c'; 
         }
-
-        
+         if(FieldApi_Name=='Unit_Of_Measure__c'){
+            Map<String,List<String>> getPickListValuesIntoList= getPickListValuesIntoList(ObjectName,FieldApi_Name); 
+            ObjectName_FieldApiName_PickListValue.put('Unit_Of_Measure__c',getPickListValuesIntoList);     
+        } 
         return ObjectName_FieldApiName_PickListValue;
     }
     
@@ -192,7 +194,7 @@ public without sharing class SubmitForFertCodeController {
         try{
             update oppLineList;
             update prod2List;
-            result = GetFERTCodeController.sendFERTCodeReqEmailNotificaiton(oppLineList[0].OpportunityId);
+           result = GetFERTCodeController.sendFERTCodeReqEmailNotificaiton(oppLineList[0].OpportunityId);
             //result = 'SUCCESS';
         }
         catch(Exception e){

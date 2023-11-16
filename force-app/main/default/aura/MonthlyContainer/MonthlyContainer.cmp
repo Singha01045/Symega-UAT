@@ -25,9 +25,9 @@
         <div class="slds-align_absolute-center desktopDayBar">
             <aura:iteration items="{!v.MonthListToShow}" var="dateObj">
                 <aura:if isTrue="{!dateObj.colormatch}">
-                    <lightning:button variant="brand" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
+                    <lightning:button class="monthBtnBox" variant="brand" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
                     <aura:set attribute="else">
-                        <lightning:button variant="Neutral" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
+                        <lightning:button class="monthBtnBox" variant="Neutral" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
                     </aura:set>
                 </aura:if>
             </aura:iteration>

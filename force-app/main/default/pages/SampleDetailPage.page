@@ -191,6 +191,7 @@
                                                                 <td>{{SLI. OPTIVA_Recipe__r.Shelf_Life__c}}</td>
                                                                 <td>{{SLI.Expected_Shelf_Life__c}}</td>
                                                                 <td><input type="text" class="form-control" ng-model="SLI.Customer_Instructions__c" ng-disabled="SLI.check" /></td>
+                                                                <td ng-if="SLI.Id == undefined"><i class="fas fa-times-circle icon ps-3" ng-click="removeSALI($index)"></i></td>
                                                                 <!--td ng-if="(conRec.Sample_Assignment_Team__r.Team_Type__c == SLI.Product_Family__c) || SLI.Id == undefined"><so-dropdown ng-model="productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,productId)">
                                                                     <option value='None'>None</option>
                                                                     </so-dropdown></td>
@@ -465,6 +466,11 @@
                         <input class="form-control" type="text" ng-model="sampleDetails.Company_Name__c" ng-disabled="true"/>
                     </div>
                     <div class="col-md-6 mt-3">
+                        <label class="font-if">Contact Name
+                        </label>
+                        <input class="form-control" type="text" ng-model="sampleDetails.Customers_Contact__r.Name" ng-disabled="true"/>
+                    </div>
+                    <div class="col-md-6 mt-3">
                         <label class="font-if">Contact Number
                         </label>
                         <input class="form-control" type="text" ng-model="sampleDetails.Contact_Number__c" ng-disabled="true"/>
@@ -736,7 +742,7 @@
             $scope.addRow=function(){
                 debugger;
                 $scope.SLIlist.push({
-                    "Quantity_Unit__c":"","Packaging_Quantity__c":"","Packaging_Unit__c":"","Sample__c":sampleId
+                    "Quantity_Unit__c":"","Packaging_Quantity__c":"","Packaging_Unit__c":"","Sample__c":sampleId,"check":false
                 });
             }
             
@@ -749,6 +755,17 @@
                 debugger;
                 SLI.Packaging_Unit__c = SLI.Quantity_Unit__c;
                 
+            }
+            
+            $scope.removeSALI = function(index){
+                debugger;
+                if ($scope.SLIlist.length == 1) {
+                    return;
+                }
+                if($scope.SLIlist[index].Id == undefined){
+                    $scope.SLIlist.splice(index, 1);
+                    return;
+                }
             }
             
             $scope.SaveSampleDetails = function(){

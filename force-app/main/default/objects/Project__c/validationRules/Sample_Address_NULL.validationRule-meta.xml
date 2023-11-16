@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sample_Address_NULL</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+RecordType.Name == &apos;Sample&apos;,
+OR(
+ISNULL( City__c),
+ISNULL(Country__c),
+ISNULL(Postal_Code__c),
+ISNULL(State__c),
+ISNULL(Street__c)
+)
+)</errorConditionFormula>
+    <errorMessage>The Sample doesn&apos;t have complete Address. Please add all the fields and re-try.</errorMessage>
+</ValidationRule>

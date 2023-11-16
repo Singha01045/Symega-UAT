@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PIR_by_this_month</fullName>
+    <columns>NAME</columns>
+    <columns>Customer_Name__c</columns>
+    <columns>Customer_Code__c</columns>
+    <columns>Product__c</columns>
+    <columns>Product_Code_HALB__c</columns>
+    <columns>Quantity_in_KG__c</columns>
+    <columns>Dispatch_Plan__c</columns>
+    <columns>Synced_to_SAP__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>THIS_MONTH</value>
+    </filters>
+    <label>PIR by this month</label>
+</ListView>

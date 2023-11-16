@@ -18,7 +18,9 @@
         margin-left:-6%;
         min-width: 50%;
     }
-    
+    .THIS .removeAddplanButton{
+        display : none;
+    }
 }
 @media (min-width:1680px){
     .THIS .NameBar{
@@ -38,14 +40,17 @@
         margin-top:0.2%; 
         margin-left:-2%;
     }
+     .THIS .removeAddplanButton{
+        display : none;
+    }
 }
 @media (min-width:820px) AND (max-width:1680px){
     .THIS .NameBar{
         background: linear-gradient(90.51deg, #6DA2EA 0%, #DDB5FF 100%);
         border-radius: 10px;
         padding:11px;
-        min-width: 110%;
-        margin-left: -6%;
+        min-width: 104.5%;
+        margin-left: -2.5%;
     }
     
     .THIS .green{
@@ -56,5 +61,8 @@
         
         margin-top:0.2%; 
         margin-left:-2%;
+    }
+     .THIS .removeAddplanButton{
+        display : none;
     }
 }

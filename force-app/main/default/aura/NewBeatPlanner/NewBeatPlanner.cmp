@@ -259,14 +259,13 @@
         <div class="MainComponCard">
 
     <!-- Html part /-->
-    <h2 class="h2TitelMain" style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:2%; margin: 1rem;">Beat Planner</h2>
     <div class="slds-col slds-size_12-of-12">
         <c:MonthlyContainer></c:MonthlyContainer>
     </div>
     
     <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
         <div style="margin-top:1%;">
-            <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonthNumber}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
+            <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonth}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
         </div>
     </aura:if>
     
@@ -286,7 +285,7 @@
                                 <span class="top-button" >{!v.mbpStatus}</span>
                                 <aura:set attribute="else">
                                     <aura:if isTrue="{!and(v.mbpStatus=='Draft', v.showApprovalButton)}">
-                                        <a class="top-button SendApproval" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'><span style="color:#fff;">Send For Approval</span>
+                                        <a class="top-button SendApproval" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'><span style="">Send For Approval</span>
                                         </a>
                                         <aura:set attribute="else">
                                             <span class="top-button">{!v.mbpStatus}</span>

@@ -19,7 +19,7 @@ public without sharing class SAP_SubmitFertPrice {
         headerMap.put('Cookie',cookies);
         headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_FERT_AUTH_HEADER));
 
-        HttpUtility.getInstance().httpReqHelper(headerMap,'POST',body,endPoint);
+        HttpUtility.getInstance().httpReqHelper(headerMap,'POST',body,endPoint, oppId);
     }
 
     public static void submitProdTOSAP(String body){
@@ -36,7 +36,7 @@ public without sharing class SAP_SubmitFertPrice {
         headerMap.put('Cookie',cookies);
         headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_FERT_AUTH_HEADER));
 
-        HttpUtility.getInstance().httpReqHelper(headerMap,'POST',body,endPoint);
+        HttpUtility.getInstance().httpReqHelper(headerMap,'POST',body,endPoint, '');
     }
 
 

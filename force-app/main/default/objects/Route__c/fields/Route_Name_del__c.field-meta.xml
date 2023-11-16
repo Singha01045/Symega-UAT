@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Route_Name_del__c</fullName>
+    <externalId>false</externalId>
+    <label>Route Name</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>BTM Layout</fullName>
+                <default>false</default>
+                <label>BTM Layout</label>
+            </value>
+            <value>
+                <fullName>HSR Layout</fullName>
+                <default>false</default>
+                <label>HSR Layout</label>
+            </value>
+            <value>
+                <fullName>Sarjapur</fullName>
+                <default>false</default>
+                <label>Sarjapur</label>
+            </value>
+            <value>
+                <fullName>JP Nagar</fullName>
+                <default>false</default>
+                <label>JP Nagar</label>
+            </value>
+            <value>
+                <fullName>Jaya Nagar</fullName>
+                <default>false</default>
+                <label>Jaya Nagar</label>
+            </value>
+            <value>
+                <fullName>Uttam Nagar</fullName>
+                <default>false</default>
+                <label>Uttam Nagar</label>
+            </value>
+            <value>
+                <fullName>Janak Puri</fullName>
+                <default>false</default>
+                <label>Janak Puri</label>
+            </value>
+            <value>
+                <fullName>Tilak Pul</fullName>
+                <default>false</default>
+                <label>Tilak Pul</label>
+            </value>
+            <value>
+                <fullName>Jeevan Park</fullName>
+                <default>false</default>
+                <label>Jeevan Park</label>
+            </value>
+            <value>
+                <fullName>Dabri More</fullName>
+                <default>false</default>
+                <label>Dabri More</label>
+            </value>
+            <value>
+                <fullName>Seetapuri extension</fullName>
+                <default>false</default>
+                <label>Seetapuri extension</label>
+            </value>
+            <value>
+                <fullName>BrokeField</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>BrokeField</label>
+            </value>
+            <value>
+                <fullName>Cabbon Park</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cabbon Park</label>
+            </value>
+            <value>
+                <fullName>Electronic City</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Electronic City</label>
+            </value>
+            <value>
+                <fullName>Hebbal</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Hebbal</label>
+            </value>
+            <value>
+                <fullName>KR Puram</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>KR Puram</label>
+            </value>
+            <value>
+                <fullName>Kormangala</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Kormangala</label>
+            </value>
+            <value>
+                <fullName>LalBagh</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>LalBagh</label>
+            </value>
+            <value>
+                <fullName>MG Road</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>MG Road</label>
+            </value>
+            <value>
+                <fullName>MICO Layout</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>MICO Layout</label>
+            </value>
+            <value>
+                <fullName>Madiwala</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Madiwala</label>
+            </value>
+            <value>
+                <fullName>Marathalli</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Marathalli</label>
+            </value>
+            <value>
+                <fullName>Panduranga Nagar</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Panduranga Nagar</label>
+            </value>
+            <value>
+                <fullName>Richmond Circle</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Richmond Circle</label>
+            </value>
+            <value>
+                <fullName>Whitefield</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Whitefield</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -73,20 +73,20 @@
                         </div>
                     </lightning:LayoutItem>
                     <lightning:LayoutItem size="10">
-                        <div style="padding:0%;margin-left:-6%; position:relative; top:-18%; display:inline-block;"><h1 style="color:white; font-size:170%;">{!v.visitRec.Account__r.Name}</h1></div>
+                        <div style="padding:0%;margin-left:-4%; position:relative; top:-18%; display:inline-block;"><h1 style="color:white; font-size:170%;">{!v.visitRec.Account__r.Name}</h1></div>
                     </lightning:LayoutItem>
                 </lightning:Layout>
             </div>
         </lightning:LayoutItem>
         <!--Mobile view header-->
         <div class="mobileHeader">
-            <div style="padding:3%; position:relative; top:-27%; display:flex">
+            <div style="padding:3%; position:relative; top:-27%; display:none">
                 <lightning:icon iconName='utility:back' alternativeText='back' size='small' title='back' onclick="{!c.goBackOnePage}"/>&nbsp;<h1>Back</h1>
                 
             </div>
-            <div style="margin-left: 15%;">
-                <lightning:button onclick="{!c.checkInHandler}" label="Check-In" disabled="{!v.ShowCheckInButton}" class="visitMainButtons"/>
-                <lightning:button onclick="{!c.checkOutHandler}" label="Check-Out" disabled="{!v.ShowCheckOutButton}" class="visitMainButtons"/>
+            <div class="checkinButton" style="">
+                <lightning:button onclick="{!c.checkInHandler}" label="Check-In" disabled="{!v.ShowCheckInButton}" class="visitCheckInButtons"/>&nbsp;
+                <lightning:button onclick="{!c.checkOutHandler}" label="Check-Out" disabled="{!v.ShowCheckOutButton}" class="visitCheckInButtons"/>
             </div>
         </div>
         
@@ -152,7 +152,7 @@
         <div class="MobileCard">
             <div class="slds-card ">
                 <div style="padding:3%; position:relative;margin-left:2%; top:-27%; display:inline-block;">
-                    <lightning:icon variant="inverse" iconName="standard:contact_list" alternativeText="Utility image" title="Image" size="medium"/>
+                    <lightning:icon class="floatingButton" variant="inverse" iconName="standard:contact_list" alternativeText="Utility image" title="Image" size="medium"/>
                 </div>
                 <div style="padding:0%; position:relative; top:-18%; display:inline-block;"><h1 style="color:black;font-size: 125%;font-weight: 500;">{!v.visitRec.Account__r.Name}</h1></div>
                 <div class="cardInfo">
@@ -203,13 +203,13 @@
                 <div class="secondbutton">
                      <ul class="slds-button-group-row">
                         <li class="slds-button-group-item">
-                           <lightning:button onclick="{!c.createTicket}" label="New Ticket" class="visitMainButtons"/>
+                           <lightning:button onclick="{!c.createTicket}" label="New Ticket" class="visitMainButtonsSecond"/>
                         </li>
                         <li class="slds-button-group-item">
-                            <lightning:button onclick="{!c.createLogCall}" label="Log a call" class="visitMainButtons"/>
+                            <lightning:button onclick="{!c.createLogCall}" label="Log a call" class="visitMainButtonsSecond"/>
                         </li>
                          <li class="slds-button-group-item">
-                           <lightning:button onclick="{!c.createTask}" label="Log an Activity" class="visitMainButtons"/>
+                           <lightning:button onclick="{!c.createTask}" label="Log an Activity" class="visitMainButtonsSecond"/>
                         </li>
                     </ul>
                 </div>
@@ -285,15 +285,15 @@
                          </lightning:tab>
                          <lightning:tab label="Tickets">
                               <div class="dataTableMobile">
-                                <aura:iteration items="{!v.relInvoicesList}"  var="val" indexVar="index">
+                                <aura:iteration items="{!v.relCaseList}"  var="val" indexVar="index">
                                     <div class="slds-card cardmargin">
                                         <div class="cardInfo">
                                             <div class="slds-text-align_left slds-has-flexi-truncate"><b>Sr No. &nbsp;:</b>&nbsp;<b style="color: crimson;">{!index+1}</b></div>
-                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Number &nbsp;:</b>&nbsp;{!val.Name}</div>
-                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Origin &nbsp;:</b>&nbsp;{!val.Amount__c}</div>
-                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Status &nbsp;:</b>&nbsp;{!val.Status__c}</div>
-                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Description &nbsp;:</b>&nbsp;{!val.Initiated_Amount__c}</div>
-                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Reason &nbsp;:</b>&nbsp;{!val.Realized_Amount__c}</div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Number &nbsp;:</b>&nbsp;{!val.CaseNumber}</div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Origin &nbsp;:</b>&nbsp;{!val.Origin}</div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Status &nbsp;:</b>&nbsp;{!val.Status}</div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Description &nbsp;:</b>&nbsp;{!val.Description}</div>
+                                            <div class="slds-text-align_left slds-has-flexi-truncate"><b>Case Reason &nbsp;:</b>&nbsp;{!val.Reason}</div>
                                         </div>
                                     </div>
                                 </aura:iteration>

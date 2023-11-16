@@ -20,7 +20,11 @@
         border-radius: 10px;
     }
     .THIS .dateBar{
-        min-width: 120%;
+        min-width: 131%;
+    }
+    .THIS .monthBtnBox{
+        display: inline;
+        min-width: 124px;
     }
 }
 @media (min-width:1680px){
@@ -42,6 +46,10 @@
     .THIS.maincard{
          background-color: white;
         border-radius: 10px;
+    }
+    .THIS .monthBtnBox{
+        display: inline;
+        min-width: 124px;
     }
 }
 

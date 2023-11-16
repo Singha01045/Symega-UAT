@@ -51,6 +51,9 @@
         height:700px;
         width:100%;
     }
+    .THIS .checkinButton{
+        margin-left: 15%;
+    }
 }
 
 @media (min-width:1680px ){
@@ -62,7 +65,6 @@
     .THIS .buttonCard{
         padding-top:1%;
     }
-    
     .THIS .page-header,
     .THIS .page-footer {
         height: 50px;
@@ -102,6 +104,9 @@
     .THIS .buttonGroupCardMobile{
         display :none;
     }
+    .THIS .checkinButton{
+        margin-left: 15%;
+    }
 }
 
 @media (max-width:820px){
@@ -109,6 +114,21 @@
         font-size: 12.5px;
         background-color:#6BBD6E;
         color:white;
+        min-width: 140px;
+    }
+    .THIS .visitMainButtons:disabled {
+        background-color: gray;
+    }
+    .THIS .visitMainButtonsSecond {
+        font-size: 12.5px;
+        background-color:#6BBD6E;
+        color:white;
+    }
+    .THIS .visitCheckInButtons {
+        font-size: 16.5px;
+        background-color:#6BBD6E;
+        color:white;
+        min-width: 135px;
     }
     .THIS .DesktopHeader{
         display :none;
@@ -125,6 +145,8 @@
     .THIS .cardInfo {
         margin-left: 5%;
         margin-bottom: 1.5%;
+        padding-top: 1%;
+        padding-bottom: 1%;
     }
     .THIS .MobileCard{
         min-width: 100%;
@@ -135,6 +157,7 @@
     }
     .THIS .mapCardMobile{
         min-width: 101%;
+        margin-top: 2%;
     }
     .THIS .buttonGroupCardDesktop{
         display :none;
@@ -183,5 +206,8 @@
         margin-top: 65%;
         min-width: 90%;
         margin-left: 5%;
+    }
+    .THIS .checkinButton{
+        margin-left: 7%;
     }
 }

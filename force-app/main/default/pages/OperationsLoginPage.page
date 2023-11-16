@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="pt-4">
-                            <label class="text-uppercase mt-2 mb-1" style="text-align:center;"><b>LOGIN</b></label>
+                            <label class="text-uppercase mt-2 mb-1" style="text-align:center; font-size:20px;"><b>LOGIN</b></label>
                             <div class="row">
                                 <div class="mb-3">
                                     <label>USERNAME</label>
@@ -88,8 +88,10 @@
                     </div>
                 </div>
                 <div style="overflow: hidden;" class="d-flex justify-content-center jsutify-items-center">
-                    <div class="d-flex justify-content-center">
-                        <apex:image url="{!$Resource.operationsLogin}"/>
+                    <div class="d-flex justify-content-center rightFrameDiv">
+                        <!--apex:image url="{!$Resource.operationsLogin}"/-->
+                        <!--apex:iframe src="https://symega.com/" scrolling="true" id="theIframe" /-->
+                        <iframe height="100%" id="theIframe" name="theIframe" src="https://symega.com/"  width="100%"></iframe>
                     </div>
                 </div>
             </div>

@@ -24,11 +24,11 @@ public without sharing class OptivaCreateWrapper {
         OpWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
         OpWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
 
-        OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'NA'; 
-        OpWrapper.annual_vol = project.Expected_Annual_Value__c!=null?String.valueOf(project.Expected_Annual_Value__c):'NA';
-        OpWrapper.business_potent_val = project.Business_potential_value_INR__c!=null?String.valueOf(project.Business_potential_value_INR__c):'NA';
+        OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):''; 
+        OpWrapper.annual_vol = project.Expected_Annual_Value__c!=null?String.valueOf(project.Expected_Annual_Value__c):'0';
+        OpWrapper.business_potent_val = project.Business_potential_value_INR__c!=null?String.valueOf(project.Business_potential_value_INR__c):'0';
         OpWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
-        OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'NA';
+        OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'0';
 
         Map<Id,Sample_Line_Item__c> optivaRecipieSLineItems = new Map<Id,Sample_Line_Item__c>();
         Map<Id,String> withoutOptivaRecipieSLineItems = new Map<Id,String>();
@@ -53,29 +53,29 @@ public without sharing class OptivaCreateWrapper {
                         OpWrapper.uom1 = checkIfBlank(sli.Quantity_Unit__c);
                         OpWrapper.tot_qty1 = checkIfBlank(String.valueOf(sli.Quantity__c));
                         OpWrapper.no_units1 = checkIfBlank(sli.Packaging_Unit__c);
-                        OpWrapper.pack_size1 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                        OpWrapper.pack_size1 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                         OpWrapper.selling_desc1 = checkIfBlank(sli.Customer_Preferred_Name__c);
-                        OpWrapper.sample_duedate1 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                        OpWrapper.cust_target_price1 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                        OpWrapper.sample_duedate1 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                        OpWrapper.cust_target_price1 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                         OpWrapper.prod_code1_dev = checkIfBlank(sli.OPTIVA_Recipe__r.SSC_Code__c);  
                     }else if(i==1){
                         OpWrapper.uom2 = checkIfBlank(sli.Quantity_Unit__c);
                         OpWrapper.tot_qty2 = checkIfBlank(String.valueOf(sli.Quantity__c));
                         OpWrapper.no_units2 = checkIfBlank(sli.Packaging_Unit__c);
-                        OpWrapper.pack_size2 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                        OpWrapper.pack_size2 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                         OpWrapper.selling_desc2 = checkIfBlank(sli.Customer_Preferred_Name__c);
-                        OpWrapper.sample_duedate2 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                        OpWrapper.cust_target_price2 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                        OpWrapper.sample_duedate2 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                        OpWrapper.cust_target_price2 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                         OpWrapper.prod_code2_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                        
                     }else if(i==2){
                        OpWrapper.uom3 = checkIfBlank(sli.Quantity_Unit__c);
                         OpWrapper.tot_qty3 = checkIfBlank(String.valueOf(sli.Quantity__c));
                         OpWrapper.no_units3 = checkIfBlank(sli.Packaging_Unit__c);
-                        OpWrapper.pack_size3 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'NA';
+                        OpWrapper.pack_size3 = sli.Packaging_Quantity__c!=null?String.valueOf(sli.Packaging_Quantity__c):'0';
                         OpWrapper.selling_desc3 = checkIfBlank(sli.Customer_Preferred_Name__c);
-                        OpWrapper.sample_duedate3 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'NA';
-                        OpWrapper.cust_target_price3 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'NA';
+                        OpWrapper.sample_duedate3 = sli.First_Sample_due_date__c!=null?formatDate(sli.First_Sample_due_date__c):'';
+                        OpWrapper.cust_target_price3 = sli.Customer_Target_Price__c!=null?String.valueOf(sli.Customer_Target_Price__c):'0';
                         OpWrapper.prod_code3_dev = checkIfBlank(sli.Project_Quotient__r.SSC_Code__c);
                     }
                 }
@@ -97,26 +97,26 @@ public without sharing class OptivaCreateWrapper {
         OpAppWrapper.cust_code = project.Opportunity__r.Account_Billing_Address__c ? checkIfBlank(project.Opportunity__r.Account.Customer_Code_OPTIVA__c) : project.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c;
         OpAppWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
         OpAppWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
-        OpAppWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'NA';
+        OpAppWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'0';
         OpAppWrapper.business_potent_val = project.Business_potential_value_INR_New__c == null ? 0 : project.Business_potential_value_INR_New__c;
-        OpAppWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'NA';
-        OpAppWrapper.cust_target_price = project.Customer_Target_price__c!=null?String.valueOf(project.Customer_Target_price__c):'NA';
+        OpAppWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'0';
+        OpAppWrapper.cust_target_price = project.Customer_Target_price__c!=null?String.valueOf(project.Customer_Target_price__c):'0';
         OpAppWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
         OpAppWrapper.confectionary_type = checkIfBlank(project.Confectionary_Type__c);
         OpAppWrapper.final_fat = project.Final_Fat__c == null ? 0 : project.Final_Fat__c;
-        OpAppWrapper.first_smpe_due_date = project.First_Sample_due_date__c!=null?formatDate(project.First_Sample_due_date__c):'NA';
+        OpAppWrapper.first_smpe_due_date = project.First_Sample_due_date__c!=null?formatDate(project.First_Sample_due_date__c):'';
         OpAppWrapper.flavor_ciu = project.Flavour_CIU__c == null ? 0 : project.Flavour_CIU__c;
         OpAppWrapper.flavor_legal_stat = checkIfBlank(project.Flavour_Legal_Status__c);
         OpAppWrapper.solubility = checkIfBlank(project.Solubility_Preference__c);
-        OpAppWrapper.sugar = project.Sugar__c!=null?String.valueOf(project.Sugar__c):'NA';
-        OpAppWrapper.creation_date = project.CreatedDate == null ? 'NA' : project.CreatedDate.format('dd/MM/yyyy');
-        OpAppWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'NA';
-        OpAppWrapper.target_date = project.Target_Date__c!=null?formatDate(project.Target_Date__c):'NA';
+        OpAppWrapper.sugar = project.Sugar__c!=null?String.valueOf(project.Sugar__c):'0';
+        OpAppWrapper.creation_date = project.CreatedDate == null ? '' : project.CreatedDate.format('dd/MM/yyyy');
+        OpAppWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'';
+        OpAppWrapper.target_date = project.Target_Date__c!=null?formatDate(project.Target_Date__c):'';
 
 
         //NEW ADDITIONS
         OpAppWrapper.per_pulp = project.of_pulp_if_with_fruit_pulp__c != null ? String.valueOf(project.of_pulp_if_with_fruit_pulp__c) : '0';
-        OpAppWrapper.account = checkIfBlank(project.Account__c);
+        OpAppWrapper.account = checkIfBlank(project.Opportunity__r.AccountId);
         OpAppWrapper.account_seg = checkIfBlank(project.Account_Segment__c);
         OpAppWrapper.acidity_per = project.Acidity__c != null ? String.valueOf(project.Acidity__c) : '0';
         OpAppWrapper.additive_status = checkIfBlank(project.Additive_Status__c);
@@ -131,7 +131,7 @@ public without sharing class OptivaCreateWrapper {
         OpAppWrapper.viscocity = project.Preferred_thickness_Viscosity__c != null ? String.valueOf(project.Preferred_thickness_Viscosity__c) : '0';
         OpAppWrapper.processing_condition = checkIfBlank(project.Processing_condition__c);
         OpAppWrapper.recipe_cost = project.Recipe_Cost__c != null ? String.valueOf(project.Recipe_Cost__c) : '0';
-        OpAppWrapper.start_date = project.Start_Date__c != null ? formatDate(project.Start_Date__c) : 'NA';
+        OpAppWrapper.start_date = project.Start_Date__c != null ? formatDate(project.Start_Date__c) : '';
 
         return OpAppWrapper;
     }
@@ -150,10 +150,10 @@ public without sharing class OptivaCreateWrapper {
             OpWrapper.cust_code = project.Opportunity__r.Account_Billing_Address__c ? checkIfBlank(project.Opportunity__r.Account.Customer_Code_OPTIVA__c) : project.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c;
             OpWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
             OpWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
-            OpWrapper.cust_target_price = project.Customer_Target_price__c!=null?String.valueOf(project.Customer_Target_price__c):'NA';
+            OpWrapper.cust_target_price = project.Customer_Target_price__c!=null?String.valueOf(project.Customer_Target_price__c):'0';
             OpWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
-            OpWrapper.cust_ciu = project.Customer_Cost_in_USE_CIU__c!=null?String.valueOf(project.Customer_Cost_in_USE_CIU__c):'NA';
-            OpWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'NA';
+            OpWrapper.cust_ciu = project.Customer_Cost_in_USE_CIU__c!=null?String.valueOf(project.Customer_Cost_in_USE_CIU__c):'0';
+            OpWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'0';
             OpWrapper.business_potent_val = project.Business_potential_value_INR_New__c == null ? 0 : project.Business_potential_value_INR_New__c;
             //OpWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'0';
             OpWrapper.curr_year_vol = project.Minimum_order_quantity__c!=null?String.valueOf(project.Minimum_order_quantity__c):'0'; // new
@@ -183,11 +183,11 @@ public without sharing class OptivaCreateWrapper {
             OpWrapper.organic_cert = project.Organic_Certification__c?'Yes':'No';
             OpWrapper.prod_apr_frmat_cust = checkIfBlank(project.Product_approval_format_by_customer__c);
 
-            OpWrapper.creation_date = project.CreatedDate == null ? 'NA' : project.CreatedDate.format('dd/MM/yyyy');
+            OpWrapper.creation_date = project.CreatedDate == null ? '' : project.CreatedDate.format('dd/MM/yyyy');
             
-            OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'NA';
-            OpWrapper.cust_launch_date = project.Customer_Launch_Date__c!=null?formatDate(project.Customer_Launch_Date__c):'NA';
-            OpWrapper.sample_duedate1 = project.First_Sample_due_date__c!=null?formatDate(project.First_Sample_due_date__c):'NA';
+            OpWrapper.opp_closedate = project.Opportunity_Close_Date__c!=null?formatDate(project.Opportunity_Close_Date__c):'';
+            OpWrapper.cust_launch_date = project.Customer_Launch_Date__c!=null?formatDate(project.Customer_Launch_Date__c):'';
+            OpWrapper.sample_duedate1 = project.First_Sample_due_date__c!=null?formatDate(project.First_Sample_due_date__c):'';
 
 
             //NEW ADDITIONS
@@ -203,7 +203,7 @@ public without sharing class OptivaCreateWrapper {
     }
 
     public static String checkIfBlank(String s){
-        return String.isBlank(s) || s == null ? 'NA' : s;
+        return String.isBlank(s) || s == null ? '' : s;
     }
 
 }

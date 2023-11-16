@@ -510,7 +510,8 @@ public without sharing class OpportunityCreateSaleOrderController {
                             acc.SAP_Update_Customer__c = true;
                             update acc;
                         }
-                        return 'Success';
+                        Utility.sendSONotification(soId);
+                        //return 'Success';
                     }
                     else{
                         return response;
@@ -524,7 +525,8 @@ public without sharing class OpportunityCreateSaleOrderController {
                             addr.SAP_Update_Customer__c = true;
                             update addr;
                         }
-                        return 'Success';
+                        Utility.sendSONotification(soId);
+                        //return 'Success';
                     }
                     else{
                         return response;

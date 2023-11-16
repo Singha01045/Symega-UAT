@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>New</fullName>
+                <default>true</default>
+                <label>New</label>
+            </value>
+            <value>
+                <fullName>Submitted for Sampling</fullName>
+                <default>false</default>
+                <label>Submitted for Sampling</label>
+            </value>
+            <value>
+                <fullName>Submitted for Project</fullName>
+                <default>false</default>
+                <label>Submitted for Project</label>
+            </value>
+            <value>
+                <fullName>Submitted for Application</fullName>
+                <default>false</default>
+                <label>Submitted for Application</label>
+            </value>
+            <value>
+                <fullName>Submitted for Tech Docs</fullName>
+                <default>false</default>
+                <label>Submitted for Tech Docs</label>
+            </value>
+            <value>
+                <fullName>Approved by R&amp;D</fullName>
+                <default>false</default>
+                <label>Approved by R&amp;D</label>
+            </value>
+            <value>
+                <fullName>Rejected by R&amp;D</fullName>
+                <default>false</default>
+                <label>Rejected by R&amp;D</label>
+            </value>
+            <value>
+                <fullName>Sample Ready to Dispatch</fullName>
+                <default>false</default>
+                <label>Sample Ready to Dispatch</label>
+            </value>
+            <value>
+                <fullName>Project Ready to Dispatch</fullName>
+                <default>false</default>
+                <label>Project Ready to Dispatch</label>
+            </value>
+            <value>
+                <fullName>Application Project Ready</fullName>
+                <default>false</default>
+                <label>Application Project Ready</label>
+            </value>
+            <value>
+                <fullName>Sample_Dispatched</fullName>
+                <default>false</default>
+                <label>Sample Dispatched</label>
+            </value>
+            <value>
+                <fullName>Forwarded Sample Detail to Client</fullName>
+                <default>false</default>
+                <label>Forwarded Sample Detail to Client</label>
+            </value>
+            <value>
+                <fullName>Sample Received By Client</fullName>
+                <default>false</default>
+                <label>Sample Received By Client</label>
+            </value>
+            <value>
+                <fullName>Sample Accepted</fullName>
+                <default>false</default>
+                <label>Sample Accepted</label>
+            </value>
+            <value>
+                <fullName>Sample Rejected</fullName>
+                <default>false</default>
+                <label>Sample Rejected</label>
+            </value>
+            <value>
+                <fullName>Project Accepted</fullName>
+                <default>false</default>
+                <label>Project Accepted</label>
+            </value>
+            <value>
+                <fullName>Project Rejected</fullName>
+                <default>false</default>
+                <label>Project Rejected</label>
+            </value>
+            <value>
+                <fullName>Application Accepted</fullName>
+                <default>false</default>
+                <label>Application Accepted</label>
+            </value>
+            <value>
+                <fullName>Application Rejected</fullName>
+                <default>false</default>
+                <label>Application Rejected</label>
+            </value>
+            <value>
+                <fullName>Need Amendments</fullName>
+                <default>false</default>
+                <label>Need Amendments</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

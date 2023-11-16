@@ -1,4 +1,5 @@
 <apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="OperationsPortalController">
+    <apex:includeLightning />
     <html>
         <head>
             <c:Libraries ></c:Libraries>
@@ -9,8 +10,6 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <apex:stylesheet value="{!$Resource.OperationsPortalCSS}" />
-
-
 
             <style>
                 .loadingBackground {
@@ -37,7 +36,7 @@
                     overflow: hidden;
                     border: 1px solid #ccc;
                     background-color: mintcream;
-                    padding-left: 1%;
+                    padding-left: 0%;
                         margin-left: 1%;
                         margin-right: 2%;
                         border-radius: 11px;
@@ -74,7 +73,6 @@
                     }
             </style>
         </head>
-
         <body ng-app="SLIDet_App" ng-controller="SLIDet_ctrl" style="background-color: white; !important;">
             <!--div class="loadingSection" ng-if="showSpinner">
                 <div class="loadingBackground"></div>
@@ -127,20 +125,30 @@
                 <div class="row mb-5">
                     <div class="col-md-12">
                         <div class="tab">
-                            <button class="tablinks" ng-click="onClickOfDetails()">Details</button>
-                            <button class="tablinks" ng-click="onClickOfComments()">Comments</button>
+                            <button class="tablinks selectedTab" ng-click="onClickOfDetails()" id="DetailTab">Details</button>
+                            <button class="tablinks" ng-click="onClickOfComments()" id="CommentsTab">Comments</button>
                           </div>
                     </div>
                 </div>
                 
-                <div ng-show="showDetailPage">
+                <div ng-show="showDetailPage" class="tabContentSLIDetPage">
                 <!--div class="row box-shadow-2 mb-5"-->
+                    
                     <div class="row mt-5">
+                        <center>
+					<!--div class="row">
+                        <div class="col-md-12 pathContainer">
+                            <div ng-repeat="name in statusValueWithCSSclass" class="path {{name.cssClass}}">
+                                {{name.status}}
+                            </div>
+                        </div>
+                    </div-->
+                        <div style="width:100%;font-size:11px;height: 51px;" id="LightningContainer"/>
+                        </center>
                         <div class="col-md-12">
                             <h3 class="pb-3 color-theme"><b>BASIC DETAILS</b></h3>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6 mt-3">
                         <label class="font-if">Customer Name
@@ -466,11 +474,11 @@
                 <!--/div-->
             </div>
                 
-                <div class="row mt-3 mx-5" ng-show="showComments">
-                <div class="col-md-8">
+                <div class="row tabContentSLIDetPage" ng-show="showComments">
+                <div class="col-md-12">
                     <h3 class="pb-3 color-theme"><b>Comments :</b></h3>
                 </div>
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <button class="blue-btn float-end me-2 mb-5" ng-click="openPopUp()" type="button">
                             New</button>
                         </div>
@@ -521,6 +529,54 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <button type="button" data-bs-dismiss="modal" style="background:rgb(179, 69, 5))" class="blue-btn" ng-click="openViewReplyPopUp($index,com.Id)">View Reply</button>
+                                <div class="modal" id="viewReplyBox{{$index}}">
+                                    <div class="modal-dialog" style="min-width:1000px">
+                                        <div class="modal-content">
+                                    
+                                        <div class="modal-header">
+                                            <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                            <h3 class="color-theme2" style="color:green;">
+                                                <b>View Reply</b>
+                                            </h3>
+                                        </div></h4> 
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                    
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Comment No.</th>
+                                                                <th>Comment</th>
+                                                                <th>Commentted By</th>
+                                                                <!--th>Action</th-->
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="com in listOfReplies">
+                                                                <td>{{$index+1}}</td> 
+                                                                <td>{{com.Name}}</td>
+                                                                <td>{{com.Reply__c}}</td>
+                                                                <td>{{com.Comment_By__r.Name}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                        </div>
+                                        </div>
+                                        <!--div class="row mt-3">
+                                            <div class="col-md-12">
+                                            <button type="button" data-bs-dismiss="modal" class="blue-btn float-end" ng-click="saveReply()">Save</button>
+                                        </div>
+                                        </div-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -528,8 +584,8 @@
                 </div>
                                <div class="row">
                     <div class="col-md-12">
-                        <a class="pe-5 float-end" ng-click="handleNext()">Next</a>
-                        <a class="pe-5 float-end" ng-click="handlePrevious()">Previous</a>
+                        <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                        <button class="paginationButton" ng-click="handlePrevious()">&#10229; Previous</button>
                     </div>
                 </div>
             </div>
@@ -575,15 +631,29 @@
         </body>
 
         <script>
+        var sliId = '{!$CurrentPage.parameters.sliId}';
+        $Lightning.use("c:customProgressPathApp", function() {
+        $Lightning.createComponent("c:customProgressPath",
+          { "recordId" : sliId
+          },
+          "LightningContainer",
+          function(cmp) {
+              //console.log('LWC Componenet added in VF page');
+          });
+    });
+        
             var userHashId = '{!$CurrentPage.parameters.id}';
-            var sliId = '{!$CurrentPage.parameters.sliId}';
+        var sampleStatusValues = JSON.parse('{!sampleStatusValues}');
             var app = angular.module('SLIDet_App', ['ng.ckeditor']);
             app.controller('SLIDet_ctrl', function ($scope){
                 debugger;
-                        $scope.showDetailPage = true;
-                        $scope.showComments = false;
+                
+                $scope.sampleStatusValues = sampleStatusValues;
+				$scope.showDetailPage = true;
+                $scope.showComments = false;
                 $scope.showSpinner = false;
                 $scope.cmnt = {"Reply__c":""};
+                $scope.statusValueWithCSSclass = [];
 
                 $scope.getSLIDetails = function(){
                         debugger;
@@ -591,7 +661,20 @@
                             debugger;
                             if(event.status && result){
                                 debugger;
+                                var currIndex;
                                 $scope.SLIDetails = result;
+                                for(var i=0; i<sampleStatusValues.length; i++){
+                                    if($scope.SLIDetails.Sample_Request_Status__c == sampleStatusValues[i]){
+                                        $scope.statusValueWithCSSclass.push({status:sampleStatusValues[i], cssClass:'slds-is-current slds-is-active', tabIndex:0, ariaSelect:'true', assistiveText: 'Current Stage'});
+                                        currIndex = i;
+                                    }else{
+                                        $scope.statusValueWithCSSclass.push({status:sampleStatusValues[i], cssClass:'slds-is-incomplete', tabIndex:-1, ariaSelect:'false', assistiveText: 'Upcoming Stage'});
+                                    }
+                                }
+                                for(var i=currIndex-1; i>=0; i--){
+                                	$scope.statusValueWithCSSclass[i].cssClass='slds-is-complete';
+                                    $scope.statusValueWithCSSclass[i].assistiveText= 'Stage Complete';
+                                }
                                 if(result.Comments__r != undefined){
                                     $scope.listOfComments = result.Comments__r;
                                 if($scope.listOfComments.length > 0){
@@ -627,7 +710,7 @@
                                 }
                                 if(result.First_Sample_Due_Date__c != null){
                                     $scope.SLIDetails.First_Sample_Due_Date__c = new Date(result.First_Sample_Due_Date__c);
-                                } 
+                                }
                                 
                                 $scope.$apply();
                             }
@@ -695,11 +778,19 @@
                     
                     $scope.onClickOfDetails = function(){
                         debugger;
+                        var detailTab = document.getElementById("DetailTab");
+                        detailTab.classList.add("selectedTab");
+                        var CommentsTab = document.getElementById("CommentsTab");
+                        CommentsTab.classList.remove("selectedTab");
                         $scope.showDetailPage = true;
                         $scope.showComments = false;
                     }
                     $scope.onClickOfComments = function(){
                         debugger;
+                        var detailTab = document.getElementById("DetailTab");
+                        detailTab.classList.remove("selectedTab");
+                        var CommentsTab = document.getElementById("CommentsTab");
+                        CommentsTab.classList.add("selectedTab");
                         $scope.showDetailPage = false;
                         $scope.showComments = true;
                     }
@@ -718,6 +809,21 @@
                         myModal.show('slow');
                         $scope.$apply();
                     }
+
+                    $scope.openViewReplyPopUp = function(index,comId){
+                    debugger;
+                    $scope.showSpinner = true;
+                    $scope.comId = comId;
+                    OperationsPortalController.getReplies(comId,function(result,event){
+                    if(event.status && result){
+                        $scope.listOfReplies = result;
+                        $scope.showSpinner = false;
+                        var myModal = new bootstrap.Modal(document.getElementById('viewReplyBox' + index));
+                        myModal.show('slow');
+                        $scope.$apply();
+                    }
+                    })
+                }
                     
                     $scope.saveComment = function(){
                         debugger;

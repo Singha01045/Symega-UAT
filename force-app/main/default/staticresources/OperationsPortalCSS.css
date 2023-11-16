@@ -1,10 +1,134 @@
+#updateCancelBtn{
+	margin-top:4rem!important;      
+}
+
+.tabContent{
+    padding: 18px;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-top: none;
+    border-radius: 15px;
+    margin-top: -32px;
+}
+
+.cancelSaveBtnDiv{
+        margin: auto;
+    width: fit-content!important;
+}
+
+.viewButton{
+    border: none;
+    background-color: orange;
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px;
+    color: white;
+    font-weight: normal;
+    cursor:pointer;
+}
+
+.tabContentSLIDetPage{
+    padding: 18px;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-top: none;
+    border-radius: 15px;
+    margin-top: -32px!important;
+    width:97%;
+    margin-left: 1%!important;
+}
+
+.tabContentCustDetPage{
+    padding: 18px;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-top: none;
+    border-radius: 15px;
+    margin-top: -32px!important;
+    width:100%;
+    margin-left: 0%!important;
+}
+
+.selectedTabOnSLIDetailPage{
+    color: #f6901e!important;
+    font-weight: bold!important;
+}
+
+.paginationButton{
+    color: black;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 8px 20px;
+    border: none;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    display: inline-block;
+    float: right;
+    margin:3px;
+}
+
+@media (min-width:820px) AND (max-width:1680px){
+    .pathContainer{
+    display:inline-flex;
+	width: 85%!important;
+    margin: auto;
+}
+
+.path{
+    background-color:gray;
+    padding: 5px 10px 5px 8px;
+    margin: 0px 5px 5px 0px;
+    border-radius: 4px 20px 20px 4px;
+}
+}
+@media (min-width:1680px){
+    .pathContainer{
+    display:inline-flex;
+	width: 60%!important;
+    margin: auto;
+}
+
+.path{
+    background-color:gray;
+    padding: 5px 10px 5px 8px;
+    margin: 0px 5px 5px 0px;
+    border-radius: 4px 20px 20px 4px;
+}
+}
+
+.CurrentStatus{
+    background-color:#6666c7;
+    color: white;
+}
+
+.PreviousStatus{
+    background-color:green;
+}
+
+
+.selectedTab{
+    background-color: #d1e4da!important;
+    border-bottom: 2px solid #92bea7!important;
+}
+
+#sampleDetailtab{
+    padding: 18px;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-top: none;
+    border-radius: 15px;
+    margin-top: -32px!important;
+    width: 100%;
+    margin-left: 0%!important;
+}
+
 .acceptButton{
 width: Fixed (41px);
 height: Hug (22px);
 padding: 6px 11.918919563293457px 6px 11.918919563293457px;
-border-radius: 5.297297477722168px;
+border-radius: 3.297297477722168px;
 gap: 6.621622085571289px;
-background-color: green;
+background-color: #F7941E;
 color: white;
 border: none;
 }
@@ -34,6 +158,11 @@ border: none;
     line-height: 1.25rem;
     font-weight: 500;
 }
+
+.rightFrameDiv{
+    width: 50vw;
+}
+
 /* .form-control:focus {
     border-color: #ced4da;
     box-shadow: none;
@@ -48,7 +177,7 @@ border: none;
     display: flex;
 } 
 .login .login-left {
-    width: 60%;
+    width: 50%;
     align-items: center;
     justify-content: center;
 }
@@ -112,7 +241,7 @@ border: none;
 }
 .login .login-form label {
     color: #171347;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 400;
     padding: 0 0 10px 0;
 }
@@ -187,7 +316,7 @@ border: none;
 
 .table {
     border-collapse: separate;
-    border-spacing: 0 10px;
+    border-spacing: 0 1px;
 }
 .table thead {
     background: rgba(177, 210, 240, 0.3);

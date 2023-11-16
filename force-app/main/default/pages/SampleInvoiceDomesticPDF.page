@@ -77,25 +77,39 @@
                 <span style="font-size:12px;"> {!projRec.Opportunity__r.Account.Name} </span><br/>
                 
                 <p style="font-size:12px;">
-                    {!projRec.Opportunity__r.Account.BillingStreet} <br/>
+                  <!--  {!projRec.Opportunity__r.Account.BillingStreet} <br/>
                     {!projRec.Opportunity__r.Account.BillingCity}, {!projRec.Opportunity__r.Account.BillingState}<br/>
                     {!projRec.Opportunity__r.Account.BillingCountry} - {!projRec.Opportunity__r.Account.BillingPostalCode} <br/>
                     Tel: {!projRec.Customers_Contact__r.Phone} <br/>
                     State Code:19/GSTIN: {!projRec.Opportunity__r.Account.GST_number__c}<BR/>
+                    PAN: {!projRec.Opportunity__r.Account.PAN_Number__c} -->
+                    {!projRec.Billing_Street__c} <br/>
+                    {!projRec.Billing_City__c},{!projRec.Billing_State__c} <br/>
+                    {!projRec.Billing_Country__c} - {!projRec.Billing_Postal_Code__c} <br/>
+                    Tel: {!projRec.Customers_Contact__r.Phone} <br/>
+                    State Code:19/GSTIN: {!projRec.Opportunity__r.Account.GST_number__c}<BR/>
                     PAN: {!projRec.Opportunity__r.Account.PAN_Number__c}
                 </p>
+                
             </div>
             
             <div class="col" style="border: 1px solid black;">
                 <b> <span style="font-size:12px;"> Details of Consignee (Ship to) </span></b><br/>
                 <span style="font-size:12px;"> {!projRec.Opportunity__r.Account.Name} </span><br/>
                 <p style="font-size:12px;">
-                    {!projRec.Opportunity__r.Account.ShippingStreet} <br/>
+               <!--  {!projRec.Opportunity__r.Account.ShippingStreet} <br/>
                     {!projRec.Opportunity__r.Account.ShippingCity}, {!projRec.Opportunity__r.Account.ShippingState}<br/>
                     {!projRec.Opportunity__r.Account.ShippingCountry} - {!projRec.Opportunity__r.Account.ShippingPostalCode} <br/>
                     Tel: {!projRec.Customers_Contact__r.Phone} <br/>
                     State Code:19/GSTIN: {!projRec.Opportunity__r.Account.GST_number__c}<BR/>
+                    PAN: {!projRec.Opportunity__r.Account.PAN_Number__c}  -->
+                    {!projRec.Street__c} <br/>
+                    {!projRec.City__c},{!projRec.State__c} <br/>
+                    {!projRec.Country__c} - {!projRec.Postal_Code__c} <br/>
+                    Tel: {!projRec.Customers_Contact__r.Phone} <br/>
+                    State Code:19/GSTIN: {!projRec.Opportunity__r.Account.GST_number__c}<BR/>
                     PAN: {!projRec.Opportunity__r.Account.PAN_Number__c}
+                    
                 </p>
             </div>
             
@@ -155,9 +169,9 @@
             <tr>
                 <td style="border:1px solid black;" colspan="16" >&nbsp;</td>
             </tr>
-            <tr>
+           <!-- <tr>
                 <td style="border:1px solid black;font-size:12px;" colspan="16" > <b>E&amp;OE Declaration</b> (To be furnished by the Seller) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; <b>For Symega Food Ingredients Ltd.</b></td>
-            </tr>
+            </tr> -->
         </table>
         
         <div style="border: 1px solid black;padding-left:5px;">

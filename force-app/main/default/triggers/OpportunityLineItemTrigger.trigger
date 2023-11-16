@@ -10,7 +10,7 @@ trigger OpportunityLineItemTrigger on OpportunityLineItem (before update, before
         }
 
         if(Trigger.isAfter && Trigger.isUpdate) {
-            //handlerInstance.onAfterUpdate(Trigger.New, Trigger.OldMap);
+            handlerInstance.onAfterUpdate(Trigger.New, Trigger.OldMap);
         }
         
         if(Trigger.isBefore && Trigger.isInsert) {

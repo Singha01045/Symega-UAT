@@ -6,6 +6,9 @@ public without sharing class SampleInvoicePDFController {
     public string recordId = System.currentPageReference().getParameters().get('id'); 
     public Integer totalQuantity {get; set;}
     public  decimal convertGmToKG {get; set;}
+    public Date Today { get { return Date.today(); }}
+
+
     public SampleInvoicePDFController(){
         try{
             convertGmToKG = 0;

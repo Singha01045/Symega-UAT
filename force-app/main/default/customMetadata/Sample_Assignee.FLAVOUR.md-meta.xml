@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>FLAVOUR</label>
+    <protected>false</protected>
+    <values>
+        <field>Project_RnD_Email_Ids__c</field>
+        <value xsi:type="xsd:string">jishena.satish@symega.com,flavorprojintimation@symega.com</value>
+    </values>
+    <values>
+        <field>Username__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

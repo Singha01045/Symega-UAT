@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Create_Product_Member_V1</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <height>200</height>
+    <linkType>page</linkType>
+    <masterLabel>Add Team Members</masterLabel>
+    <openType>noSidebar</openType>
+    <page>OpportunityTeamPage</page>
+    <protected>false</protected>
+    <requireRowSelection>false</requireRowSelection>
+</WebLink>

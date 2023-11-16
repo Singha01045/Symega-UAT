@@ -71,7 +71,7 @@ public class Scheduler_Insights_Handler {
         return null;  
     }
     
-    class SchedulerInsightsWrapper {
+   public class SchedulerInsightsWrapper {
         @AuraEnabled
         public List<Visit__c> visitRecList {get;set;}
         @AuraEnabled

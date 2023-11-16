@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Visits_This_Quater</fullName>
+    <columns>NAME</columns>
+    <columns>Actual_visit_date__c</columns>
+    <columns>Planned_visit_date__c</columns>
+    <columns>Assigned_User__c</columns>
+    <columns>Delivery_Agent__c</columns>
+    <columns>Visit_Date_Time__c</columns>
+    <columns>City__c</columns>
+    <columns>State__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Actual_visit_date__c</field>
+        <operation>greaterOrEqual</operation>
+        <value>THIS_QUARTER</value>
+    </filters>
+    <label>Visits This Quarter</label>
+</ListView>

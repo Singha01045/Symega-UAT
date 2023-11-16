@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_Panel</fullName>
+    <fields>Name</fields>
+    <fields>Type__c</fields>
+    <fields>Student_Strength__c</fields>
+    <fields>Faculty_Strength__c</fields>
+    <fields>Student_Teacher_s_Ratio__c</fields>
+    <fields>Student_Coordinator_Ratio__c</fields>
+    <label>New Panel</label>
+</CompactLayout>

@@ -19,9 +19,13 @@
         background-color: white;
         border-radius: 10px;
     }
-   /* .THIS .dateBar{
-        min-width: 120%;
-    }*/
+    .THIS .monthBtnBox{
+        display: inline;
+        min-width: 124px;
+    }
+    .THIS .dateBar{
+         min-width: 131%;
+    }
 }
 @media (min-width:1680px){
     .THIS .h2Titel {
@@ -42,6 +46,10 @@
     .THIS.maincard{
         background-color: white;
         border-radius: 10px;
+    }
+    .THIS .monthBtnBox{
+        display: inline;
+        min-width: 124px;
     }
 }
 

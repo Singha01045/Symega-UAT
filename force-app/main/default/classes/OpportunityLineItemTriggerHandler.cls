@@ -52,9 +52,16 @@ public without sharing class OpportunityLineItemTriggerHandler {
             Set<Id> productIdSet = new Set<Id>();
             for(OpportunityLineItem lineItem : lineItemList) {
                 if(lineItem.Is_Parent_Opportunity__c) {
-                    //FERT
-                    opTooppMap.put(lineItem.Id, lineItem.OpportunityId);
-                    productIdSet.add(lineItem.Product2Id);
+                    if( (lineItem.ProductCode != oldOppLineItemMap.get(lineItem.Id).ProductCode && !String.isBlank(lineItem.ProductCode) ) ||
+                        (lineItem.Primary__c != oldOppLineItemMap.get(lineItem.Id).Primary__c && !String.isBlank(lineItem.Primary__c) ) ||
+                        (lineItem.Secondary__c != oldOppLineItemMap.get(lineItem.Id).Secondary__c && !String.isBlank(lineItem.Secondary__c) ) ||
+                        (lineItem.Tertiary__c != oldOppLineItemMap.get(lineItem.Id).Tertiary__c && !String.isBlank(lineItem.Tertiary__c) )
+                      ) {
+
+                        //FERT
+                        opTooppMap.put(lineItem.Id, lineItem.OpportunityId);
+                        productIdSet.add(lineItem.Product2Id);
+                    }
                 }
             }
     
@@ -295,6 +302,69 @@ public without sharing class OpportunityLineItemTriggerHandler {
         return productToCurrencyPrice;
     }
 
+    // Done by Prithvi
+    //private void checkAndUpdateFERT(Map<Id,Id> opTooppMap, List<OpportunityLineItem> oppLineList, Set<Id> productIdSet) {
+
+    //     System.debug('--- oppLineList '+ oppLineList);
+    //     System.debug('--- productIdSet '+ productIdSet);
+
+    //     Map<Id,Id> oppToaccMap = new Map<Id,Id>();
+    //     Set<Id> customerIdSet = new Set<Id>();
+    //     List<Opportunity> oppList = [SELECT Id, AccountId FROM Opportunity WHERE Id IN :opTooppMap.values()];
+    //     for(Opportunity opp : oppList){
+    //         oppToaccMap.put(opp.Id, opp.AccountId);
+    //         customerIdSet.add(opp.AccountId);
+    //     }
+    //     if(!opTooppMap.isEmpty()) {
+    //         System.debug('--- customerIdSet'+customerIdSet);
+    //         List<OpportunityLineItem> opplineItemList = [SELECT Id, Product2Id, Opportunity.AccountId, FERT_Code__c, Packaging_Type__c, Packaging_Unit__c, Packaging_Quantity__c FROM OpportunityLineItem WHERE Opportunity.AccountId IN : customerIdSet AND Product2Id IN : productIdSet AND FERT_Code__c != null LIMIT 50000];
+
+    //         System.debug('--- opplineItemList'+opplineItemList);
+    //         //multi map to get the FERT based on packaging type.
+    //         Map<Id, Map<Id, Map<String,String>>> cusToProductsMap = new Map<Id,Map<Id, Map<String,String>>>();
+    //         for(OpportunityLineItem oli : opplineItemList) {
+    //             if(!String.isBlank(oli.Packaging_Type__c) && !String.isBlank(oli.Packaging_Unit__c) && oli.Packaging_Quantity__c != null) {
+    //                 if(cusToProductsMap.containsKey(oli.Opportunity.AccountId)) {
+
+    //                     if(cusToProductsMap.get(oli.Opportunity.AccountId).containsKey(oli.Product2Id)) {
+    //                         cusToProductsMap.get(oli.Opportunity.AccountId).get(oli.Product2Id).put(oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c), oli.FERT_Code__c);
+    //                     }else {
+    //                         cusToProductsMap.get(oli.Opportunity.AccountId).put(oli.Product2Id, new Map<String,String>{oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c) => oli.FERT_Code__c});
+    //                     }
+    //                 }
+    //                 else {
+    //                     cusToProductsMap.put(oli.Opportunity.AccountId, new Map<Id, Map<String, String>>{oli.Product2Id => new Map<String, String> { oli.Packaging_Type__c + oli.Packaging_Unit__c + oli.Packaging_Quantity__c => oli.FERT_Code__c}});
+    //                 }
+    //             }
+    //         }
+
+    //         System.debug('--- cusToProductsMap '+cusToProductsMap);
+    //         System.debug('--- oppToaccMap '+oppToaccMap);
+    //         System.debug('--- opTooppMap '+opTooppMap);
+
+
+    //         if(!cusToProductsMap.isEmpty()) {
+    //             List<OpportunityLineItem> lineItemToUpdate = new List<OpportunityLineItem>();
+    //             for(OpportunityLineItem oli : oppLineList) { 
+    //                 System.debug('--- checking for key:'+oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c));
+    //                 if(opTooppMap.containsKey(oli.Id) && oppToaccMap.containsKey(opTooppMap.get(oli.Id)) && cusToProductsMap.containsKey(oppToaccMap.get(opTooppMap.get(oli.Id))) && cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).containsKey(oli.Product2Id) && cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).get(oli.Product2Id).containsKey(oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c))) {
+    //                     System.debug('--- matching fert found');
+    //                     lineItemToUpdate.add(new OpportunityLineItem(Id = oli.Id, FERT_Code__c = cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).get(oli.Product2Id).get(oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c))));
+    //                     System.debug('--- lineItemToUpdate: '+lineItemToUpdate);
+    //                 }
+    //             }
+    //             if(!lineItemToUpdate.isEmpty()) {
+    //                 try {
+    //                     update lineItemToUpdate;
+    //                 }catch(DMLException e) {
+    //                     HandleBusinessException.captureError('OpportunityLineItemTriggerHandler', 'checkAndUpdateFERT', e);
+    //                 }
+    //             }
+                    
+    //         }
+    //     }
+    // }
+
     private void checkAndUpdateFERT(Map<Id,Id> opTooppMap, List<OpportunityLineItem> oppLineList, Set<Id> productIdSet) {
 
         System.debug('--- oppLineList '+ oppLineList);
@@ -309,23 +379,26 @@ public without sharing class OpportunityLineItemTriggerHandler {
         }
         if(!opTooppMap.isEmpty()) {
             System.debug('--- customerIdSet'+customerIdSet);
-            List<OpportunityLineItem> opplineItemList = [SELECT Id, Product2Id, Opportunity.AccountId, FERT_Code__c, Packaging_Type__c, Packaging_Unit__c, Packaging_Quantity__c FROM OpportunityLineItem WHERE Opportunity.AccountId IN : customerIdSet AND Product2Id IN : productIdSet AND FERT_Code__c != null LIMIT 50000];
+            List<OpportunityLineItem> opplineItemList = [SELECT Id, Product2Id, ProductCode, Primary__c, Secondary__c, Tertiary__c,
+                                                        Opportunity.AccountId, FERT_Code__c, Packaging_Type__c, Packaging_Unit__c, Packaging_Quantity__c 
+                                                        FROM OpportunityLineItem WHERE Opportunity.AccountId IN : customerIdSet AND Product2Id IN : productIdSet 
+                                                        AND FERT_Code__c != null LIMIT 50000];
 
             System.debug('--- opplineItemList'+opplineItemList);
             //multi map to get the FERT based on packaging type.
             Map<Id, Map<Id, Map<String,String>>> cusToProductsMap = new Map<Id,Map<Id, Map<String,String>>>();
             for(OpportunityLineItem oli : opplineItemList) {
-                if(!String.isBlank(oli.Packaging_Type__c) && !String.isBlank(oli.Packaging_Unit__c) && oli.Packaging_Quantity__c != null) {
+                if(!String.isBlank(oli.ProductCode) && !String.isBlank(oli.Primary__c) && !String.isBlank(oli.Secondary__c) && !String.isBlank(oli.Tertiary__c)) {
                     if(cusToProductsMap.containsKey(oli.Opportunity.AccountId)) {
 
                         if(cusToProductsMap.get(oli.Opportunity.AccountId).containsKey(oli.Product2Id)) {
-                            cusToProductsMap.get(oli.Opportunity.AccountId).get(oli.Product2Id).put(oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c), oli.FERT_Code__c);
+                            cusToProductsMap.get(oli.Opportunity.AccountId).get(oli.Product2Id).put(oli.ProductCode + oli.Primary__c + oli.Secondary__c + oli.Tertiary__c, oli.FERT_Code__c);
                         }else {
-                            cusToProductsMap.get(oli.Opportunity.AccountId).put(oli.Product2Id, new Map<String,String>{oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c) => oli.FERT_Code__c});
+                            cusToProductsMap.get(oli.Opportunity.AccountId).put(oli.Product2Id, new Map<String,String>{(oli.ProductCode + oli.Primary__c + oli.Secondary__c + oli.Tertiary__c) => oli.FERT_Code__c});
                         }
                     }
                     else {
-                        cusToProductsMap.put(oli.Opportunity.AccountId, new Map<Id, Map<String, String>>{oli.Product2Id => new Map<String, String> { oli.Packaging_Type__c + oli.Packaging_Unit__c + oli.Packaging_Quantity__c => oli.FERT_Code__c}});
+                        cusToProductsMap.put(oli.Opportunity.AccountId, new Map<Id, Map<String, String>>{oli.Product2Id => new Map<String, String> { oli.ProductCode + oli.Primary__c + oli.Secondary__c + oli.Tertiary__c => oli.FERT_Code__c}});
                     }
                 }
             }
@@ -338,10 +411,13 @@ public without sharing class OpportunityLineItemTriggerHandler {
             if(!cusToProductsMap.isEmpty()) {
                 List<OpportunityLineItem> lineItemToUpdate = new List<OpportunityLineItem>();
                 for(OpportunityLineItem oli : oppLineList) { 
-                    System.debug('--- checking for key:'+oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c));
-                    if(opTooppMap.containsKey(oli.Id) && oppToaccMap.containsKey(opTooppMap.get(oli.Id)) && cusToProductsMap.containsKey(oppToaccMap.get(opTooppMap.get(oli.Id))) && cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).containsKey(oli.Product2Id) && cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).get(oli.Product2Id).containsKey(oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c))) {
+                    System.debug('--- checking for key:'+oli.ProductCode + oli.Primary__c + oli.Secondary__c + oli.Tertiary__c);
+                    if(opTooppMap.containsKey(oli.Id) && oppToaccMap.containsKey(opTooppMap.get(oli.Id)) && 
+                       cusToProductsMap.containsKey(oppToaccMap.get(opTooppMap.get(oli.Id))) && 
+                       cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).containsKey(oli.Product2Id) && 
+                       cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).get(oli.Product2Id).containsKey(oli.ProductCode + oli.Primary__c + oli.Secondary__c + oli.Tertiary__c)) {
                         System.debug('--- matching fert found');
-                        lineItemToUpdate.add(new OpportunityLineItem(Id = oli.Id, FERT_Code__c = cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).get(oli.Product2Id).get(oli.Packaging_Type__c + oli.Packaging_Unit__c + Integer.valueOf(oli.Packaging_Quantity__c))));
+                        lineItemToUpdate.add(new OpportunityLineItem(Id = oli.Id, FERT_Code__c = cusToProductsMap.get(oppToaccMap.get(opTooppMap.get(oli.Id))).get(oli.Product2Id).get(oli.ProductCode + oli.Primary__c + oli.Secondary__c + oli.Tertiary__c)));
                         System.debug('--- lineItemToUpdate: '+lineItemToUpdate);
                     }
                 }

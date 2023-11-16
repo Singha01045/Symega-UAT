@@ -92,7 +92,11 @@ public without sharing class SampleTriggerHandler {
         String projectRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Sample').getRecordTypeId();
         Map<String,Boolean> checkValues = new Map<String,Boolean>();
         Map<Id,Project__c> samples = new Map<Id,Project__c>();
-        Map<Id,Project__c> projects = new Map<Id,Project__c>([Select Id,Name,Opportunity__c,Sampling_Quantity_Unit__c,Parent_Project__c,Auto_Submit_Sample__c,Opportunity__r.Account.OwnerId,Expected_Annual_Value__c,End_Use_category__c,End_Use_Applications__c,Account__c,Opportunity_Close_Date__c,Sampling_Quantity_details__c ,CurrencyIsoCode, Opportunity__r.Account.Customer_Contact__r.MailingCity, Opportunity__r.Account.Customer_Contact__r.MailingState, Opportunity__r.Account.Customer_Contact__r.MailingCountry, Opportunity__r.Account.Customer_Contact__r.MailingPostalCode, Opportunity__r.Account.Customer_Contact__r.MailingStreet, Opportunity__r.Account.ShippingCity, Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingCountry, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.Customer_Contact__r.MailingAddress, (Select Id,Product_Name__c,Name,SSC_Code__c,Description__c From Project_Quotients__r) From Project__c Where Id In :projectIds]);
+        Map<Id,Project__c> projects = new Map<Id,Project__c>([Select Id,Opportunity__r.Billing_City__c, Opportunity__r.Billing_Country__c, Opportunity__r.Billing_State__c, 
+                                                              Opportunity__r.Shipping_Street__c, Opportunity__r.Shipping_State__c,Opportunity__r.Shipping_City__c,
+                                                              Opportunity__r.Shipping_Postal_Code__c ,Opportunity__r.Shipping_Country__c,
+                                                              Opportunity__r.Billing_Street__c,Opportunity__r.Billing_Postal_Code__c,  Name,Opportunity__c,Sampling_Quantity_Unit__c,
+                                                              Parent_Project__c,Auto_Submit_Sample__c,Opportunity__r.Account.OwnerId,Expected_Annual_Value__c,End_Use_category__c,End_Use_Applications__c,Account__c,Opportunity_Close_Date__c,Sampling_Quantity_details__c ,CurrencyIsoCode, Opportunity__r.Account.Customer_Contact__r.MailingCity, Opportunity__r.Account.Customer_Contact__r.MailingState, Opportunity__r.Account.Customer_Contact__r.MailingCountry, Opportunity__r.Account.Customer_Contact__r.MailingPostalCode, Opportunity__r.Account.Customer_Contact__r.MailingStreet, Opportunity__r.Account.ShippingCity, Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingCountry, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.Customer_Contact__r.MailingAddress, (Select Id,Product_Name__c,Name,SSC_Code__c,Description__c From Project_Quotients__r) From Project__c Where Id In :projectIds]);
         Map<Id,List<Sample_Line_Item__c>> projSampleLineItemMap = new Map<Id,List<Sample_Line_Item__c>>();
 
         for(Project__c proj : projects.values()){
@@ -110,26 +114,27 @@ public without sharing class SampleTriggerHandler {
             sample.Sample_Project__c = proj.Id;
             sample.OwnerId = proj.Opportunity__r.Account.OwnerId;
             //Add address fields here.
+            system.debug('proj.Opportunity__r.Shipping_Street__c.length() ' + proj.Opportunity__r.Shipping_Street__c.length());
             if(proj.Opportunity__r.Account.Customer_Contact__c != null && proj.Opportunity__r.Account.Customer_Contact__r.MailingAddress != null) {
                 sample.City__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCity;
                 sample.State__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingState;
                 sample.Country__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCountry;
                 sample.Postal_Code__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingPostalCode;
-                sample.Street__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet; 
+                sample.Street__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet.length() >= 125 ? proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet.substring(0, 124) : proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet; 
             }
             else {
                 sample.City__c = proj.Opportunity__r.Shipping_City__c;
                 sample.State__c = proj.Opportunity__r.Shipping_State__c;
                 sample.Country__c = proj.Opportunity__r.Shipping_Country__c;
                 sample.Postal_Code__c = proj.Opportunity__r.Shipping_Postal_Code__c;
-                sample.Street__c = proj.Opportunity__r.Shipping_Street__c;
+                sample.Street__c = proj.Opportunity__r.Shipping_Street__c.length() >= 125 ? proj.Opportunity__r.Shipping_Street__c.substring(0, 124) : proj.Opportunity__r.Shipping_Street__c;
             }
             
             sample.Billing_City__c = proj.Opportunity__r.Billing_City__c;
             sample.Billing_State__c = proj.Opportunity__r.Billing_State__c;
             sample.Billing_Country__c = proj.Opportunity__r.Billing_Country__c;
             sample.Billing_Postal_Code__c = proj.Opportunity__r.Billing_Postal_Code__c;
-            sample.Billing_Street__c = proj.Opportunity__r.Billing_Street__c; 
+            sample.Billing_Street__c = proj.Opportunity__r.Billing_Street__c.length() >= 125 ? proj.Opportunity__r.Billing_Street__c.substring(0, 124) : proj.Opportunity__r.Billing_Street__c; 
             
             samples.put(proj.Id,sample);
             checkValues.put(proj.Id,proj.Auto_Submit_Sample__c); 

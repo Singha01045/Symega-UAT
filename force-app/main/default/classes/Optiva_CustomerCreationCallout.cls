@@ -29,7 +29,7 @@ public without sharing class Optiva_CustomerCreationCallout {
 
                 DateTime endDate = System.now();
 
-                HttpUtility.createLog(req,resp,startDate,endDate);
+                HttpUtility.createLog(req,resp,startDate,endDate, '');
 
                 if(resp.getStatusCode()==200 || resp.getStatusCode()==201){
                     return 'Success';

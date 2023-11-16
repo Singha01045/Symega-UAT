@@ -30,7 +30,7 @@ global without sharing class Optiva_CustomerCreationService {
             String result = updateOptivaCode(reqId,optivaCode);
             if(result == 'Failed, recordId not found')
                 RestContext.response.statusCode = 400;
-            HttpUtility.getInstance().createServiceLogger(body, result, '/updatecustomercode/*', 'POST', 200, processingStartTime, System.now()); //Log this request
+            HttpUtility.getInstance().createServiceLogger(body, result, '/updatecustomercode/*', 'POST', 200, processingStartTime, System.now(), reqId); //Log this request
             return result;
         }catch(Exception e){
             HandleBusinessException.captureError('Optiva_CustomerCreationService','updateCustomerCode', e);

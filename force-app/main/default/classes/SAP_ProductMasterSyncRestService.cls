@@ -46,12 +46,12 @@ global without sharing class SAP_ProductMasterSyncRestService {
             if(updateProduct(rWrapper.PRODUCT_DATA)) {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Products synced successfully'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/products', 'POST', 200, processingStartTime, System.now()); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/products', 'POST', 200, processingStartTime, System.now(), ''); //Log 
             }
             else {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Something went wrong'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/products', 'POST', 400, processingStartTime, System.now()); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/products', 'POST', 400, processingStartTime, System.now(), ''); //Log 
             }
         }
     }
