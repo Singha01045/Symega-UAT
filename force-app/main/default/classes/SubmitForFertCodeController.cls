@@ -295,7 +295,7 @@ public without sharing class SubmitForFertCodeController {
                 
             }
             else{
-                Dispatch_Address__c disRec = [select id, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, Address__CountryCode__s, Address__StateCode__s,
+                Dispatch_Address__c disRec = [select id, Customer_Category__c, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, Address__CountryCode__s, Address__StateCode__s,
                 Contact__c,Account__c,Type__c, OwnerId, Account__r.Customer_Type__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, CurrencyIsoCode
                 from Dispatch_Address__c WHERE Id =:accId];
 
@@ -320,6 +320,10 @@ public without sharing class SubmitForFertCodeController {
                 
                 if((disRec.Address__PostalCode__s == null) || (disRec.Address__PostalCode__s == '')){
                     missingFieldsList.add('Address__PostalCode__s');
+                }
+
+                if(String.isBlank(disRec.Customer_Category__c)){
+                    missingFieldsList.add('Customer_Category__c');
                 }
 
                 if(disRec.Contact__c == null){

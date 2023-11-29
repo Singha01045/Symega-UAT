@@ -11,6 +11,9 @@ private class OpportunityTeamHelperTest {
         oppRecType.CloseDate = System.TODAY();
         oppRecType.End_Use_Application__c = 'Popcorn';
         oppRecType.End_Use_category__c = 'Snacks';
+        oppRecType.Annual_Volume_Full__c = 1;
+        oppRecType.Target_Price_Kg__c = 1;
+        oppRecType.Annual_Volume_in_units__c = 'Kg';
         insert oppRecType;
         
         Opportunity_Team_Master__c obj = new Opportunity_Team_Master__c();
@@ -18,6 +21,18 @@ private class OpportunityTeamHelperTest {
         
         Account acc = new Account();
         acc.name = 'TEST ACCOUNT';
+        
+        acc.BillingCity = 'Bangalore';
+        acc.BillingCountry = 'India';
+        acc.BillingState = 'Karnataka';
+        acc.BillingStreet = 'XYZ, Test';
+        acc.BillingPostalCode = '561011';
+        
+        acc.ShippingCity = 'Bangalore';
+        acc.ShippingCountry = 'India';
+        acc.ShippingState = 'Punjab';
+        acc.ShippingStreet = 'XYZ, Test';
+        acc.ShippingPostalCode = '561011';        
         Insert acc;
         
         Project__c recordType = new Project__c();
@@ -25,6 +40,7 @@ private class OpportunityTeamHelperTest {
         recordType.Product_Family__c = 'CPD';
         recordType.End_Use_Applications__c = 'Popcorn';
         recordType.End_Use_category__c = 'Snacks';
+        recordType.Opportunity__c = oppRecType.Id;
         insert recordType;
         
         list<Contact> conList = new list<Contact>();

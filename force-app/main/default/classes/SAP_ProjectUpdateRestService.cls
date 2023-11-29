@@ -12,15 +12,16 @@ global without sharing class SAP_ProjectUpdateRestService {
         String requestString = body.toString();
         System.debug('--- rquestString'+ requestString);
         String responseBody;
+         String projectId ;
         if(!String.isEmpty(requestString)) {
             Project__c newProject = (Project__c)JSON.deserialize(requestString, Project__c.class);
             if(newProject != null) {
                 //system.debug('insertLead :: ' + insertLead(leadWrapper));
-                String projectId = updateProject(newProject);
+                 projectId = updateProject(newProject);
                 if(projectId != null) {
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Project updated succesfully:'+projectId));
                     RestContext.response.responseBody = Blob.valueOf(responseBody);
-                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 200, processingStartTime, System.now(), projectId); //Log 
+                    HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 200, processingStartTime, System.now(),projectId); //Log 
                 }
                 else {
                     responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Could not update Project'));
@@ -33,7 +34,7 @@ global without sharing class SAP_ProjectUpdateRestService {
             responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Bad Request'));
             RestContext.response.responseBody = Blob.valueOf(responseBody);
             RestContext.response.statusCode = 400;
-            HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 400, processingStartTime, System.now(), ''); //Log 
+            HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sap_project_update', 'POST', 400, processingStartTime, System.now(), projectId); //Log 
         }
     }
 

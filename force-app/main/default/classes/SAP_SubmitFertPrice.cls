@@ -36,7 +36,40 @@ public without sharing class SAP_SubmitFertPrice {
         headerMap.put('Cookie',cookies);
         headerMap.put('Authorization',HTTPUtility.getSAPCalloutHeader(Constants.SAP_FERT_AUTH_HEADER));
 
-        HttpUtility.getInstance().httpReqHelper(headerMap,'POST',body,endPoint, '');
+        //HttpUtility.getInstance().httpReqHelper(headerMap,'POST',body,endPoint /*, oppId*/);
+        //HttpUtility.createLog(body,resp,startDate,endDate /*, null*/);
+
+        DateTime sDate = System.now();
+        Map<String,String> respMap = new Map<String,String>();
+        HttpRequest httpRequest = new HttpRequest();
+        httpRequest.setEndpoint(endpoint);
+        httpRequest.setMethod('POST');
+        httpRequest.setBody(body);
+        //httpRequest.setTimeout(600);     
+        system.debug('headerMap -- ' + headerMap);
+
+        if(!headerMap.isEmpty()){
+            for(String key : headerMap.keySet()){
+                httpRequest.setHeader(key,headerMap.get(key));
+            }
+        }
+
+        System.debug('EndPoint-- '+endPoint);
+        System.debug('X-CSRF-Token- '+httpRequest.getHeader('X-CSRF-Token'));
+        System.debug('Authorization- '+httpRequest.getHeader('Authorization'));
+        System.debug('Cookies- '+httpRequest.getHeader('Cookie'));
+
+        Http http = new Http();
+        HTTPResponse response = http.send(httpRequest);
+        DateTime eDate = System.now();
+
+        System.debug('RESPONSE BODY FERT----'+response.getBody());
+        System.debug('AUTHHEADER FERT-----'+httpRequest);
+        HttpUtility.createLog(httpRequest,response,sDate,eDate, null);
+
+       if(response.getStatusCode() == 200 || response.getStatusCode() == 201){
+            system.debug('Success -- ');
+        }
     }
 
 

@@ -37,7 +37,7 @@ public without sharing class SAP_ADDRESS_UPDATE_CALLOUT {
     }
     
     public static Dispatch_Address__c getAddress(String recId){
-        return [Select Id, Name, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
+        return [Select Id, Name, Account__r.Name, Customer_Category__c, PAN_Number__c, Tax_Type__c, FSSAI_Number__c, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
                 Account__r.Tax_Type__c, Account__r.PAN_Number__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, Account__r.Customer_Type__c, Account__r.Payment_terms__c, Owner.Email,
                 Account__r.RecordType.Name, Customer_Code_SAP__c, Account__r.User__r.SAP_USER_CODE__c, Account__r.Owner.SAP_USER_CODE__c, Contact__r.Name, Contact__r.Phone, Contact__r.Email,
                 Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c, Account__r.Transportation_Terms__c From Dispatch_Address__c Where Id=:recId];
@@ -49,13 +49,13 @@ public without sharing class SAP_ADDRESS_UPDATE_CALLOUT {
         SAP_CUSTOMER_UPDATE_WRAPPER sWrapper = new SAP_CUSTOMER_UPDATE_WRAPPER();
         
         sWrapper.SF_ID = addressRec.Id;
-        sWrapper.CUSTOMER_NAME_2 = addressRec.Name.length()<40?'':addressRec.Name.substring(40,addressRec.Name.length());
+        sWrapper.CUSTOMER_NAME_2 = addressRec.Account__r.Name.length()<40?'':addressRec.Account__r.Name.substring(40,addressRec.Account__r.Name.length());
         sWrapper.STATE = addressRec.Address__StateCode__s;
         sWrapper.TAX_TYPE = addressRec.Account__r.Tax_Type__c!=null ? addressRec.Account__r.Tax_Type__c:'';   
         sWrapper.CUSTOMER_SAP_CODE = addressRec.Customer_Code_SAP__c;
         
         //sWrapper.CUSTOMER_SAP_CODE = addressRec.Customer_Code_SAP__c;
-        sWrapper.CUSTOMER_NAME = addressRec.Name.length()>40?addressRec.Name.substring(0,40):addressRec.Name;
+        sWrapper.CUSTOMER_NAME = addressRec.Account__r.Name.length()>40?addressRec.Account__r.Name.substring(0,40):addressRec.Account__r.Name;
         sWrapper.STREET_2 = addressRec.Address__Street__s;
         sWrapper.STREET_3 = addressRec.Address__Street__s;
         sWrapper.STREET = addressRec.Address__Street__s;
@@ -63,16 +63,16 @@ public without sharing class SAP_ADDRESS_UPDATE_CALLOUT {
         sWrapper.CITY = addressRec.Address__City__s;
         sWrapper.COUNTRY = addressRec.Address__CountryCode__s; //Utility.getPickVal('Account','BillingCountryCode').get(addressRec.Address__CountryCode__s);
         sWrapper.SALES_EMP = addressRec.Account__r.Owner.SAP_USER_CODE__c;
-        sWrapper.CUSTOMER_CATEGORY = addressRec.Account__r.RecordType.Name;
+        sWrapper.CUSTOMER_CATEGORY = addressRec.Customer_Category__c;
         sWrapper.BUSINESS_HEAD_NAME = addressRec.Account__r.User__r.SAP_USER_CODE__c;
         sWrapper.GSTIN_NUMBER = addressRec.GST_number__c!=null?addressRec.GST_number__c:'';
-        sWrapper.PAN_NUMBER = addressRec.Account__r.PAN_Number__c!=null?addressRec.Account__r.PAN_Number__c:'';
+        sWrapper.PAN_NUMBER = addressRec.PAN_Number__c!=null?addressRec.PAN_Number__c:'';
         sWrapper.CUSTOMER_GROUP = addressRec.Account__r.Account_Segment__c!=null?addressRec.Account__r.Account_Segment__c:'';
         sWrapper.DELIVERY_PLANT = addressRec.Account__r.Delivery_Plant__c!=null?addressRec.Account__r.Delivery_Plant__c:'';
         sWrapper.DOMESTIC_EXPORT = addressRec.Account__r.Customer_Type__c!=null?addressRec.Account__r.Customer_Type__c:'';
         sWrapper.PAYMENT_TERMS = addressRec.Account__r.Payment_terms__c!=null?addressRec.Account__r.Payment_terms__c:'';
         sWrapper.ACC_OWNER_EMAIL = addressRec.Owner.Email;
-        sWrapper.FSSAI_NUMBER = addressRec.Account__r.FSSAI__c!=null?String.valueOf(addressRec.Account__r.FSSAI__c):'';
+        sWrapper.FSSAI_NUMBER = addressRec.FSSAI_Number__c!=null?String.valueOf(addressRec.FSSAI_Number__c):'';
         sWrapper.TRANSPORTATION_TERMS = addressRec.Account__r.Transportation_Terms__c!=null?addressRec.Account__r.Transportation_Terms__c:'';
         sWrapper.CUSTOMER_CONTACT_INFO = createConWrapperByAddress(addressRec);
         

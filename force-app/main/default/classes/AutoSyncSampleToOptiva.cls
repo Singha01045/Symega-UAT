@@ -92,7 +92,7 @@ public without sharing class AutoSyncSampleToOptiva {
                 }
 
                 System.debug('Body------'+OpWrapper.toString());
-                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper));
+                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper), project.Id);
                 if(responseMap!=null && responseMap.get('status')=='Success'){
                     project.Submit_Sample_To_Optiva__c = true;
                     project.Submitted_To_SAP_Optiva__c = true;

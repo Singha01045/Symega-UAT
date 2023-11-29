@@ -80,6 +80,29 @@
         </head>
         
         <body ng-app="SampleDet_App" ng-controller="SampleDet_ctrl" style="background-color: white; !important;">
+
+            <div class="modal" id="filePreview">
+                <div class="modal-dialog" style="min-width:120rem">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">
+                                <div class="d-flex" style="background:unset;">
+                                    <h3 style="text-align: center"><b>{{selectedFile.userDocument.Name}}</b></h3>
+                                </div>
+                            </h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <iframe style="width:100%;height:75vh;border: 0px;border-radius: 10px;" id="file_frame" title="File"></iframe>
+                        </div>
+                        <div class="col-md-4 cancelSaveBtnDiv">
+                            <button class="blue-btn me-2 mb-5" ng-click="saveInvoiceUnderAccount()" type="button">Save</button>
+                            <button class="blue-btn me-2 mb-5" data-bs-dismiss="modal" type="button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="loadingSection" ng-if="showSpinner">
                 <div class="loadingBackground"></div>
                 <div>
@@ -92,41 +115,37 @@
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
-                    <div style="width: 50%;">
-                        <!-- <marquee>
+                <div style="width: 50%;">
+                    <!-- <marquee>
 <h2 class="nav-link" style="color:white;"><b>Hello We partner with our customers across a project’s lifespan – from inception, through product commercialisation, sharing our experience and expertise. With our informed, committed, and passionate team of professionals, we strive to provide you with solutions that bring your culinary ideas to life, faster and better.</b></h2>
 </marquee> -->
-                    </div>
-                    
-                    <!--div class="d-flex text-align-center">
-<div class="dropdown">
-<i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
-</i>
-<ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-<li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{conName}}</a></li>
-<li>
-<hr class="dropdown-divider" />
-</li>
-<li><a class="dropdown-item pe-5"><i class="fa-solid fa-at me-3"></i>{{email}}</a></li>
-<li>
-<hr class="dropdown-divider" />
-</li>
-<li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
-<li>
-<hr class="dropdown-divider" />
-</li>
-<li>
-<a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
-</li>
-</ul>
-</div>
-</div-->
                 </div>
-            </nav>
+                
+                <div class="d-flex text-align-center">
+                    <div class="dropdown">
+                        <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+                        </i>
+                        <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
+                            <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
+                            <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
+                            <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
+                        </li>
+                        </ul>
+                        </div>
+                    </div>
+            </div>
+        </nav>
             <apex:includeLightning />
             <div  id="container"/>
             
-            <div class="row mx-5">
+            <div class="row mx-5" ng-show="showDetailPage">
                 <div class="row box-shadow-2 mb-5">
                     <div class="row mt-5 mx-1">
                         <div class="col-md-8">
@@ -134,26 +153,154 @@
                         </div>
                         
                         <div class="col-md-4">
-                            
+                            <div id="hideForDispatch" style="display:none;" class="buttonContainer">
+                                <button class="blue-btn me-2 mb-5" ng-click="openReleaseToDispatch()" style="background:teal;" type="button">
+                                    Release To Dispatch Team</button>
+                        <button class="blue-btn me-2 mb-5" ng-click="openGenerateLabel()" style="background:teal;" type="button">
+                            Generate Label</button>
+                            <button class="blue-btn me-2 mb-5" ng-click="openGenerateNonHazardous()" style="background:teal;" type="button">
+                                Generate Non-Hazardous</button>
                             <button class="blue-btn float-end me-2 mb-5" ng-click="openAuraPopUp()" style="background:teal;" type="button">
                                 Create/Edit Sample Lineitems</button>
-                            
-                            <div class="modal" id="flipFlop">
-                                <div class="modal-dialog" style="min-width:1000px">
+                            </div>
+
+                            <div class="modal" id="releaseToDispatch">
+                                <div class="modal-dialog" style="min-width:95%; margin-top: 30vh;">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
                                                 <h3>
-                                                    <b>Create Sample LineItems :</b>
+                                                    <b>Release To Dispatch Team</b>
                                                 </h3>
                                                 </div></h4> 
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="row mt-3 mx-5">
+                                            <div class="row mt-3 mx-5" style="margin: 0px!important;">
                                                 <div class="col-md-12" style="overflow-x:auto;">
                                                     
-                                                    <table class="table" style="width:300%">
+                                                    <table class="table" style="width:150%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:0%;">S.No.</th>
+                                                                <th style="width:2%;">Product</th>
+                                                                <th style="width:0%;">Sample Invoice Date</th>
+                                                                <th style="width:0%;">Actual Date of Dispatch</th>
+                                                                <th style="width:5%;">Courier</th>
+                                                                <th style="width:5%;">Dispatch Details</th>
+                                                                <th style="width:5%;">Way Bill No.</th>
+                                                                <th style="width:5%;">Additional Comments</th>
+                                                                <th style="width:5%;">Release Status</th>
+                                                                <!--th style="width:10%;">Customer Instructions</th>
+                                                                <th style="width:1%"><i class="fas fa-plus-circle icon ps-3" ng-click="addRow()"></i></th-->
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="SLI in SLIlist">
+                                                                <!--{{SLIlist}}-->
+                                                                <td>{{$index+1}}</td>
+                                                                <td>{{SLI.Name}}</td>
+                                                                <td><input class="form-control" type="Date" ng-model="SLI.Sample_Invoice_Date__c" ng-disabled="SLI.checkReleaseStatus"/></td>
+                                                                <td><input type="Date" class="form-control" ng-model="SLI.Actual_date_of_dispatch__c" ng-disabled="SLI.checkReleaseStatus"/></td>
+                                                                <td><input type="text" class="form-control" ng-model="SLI.Courier__c" ng-disabled="SLI.checkReleaseStatus" /></td>
+                                                                <td><input type="text" class="form-control" ng-model="SLI.Dispatch_Details__c" ng-disabled="SLI.checkReleaseStatus" /></td>
+                                                                <td><input type="text" class="form-control" ng-model="SLI.Way_Bill_No__c" ng-disabled="SLI.checkReleaseStatus" /></td> 
+                                                                <td><input type="text" class="form-control" ng-model="SLI.Additional_Comments__c" ng-disabled="SLI.checkReleaseStatus" /></td>
+                                                                <td><div class="col-md-4 pt-3" ng-repeat="status in releaseStatus">
+                                                                    <input type="radio" ng-model="SLI.Release_Status__c" ng-value="status" ng-change="ChangeOfReleaseStatus(status, SLI)" />
+                                                                    <label>{{status}}</label>
+                                                                </div></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6 mb-5">
+                                                <button type="button" ng-click="saveSLIList()" class="blue-btn float-end">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                <div class="modal" id="genrateLabelModal">
+                                    <div class="modal-dialog" style="min-width:95%; margin-top: 10vh;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                                    <h3>
+                                                        <b>Sample Invoice</b>
+                                                    </h3>
+                                                    </div></h4> 
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row mt-3 mx-5" style="margin: 0px!important;">
+                                                    <div class="col-md-12" style="overflow-x:auto;">
+                                                        <iframe height="400px" width="100%;" src="{{URLused}}" scrolling="true"></iframe>
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6 mb-5">
+                                                    <button type="button" ng-click="saveLabel()" class="blue-btn float-end">Save</button>
+                                                </div>
+                                                <div class="col-md-6 mb-5">
+                                                    <button type="button" data-bs-dismiss="modal" class="blue-btn">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal" id="genrateNonHazardousModal">
+                                    <div class="modal-dialog" style="min-width:95%; margin-top: 10vh;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                                    <h3>
+                                                        <b>Sample Invoice</b>
+                                                    </h3>
+                                                    </div></h4> 
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row mt-3 mx-5" style="margin: 0px!important;">
+                                                    <div class="col-md-12" style="overflow-x:auto;">
+                                                        <iframe height="400px" width="100%;" src="{{URLusedForNonHazardous}}" scrolling="true"></iframe>
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6 mb-5">
+                                                    <button type="button" ng-click="saveNonHazardous()" class="blue-btn float-end">Save</button>
+                                                </div>
+                                                <div class="col-md-6 mb-5">
+                                                    <button type="button" data-bs-dismiss="modal" class="blue-btn">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            <div class="modal" id="flipFlop">
+                                <div class="modal-dialog" style="min-width:95%; margin-top: 30vh;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                                <h3>
+                                                    <b>Create Sample Line Items :</b>
+                                                </h3>
+                                                </div></h4> 
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row mt-3 mx-5" style="margin: 0px!important;">
+                                                <div class="col-md-12" style="overflow-x:auto;">
+                                                    
+                                                    <table class="table" style="width:150%">
                                                         <thead>
                                                             <tr>
                                                                 <th style="width:0%;">S.No.</th>
@@ -176,8 +323,8 @@
                                                                 <td ng-if="SLI.check == false"><!--so-dropdown ng-model="SLI.productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,SLI.productId.Id)" ng-disabled="SLI.check">
                                                                     <option value='None'>None</option>
                                                                     </so-dropdown-->
-                                                                <select class="form-control" ng-model="SLI.productId" ng-change="onChangeToAssignProduct(SLI,SLI.productId)" ng-disabled="SLI.check">
-                                                                    <option ng-repeat="item in mergedList" value="{{item.Id}}">{{item.Name}}</option>
+                                                                <select class="form-control" ng-model="SLI.ProductNm" ng-change="onChangeToAssignProduct(SLI,SLI.ProductNm)" ng-disabled="SLI.check">
+                                                                    <option ng-repeat="item in mergedList" value="{{item.Name}}">{{item.Name}}</option>
                                                                     </select>
                                                                 </td>
                                                                 <td ng-if="SLI.check == true"><input class="form-control" type="text" ng-model="SLI.Product_Name__c" ng-disabled="SLI.check"/></td>
@@ -226,7 +373,7 @@
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md-6 mb-5">
-                                                <button type="button" data-bs-dismiss="modal" ng-click="saveSLIDetails()" class="blue-btn float-end">Save</button>
+                                                <button type="button" ng-click="saveSLIDetails()" class="blue-btn float-end">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -285,24 +432,9 @@
                         <input class="form-control" type="text" ng-model="sampleDetails.Sample_Sub_Retry_Count__c" ng-disabled="true"/>
                     </div>
                     <div class="col-md-6 mt-3">
-                        <label class="font-if">Submit To Optiva
-                        </label>
-                        <input class="form-check-input" type="checkbox" ng-model="sampleDetails.Submit_Sample_To_Optiva__c" ng-disabled="true"/>
-                    </div>
-                    <div class="col-md-6 mt-3">
                         <label class="font-if">Currency
                         </label>
                         <input class="form-control" type="text" ng-model="sampleDetails.CurrencyIsoCode" ng-disabled="true"/>
-                    </div>
-                    <div class="col-md-6 mt-3">
-                        <label class="font-if">Submitted
-                        </label>
-                        <input class="form-check-input" type="checkbox" ng-model="sampleDetails.Submitted_To_SAP_Optiva__c" ng-disabled="true"/>
-                    </div>
-                    <div class="col-md-6 mt-3">
-                        <label class="font-if">Error Occured On Submitting To Optiva
-                        </label>
-                        <input class="form-check-input" type="checkbox" ng-model="sampleDetails.Error_Occured_On_Submitting_To_Optiva__c" ng-disabled="true"/>
                     </div>
                     <div class="col-md-6 mt-3">
                         <label class="font-if">Business potential value (INR) New
@@ -350,6 +482,22 @@
                         </label>
                         <input class="form-control" type="text" ng-model="sampleDetails.Target_Price__c" ng-disabled="true"/>
                     </div>
+                    <div class="col-md-6 mt-3">
+                        <label class="font-if">Submit To Optiva
+                        </label>
+                        <input class="form-check-input" type="checkbox" ng-model="sampleDetails.Submit_Sample_To_Optiva__c" ng-disabled="true"/>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <label class="font-if">Submitted
+                        </label>
+                        <input class="form-check-input" type="checkbox" ng-model="sampleDetails.Submitted_To_SAP_Optiva__c" ng-disabled="true"/>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <label class="font-if">Error Occured On Submitting To Optiva
+                        </label>
+                        <input class="form-check-input" type="checkbox" ng-model="sampleDetails.Error_Occured_On_Submitting_To_Optiva__c" ng-disabled="true"/>
+                    </div>
+
                     
                     <div class="row mt-5 mx-1">
                         <div class="col-md-12">
@@ -505,11 +653,50 @@
                 </div>
             </div>
             
-            <div class="col-md-6 mt-3 mb-3">
+            <div class="col-md-6 mt-3 mb-3" ng-show="showbackAndSaveBtn">
                 <button class="blue-btn float-end me-2 mb-5" ng-click="SaveSampleDetails()" type="button">
                     Save</button>
                 <button class="blue-btn float-end me-2 mb-5" ng-click="back()" type="button">
                     <i class="fa-solid fa-arrow-left me-2"></i>Back</button>
+            </div>
+
+            <div class="row box-shadow-2" ng-show="showProfile" style="margin-top:10rem!important;margin-right:24rem!important;margin-left:24rem!important;">
+                <div class="row mt-5 mx-1">
+                    <div class="col-md-12">
+                        <h3 class="pb-3 color-theme"><b>EDIT PROFILE</b></h3>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">First Name
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.FirstName" ng-disabled="true"/>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">Last Name
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.LastName" ng-disabled="true"/>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">Email
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.Email" ng-disabled="true"/>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">Phone
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.MobilePhone"/>
+                </div>
+                <div class="col-md-6 mt-3 mb-5">
+                    <label class="font-if">Password
+                    </label>
+                    <input class="form-control" type="password" ng-model="conRec.Password__c"/>
+                </div>
+                <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
+                    <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
+                        <i class="fa-solid fa-check me-2"></i>Update</button>
+                    <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
+                        <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+                </div>
             </div>
         </body>
         
@@ -517,6 +704,7 @@
         var userHashId = '{!$CurrentPage.parameters.id}';
         var sampleId = '{!$CurrentPage.parameters.sampleId}';
         var quantityUnit = JSON.parse('{!quantityUnit}');
+        var releaseStatus = JSON.parse('{!releaseStatus}');
         var endUseCategory = JSON.parse('{!endUseCategory}');
         var sampleReqBy = JSON.parse('{!sampleReqBy}');
         var mainReasonForSelPro = JSON.parse('{!mainReasonForSelPro}');
@@ -561,14 +749,21 @@
             };
         });
         var app = angular.module('SampleDet_App', []);
-        app.controller('SampleDet_ctrl', function ($scope){
+        app.controller('SampleDet_ctrl', function ($scope,$sce){
             debugger;
+           // $scope.challanLink = {!JSENCODE($Label.SymegaWaterMarkLink)};
+           $scope.challanLink = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/SymegaStickerPDF?id=';
+           $scope.challanLinkForNonHazardous = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/NonHarzardousDHLPDF?id=';
             $scope.quantityUnit = quantityUnit;
             $scope.endUseCategory = endUseCategory;
             $scope.sampleReqBy = sampleReqBy;
             $scope.mainReasonForSelPro = mainReasonForSelPro;
             $scope.annulaVolInUnits = annulaVolInUnits;
             $scope.teamTypeList = [];
+            $scope.showProfile = false;
+            $scope.showDetailPage=true;
+            $scope.showbackAndSaveBtn=true;
+            $scope.releaseStatus = releaseStatus;
             
             $scope.getSampleDetails = function(){
                 debugger;
@@ -578,7 +773,16 @@
                     debugger;
                     if(event.status && result){
                         debugger;
+                        $scope.conRec = result.conRec;
+                        if($scope.conRec.Role__c != 'Dispatch Team'){
+                            $('#hideForDispatchu').show();
+                        }
                         $scope.sampleDetails = result.listOfSamples[0];
+                        $scope.sampleId = $scope.sampleDetails.Id;
+                        $scope.URLused = $sce.trustAsResourceUrl($scope.challanLink + $scope.sampleId);
+                        $scope.urlToSendToApex = $scope.challanLink + $scope.sampleId;
+                        $scope.URLusedForNonHazardous = $sce.trustAsResourceUrl($scope.challanLinkForNonHazardous + $scope.sampleId);
+                        $scope.urlToSendToApexForNonHazardous = $scope.challanLink + $scope.sampleId;
                         $scope.allocationTeam = result.conRec.Account__r;
                         if(result.listOfSamples[0].Opportunity_Close_Date__c != null){
                             $scope.sampleDetails.Opportunity_Close_Date__c = new Date(result.listOfSamples[0].Opportunity_Close_Date__c);
@@ -595,16 +799,19 @@
                         if(result.listOfSamples[0].First_Sample_due_date__c != null){
                             $scope.sampleDetails.First_Sample_due_date__c = new Date(result.listOfSamples[0].First_Sample_due_date__c); 
                         }
-                        
-                        
-                        
-                        $scope.conRec = result.conRec;
+                        $scope.contactName = result.conRec.Name;
+                        $scope.accId = result.
+                        accId;
                         if(result.listOfSamples[0].Sample_Line_Items__r != undefined){
+                            debugger;
                             $scope.SLIlist = result.listOfSamples[0].Sample_Line_Items__r;
+                            debugger;
+                            $scope.SLIlistOld = result.listOfSamples[0].Sample_Line_Items__r;
                             for(var i=0;i<$scope.SLIlist.length;i++){
-                                $scope.SLIlist[i].calc = $scope.SLIlist[i].Quantity__c/$scope.SLIlist[i].Packaging_Quantity__c;
-                                 if($scope.SLIlist[i].Product__c != undefined){
-                                     $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Product__r.Name;
+                                $scope.SLIlist[i].calc = $scope.SLIlist[i].Formula_Packaging_Qty__c;
+                                //$scope.SLIlist[i].calc = $scope.SLIlist[i].Quantity__c/$scope.SLIlist[i].Packaging_Quantity__c;
+                                 		if($scope.SLIlist[i].Product__c != undefined){
+                                     		$scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Product__r.Name;
                                             $scope.SLIlist[i].productId = $scope.SLIlist[i].Product__c;
                                         }else if($scope.SLIlist[i].OPTIVA_Recipe__c != undefined){
                                             $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].OPTIVA_Recipe__r.Name;
@@ -615,8 +822,18 @@
                                         }else{
                                             $scope.SLIlist[i].productId = "--None--";
                                         }
+                                        if($scope.SLIlist[i].Release_Status__c != 'Released' || $scope.SLIlist[i].Release_to_Dispatch_Team__c == false){
+                                            $scope.SLIlist[i].checkReleaseStatus = true;
+                                        }
+                                        if($scope.SLIlist[i].Actual_date_of_dispatch__c != null){
+                                            $scope.SLIlist[i].Actual_date_of_dispatch__c = new Date($scope.SLIlist[i].Actual_date_of_dispatch__c);
+                                }
+                                if($scope.SLIlist[i].Sample_Invoice_Date__c != null){
+                                    $scope.SLIlist[i].Sample_Invoice_Date__c = new Date($scope.SLIlist[i].Sample_Invoice_Date__c);
+                                }
                             }
                         }else{
+                            $scope.SLIlist = [];
                             $scope.SLIlist.push({
                                 "Quantity__c":"","Quantity_Unit__c":"","Packaging_Quantity__c":"","Packaging_Unit__c":"","Sample__c":sampleId,"Packaging_Unit__c":"","OPTIVA_Recipe__r.Regulatory__c":"","OPTIVA_Recipe__r.Shelf_Life__c":"","Expected_Shelf_Life__c":"","Customer_Instructions__c":""
                             })
@@ -653,17 +870,191 @@
                 })
             }
             $scope.getSampleDetails();
+
+            $scope.ChangeOfReleaseStatus = function(value, SLIRec){
+                    debugger;
+                    //$scope.SLIRec.Release_Status__c = value;
+                    if(value == 'Released'){
+                        SLIRec.checkReleaseStatus = false;
+                        SLIRec.Release_to_Dispatch_Team__c = true;
+                    }else{
+                        SLIRec.checkReleaseStatus = true;
+                        SLIRec.Release_to_Dispatch_Team__c = false;
+                    }
+                }
+
+                $scope.saveSLIList = function(){
+                    debugger;
+                    for(var i=-0; i<$scope.SLIlist.length; i++){
+                        delete ($scope.SLIlist[i]['$$hashKey']);
+                        delete ($scope.SLIlist[i]['checkReleaseStatus']);
+                        delete ($scope.SLIlist[i]['calc']);
+                        delete ($scope.SLIlist[i]['check']);
+                        delete ($scope.SLIlist[i]['productId']);
+                        delete ($scope.SLIlist[i]['ProductNm']);
+                        if($scope.SLIlist[i].Actual_date_of_dispatch__c != null){
+                            const dateString = $scope.SLIlist[i].Actual_date_of_dispatch__c;
+                    const epochTimestamp = new Date(dateString).getTime() / 1000;
+                    $scope.SLIlist[i].Actual_date_of_dispatch__c = epochTimestamp;
+                        }
+                        if($scope.SLIlist[i].Sample_Invoice_Date__c != null){
+                            const dateString = $scope.SLIlist[i].Sample_Invoice_Date__c;
+                    const epochTimestamp = new Date(dateString).getTime() / 1000;
+                    $scope.SLIlist[i].Sample_Invoice_Date__c = epochTimestamp;
+                        }
+                    }
+                        OperationsPortalController.updateSLIList($scope.SLIlist,function(result,event){
+                            debugger;
+                            if(event.status && result){
+                                swal("success", "Records has been updated successfully.","success");
+                                $scope.$apply();
+                            }
+                        })
+                }
+
+            $scope.showProfileDiv=function(){
+                debugger;
+                $scope.showDetailPage=false;
+                $scope.showbackAndSaveBtn=false;
+                $scope.showProfile = true;
+            }
+
+            $scope.backProfile = function(){
+                debugger;
+                //$scope.showListViewOfSLI=true;
+                //$scope.showDetailPageSLI=false;
+
+                $scope.showProfile = false;
+                $scope.showDetailPage=true;
+                $scope.showbackAndSaveBtn=true;
+            }
+
+            $scope.saveDetails = function(){
+                debugger;
+                delete($scope.conRec['Account__r']);
+                $scope.showSpinner = true;
+                OperationsPortalController.updateProfile($scope.conRec,function(result,event){
+                    debugger;
+                    if(event.status && result){
+                        $scope.showSpinner = false;
+                        swal("success", "Your profile has been updated.","success");
+                        $scope.backProfile();
+                        $scope.$apply();
+                    }
+                })
+            }
+
+            $scope.LogoutApplicant=function(){  
+                $scope.showSpinner = true;      
+                OperationsPortalController.LogoutApplicant(userHashId, function (result, event) {
+                debugger
+                console.log(result);
+                console.log(event);
+                if(event.status){
+                    $scope.res=result;
+                    $scope.redirect();
+                    $scope.$apply();
+                }
+        });   
+            }
+
+            $scope.redirect = function(){
+                debugger;
+                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations';
+                setTimeout(function() {window.location.replace(window.location.origin + sitePrefix )}, 3000);
+            }
+
+//             $scope.filePreviewHandler = function(fileContent){
+// debugger;
+// $scope.selectedFile = fileContent;
+
+// console.log('selectedFile---', $scope.selectedFile);
+
+// $('#file_frame').attr('src', $scope.selectedFile[0].DistributionPublicUrl);
+
+// var myModal = new bootstrap.Modal(document.getElementById('filePreview'))        
+// myModal.show('slow') ;
+// $scope.$apply();
+
+// //.ContentDistribution.DistributionPublicUrl
+// }
+
+$scope.saveLabel = function(){
+                debugger;
+                OperationsPortalController.savePDF($scope.urlToSendToApex, $scope.sampleId, 'Sample Invoice', function(result, event){
+                    $scope.showSpinner = true;
+                    if(event.status && result){
+                        $scope.labelToDisplay = result;
+                            //$scope.contentVersionId = result[0].ContentVersionId;
+                            $scope.showSpinner = false;
+                            swal("success", "Label has been successfully saved!","success");
+                            $('#genrateLabelModal').modal('toggle');
+                            $scope.$apply();
+                            //$scope.filePreviewHandler(result);
+                    }else{
+                        swal("error", "Label wasn't saved due to an error!","error");
+                        $scope.showSpinner = false;
+                            $('#genrateLabelModal').modal('toggle');
+                            $scope.$apply();
+                    }
+                });
+            }
+
+            $scope.saveNonHazardous = function(){
+                debugger;
+                OperationsPortalController.savePDF($scope.urlToSendToApexForNonHazardous, $scope.sampleId, 'Sample Invoice', function(result, event){
+                    $scope.showSpinner = true;
+                    if(event.status && result){
+                        $scope.labelToDisplay = result;
+                            //$scope.contentVersionId = result[0].ContentVersionId;
+                            $scope.showSpinner = false;
+                            swal("success", "Label has been successfully saved!","success");
+                            $('#genrateNonHazardousModal').modal('toggle');
+                            $scope.$apply();
+                            //$scope.filePreviewHandler(result);
+                    }else{
+                        swal("error", "Label wasn't saved due to an error!","error");
+                        $scope.showSpinner = false;
+                            $('#genrateNonHazardousModal').modal('toggle');
+                            $scope.$apply();
+                    }
+                });
+            }
             
             $scope.back = function(){
                 debugger;
-                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleLineItemDetailPage';
-                window.location.replace(window.location.origin + sitePrefix +'?id='+ userHashId);
+                var sitePrefix = '/operations/CustomerDetailPageOP';
+                window.location.replace(window.location.origin + sitePrefix +'?id='+ userHashId + '&accId=' + $scope.accId);
             }
             
             $scope.openAuraPopUp = function(){
                 debugger;
                 var myModal = new bootstrap.Modal(document.getElementById('flipFlop'));
                 myModal.show('slow');
+            }
+
+            $scope.openReleaseToDispatch = function(){
+                debugger;
+                $scope.showSpinner = true;
+                var myModal = new bootstrap.Modal(document.getElementById('releaseToDispatch'));
+                myModal.show('slow');
+                $scope.showSpinner = false;
+            }
+
+            $scope.openGenerateLabel = function(){
+                debugger;
+                $scope.showSpinner = true;
+                var myModal = new bootstrap.Modal(document.getElementById('genrateLabelModal'));
+                myModal.show('slow');
+                $scope.showSpinner = false;
+            }
+
+            $scope.openGenerateNonHazardous = function(){
+                debugger;
+                $scope.showSpinner = true;
+                var myModal = new bootstrap.Modal(document.getElementById('genrateNonHazardousModal'));
+                myModal.show('slow');
+                $scope.showSpinner = false;
             }
             
             $scope.myFunc = function() {
@@ -687,16 +1078,18 @@
             $scope.onChangeToAssignProduct = function(SLI,productId){
                 console.log(SLI);
                 debugger;
-                if(productId.startsWith('01t')){
-                    SLI.Product__c = productId;
-                    //$scope.productId = SLI.Product__r.Name;
-                }else if(productId.startsWith('a0S')){
-                    SLI.Project_Quotient__c = productId;
-                    //$scope.productId = SLI.Project_Quotient__r.Name;
-                }else if(productId.startsWith('a0Y')){
-                    SLI.OPTIVA_Recipe__c = productId;
-                    //$scope.productId = SLI.OPTIVA_Recipe__r.Name;
-                }else{
+                var foundItem = $scope.mergedList.find(item => item.Name === productId);
+                if (foundItem) {
+                    if (foundItem.Id.startsWith('01t')) {
+                        SLI.Product__c = foundItem.Id;
+                    }else if(foundItem.Id.startsWith('a0S')){
+                        SLI.Project_Quotient__c = foundItem.Id;
+                        //$scope.productId = SLI.Project_Quotient__r.Name;
+                    }else if(foundItem.Id.startsWith('a0Y')){
+                        SLI.OPTIVA_Recipe__c = foundItem.Id;
+                        //$scope.productId = SLI.OPTIVA_Recipe__r.Name;
+                    }else{
+                    }
                 }
             }
             
@@ -728,14 +1121,19 @@
                     delete ($scope.SLIlist[i]['check']);
                     delete ($scope.SLIlist[i]['productId']);
                     delete ($scope.SLIlist[i]['ProductNm']);
+                    delete ($scope.SLIlist[i]['Actual_date_of_dispatch__c']);
+                    delete ($scope.SLIlist[i]['Sample_Invoice_Date__c']);
+                    delete ($scope.SLIlist[i]['checkReleaseStatus']);
                 }
-                OperationsPortalController.saveSLIDetails($scope.SLIlist,function(result,event){
+                OperationsPortalController.saveSLIDetails($scope.SLIlist,userHashId,function(result,event){
                     debugger;
                     if(event.status && result){
                         debugger;
                         swal("success", "Record has been update successfully.","success");
+                        $('#flipFlop').modal('toggle');
                     }
                     $scope.$apply();
+                    $scope.getSampleDetails();
                 })
             }
             
@@ -748,7 +1146,11 @@
             
             $scope.calculatePUnit = function(quantity,pquantity,SLI){
                 debugger;
-                SLI.calc = quantity/pquantity;
+                if(pquantity != 0 && pquantity != null && pquantity != undefined){
+                    SLI.calc = quantity/pquantity;
+                }else{
+                    SLI.calc = '';
+                }
             }
             
             $scope.setPackagingUnit = function(qUnit,SLI){

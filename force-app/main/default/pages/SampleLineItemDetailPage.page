@@ -67,7 +67,7 @@
                 </div>
             </div>
             <nav class="navbar navbar-expand-lg navbar-light">
-                <div class="wrapper px-5" ng-if="contactRole == 'Sample'">
+                <div class="wrapper px-5" ng-if="contactRole == 'Sample' || contactRole == 'Dispatch Team'">
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
@@ -207,10 +207,10 @@
                 <div class="col-md-8">
                     <h3 class="pb-3 color-theme"><b>Samples :</b></h3>
                 </div>
-                <div class="col-md-4">
+                <!--div class="col-md-4">
                     <button class="blue-bordered-btn float-end me-2" ng-click="generateInvoice()" type="button">
                         Generate Invoice</button>
-                </div>
+                </div-->
                 <div class="row">
                     <div class="col-md-4">
                         <input type="text" class="form-control" ng-model="searchKeySample"/>
@@ -228,11 +228,13 @@
                                 <th>S.No.</th>
                                 <th>Name</th>
                                 <th>Customer</th>
+                                <th>Customer Contact</th>
                                 <th>Status</th>
                                 <th>Shipping Type</th>
                                 <th>Product Family</th>
                                 <th>Sample Requested By</th>
                                 <th>Record Type</th>
+                                <th>Created Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -240,12 +242,14 @@
                                 <td><input type="checkbox" ng-model="sample.selected" ng-change="onClickOfSample(sample.Id,$index)" /></td>
                                 <td>{{$index+1}}</td>
                                 <td style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
-                                <td style="cursor:pointer;" ng-click="onClickOpenCustomerDetail(sample.Account__c)" data-id="{{sample.Account__c}}"><a href="#">{{sample.Account__r.Name}}</a></td>
+                                <td style="cursor:pointer;" ng-click="onClickOpenCustomerDetail(sample.Account__c)" data-id="{{sample.Account__c}}"><a href="">{{sample.Account__r.Name}}</a></td>
+                                <td style="cursor:pointer;" ng-click="onClickOpenCustomerContactDetail($index,sample.Customers_Contact__c)" data-id="{{sample.Customers_Contact__r.Name}}"><a href="">{{sample.Customers_Contact__r.Name}}</a></td>
                                 <td>{{sample.Status__c}}</td>
                                 <td>{{Shipping_Type__c}}</td>
                                 <td>{{sample.Product_Family__c}}</td>
                                 <td>{{sample.Sample_Requested_by__c}}</td>
                                 <td>{{sample.Record_Type_Name__c}}</td>
+                                <td>{{sample.CreatedDate | date:'yyyy-MM-dd'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -257,6 +261,69 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal" id="customerContact">
+                <div class="modal-dialog" style="min-width:1000px">
+                    <div class="modal-content">
+                
+                    <div class="modal-header">
+                        <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                        <h3 class="color-theme2" style="color:green;">
+                            <b>Customer Contact Details</b>
+                        </h3>
+                    </div></h4> 
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                
+                <div class="modal-body">
+                        <div class="col-md-6 mt-3">
+                            <label class="font-if">Name
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.Name" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label class="font-if">Phone
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.Phone" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label class="font-if">Email
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.Email" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label class="font-if">Mailing Street
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.MailingStreet" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3 mb-5">
+                            <label class="font-if">Mailing City
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.MailingCity" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3 mb-5">
+                            <label class="font-if">Mailing State
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.MailingState" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3 mb-5">
+                            <label class="font-if">Mailing Country
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.MailingCountry" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3 mb-5">
+                            <label class="font-if">Postal Code
+                            </label>
+                            <input class="form-control" type="text" ng-model="custConDetails.MailingPostalCode" ng-disabled="true"/>
+                        </div>
+                        <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
+                            <button class="blue-bordered-btn float-end me-2" data-bs-dismiss="modal" type="button">
+                                <i class="fa-solid fa-arrow-left me-2"></i>Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
             <div class="row mt-3 mx-5" ng-show="showSLI">
                 <div class="col-md-8">
@@ -332,7 +399,7 @@
                                 <th>Stage</th>
                                 <th>Probability (%)</th>
                                 <th>Type</th>
-                                <th>Opportunity Record Type</th>
+                                <!--th>Opportunity Record Type</th-->
                             </tr>
                         </thead>
                         <tbody>
@@ -341,11 +408,11 @@
                                 <td><a href="#" ng-click="onClickOpenOppDetailPage(opp.Id)">{{opp.Name}}</a></td>
                                 <td>{{opp.Account.Name}}</td>
                                 <td>{{opp.Amount}}</td>
-                                <td>{{opp.CloseDate}}</td>
+                                <td>{{opp.CloseDate | date:'yyyy-MM-dd'}}</td>
                                 <td>{{opp.StageName}}</td>
                                 <td>{{opp.Probability}}</td>
                                 <td>{{opp.Type}}</td>
-                                <td>{{opp.RecordType.Name}}</td>
+                                <!--td>{{opp.RecordType.Name}}</td-->
                             </tr>
                         </tbody>
                     </table>
@@ -502,6 +569,11 @@
                             $scope.conName = result.conRec.Name;
                             $rootScope.contactName = $scope.conName;
                             $scope.contactRole = result.conRec.Role__c;
+                            if(result.oppList != undefined){
+                                for(var i=0; i<result.oppList.length; i++){
+                                    result.oppList[i].CloseDate = new Date(result.oppList[i].CloseDate);
+                                }
+                            }
                             $scope.listOfOpportunity = result.oppList;
                             $scope.listOfOpportunity2 = result.oppList;
                             $scope.oppProductList = result.oppProductList;
@@ -613,6 +685,19 @@
                     window.location.replace(window.location.origin + sitePrefix +'?id='+userHashId+'&accId='+ $scope.accId);
                     $scope.customerDetPage = true;
                     $scope.showCustomerDetails = false;
+                }
+
+                $scope.onClickOpenCustomerContactDetail = function(index, customerConId){
+                    debugger;
+                    $scope.customerConId = customerConId;
+                    OperationsPortalController.getCustomerContactDetails(customerConId, function(result, event){
+                        if(event.status && result){
+                            $scope.custConDetails = result;
+                        }
+                        var myModal = new bootstrap.Modal(document.getElementById('customerContact'));
+                    myModal.show('slow');
+                    $scope.$apply();
+                    })
                 }
 
                 $scope.onClickOpenSampleDetailPage = function(sampleId){

@@ -98,14 +98,14 @@ public without sharing class OptivaCreateWrapper {
         OpAppWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
         OpAppWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
         OpAppWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'0';
-        OpAppWrapper.business_potent_val = project.Business_potential_value_INR_New__c == null ? 0 : project.Business_potential_value_INR_New__c;
+        OpAppWrapper.business_potent_val = project.Business_potential_value_INR_New__c == null ? '0' : String.valueOf(project.Business_potential_value_INR_New__c);
         OpAppWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'0';
         OpAppWrapper.cust_target_price = project.Customer_Target_price__c!=null?String.valueOf(project.Customer_Target_price__c):'0';
         OpAppWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
         OpAppWrapper.confectionary_type = checkIfBlank(project.Confectionary_Type__c);
-        OpAppWrapper.final_fat = project.Final_Fat__c == null ? 0 : project.Final_Fat__c;
+        OpAppWrapper.final_fat = project.Final_Fat__c == null ? '0' : String.valueOf(project.Final_Fat__c);
         OpAppWrapper.first_smpe_due_date = project.First_Sample_due_date__c!=null?formatDate(project.First_Sample_due_date__c):'';
-        OpAppWrapper.flavor_ciu = project.Flavour_CIU__c == null ? 0 : project.Flavour_CIU__c;
+        OpAppWrapper.flavor_ciu = project.Flavour_CIU__c == null ? '0' : String.valueOf(project.Flavour_CIU__c);
         OpAppWrapper.flavor_legal_stat = checkIfBlank(project.Flavour_Legal_Status__c);
         OpAppWrapper.solubility = checkIfBlank(project.Solubility_Preference__c);
         OpAppWrapper.sugar = project.Sugar__c!=null?String.valueOf(project.Sugar__c):'0';

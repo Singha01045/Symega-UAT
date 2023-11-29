@@ -176,6 +176,7 @@ export default class GenerateInvoiceComponent extends LightningElement {
     }
 
     handleNext(){
+        debugger;
         if(this.isINR){
             this.incFreight = this.values.checks;
             updateINROpp({oppId : this.recordId, purposeDate : this.formatDate(new Date(this.values.propseDate)), freightChrg : this.values.frCharge, includeFreight : this.incFreight}).then(result =>{

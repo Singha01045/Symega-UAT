@@ -129,7 +129,7 @@ public without sharing class OptivaCalloutHandler {
             }
 
             if(project.Product_Family__c.contains(Constants.FLAVOUR_API_NAME) || project.Product_Family__c.contains(Constants.COLOR_API_NAME)){
-                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(getProjectWrapper(project));
+                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(getProjectWrapper(project), project.Id);
 
                 if(responseMap!=null && responseMap.get('status')=='Success'){
                     Project__c prod = new Project__c(Id=recId, Submitted_To_SAP_Optiva__c=true, Status__c = Constants.PROJECT_SUBMITTION_STATUS,Sample_Submitted_Date__c=System.today());
@@ -221,7 +221,7 @@ public without sharing class OptivaCalloutHandler {
                 return createResponse('Success','200','Customer creation in progress');
             }
     
-            responseMap = Optiva_NPDCreationCallout.getInstance().createProject(getApplicationWrapper(project));
+            responseMap = Optiva_NPDCreationCallout.getInstance().createProject(getApplicationWrapper(project), project.Id);
             if(responseMap!=null && responseMap.get('status')=='Success'){
                 Project__c prod = new Project__c(Id=recId, Submitted_To_SAP_Optiva__c=true, Status__c = Constants.APPLICATION_SUBMITTION_STATUS,Sample_Submitted_Date__c=System.today());
                 prod.Submit_Sample_To_Optiva__c = false;
@@ -310,6 +310,7 @@ public without sharing class OptivaCalloutHandler {
                                 resp = OptivaCustomerCreation.syncCustomer(project.Opportunity__r.AccountId);
                                 if(resp=='Success'){
                                     updateAccountSubmittion(project.Opportunity__r.AccountId,'Optiva');
+                                    updateSampleCheckbox(project.Id);
                                 }
                             }
                             else{
@@ -321,6 +322,7 @@ public without sharing class OptivaCalloutHandler {
                                 resp = OptivaAddressCreation.syncCustomer(project.Opportunity__r.Customer_Billing_Address__c);
                                 if(resp=='Success'){
                                     updateAddressSubmittion(project.Opportunity__r.Customer_Billing_Address__c,'Optiva');
+                                    updateSampleCheckbox(project.Id);
                                 }
                             }
                             else{
@@ -343,7 +345,7 @@ public without sharing class OptivaCalloutHandler {
                         String reqBody = getSampleWrapper(project,isLeadAvailable,optivaRecipieSLineItems);
 
                         System.debug('Body------'+reqBody);
-                        responseMap = Optiva_NPDCreationCallout.getInstance().createProject(reqBody);
+                        responseMap = Optiva_NPDCreationCallout.getInstance().createProject(reqBody, project.Id);
                         System.debug('ResponseMap----'+responseMap);
                         if(responseMap!=null && responseMap.get('status')=='Success'){
                             isSubmittedToOptiva = true;
@@ -401,6 +403,13 @@ public without sharing class OptivaCalloutHandler {
         }
         update acc;
     }
+
+    public static void updateSampleCheckbox(String sampleId){
+        //Account acc = new Account(Id=accId);
+        Project__c sampleRec = [SELECT Id, Show_Sample_Cust_Creation_Msg__c FROM Project__c WHERE Id =: sampleId];
+        sampleRec.Show_Sample_Cust_Creation_Msg__c = true;
+        update sampleRec;
+    }
     
     public static void updateAddressSubmittion(String addressId, String submitTo){
         //Account acc = new Account(Id=accId);
@@ -424,7 +433,7 @@ public without sharing class OptivaCalloutHandler {
     }
     
     public static Project__c getSample(String recId){
-        return [Select Id, Name, Legal_Status__c, Application_product_shelf_life__c, Physical_Form__c, Minimum_order_quantity__c, Opportunity__r.Customer_Billing_Address__r.Submitted_to_SAP__c, Opportunity__r.Customer_Billing_Address__r.Submitted_to_Optiva__c, Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c, Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Account_Billing_Address__c, Start_Date__c, Recipe_Cost__c, Product_Type__c, Processing_condition__c, Preferred_thickness_Viscosity__c, pH__c, Oil_sprinkling_Dust_on__c, Milk_Solids__c, Final_SNF__c, Fat__c, Expected_Shelf_Life__c, Customer_Name__c, Center_filling_Cream__c, Brix_degrees__c, Additive_Status__c, Acidity__c,Account_Segment__c,of_pulp_if_with_fruit_pulp__c,Customers_Contact__r.FirstName, Customers_Contact__r.LastName, Contact_Number__c, Company_Name__c, Opportunity_Close_Date__c, Sample_Project__c,Sample_Project__r.Owner.Name,Quantity__c,Expected_Annual_Value__c,Business_potential_value_INR__c,Annual_Volume_Full__c,Business_potential_value_INR_New__c,Submitted_To_SAP_Optiva__c,Opportunity__r.AccountId,Opportunity__r.Account.Submitted_to_Optiva__c,Opportunity__r.Account.Submitted_to_SAP__c,Opportunity__r.Account.Customer_Code_OPTIVA__c,Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c,Project_Reference__c,CreatedBy.Name, City__c, Country__c, Postal_Code__c, State__c, Street__c, Opportunity__r.Account.Name,
+        return [Select Id, Name, Show_Sample_Cust_Creation_Msg__c, Legal_Status__c, Application_product_shelf_life__c, Physical_Form__c, Minimum_order_quantity__c, Opportunity__r.Customer_Billing_Address__r.Submitted_to_SAP__c, Opportunity__r.Customer_Billing_Address__r.Submitted_to_Optiva__c, Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c, Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Account_Billing_Address__c, Start_Date__c, Recipe_Cost__c, Product_Type__c, Processing_condition__c, Preferred_thickness_Viscosity__c, pH__c, Oil_sprinkling_Dust_on__c, Milk_Solids__c, Final_SNF__c, Fat__c, Expected_Shelf_Life__c, Customer_Name__c, Center_filling_Cream__c, Brix_degrees__c, Additive_Status__c, Acidity__c,Account_Segment__c,of_pulp_if_with_fruit_pulp__c,Customers_Contact__r.FirstName, Customers_Contact__r.LastName, Contact_Number__c, Company_Name__c, Opportunity_Close_Date__c, Sample_Project__c,Sample_Project__r.Owner.Name,Quantity__c,Expected_Annual_Value__c,Business_potential_value_INR__c,Annual_Volume_Full__c,Business_potential_value_INR_New__c,Submitted_To_SAP_Optiva__c,Opportunity__r.AccountId,Opportunity__r.Account.Submitted_to_Optiva__c,Opportunity__r.Account.Submitted_to_SAP__c,Opportunity__r.Account.Customer_Code_OPTIVA__c,Lead__c,Lead__r.FirstName,Lead__r.LastName,Lead__r.Country,Lead__r.State,Lead__r.City,Lead__r.Street,Product_Family__c,Sample_Name__c,Project_Type__c,Project_Category__c,Project_Reference__c,CreatedBy.Name, City__c, Country__c, Postal_Code__c, State__c, Street__c, Opportunity__r.Account.Name,
         CreatedDate,Opportunity_Type__c,Opportunity_Sub_Type__c,End_Use_category__c,
         End_Use_Applications__c,CurrencyIsoCode,(Select Id,Quantity_Unit__c,Quantity__c,Packaging_Unit__c,
         Packaging_Quantity__c, Product__c, Product__r.ProductCode,Product__r.Family, OPTIVA_Recipe__c,Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName,Project_Quotient__r.Sample_Project_Application__r.Product_Family__c,Project_Quotient__r.SSC_Code__c,OPTIVA_Recipe__r.SSC_Code__c,First_Sample_due_date__c,Customer_Target_Price__c, Customer_Preferred_Name__c From Sample_Line_Items__r WHERE Submitted__c= false AND (OPTIVA_Recipe__r.SSC_Code__c != null OR Project_Quotient__c!=null OR (Product__c != null AND Product__r.isActive = true))) From Project__c Where Id=:recId];
@@ -495,7 +504,7 @@ public without sharing class OptivaCalloutHandler {
         OpAppWrapper.project_sf_code = checkIfBlank(project.Id);
         OpAppWrapper.project_title = checkIfBlank(project.Name) + ':' + checkIfBlank(project.Application_Name__c);
         OpAppWrapper.created_by = checkIfBlank(project.Owner.Name);
-        OpAppWrapper.project_type = checkIfBlank(project.Project_Type__c);  //'External';
+        OpAppWrapper.project_type = 'EXTERNAL'; //checkIfBlank(project.Project_Type__c);  //'External';
         OpAppWrapper.project_category = checkIfBlank(project.Product_Family__c);//checkIfBlank(project.Project_Category__c);
         OpAppWrapper.opp_type_int = 'Sales';//checkIfBlank(project.Opportunity_Type__c);
         OpAppWrapper.opp_sub_type_sales = 'Application';//checkIfBlank(project.Opportunity_Sub_Type__c);
@@ -503,14 +512,14 @@ public without sharing class OptivaCalloutHandler {
         OpAppWrapper.end_use_cat = checkIfBlank(project.End_Use_category__c);
         OpAppWrapper.end_use_appli = checkIfBlank(project.End_Use_Applications__c);
         OpAppWrapper.annual_vol = project.Annual_Volume_Full__c!=null?String.valueOf(project.Annual_Volume_Full__c):'0';
-        OpAppWrapper.business_potent_val = project.Business_potential_value_INR_New__c == null ? 0 : project.Business_potential_value_INR_New__c;
+        OpAppWrapper.business_potent_val = project.Business_potential_value_INR_New__c == null ? '0' : String.valueOf(project.Business_potential_value_INR_New__c);
         OpAppWrapper.curr_year_vol = project.Quantity__c!=null?String.valueOf(project.Quantity__c):'0';
         OpAppWrapper.cust_target_price = project.Customer_Target_price__c!=null?String.valueOf(project.Customer_Target_price__c):'0';
         OpAppWrapper.curr_type = checkIfBlank(project.CurrencyIsoCode);
         OpAppWrapper.confectionary_type = checkIfBlank(project.Confectionary_Type__c);
-        OpAppWrapper.final_fat = project.Final_Fat__c == null ? 0 : project.Final_Fat__c;
+        OpAppWrapper.final_fat = project.Final_Fat__c == null ? '0' : String.valueOf(project.Final_Fat__c);
         OpAppWrapper.first_smpe_due_date = project.First_Sample_due_date__c != null ? formatDate(project.First_Sample_due_date__c):'';
-        OpAppWrapper.flavor_ciu = project.Flavour_CIU__c == null ? 0 : project.Flavour_CIU__c;
+        OpAppWrapper.flavor_ciu = project.Flavour_CIU__c == null ? '0' : String.valueOf(project.Flavour_CIU__c);
         OpAppWrapper.flavor_legal_stat = checkIfBlank(project.Flavour_Legal_Status__c);
         OpAppWrapper.solubility = checkIfBlank(project.Solubility_Preference__c);
         OpAppWrapper.sugar = project.Sugar__c != null ? String.valueOf(project.Sugar__c):'0';

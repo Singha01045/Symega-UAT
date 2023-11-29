@@ -81,8 +81,7 @@ public without sharing class AddressTriggerHandler {
     
     
     private static boolean isAddressChange(Map<Id,Dispatch_Address__c> oldMap, Dispatch_Address__c acc){
-        if(oldMap.get(acc.Id).Name != null && acc.Name!=null && oldMap.get(acc.Id).Name!=acc.Name && acc.Customer_Code_SAP__c == null
-           || oldMap.get(acc.Id).Address__Street__s != null && acc.Address__Street__s!=null && oldMap.get(acc.Id).Address__Street__s!=acc.Address__Street__s 
+        if(   oldMap.get(acc.Id).Address__Street__s != null && acc.Address__Street__s!=null && oldMap.get(acc.Id).Address__Street__s!=acc.Address__Street__s 
            || oldMap.get(acc.Id).Address__PostalCode__s != null && acc.Address__PostalCode__s !=null && oldMap.get(acc.Id).Address__PostalCode__s!=acc.Address__PostalCode__s
            || oldMap.get(acc.Id).Address__City__s != null && acc.Address__City__s !=null && oldMap.get(acc.Id).Address__City__s!=acc.Address__City__s
            || oldMap.get(acc.Id).Address__CountryCode__s  != null && acc.Address__CountryCode__s !=null && oldMap.get(acc.Id).Address__CountryCode__s !=acc.Address__CountryCode__s  
@@ -90,6 +89,9 @@ public without sharing class AddressTriggerHandler {
            || oldMap.get(acc.Id).GST_number__c != null && acc.GST_number__c !=null && oldMap.get(acc.Id).GST_number__c!=acc.GST_number__c && !String.isBlank(acc.Address__CountryCode__s) && acc.Address__CountryCode__s.equalsIgnoreCase('India')
            || oldMap.get(acc.Id).CurrencyIsoCode != null && acc.CurrencyIsoCode !=null && oldMap.get(acc.Id).CurrencyIsoCode!=acc.CurrencyIsoCode
            || oldMap.get(acc.Id).Contact__c != null && acc.Contact__c !=null && oldMap.get(acc.Id).Contact__c!=acc.Contact__c
+           || oldMap.get(acc.Id).Customer_Category__c != null && acc.Customer_Category__c !=null && oldMap.get(acc.Id).Customer_Category__c!=acc.Customer_Category__c
+           || oldMap.get(acc.Id).PAN_Number__c != null && acc.PAN_Number__c !=null && oldMap.get(acc.Id).PAN_Number__c!=acc.PAN_Number__c
+           || oldMap.get(acc.Id).FSSAI_Number__c != null && acc.FSSAI_Number__c !=null && oldMap.get(acc.Id).FSSAI_Number__c!=acc.FSSAI_Number__c
           ){
               return true;
           }

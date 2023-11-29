@@ -3,7 +3,7 @@
     <fullName>Error_Occured_On_Submitting_To_Optiva__c</fullName>
     <defaultValue>false</defaultValue>
     <externalId>false</externalId>
-    <label>Error Occured On Submitting To Optiva</label>
+    <label>Error Occured On Submit To SAP/Optiva</label>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>

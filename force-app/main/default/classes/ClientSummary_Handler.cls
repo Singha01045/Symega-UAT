@@ -29,7 +29,7 @@ public class ClientSummary_Handler {
         return null; 
     }
     
-    class ClientSummaryWrapper {
+   public class ClientSummaryWrapper {
         @AuraEnabled
         public Integer oppToatlCount {get;set;}
         @AuraEnabled

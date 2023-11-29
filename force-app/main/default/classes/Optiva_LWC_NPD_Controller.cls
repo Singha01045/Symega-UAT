@@ -65,8 +65,8 @@ public without sharing class Optiva_LWC_NPD_Controller {
         
         try{
             List<string> missingFieldsList = new List<string>();
-            List<Project__c> projList = [SELECT Id, Name, Opportunity__c, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Customer_Billing_Address__c, Opportunity__r.AccountId
-            FROM Project__c WHERE Id =: projId];
+            List<Project__c> projList = [SELECT Id, Is_SAP__c, Name, Opportunity__c, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Customer_Billing_Address__c, 
+                                        Opportunity__r.AccountId, RecordType.Name FROM Project__c WHERE Id =: projId];
             System.debug('projList---->'+projList);
             
             Id custId;
@@ -91,6 +91,7 @@ public without sharing class Optiva_LWC_NPD_Controller {
             opwrap.userIdList = selectedAddressWrapper.userIdList;
             opwrap.bhIdList = selectedAddressWrapper.bhIdList;
             opwrap.onlyAccMissingFieldList = selectedAddressWrapper.onlyAccMissingFieldList;
+            opwrap.projRec = projList[0];
             return opWrap;
         }
         catch(Exception e){
@@ -165,7 +166,7 @@ public without sharing class Optiva_LWC_NPD_Controller {
                 
             }
             else{
-                Dispatch_Address__c disRec = [select id, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, toLabel(Address__CountryCode__s), toLabel(Address__StateCode__s),
+                Dispatch_Address__c disRec = [select id, Customer_Category__c, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, toLabel(Address__CountryCode__s), toLabel(Address__StateCode__s),
                 Contact__c,Account__c,Type__c, OwnerId, Account__r.Customer_Type__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, CurrencyIsoCode
                 from Dispatch_Address__c WHERE Id =:accId];
 
@@ -198,6 +199,10 @@ public without sharing class Optiva_LWC_NPD_Controller {
 
                 if((disRec.CurrencyIsoCode == null) || (disRec.CurrencyIsoCode == '')){
                     missingFieldsList.add('CurrencyIsoCode');
+                }
+
+                if(String.isBlank(disRec.Customer_Category__c)){
+                    missingFieldsList.add('Customer_Category__c');
                 }
                 
                 if((disRec.Account__r.Customer_Type__c == null) || (disRec.Account__r.Customer_Type__c == '')){
@@ -283,8 +288,7 @@ public without sharing class Optiva_LWC_NPD_Controller {
         @AuraEnabled
         public  List<String> missingFieldsListForBH = new list<string>();
         @AuraEnabled
-        public  List<String> bhIdList = new list<string>();
-        
+        public  List<String> bhIdList = new list<string>();        
     }
 
     public class oppProdWrapper{
@@ -308,6 +312,8 @@ public without sharing class Optiva_LWC_NPD_Controller {
         public Boolean isAccount;
         @AuraEnabled
         public List<String> onlyAccMissingFieldList = new list<string>();
+        @AuraEnabled
+        public Project__c projRec = new Project__c();
     }
 
      @AuraEnabled

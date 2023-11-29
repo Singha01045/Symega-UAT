@@ -127,6 +127,9 @@ public without sharing class OpportunityLineItemTriggerHandler {
         }
         
         if(!parentOppIdSet.isEmpty()) {
+            System.debug('lineItemList ==== >'+lineItemList);
+             System.debug('productIdSet ==== >'+productIdSet);
+             System.debug('customerIdSet ==== >'+customerIdSet);
             checkProdCreationAcceptanceCriteria(lineItemList, productIdSet, customerIdSet); //v1.1 product visibility validation
             validatePackageType(lineItemList, parentOppIdSet, null);
             restrictLineItemCreationOrUpdation(lineItemList, parentOppIdSet);
@@ -516,7 +519,7 @@ public without sharing class OpportunityLineItemTriggerHandler {
 
     //v1.1 product visibility validations
     private void checkProdCreationAcceptanceCriteria(List<OpportunityLineItem> oliList, Set<Id> productIdSet, Set<Id> customerIdSet) {
-        System.debug('--- '+ oliList+ '--- productIdSet' + productIdSet + ' customerIdSet' +customerIdSet);
+        System.debug('--- oliList '+ oliList+ '--- productIdSet' + productIdSet + ' customerIdSet' +customerIdSet);
         Map<Id, Product2> pMasterMap = new Map<Id, Product2>([SELECT Id, ProductCode, Product_Visibility__c, To_Be_Sold_By__c, Product_Used_By__c, IsActive FROM Product2 WHERE Id IN : productIdSet]);
         System.debug('--- pMasterMap '+ pMasterMap);
         
@@ -596,6 +599,8 @@ public without sharing class OpportunityLineItemTriggerHandler {
             /*
             * `--part of project quotient and only for that customer --only quotient that has won --before winning available for sample
             */
+            system.debug('oliList::::'+oliList);
+            system.debug('oli::::'+oli.Name);
                         
             if(pMasterMap.containsKey(oli.Product2Id) && (pMasterMap.get(oli.Product2Id).Product_Visibility__c == null || pMasterMap.get(oli.Product2Id).To_Be_Sold_By__c == null || pMasterMap.get(oli.Product2Id).Product_Used_By__c == null )) {
                 oli.addError(pMasterMap.get(oli.Product2Id).ProductCode + ': You cannot proceed with this operation. Either Product Visibility or To Be Sold By or Product Used By is not set');

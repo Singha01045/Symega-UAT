@@ -109,24 +109,24 @@ export default class PushSOToSAP extends LightningElement {
                         if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
                              this.showAccSegField = true;
                         }
-                        if(data.onlyAccMissingFieldList.includes('Tax_Type__c')){
-                            this.showTaxType = true;
-                        }
-                        if(data.onlyAccMissingFieldList.includes('PAN_Number__c')){
-                            this.showPAN = true;
-                        }
-                        if(data.onlyAccMissingFieldList.includes('GST_number__c')){
-                            this.showGST = true;
-                        }
+                        // if(data.onlyAccMissingFieldList.includes('Tax_Type__c')){
+                        //     this.showTaxType = true;
+                        // }
+                        // if(data.onlyAccMissingFieldList.includes('PAN_Number__c')){
+                        //     this.showPAN = true;
+                        // }
+                        // if(data.onlyAccMissingFieldList.includes('GST_number__c')){
+                        //     this.showGST = true;
+                        // }
                         if(data.onlyAccMissingFieldList.includes('Payment_terms__c')){
                             this.showPaymentTerms = true;
                         }
                         if(data.onlyAccMissingFieldList.includes('Tax_Collected_At_Source__c')){
                             this.showTaxCollect = true;
                         }
-                        if(data.onlyAccMissingFieldList.includes('FSSAI__c')){
-                            this.showFSSAI = true;
-                        }
+                        // if(data.onlyAccMissingFieldList.includes('FSSAI__c')){
+                        //     this.showFSSAI = true;
+                        // }
                         if(data.onlyAccMissingFieldList.includes('Transportation_Terms__c')){
                             this.showTransportTerms = true;
                         }
@@ -323,8 +323,8 @@ export default class PushSOToSAP extends LightningElement {
         }
 
         if((this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '') ||
-        (this.taxTypeVal != undefined && this.taxTypeVal != '') || (this.taxCollectVal != undefined && this.taxCollectVal != '') || (this.paymentTermsVal != undefined && this.paymentTermsVal != '') ||
-        (this.transportTermsVal != undefined && this.transportTermsVal != '') || (this.pan != undefined && this.pan != '') || (this.gst != undefined && this.gst != '') || (this.fssai != undefined && this.fssai > 0)
+        /*(this.taxTypeVal != undefined && this.taxTypeVal != '') ||*/ (this.taxCollectVal != undefined && this.taxCollectVal != '') || (this.paymentTermsVal != undefined && this.paymentTermsVal != '') ||
+        (this.transportTermsVal != undefined && this.transportTermsVal != '') /*|| (this.pan != undefined && this.pan != '') || (this.gst != undefined && this.gst != '') || (this.fssai != undefined && this.fssai > 0 )*/
         ){
             updateAccRecord({accId:this.accRecId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal, taxType : this.taxTypeVal, taxCollect : this.taxCollectVal, paymentTerms : this.paymentTermsVal, transportTerms : this.transportTermsVal, Gst : this.gst, Pan : this.pan, fssai : this.fssai})
         }

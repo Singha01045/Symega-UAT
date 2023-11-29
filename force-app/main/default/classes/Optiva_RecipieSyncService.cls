@@ -20,10 +20,10 @@ global without sharing class Optiva_RecipieSyncService {
 
             String result = updateOptivaRecipie(mList);
             if(result == 'success') {
-                HttpUtility.getInstance().createServiceLogger(body, result, '/syncoptivarecipie/*', 'POST', 200, processingStartTime, System.now(), ''); //Log this request
+                HttpUtility.getInstance().createServiceLogger(body, result, '/syncoptivarecipie/*', 'POST', 200, processingStartTime, System.now(),null); //Log this request
             }else {
                 RestContext.response.statusCode = 400;
-                HttpUtility.getInstance().createServiceLogger(body, result, '/syncoptivarecipie/*', 'POST', 400, processingStartTime, System.now(), ''); //Log this request
+                HttpUtility.getInstance().createServiceLogger(body, result, '/syncoptivarecipie/*', 'POST', 400, processingStartTime, System.now(),null); //Log this request
             }
             return result;
         }catch(Exception e){

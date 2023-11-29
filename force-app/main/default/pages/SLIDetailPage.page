@@ -74,12 +74,12 @@
             </style>
         </head>
         <body ng-app="SLIDet_App" ng-controller="SLIDet_ctrl" style="background-color: white; !important;">
-            <!--div class="loadingSection" ng-if="showSpinner">
+            <div class="loadingSection" ng-if="showSpinner">
                 <div class="loadingBackground"></div>
                 <div>
                     <apex:image url="{!$Resource.Loading}" styleClass="loading" />
                 </div>
-            </div-->
+            </div>
 
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="wrapper px-5">
@@ -96,33 +96,29 @@
                          </marquee> -->
                     </div>
                     
-                        <!--div class="d-flex text-align-center">
-                            <div class="dropdown">
-                                <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
-                                </i>
-                                <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{conName}}</a></li>
-                                  <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-at me-3"></i>{{email}}</a></li>
-                                  <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
-                                  <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
+                    <div class="d-flex text-align-center" style="margin-right: 2vw;">
+                        <div class="dropdown">
+                            <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+                            </i>
+                            <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
+                                <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
                                 <li>
-                                    <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
-                                </li>
-                                </ul>
-                              </div>
-                            </div-->
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
+                                <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li>
+                                <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
+                            </li>
+                            </ul>
+                            </div>
+                        </div>
             </nav>
             
             <div class="container-fluid px-5">
-                <div class="row mb-5">
+                <div class="row mb-5" ng-show="showTabBar">
                     <div class="col-md-12">
                         <div class="tab">
                             <button class="tablinks selectedTab" ng-click="onClickOfDetails()" id="DetailTab">Details</button>
@@ -413,13 +409,13 @@
                     </div>
                     
 
-                    <div class="row mt-5 mx-1">
+                    <!--div class="row mt-5 mx-1">
                         <div class="col-md-12">
                             <h3 class="pb-3 color-theme"><b>SAMPLE DISPATCH BY SAMPLING TEAM</b></h3>
                         </div>
-                    </div>
+                    </div-->
 
-                    <div class="row">
+                    <!--div class="row">
                         <div class="col-md-6 mt-3">
                         <label class="font-if">Sample Invoice Date
                         </label>
@@ -469,7 +465,7 @@
                         <button class="blue-btn float-end me-2 mb-5" style="background: green;" ng-click="saveDetails()" type="button">
                             Save</button>
                     </div>
-                    </div>  
+                    </div-->  
                     
                 <!--/div-->
             </div>
@@ -551,9 +547,9 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>S.No.</th>
-                                                                <th>Comment No.</th>
-                                                                <th>Comment</th>
-                                                                <th>Commentted By</th>
+                                                                <th>Reply No.</th>
+                                                                <th>Reply</th>
+                                                                <th>Replied By</th>
                                                                 <!--th>Action</th-->
                                                             </tr>
                                                         </thead>
@@ -622,11 +618,50 @@
             
 
 
-            <div class="col-md-6 mt-3">
+            <div class="col-md-6 mt-3" ng-show="showBackAndSaveBtn">
                 <button class="blue-btn float-end me-2 mb-5" ng-click="back()" type="button">
                     <i class="fa-solid fa-arrow-left me-2"></i>Back</button>
             </div>
                 
+            </div>
+
+            <div class="row box-shadow-2" ng-show="showProfile" style="margin-top:10rem!important;margin-right:24rem!important;margin-left:24rem!important;">
+                <div class="row mt-5 mx-1">
+                    <div class="col-md-12">
+                        <h3 class="pb-3 color-theme"><b>EDIT PROFILE</b></h3>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">First Name
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.FirstName" ng-disabled="true"/>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">Last Name
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.LastName" ng-disabled="true"/>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">Email
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.Email" ng-disabled="true"/>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <label class="font-if">Phone
+                    </label>
+                    <input class="form-control" type="text" ng-model="conRec.MobilePhone"/>
+                </div>
+                <div class="col-md-6 mt-3 mb-5">
+                    <label class="font-if">Password
+                    </label>
+                    <input class="form-control" type="password" ng-model="conRec.Password__c"/>
+                </div>
+                <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
+                    <button class="blue-btn float-end" ng-click="saveDetailsOfCon()" type="button">
+                        <i class="fa-solid fa-check me-2"></i>Update</button>
+                    <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
+                        <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+                </div>
             </div>
         </body>
 
@@ -650,7 +685,9 @@
                 
                 $scope.sampleStatusValues = sampleStatusValues;
 				$scope.showDetailPage = true;
+                $scope.showBackAndSaveBtn = true;
                 $scope.showComments = false;
+                $scope.showProfile = false;
                 $scope.showSpinner = false;
                 $scope.cmnt = {"Reply__c":""};
                 $scope.statusValueWithCSSclass = [];
@@ -717,6 +754,78 @@
                         })
                     }
                     $scope.getSLIDetails();
+
+                    $scope.getCustomerDetail = function(){
+                    debugger;
+                    OperationsPortalController.getConDetails(userHashId,function(result,event){
+                        debugger;
+                        if(event.status && result){
+                            debugger;
+                            $scope.conRec = result;
+                            $scope.contactName = result.Name;
+                            $scope.$apply();
+                        }
+                    })
+                }
+                $scope.getCustomerDetail();
+
+                    $scope.showProfileDiv=function(){
+                debugger;
+                $scope.showDetailPage=false;
+                $scope.showBackAndSaveBtn=false;
+                $scope.showComments = false;
+                $scope.showTabBar=false;
+                $scope.showProfile = true;
+            }
+
+            $scope.backProfile = function(){
+                debugger;
+
+                var detailTab = document.getElementById("DetailTab");
+                    detailTab.classList.add("selectedTab");
+                        var CommentsTab = document.getElementById("CommentsTab");
+                    CommentsTab.classList.remove("selectedTab");   
+
+                $scope.showProfile = false;
+                $scope.showDetailPage=true;
+                $scope.showBackAndSaveBtn=true;
+                $scope.showTabBar=true;
+            }
+
+            $scope.saveDetailsOfCon = function(){
+                debugger;
+                delete($scope.conRec['Account__r']);
+                $scope.showSpinner = true;
+                OperationsPortalController.updateProfile($scope.conRec,function(result,event){
+                    debugger;
+                    if(event.status && result){
+                        $scope.showSpinner = false;
+                        swal("success", "Your profile has been updated.","success");
+                        $scope.backProfile();
+                        $scope.$apply();
+                    }
+                })
+            }
+
+            $scope.LogoutApplicant=function(){  
+                $scope.showSpinner = true;      
+                OperationsPortalController.LogoutApplicant(userHashId, function (result, event) {
+                debugger
+                console.log(result);
+                console.log(event);
+                if(event.status){
+                    $scope.res=result;
+                    $scope.redirect();
+                    $scope.$apply();
+                }
+        });   
+            }
+
+            $scope.redirect = function(){
+                debugger;
+                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations';
+                setTimeout(function() {window.location.replace(window.location.origin + sitePrefix )}, 3000);
+            }
                 
                 $scope.paginateData = function() {
                     debugger;

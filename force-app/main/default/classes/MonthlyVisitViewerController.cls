@@ -29,21 +29,13 @@ global class MonthlyVisitViewerController {
     global static List<Visit__c> fetchPageData(string formatteddate) {
         system.debug('formatteddate------'+formatteddate);
         List<string> mtdList=formatteddate.split('-');
-        string monthName=mtdList[1];
+        string monthName=mtdList[1]; 
         String yearName=mtdList[0];
+        system.debug('monthName------'+monthName);
+        system.debug('yearName------'+yearName);
         List<Monthly_Beat_Plan__c> MBPlist=[SELECT id,Year__c,Status__c,Start_Date__c,OwnerId,Sales_User__c,Name,Month__c,End_Date__c,Month_Name__c,(SELECT id,Year__c,Name,Week_Identifier__c,Start_Day_of_Week__c,End_Day_of_Week__c,OwnerId,Monthly_Beat_Plan__c,Week_Number__c FROM Weekly_Beat_Plans__r) FROM Monthly_Beat_Plan__c WHERE Month_year__c=:yearName AND Month_Name__c=:monthName limit 1];
  		String mbpID =MBPlist[0].Id;
        	List<Visit__c> getAllvisitRecordList = [Select Id,KPI_Target__r.Name,Account__c,Account__r.Name,Lead__c,Lead__r.Name,Start_Date_Time__c,Route__c,Route__r.Name,Visit_Status__c,Actual_visit_date__c,KPI_Target_Name__c,KPI_Target__c From Visit__c Where (Account__c!=NUll or Lead__c !=Null) and MBPID__c =:mbpID];
-
-        
-        /*try{
-            Map<String, Object> pageData = new Map<String,Object>();
-            pageData.put('salesRepList', [SELECT Id, FirstName, LastName, UserName FROM User]);
-            system.debug('--- pageData '+ pageData);
-            return pageData;
-        } catch (Exception e) {
-            printError(e);
-        }*/
         return getAllvisitRecordList;
     }
     

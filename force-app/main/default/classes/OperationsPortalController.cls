@@ -17,6 +17,7 @@ public without sharing class OperationsPortalController {
     public string deliveryPlant {get;set;}
     public string accountSegmant {get;set;}
     public string customerAddType {get;set;}
+    public string releaseStatus {get; set;}
     
     public OperationsPortalController() {
         
@@ -37,6 +38,7 @@ public without sharing class OperationsPortalController {
         accountSegmant = JSON.serialize(Utility.getPicklistValues('Account' , 'Account_Segment__c'));
         customerAddType = JSON.serialize(Utility.getPicklistValues('Dispatch_Address__c' , 'Type__c'));
         sampleStatusValues = JSON.serialize(Utility.getPicklistValues('Sample_Line_Item__c' , 'Sample_Request_Status__c'));
+        releaseStatus = JSON.serialize(Utility.getPicklistValues('Sample_Line_Item__c' , 'Release_Status__c'));
     }
 
     @RemoteAction
@@ -80,8 +82,9 @@ public without sharing class OperationsPortalController {
             List<Opportunity> oppList = New List<Opportunity>();
             List<Account> allCustomerList = New List<Account>();
             List<Project__c> listOfSamples = New List<Project__c>();
+            List<Sample_Line_Item__c> listOfAllSLI = New List<Sample_Line_Item__c>();
 
-            Contact conRecord = [SELECT Id,Name,Role__c,Login_Hash_Code__c,FirstName,LastName,Email,Phone,Password__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
+            Contact conRecord = [SELECT Id,Name,Role__c,Login_Hash_Code__c,FirstName,LastName,Email,Phone,MobilePhone,Password__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
             system.debug('conRecord ====> '+conRecord);
             
             List<Sample_Allocation_Team__c> listOfAllocationTeam = [SELECT Id,Name,Sample_Assignment_Team__c FROM Sample_Allocation_Team__c WHERE Contact__r.Login_Hash_Code__c =: hashCode];
@@ -95,7 +98,11 @@ public without sharing class OperationsPortalController {
             }
             system.debug('setOfSampleAssignment ====> '+setOfSampleAssignment);
             
-            List<Sample_Line_Item__c> listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true];
+            if(conRecord.Role__c == 'Dispatch Team'){
+               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Release_to_Dispatch_Team__c = True];
+            }else{
+               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample'];
+            }
             system.debug('listOfAllSLI ====> '+listOfAllSLI);
             accountDetailWrapper wrapper = new accountDetailWrapper();
             wrapper.listOfSLI = listOfAllSLI;
@@ -121,7 +128,9 @@ public without sharing class OperationsPortalController {
                 oppLIneItems = [SELECT Id,Name,OpportunityId,Product2Id,Product2.Name,Quantity,ListPrice,UnitPrice,TotalPrice,Price_In_KG__c,Quantity_In_KG__c FROM OpportunityLineItem WHERE OpportunityId IN : setOfOppIds];
             }
             if(!setOfSampleIds.isEmpty()){
-                listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,Sample_Requested_by__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true];
+                listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample'];
             }
             wrapper.accList = allCustomerList;
             wrapper.accRecord = Null;
@@ -137,15 +146,30 @@ public without sharing class OperationsPortalController {
     }
 
     @RemoteAction
+    public static Contact getCustomerContactDetails(String conId){
+        try{
+            if(conId != null && conId != ''){
+                List<Contact> conList = [SELECT Id, Name, Phone,Email,MailingStreet,MailingCity,MailingState,MailingCountry,MailingPostalCode FROM Contact WHERE Id=:conId LIMIT 1];
+                return conList[0];
+            }else{
+                return null;
+            }
+        }catch(exception e){
+            System.debug(e.getMessage() + ' at ' + e.getLineNumber());
+            return null;
+        }
+    }
+
+    @RemoteAction
     public static accountDetailWrapper getSampleDetails(string sampleId, string userHashId){
         try{
-            List<Contact> conRecord = [SELECT Id,Name,Login_Hash_Code__c, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r) /*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
+            List<Contact> conRecord = [SELECT Id,Name,Login_Hash_Code__c,FirstName,LastName,MobilePhone,Email,Password__c, AccountId,Role__c, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r) /*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
             List<Project__c> sampleRec = [SELECT Account__c,Acc_Email__c,Acidity__c,Actual_Date_of_Dispatch__c,Additional_Comments__c,Additive_Status__c,
             Allergen__c,Allergin_Free_Decleration__c,Annual_Value__c,Annual_Volume_Full__c,Annual_Volume_in_units__c,Application_guidelines_if_any__c,
             Application_method__c,Application_Name__c,Application_product_shelf_life__c,Application_Ready__c,Application_reciepe_code__c,
             Application_Samples_Receipe_Support__c,Application_Trails__c,Approval_Status__c,Approver_Name__c,Auto_Submit_Sample__c,Brix_degrees__c,
             Business_potential_value_INR_New__c,Business_potential_value_INR__c,Category_Buyer__c,Category_description_as_per_FSSAI__c,
-            Center_filling_Cream__c,City__c,Company_Name__c,Confectionary_Type__c,Contact_Number__c,Cost_in_Use_target__c,Cost_in_use__c,
+            Center_filling_Cream__c,City__c,Company_Name__c,Confectionary_Type__c,Contact_Number__c,Cost_in_Use_target__c,
             Country_of_Compliance__c,Country_Regulation__c,Country__c,Courier__c,CreatedById,CreatedDate,Critical__c,CurrencyIsoCode,Currency_Type__c,
             Current_Cost__c,Current_Packaging__c,Current_RM_FG_Code__c,Current_Shelf_life__c,Current_Supplier_Name__c,Customers_Contact__c, Customers_Contact__r.Name,
             Customer_Base_Details__c,Customer_Brand_details__c,Customer_Comments__c,Customer_Cost_in_USE_CIU__c,Customer_Launch_Date__c,
@@ -167,16 +191,16 @@ public without sharing class OperationsPortalController {
             Required_End_Date__c,Revert_Date_Count__c,RM_Category__c,R_D_Approval_Status__c,Sales_Code__c,Sales_head_review__c,Sample_Delivery_Date__c,
             Sample_Name__c,Sample_Project__c,Sample_Requested_by__c,Sample_Revert_Date__c,Sample_Size_for_trails__c,Sample_Submitted_Date__c,Sample_Sub_Retry_Count__c,
             Sampling_Quantity_details__c,Sampling_Quantity_Unit__c,SAP_User_Code__c,Scaled_up_date__c,Sensory_profiling_Report_Required__c,Sensory_Target_profile_expectation__c,
-            Ship_To_Address__c,Show_BH_Approval__c,Solubility_Preference__c,Solublity__c,Specific_inputs_by_customer__c,Specify_other_reason__c,Start_Date__c,
+            Ship_To_Address__c,Solubility_Preference__c,Solublity__c,Specific_inputs_by_customer__c,Specify_other_reason__c,Start_Date__c,
             State__c,Status__c,Street__c,Submitted_To_SAP_Optiva__c,Submit_Sample_To_Optiva__c,Sugar__c,Supplier_COA__c,Supplier_Food_Grade_Status__c,
             Supplier_Legal_Status__c,Supplier_MSDS__c,Supplier_Spec__c,SystemModstamp,S_O_Date__c,Target_Date__c,Target_GM_Improvement_at_FG_levels__c,
             Target_Price__c,Target_Saving_Percentage__c,Technical_Complexity__c,Tech_Doc_Name__c,Tested_at_Flavor_Level__c,Time_Duration_in_hours__c,Total_Project_Quotient__c,
             Total_Solids__c,Type_of_PR__c,Usage_Levels_in_Recipes_Average__c,Way_Bill_No__c,Wet_Dry__c,Where_Used__c,who_requested_the_sample__c,
-            Opportunity__r.Name,Account__r.Name,(SELECT Id, Name, Product__c,Project_Quotient__c,OPTIVA_Recipe__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c,OPTIVA_Recipe__r.Name, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Product_Family__c,
+            Opportunity__r.Name,Opportunity__r.AccountId,Account__r.Name,(SELECT Id, Sample_Invoice_Date__c,Courier__c, Actual_date_of_dispatch__c, Release_to_Dispatch_Team__c, Release_Status__c, Dispatch_Details__c, Way_Bill_No__c, Name, Product__c,Project_Quotient__c,OPTIVA_Recipe__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c,OPTIVA_Recipe__r.Name, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Product_Family__c,
                                                   Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Product_Name__c
                                                   FROM Sample_Line_Items__r) FROM Project__c WHERE Id =: sampleId];
             
-            List<Contact> conRec = [SELECT Id,Name, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
+            List<Contact> conRec = [SELECT AccountId,Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,Role__c, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
             
             accountDetailWrapper wrapper = new accountDetailWrapper();
             List<String> typeList = new List<String>();
@@ -190,6 +214,7 @@ public without sharing class OperationsPortalController {
             List<Project_Quotient__c> proQuotientList = [SELECT Id,Name,SSC_Code__c,Sample_Project_Application__c,Sample_Project_Application__r.Product_Family__c FROM Project_Quotient__c WHERE Sample_Project_Application__r.Product_Family__c IN : typeList];
             wrapper.listOfSamples = sampleRec;
             wrapper.listOfProducts = productList;
+            wrapper.accId = sampleRec[0].Opportunity__r.AccountId;
             wrapper.listOfOptivaRecipe = opRecipeList;
             wrapper.listOfProQuotient = proQuotientList;
             wrapper.conRec = conRec[0];
@@ -198,6 +223,13 @@ public without sharing class OperationsPortalController {
         }catch(Exception e){
             return null;
         }
+    }
+
+
+    @RemoteAction
+    public static Contact getConDetails(string userHashId){
+        Contact conRec = [SELECT Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,AccountId FROM Contact WHERE Login_Hash_Code__c =: userHashId];
+        return conRec;
     }
     
 
@@ -245,8 +277,12 @@ public without sharing class OperationsPortalController {
     public static accountDetailWrapper getCustomerDetail(String accId, String hashCode){
         try{
             List<ContentDistribution> filesList = OperationsPortalController.getAccRelatedFiles(accId);
+            List<Project__c> listOfAllSampleRecords = New List<Project__c>();
+            List<Sample_Allocation_Team__c> listOfAllocationTeam = New List<Sample_Allocation_Team__c>();
+            Set<Id> setOfSampleAssignment = New Set<Id>();
+			List<Sample_Line_Item__c> listOfAllSLI = New List<Sample_Line_Item__c>();
             
-            List<Contact> conRec = [SELECT Id,Name,(SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/,Role__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
+            List<Contact> conRec = [SELECT Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,(SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/,Role__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
             List<Account> accRecord = [SELECT AccountSource,Account_Potential__c,
             Account_Segment__c,Account_Type__c,BillingAddress,BillingCity,BillingCountry,
             BillingCountryCode,BillingGeocodeAccuracy,BillingLatitude,BillingLongitude,
@@ -287,12 +323,34 @@ public without sharing class OperationsPortalController {
                 }
             }
             system.debug('setOfOppIds =====> '+setOfOppIds);
-            
-            List<Project__c> listOfAllSampleRecords = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Project_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Opportunity__c From Project__c WHERE Opportunity__c IN : setOfOppIds];
-            system.debug('listOfAllSampleRecords ====> '+listOfAllSampleRecords);
+            set<Id> setOfProId = New Set<Id>();
             accountDetailWrapper wrapper = new accountDetailWrapper();
+            if(conRec[0].Role__c == 'Dispatch Team'){
+                system.debug('Dispatch Team....');
+                List<Project__c> listOfProject = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Project_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Opportunity__c From Project__c WHERE Opportunity__c IN : setOfOppIds AND Record_Type_Name__c = 'Sample'];
+                system.debug('listOfProject ====> '+listOfProject);
+                if(!listOfProject.isEmpty()){
+                    for(Project__c pro : listOfProject){
+                        setOfProId.add(pro.Id);
+                    }
+                }
+                system.debug('setOfProId ====> '+setOfProId);
+                listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c,
+                               Sample__r.Name,Sample__r.Record_Type_Name__c,Sample__r.Sample_Name__c,Sample__r.Project_Name__c,Sample__r.Shipping_Type__c,Sample__r.Status__c,Sample__r.Product_Family__c,Sample__r.Sample_Requested_by__c,Sample__r.Opportunity__c FROM Sample_Line_Item__c WHERE Sample__c IN : setOfProId AND Release_to_Dispatch_Team__c = True];
+                List<Project__c> listOfsamp = New List<Project__c>();
+                listOfsamp.add(listOfAllSLI[0].Sample__r);
+                system.debug('listOfsamp ====> '+listOfsamp);
+                wrapper.listOfSamples = listOfsamp;
+                system.debug('listOfAllSLI[0].Sample__r ====> '+listOfAllSLI[0].Sample__r);
+            }else{
+              listOfAllSampleRecords = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Project_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Opportunity__c From Project__c WHERE Opportunity__c IN : setOfOppIds AND Record_Type_Name__c = 'Sample'];
+              wrapper.listOfSamples = listOfAllSampleRecords;
+            }
+            
+            system.debug('listOfAllSampleRecords ====> '+listOfAllSampleRecords);
+            
             wrapper.accRecord = (accRecord.size() > 0) ? accRecord[0] : null;
-            wrapper.listOfSamples = listOfAllSampleRecords;
+            
             wrapper.conRec = conRec[0];
             wrapper.filesList = filesList;
             return wrapper;
@@ -388,6 +446,7 @@ public without sharing class OperationsPortalController {
 
     public class accountDetailWrapper{
         public Account accRecord { get; set; }
+        public String accId {get; set;}
         public List<Project__c> listOfSamples { get; set; }
         public List<Sample_Line_Item__c> listOfSLI { get; set; }
         public List<Account> accList { get; set; }
@@ -480,9 +539,60 @@ public without sharing class OperationsPortalController {
     }
 
     @RemoteAction
+    public static string savePDF(String url,String id,String fileName){
+        System.debug('url==> ' + url);
+        System.debug('id==> ' + id);
+        List<Attachment> attachmentList = new List<Attachment>();
+        System.debug('fileName==> ' + fileName);
+        try {
+            //  string  disReqId = id;
+            //   PageReference ref =page.SymegaStickerPDF;
+            PageReference pageRef = page.SymegaStickerPDF;
+            pageRef.getParameters().put('id',id);
+            blob vBody;
+            if(Test.isRunningTest()){
+                vBody = blob.valueOf('Unit.Test');
+            }else{
+                vBody = pageRef.getContent();
+            }
+            
+            Attachment attach = new Attachment();
+            attach.Body = vBody;
+            attach.Name = fileName+'_.pdf';
+            attach.ParentId = id;
+            attach.ContentType = 'application/pdf';
+            attachmentList.add(attach);
+            
+            insert attachmentList;
+            if(attachmentList.size()>0){
+                return 'Success'; 
+            }
+        } 
+        catch (Exception e) {
+            System.debug('(e.getMessage());==>' + (e.getMessage()) + 'at line number ' + e.getLineNumber());
+            // throw new AuraHandledException(e.getMessage());
+        }
+        return null;
+    }
+    
+    private static ContentDocumentLink createContentLink(String contentVersionId, String recordId) {
+        system.debug('contentVersionId ====> '+contentVersionId);
+        system.debug('recordId =====> '+recordId);
+        if (contentVersionId == null || recordId == null) { return null; }
+        ContentDocumentLink cdl = new ContentDocumentLink();
+        cdl.ContentDocumentId = [SELECT Id,ContentDocumentId FROM ContentVersion WHERE Id =: contentVersionId ].ContentDocumentId;
+        cdl.LinkedEntityId = recordId;
+        cdl.ShareType = 'V';
+            insert cdl;
+            return cdl;
+    }
+
+    @RemoteAction
     public static string updateProfile(Contact ConDetails){
+        System.debug('ConDetails ==> ' + ConDetails);
         try{
             update ConDetails;
+            System.debug('ConDetails ==> ' + ConDetails);
             return 'SUCCESS';
         }catch(Exception e){
             return e.getMessage()+e.getLineNumber();
@@ -504,10 +614,12 @@ public without sharing class OperationsPortalController {
                     mail.setSubject(temp.Subject);//Set Subject
                     string emailHtmlValue = temp.HtmlValue;
 
-                    if(!string.isBlank(conList[0].FirstName))
-                    emailHtmlValue = emailHtmlValue.replace('{!Contact.FirstName}', conList[0].FirstName);
-                    if(!string.isBlank(conList[0].LastName))
-                    emailHtmlValue = emailHtmlValue.replace('{!Contact.LastName}', conList[0].LastName);
+                    if(!string.isBlank(conList[0].Name))
+                    emailHtmlValue = emailHtmlValue.replace('{!Contact.Name}', conList[0].Name);
+                    //if(!string.isBlank(conList[0].LastName))
+                    //emailHtmlValue = emailHtmlValue.replace('{!Contact.LastName}', conList[0].LastName);
+                    if(!string.isBlank(conList[0].Email))
+                    emailHtmlValue = emailHtmlValue.replace('{!Contact.Email}', conList[0].Email);
                     if(!string.isBlank(conList[0].Login_Hash_Code__c))
                     emailHtmlValue = emailHtmlValue.replace('{!Contact.Login_Hash_Code__c}', conList[0].Login_Hash_Code__c);
 
@@ -550,6 +662,18 @@ public without sharing class OperationsPortalController {
                 SLIRecord.Sample_Invoice_Date__c = Date.newInstance(invoiceYear, invoicemonth, invoiceday); 
             }
             update SLIRecord;
+            //insert comment;
+            return 'Success';
+        }catch(Exception e){
+            return e.getMessage()+e.getLineNumber();
+        }
+    }
+
+    @RemoteAction
+    public static string updateSLIList(List<Sample_Line_Item__c> SLIList){
+        try{
+            System.debug('Inside Update SLI List Method');
+            update SLIList;
             //insert comment;
             return 'Success';
         }catch(Exception e){
@@ -638,6 +762,8 @@ public without sharing class OperationsPortalController {
             system.debug('listOfSampleIds =====> '+listOfSampleIds);
             if(!listOfSampleIds.isEmpty()){
                 List<Project__c> listOfSamples = [SELECT Id,Name,Shipping_Type__c FROM Project__c WHERE Id IN : listOfSampleIds];
+                List<Sample_Line_Item__c> SLIList = [SELECT Id, Name, Sample_Invoice_Date__c FROM Sample_Line_Item__c WHERE Sample__c IN: listOfSampleIds];
+                System.debug('SLIList ==> ' + SLIList);
                 List<ContentVersion> fileDataList = new List<ContentVersion>();
             	List<ContentDocumentLink> contentDocumentLinks = new List<ContentDocumentLink>();
                 if(listOfSamples[0].Shipping_Type__c == 'Domestic'){
@@ -719,6 +845,10 @@ public without sharing class OperationsPortalController {
             
             Database.upsert(contentDocumentLinks, false); // Upsert ContentDocumentLink records
                 System.debug('contentDocumentLinks==> ' + contentDocumentLinks);
+                for(Sample_Line_Item__c sliRec : SLIList){
+                    sliRec.Sample_Invoice_Date__c = System.today();
+                }
+                update SLIList;
             }
             return listOfSampleIds[0];
         }catch(Exception e){
@@ -795,6 +925,7 @@ public without sharing class OperationsPortalController {
                 String accId = sampleRec.Opportunity__r.AccountId;
                 List<ContentVersion> fileDataList = new List<ContentVersion>();
                 List<ContentDocumentLink> contentDocumentLinks = new List<ContentDocumentLink>();
+                List<ContentDistribution> ContentDistributionList = new List<ContentDistribution>();
                 if(sampleRec.Shipping_Type__c == 'Domestic'){
                     PDFName = 'SampleInvoiceDomesticPDF';
                 }else{
@@ -822,6 +953,15 @@ public without sharing class OperationsPortalController {
                 	
                 insert fileDataList;
                 System.debug('fileDataList==> ' + fileDataList);
+                for(ContentVersion cv : fileDataList){
+                ContentDistribution cd = new ContentDistribution();
+                cd.Name = cv.Title;
+                cd.ContentVersionId = cv.Id;
+                cd.PreferencesAllowOriginalDownload = true; // Allow download of the original file
+                cd.PreferencesAllowViewInBrowser = true; // Allow viewing in the browser
+                ContentDistributionList.add(cd);
+                }
+                insert ContentDistributionList;
                 return 'SUCCESS';
             }else{
                 return 'ERROR';
@@ -869,6 +1009,20 @@ public without sharing class OperationsPortalController {
            return e.getMessage()+e.getLineNumber(); 
         }
     }
+
+    @RemoteAction
+    public static string saveCommentonOLI(Comment__c com, String hashCode, string SLIid){
+        try{
+            List<Contact> conRec = [SELECT Id,Name,Login_Hash_Code__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
+            com.Comment_By__c = conRec[0].Id;
+            com.Opportunity_Product__c = SLIid;
+            system.debug('com =====> '+com);
+           	insert com;
+            return com.Id;
+        }catch(Exception e){
+           return e.getMessage()+e.getLineNumber(); 
+        }
+    }
     
     @RemoteAction
     public static string saveComment2(Comment__c com, String hashCode, string accId){
@@ -903,15 +1057,30 @@ public without sharing class OperationsPortalController {
         try{
             List<Comment__c> comList = [SELECT Id,Name,Comment_By__c,Sample_Line_Item__c,Comment__c,Comments__c, Reply__c,Comment_By__r.Name FROM Comment__c WHERE Comments__c =: comId];
             return comList;
-        }catch(Exception e){
+        }
+        catch(Exception e){
             System.debug('e.getMessage()+e.getLineNumber() ==> ' + e.getMessage()+e.getLineNumber());
             return null;
         }
     }
     
     @RemoteAction
-    public static string saveSLIDetails(List<Sample_Line_Item__c> ListOfSLI){
+    public static string saveSLIDetails(List<Sample_Line_Item__c> ListOfSLI, string hashcode){
         try{
+            /*set<Id> setOfAssignmentTeamId = New set<Id>();
+             List<Sample_Assignment_Team__c> listOfAssignmentTeam = New List<Sample_Assignment_Team__c>();
+            Contact conRec = [SELECT Id,Name,Login_Hash_Code__c,(SELECT Id,Name,Sample_Assignment_Team__c FROM Account__r) FROM Contact WHERE Login_Hash_Code__c =: hashcode LIMIT 1];
+            system.debug('Sample Allocation Teams ====> '+conRec.Account__r);
+            if(!conRec.Account__r.isEmpty()){
+                for(Sample_Allocation_Team__c SAT : conRec.Account__r){
+                    setOfAssignmentTeamId.add(SAT.Sample_Assignment_Team__c);
+                }
+            }
+            system.debug('setOfAssignmentTeamId ===> '+setOfAssignmentTeamId);
+            if(!setOfAssignmentTeamId.isEmpty()){
+                listOfAssignmentTeam = [SELECT Id,Name,Team_Type__c FROM Sample_Assignment_Team__c WHERE Id IN : setOfAssignmentTeamId];
+            }
+            system.debug('listOfAssignmentTeam ====> '+listOfAssignmentTeam);*/
             upsert ListOfSLI;
             return 'SUCCESS';
         }catch(Exception e){

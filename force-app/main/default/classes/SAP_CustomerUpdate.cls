@@ -20,7 +20,7 @@ global without sharing class SAP_CustomerUpdate {
                 //throw new APIException('Invalid customer code');
                 responseBody = JSON.serialize(new APIResponseWrapper('Error', 'Please provide a valid Id for the request'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_SapCode', 'POST', 400, processingStartTime, System.now(), recId); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_SapCode', 'POST', 400, processingStartTime, System.now(),recId); //Log this request
                 RestContext.response.statusCode = 400;
                 return;
             }
@@ -54,7 +54,7 @@ global without sharing class SAP_CustomerUpdate {
                     else {
                         responseBody = JSON.serialize(new APIResponseWrapper('Error', 'Something went wrong. couldn\'t update Customer : ' + response));
                         RestContext.response.responseBody = Blob.valueOf(responseBody);
-                        HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_SapCode', 'POST', 400, processingStartTime, System.now(), recId); //Log this request
+                        HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_SapCode', 'POST', 400, processingStartTime, System.now(),recId); //Log this request
                         RestContext.response.statusCode = 400;
                     }
                 }

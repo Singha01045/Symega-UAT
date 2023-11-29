@@ -42,22 +42,22 @@ global without sharing class SAP_UpdateFertRestService {
             if(response == 'success') {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'FERT updated Successfully'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 200, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 200, processingStartTime, System.now(), null); //Log 
             }
             else if(response == 'not existing'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Opportunity Product doesn\'t exist.'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 400, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 400, processingStartTime, System.now(),null); //Log 
             }
             else if(response == 'false'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'PRODUCTCODE or CUSTOMER_NUMBER is empty!!'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 400, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 400, processingStartTime, System.now(),null); //Log 
             }
             else {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', response));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 400, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/update_fert', 'POST', 400, processingStartTime, System.now(),null); //Log 
             }
         }
     }

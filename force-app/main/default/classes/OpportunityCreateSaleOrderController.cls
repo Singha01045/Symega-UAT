@@ -16,8 +16,8 @@ public without sharing class OpportunityCreateSaleOrderController {
 
     @AuraEnabled
     public static void updateAccount(String accId, String dlvryPlant, String custType, String accSeg, 
-                                     String taxType, String taxCollect, String paymentTerms, 
-                                     String transportTerms, String Gst, String Pan, Integer fssai){
+                                     /*String taxType,*/ String taxCollect, String paymentTerms, 
+                                     String transportTerms /*, String Gst, String Pan, Integer fssai */){
         System.debug('Update Account Method Called');
         try{
             Account accRec = [SELECT Id, Account_Segment__c, Delivery_Plant__c, Customer_Type__c, 
@@ -27,13 +27,13 @@ public without sharing class OpportunityCreateSaleOrderController {
             accRec.Account_Segment__c = accSeg != null && accSeg != '' ? accSeg : accRec.Account_Segment__c;
             accRec.Delivery_Plant__c = dlvryPlant != null && dlvryPlant != '' ? dlvryPlant : accRec.Delivery_Plant__c;
             accRec.Customer_Type__c = custType != null && custType != '' ? custType : accRec.Customer_Type__c;
-            accRec.Tax_Type__c = taxType != null && taxType != '' ? taxType : accRec.Tax_Type__c;
+            //accRec.Tax_Type__c = taxType != null && taxType != '' ? taxType : accRec.Tax_Type__c;
             accRec.Tax_Collected_At_Source__c = taxCollect != null && taxCollect != '' ? taxCollect : accRec.Tax_Collected_At_Source__c;
             accRec.Payment_terms__c = paymentTerms != null && paymentTerms != '' ? paymentTerms : accRec.Payment_terms__c;
             accRec.Transportation_Terms__c = transportTerms != null && transportTerms != '' ? transportTerms : accRec.Transportation_Terms__c;
-            accRec.GST_number__c = Gst != null && Gst != '' ? Gst : accRec.GST_number__c;
-            accRec.PAN_Number__c = Pan != null && Pan != '' ? Pan : accRec.PAN_Number__c;
-            accRec.FSSAI__c = fssai != null && fssai > 0 ? fssai : accRec.FSSAI__c;
+            // accRec.GST_number__c = Gst != null && Gst != '' ? Gst : accRec.GST_number__c;
+            // accRec.PAN_Number__c = Pan != null && Pan != '' ? Pan : accRec.PAN_Number__c;
+            // accRec.FSSAI__c = fssai != null && fssai > 0 ? fssai : accRec.FSSAI__c;
             update accRec;                
         }
         catch(exception e){
@@ -221,7 +221,7 @@ public without sharing class OpportunityCreateSaleOrderController {
                 
             }
             else{
-                Dispatch_Address__c disRec = [select id, Initial_SAP_Update__c, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, Address__CountryCode__s, Address__StateCode__s,
+                Dispatch_Address__c disRec = [select id, Customer_Category__c, Tax_Type__c, FSSAI_Number__c, PAN_Number__c, Initial_SAP_Update__c, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, Address__CountryCode__s, Address__StateCode__s,
                                               Contact__c,Account__c,Type__c, OwnerId, Account__r.Customer_Type__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, CurrencyIsoCode, GST_Number__c,
                                               Account__r.Transportation_Terms__c, Account__r.PAN_Number__c, Account__r.Tax_Type__c, Account__r.Payment_terms__c, Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c
                                               from Dispatch_Address__c WHERE Id =: selectedAddressId];
@@ -257,6 +257,10 @@ public without sharing class OpportunityCreateSaleOrderController {
                     if((disRec.CurrencyIsoCode == null) || (disRec.CurrencyIsoCode == '')){
                         missingFieldsList.add('CurrencyIsoCode');
                     }
+
+                    if(String.isBlank(disRec.Customer_Category__c)){
+                        missingFieldsList.add('Customer_Category__c');
+                    }
                     
                     if((disRec.Account__r.Customer_Type__c == null) || (disRec.Account__r.Customer_Type__c == '')){
                         onlyAccMissingFieldList.add('Customer_Type__c');
@@ -269,17 +273,22 @@ public without sharing class OpportunityCreateSaleOrderController {
                     if((disRec.Account__r.Delivery_Plant__c == null) || (disRec.Account__r.Delivery_Plant__c == '')){
                         onlyAccMissingFieldList.add('Delivery_Plant__c');
                     }
+                   
                 }
                 
-                if(String.isBlank(disRec.Account__r.Tax_Type__c)){
-                    onlyAccMissingFieldList.add('Tax_Type__c');
+                if(String.isBlank(disRec.Tax_Type__c)){
+                    missingFieldsList.add('Tax_Type__c');
                 }
-                if(!String.isBlank(disRec.Address__CountryCode__s) && disRec.Address__CountryCode__s.equalsIgnoreCase('India') && (String.isBlank(disRec.Account__r.PAN_Number__c) || String.isBlank(disRec.GST_number__c))){
-                    if(String.isBlank(disRec.Account__r.PAN_Number__c)){
-                        onlyAccMissingFieldList.add('PAN_Number__c');
+                if(disRec.FSSAI_Number__c == null || disRec.FSSAI_Number__c == 0){
+                    missingFieldsList.add('FSSAI_Number__c');
+                }
+
+                if(!String.isBlank(disRec.Address__CountryCode__s) && disRec.Address__CountryCode__s.equalsIgnoreCase('IN') && (String.isBlank(disRec.PAN_Number__c) || String.isBlank(disRec.GST_Number__c))){
+                    if(String.isBlank(disRec.PAN_Number__c)){
+                        missingFieldsList.add('PAN_Number__c');
                     }
-                    if(String.isBlank(disRec.GST_number__c)){
-                        onlyAccMissingFieldList.add('GST_number__c');
+                    if(String.isBlank(disRec.GST_Number__c)){
+                        missingFieldsList.add('GST_Number__c');
                     }
                 }
                 if(String.isBlank(disRec.Account__r.Payment_terms__c)){
@@ -287,9 +296,6 @@ public without sharing class OpportunityCreateSaleOrderController {
                 }
                 if(String.isBlank(disRec.Account__r.Tax_Collected_At_Source__c)){
                     onlyAccMissingFieldList.add('Tax_Collected_At_Source__c');
-                }
-                if(disRec.Account__r.FSSAI__c == null || disRec.Account__r.FSSAI__c == 0){
-                    onlyAccMissingFieldList.add('FSSAI__c');
                 }
                 if(String.isBlank(disRec.Account__r.Transportation_Terms__c)){
                     onlyAccMissingFieldList.add('Transportation_Terms__c');

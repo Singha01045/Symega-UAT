@@ -16,6 +16,12 @@
     width: fit-content!important;
 }
 
+.buttonContainer{
+    display: inline-block;
+    width:max-content;
+    float: right;
+}
+
 .viewButton{
     border: none;
     background-color: orange;
@@ -328,7 +334,7 @@ border: none;
     color: #000;
     font-size: 15px;
     line-height: 24px;
-    padding: 12px;
+    /*padding: 12px;*/
     /* padding-left: 30px; */
     border: none;
     border-right: 1px solid rgba(103, 103, 103, 0.39);

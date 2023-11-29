@@ -17,22 +17,22 @@ global without sharing class SAP_SaleOrderUpdate {
             if(getResponse == 'Success') {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Sale Order Updated Successfully'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 200, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 200, processingStartTime, System.now(),null); //Log 
             }
             else if(getResponse == 'err') {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Something went wrong'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 400, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 400, processingStartTime, System.now(),null); //Log 
             }
             else if(getResponse == 'unequal') {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'We couldn\'t find the requested products details in our system'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 400, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 400, processingStartTime, System.now(),null); //Log 
             }
             else {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', getResponse));
                 RestContext.response.responseBody = Blob.valueOf(responseBody); 
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 400, processingStartTime, System.now(), ''); //Log 
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sale_order_update', 'POST', 400, processingStartTime, System.now(),null); //Log 
                 
             }
         }

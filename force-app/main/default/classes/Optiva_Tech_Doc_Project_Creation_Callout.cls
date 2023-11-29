@@ -33,7 +33,7 @@ public without sharing class Optiva_Tech_Doc_Project_Creation_Callout {
                 return responseMap;
             }
             else{
-                HandleBusinessException.captureCalloutError('Optiva_NPDCreationCallout','createProject',reqBody,resp.getStatusCode(),resp.getBody());    
+                HandleBusinessException.captureCalloutError('Optiva_Tech_Doc_Project_Creation_Callout','submitProject',reqBody,resp.getStatusCode(),resp.getBody());    
             }
     
             

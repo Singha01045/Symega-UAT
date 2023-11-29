@@ -26,6 +26,9 @@ public without sharing class SymegaStickerPDFController {
     
     @AuraEnabled
     public static string savePDF(String url,String id,String fileName){
+        System.debug('url==> ' + url);
+        System.debug('id==> ' + id);
+        System.debug('fileName==> ' + fileName);
         try {
             string  disReqId = id;
             PageReference ref = new PageReference(url);
@@ -37,13 +40,14 @@ public without sharing class SymegaStickerPDFController {
             cont.Origin = 'H';
             
             insert cont;    
-           
+           System.debug('Content Version ===> ' + cont);    
             
             ContentDocumentLink cdl = createContentLink(cont.Id, id);
             return 'Success';    
             
         } 
         catch (Exception e) {
+            System.debug('(e.getMessage());==>' + (e.getMessage()) + 'at line number ' + e.getLineNumber());
             throw new AuraHandledException(e.getMessage());
         }
     }
@@ -51,7 +55,7 @@ public without sharing class SymegaStickerPDFController {
     private static ContentDocumentLink createContentLink(String contentVersionId, String recordId) {
         if (contentVersionId == null || recordId == null) { return null; }
         ContentDocumentLink cdl = new ContentDocumentLink();
-        cdl.ContentDocumentId = [ SELECT ContentDocumentId FROM ContentVersion WHERE Id =: contentVersionId ].ContentDocumentId;
+        cdl.ContentDocumentId = [ SELECT Id,ContentDocumentId FROM ContentVersion WHERE Id =: contentVersionId ].ContentDocumentId;
         cdl.LinkedEntityId = recordId;
         cdl.ShareType = 'V';
         try {

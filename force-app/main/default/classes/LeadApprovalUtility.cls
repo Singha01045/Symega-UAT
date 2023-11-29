@@ -402,7 +402,7 @@ public without sharing class LeadApprovalUtility {
                 pwrap.isAccount = true;
             }   
             else{
-                Dispatch_Address__c customerAddressRec = [Select ID, Account__r.Account_Segment__c, Account__r.Customer_Type__c, Account__c, Type__c, Contact__c, Address__Street__s, Address__CountryCode__s,
+                Dispatch_Address__c customerAddressRec = [Select ID, Customer_Category__c, Account__r.Account_Segment__c, Account__r.Customer_Type__c, Account__c, Type__c, Contact__c, Address__Street__s, Address__CountryCode__s,
                                                           Address__StateCode__s, Address__PostalCode__s, Address__City__s, CurrencyIsoCode, OwnerId, Account__r.User__c, Account__r.Delivery_Plant__c
                                                           From Dispatch_Address__c Where Id =: projRec.Opportunity__r.Customer_Billing_Address__c];
                 userId = customerAddressRec.OwnerId;
@@ -428,7 +428,7 @@ public without sharing class LeadApprovalUtility {
                     missingReqField.add('Address__CountryCode__s');
                 }
                 
-                if((customerAddressRec.Address__StateCode__s == null) || (customerAddressRec.Address__StateCode__s == '')){
+                if(((customerAddressRec.Address__StateCode__s == null) || (customerAddressRec.Address__StateCode__s == '')) && customerAddressRec.Account__r.Customer_Type__c!='Export'){
                     missingReqField.add('Address__StateCode__s');
                 }
                 
@@ -438,6 +438,10 @@ public without sharing class LeadApprovalUtility {
                 
                 if((customerAddressRec.Address__City__s == null) || (customerAddressRec.Address__City__s == '')){
                     missingReqField.add('Address__City__s');
+                }
+
+                if(String.isBlank(customerAddressRec.Customer_Category__c)){
+                    missingReqField.add('Customer_Category__c');
                 }
                 
                 if((customerAddressRec.CurrencyIsoCode == null) || (customerAddressRec.CurrencyIsoCode == '')){
@@ -517,7 +521,7 @@ public without sharing class LeadApprovalUtility {
         System.debug('Update User Method Called');
         try{
             User userRec = [SELECT Id, Name, SAP_USER_CODE__c FROM User WHERE Id=:userId LIMIT 1];
-            userRec.SAP_USER_CODE__c = userSAPcode;
+            userRec.SAP_USER_CODE__c = !String.isBlank(userSAPcode)? userSAPcode : userRec.SAP_USER_CODE__c;
             update userRec;                
         }
         catch(exception e){
@@ -530,9 +534,9 @@ public without sharing class LeadApprovalUtility {
         System.debug('Update Account Method Called');
         try{
             Account accRec = [SELECT Id, Account_Segment__c, Delivery_Plant__c, Customer_Type__c FROM Account WHERE Id =: accId LIMIT 1];
-            accRec.Account_Segment__c = accSeg;
-            accRec.Delivery_Plant__c = dlvryPlant;
-            accRec.Customer_Type__c = custType;
+            accRec.Account_Segment__c = !String.isBlank(accSeg)? accSeg : accRec.Account_Segment__c;
+            accRec.Delivery_Plant__c = !String.isBlank(dlvryPlant)? dlvryPlant : accRec.Delivery_Plant__c;
+            accRec.Customer_Type__c = !String.isBlank(custType)? custType : accRec.Customer_Type__c;
             update accRec;                
         }
         catch(exception e){

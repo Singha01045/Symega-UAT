@@ -7,7 +7,7 @@ public without sharing class Optiva_CustomerCreationCallout {
         return OptiovaCustObj;
     }
 
-    public String createCustomer(String body){
+    public String createCustomer(String body, Id refId){
         System.debug('Body------'+body);
         try{
             if(Utility.isOptivaSyncingEnable()){
@@ -29,7 +29,7 @@ public without sharing class Optiva_CustomerCreationCallout {
 
                 DateTime endDate = System.now();
 
-                HttpUtility.createLog(req,resp,startDate,endDate, '');
+                HttpUtility.createLog(req,resp,startDate,endDate, refId);
 
                 if(resp.getStatusCode()==200 || resp.getStatusCode()==201){
                     return 'Success';

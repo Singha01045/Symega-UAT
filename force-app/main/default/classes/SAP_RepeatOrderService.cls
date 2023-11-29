@@ -20,10 +20,10 @@ global without sharing class SAP_RepeatOrderService {
             String responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', Constants.SO_CREATION_SUCCESS_RESPONSE));
             RestContext.response.responseBody = Blob.valueOf(responseBody);
             RestContext.response.statusCode = 200;
-            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/sale_order_create','POST',200,processingStartTime,System.now(), '');
+            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/sale_order_create','POST',200,processingStartTime,System.now() , null);
         }else{
             String responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', resp));
-            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/sale_order_create','POST',400,processingStartTime,System.now(), '');
+            HTTPUtility.getInstance().createServiceLogger(resBody,responseBody,'/sale_order_create','POST',400,processingStartTime,System.now() , null);
             RestContext.response.responseBody = Blob.valueOf(responseBody);
             RestContext.response.statusCode = 400;
         }

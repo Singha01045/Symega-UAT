@@ -96,6 +96,15 @@
                                         <template if:true={showBhField}>
                                             <lightning-input type="text" variant="standard" name="BHCode" label="BH SAP Code" placeholder="type here..." value={bhSapCode} onchange={handleChange}></lightning-input>
                                         </template>
+                                        <template if:true={showTaxCollect}>
+                                            <lightning-combobox name="taxCollect" label="Tax Collected" value={taxCollectVal} options={taxCollectList} onchange={handleChange} ></lightning-combobox>                           
+                                        </template>
+                                        <template if:true={showPaymentTerms}>
+                                            <lightning-combobox name="paymentTerms" label="Payment Terms" value={paymentTermsVal} options={paymentTermsList} onchange={handleChange} ></lightning-combobox>                           
+                                        </template>
+                                        <template if:true={showTransportTerms}>
+                                            <lightning-combobox name="transportTerms" label="Transportation Terms" value={transportTermsVal} options={transportTermsList} onchange={handleChange} ></lightning-combobox>                           
+                                        </template>
                                     </div>
                                 </div>
                                 <br/>
@@ -109,9 +118,9 @@
                             <div class="slds-grid slds-gutters">
                                 <div class="slds-col slds-size_1-of-2">
 
-                                    <template if:true={showTaxType}>
+                                    <!-- <template if:true={showTaxType}>
                                         <lightning-combobox name="taxType" label="Tax Type" value={taxTypeVal} options={taxTypeList} onchange={handleChange} ></lightning-combobox>                           
-                                    </template>
+                                    </template> -->
                                     <template if:true={showTaxCollect}>
                                         <lightning-combobox name="taxCollect" label="Tax Collected" value={taxCollectVal} options={taxCollectList} onchange={handleChange} ></lightning-combobox>                           
                                     </template>
@@ -121,7 +130,7 @@
                                     <template if:true={showTransportTerms}>
                                         <lightning-combobox name="transportTerms" label="Transportation Terms" value={transportTermsVal} options={transportTermsList} onchange={handleChange} ></lightning-combobox>                           
                                     </template>
-                                    <template if:true={showPAN}>
+                                    <!-- <template if:true={showPAN}>
                                         <lightning-input type="text" variant="standard" name="pan" label="PAN No" placeholder="type here..." value={pan} onchange={handleChange}></lightning-input>
                                     </template>
                                     <template if:true={showGST}>
@@ -129,7 +138,7 @@
                                     </template>
                                     <template if:true={showFSSAI}>
                                         <lightning-input type="number" variant="standard" name="fssai" label="FSSAI Number" placeholder="type here..." value={fssai} onchange={handleChange}></lightning-input>
-                                    </template>
+                                    </template> -->
                                 </div>
                                 <div class="slds-col slds-size_1-of-2">
                                     <template if:true={showDlvryPlantField}>

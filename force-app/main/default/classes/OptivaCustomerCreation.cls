@@ -32,7 +32,7 @@ public without sharing class OptivaCustomerCreation {
         
         String body = JSON.serialize(oppWrapper);
         System.debug('BODY)))))======'+body);
-        return Optiva_CustomerCreationCallout.getInstance().createCustomer(body);
+        return Optiva_CustomerCreationCallout.getInstance().createCustomer(body, acc.Id);
     }
 
     public static String checkIfBlank(String s){

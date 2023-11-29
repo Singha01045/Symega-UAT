@@ -1,4 +1,4 @@
-trigger LeadTrigger on Lead (before update, before insert) {
+trigger LeadTrigger on Lead (before update, before insert, after update) {
     SObject_Trigger_Control__c triggerConfig = SObject_Trigger_Control__c.getValues('Lead');
     system.debug('triggerConfig----'+triggerConfig);
     system.debug('triggerConfig.Trigger_Status__c>>'+triggerConfig.Trigger_Status__c);
@@ -11,7 +11,7 @@ trigger LeadTrigger on Lead (before update, before insert) {
             handlerInstance.onBeforeInsert(Trigger.New);
         }
         
-        if(Trigger.isBefore && Trigger.isUpdate) {
+        if(Trigger.isAfter && Trigger.isUpdate) {
             system.debug('Before Update');
             handlerInstance.onAfterUpdate(Trigger.OldMap, Trigger.NewMap);
             handlerInstance.updateApprovalMemberApprovedDate(Trigger.OldMap, Trigger.NewMap);

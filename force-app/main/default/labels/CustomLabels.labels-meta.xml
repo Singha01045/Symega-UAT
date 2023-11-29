@@ -138,7 +138,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>OPTIVA NO RESPONSE MSG</shortDescription>
-        <value>Couldn&apos;t get the response from OPTIVA.</value>
+        <value>SFDC Internal Error has occurred.</value>
     </labels>
     <labels>
         <fullName>Opp_Indian_Link</fullName>

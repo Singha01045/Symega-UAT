@@ -13,15 +13,15 @@ public without sharing class Optiva_NPD_Application_Wrapper {
 	public String end_use_cat;	//end-use_category .
 	public String end_use_appli;	//end-use_app .
 	public String annual_vol;	//50000 .
-	public Double business_potent_val;	//78.9 .
+	public String business_potent_val;	//78.9 .
 	public String curr_year_vol;	//890000 .
 	public String cust_target_price;	//500000 .
 	public String target_date;	//8/24/2021 .
 	public String curr_type;	//Euro .
 	public String confectionary_type;	//Sugar boiled candy .
-	public Decimal final_fat;	//12 .
+	public String final_fat;	//12 .
 	public String first_smpe_due_date;	//8/24/2021 .
-	public Decimal flavor_ciu;	//450 .
+	public String flavor_ciu;	//450 .
 	public String flavor_legal_stat;	//Verified .
 	public String solubility;	//solubility .
 	public String sugar;	//brown_sugar .

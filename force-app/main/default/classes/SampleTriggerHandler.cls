@@ -112,23 +112,27 @@ public without sharing class SampleTriggerHandler {
             sample.End_Use_Applications__c = !String.isEmpty(proj.End_Use_Applications__c)?proj.End_Use_Applications__c : '';
             sample.Expected_Annual_Value__c = proj.Expected_Annual_Value__c ;
             sample.Sample_Project__c = proj.Id;
-            sample.OwnerId = proj.Opportunity__r.Account.OwnerId;
+            if(proj.Opportunity__c != null){
+                sample.OwnerId = proj.Opportunity__r.Account.OwnerId;
+
+         
             //Add address fields here.
-            system.debug('proj.Opportunity__r.Shipping_Street__c.length() ' + proj.Opportunity__r.Shipping_Street__c.length());
-            if(proj.Opportunity__r.Account.Customer_Contact__c != null && proj.Opportunity__r.Account.Customer_Contact__r.MailingAddress != null) {
-                sample.City__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCity;
-                sample.State__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingState;
-                sample.Country__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCountry;
-                sample.Postal_Code__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingPostalCode;
-                sample.Street__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet.length() >= 125 ? proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet.substring(0, 124) : proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet; 
-            }
-            else {
-                sample.City__c = proj.Opportunity__r.Shipping_City__c;
-                sample.State__c = proj.Opportunity__r.Shipping_State__c;
-                sample.Country__c = proj.Opportunity__r.Shipping_Country__c;
-                sample.Postal_Code__c = proj.Opportunity__r.Shipping_Postal_Code__c;
-                sample.Street__c = proj.Opportunity__r.Shipping_Street__c.length() >= 125 ? proj.Opportunity__r.Shipping_Street__c.substring(0, 124) : proj.Opportunity__r.Shipping_Street__c;
-            }
+                system.debug('proj.Opportunity__r.Shipping_Street__c.length() ' + proj.Opportunity__r.Shipping_Street__c.length());
+                if(proj.Opportunity__r.Account.Customer_Contact__c != null && proj.Opportunity__r.Account.Customer_Contact__r.MailingAddress != null) {
+                    sample.City__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCity;
+                    sample.State__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingState;
+                    sample.Country__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCountry;
+                    sample.Postal_Code__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingPostalCode;
+                    sample.Street__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet.length() >= 125 ? proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet.substring(0, 124) : proj.Opportunity__r.Account.Customer_Contact__r.MailingStreet; 
+                }
+                else {
+                    sample.City__c = proj.Opportunity__r.Shipping_City__c;
+                    sample.State__c = proj.Opportunity__r.Shipping_State__c;
+                    sample.Country__c = proj.Opportunity__r.Shipping_Country__c;
+                    sample.Postal_Code__c = proj.Opportunity__r.Shipping_Postal_Code__c;
+                    sample.Street__c = proj.Opportunity__r.Shipping_Street__c.length() >= 125 ? proj.Opportunity__r.Shipping_Street__c.substring(0, 124) : proj.Opportunity__r.Shipping_Street__c;
+                }
+             }
             
             sample.Billing_City__c = proj.Opportunity__r.Billing_City__c;
             sample.Billing_State__c = proj.Opportunity__r.Billing_State__c;

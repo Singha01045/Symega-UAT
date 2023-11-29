@@ -1,10 +1,26 @@
 <template>
-        <template if:true={showSpinner}>
-            <div class="slds-modal__content slds-p-around_medium modalBody">
-                <lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
-            </div>
+    <template if:true={showSpinner}>
+        <div class="slds-modal__content slds-p-around_medium modalBody">
+            <br/><br/><br/><br/>
+            <lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
+            <br/><br/><br/><br/>
+        </div>
+    </template>
+    <template if:false={showSpinner}>
+        <template if:true={showSampleMsg}>
+            <lightning-quick-action-panel header="Submit Sample">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-2" style="color:brown; font-size:16px;">
+                        Have you verified the Sample Shipping Address?
+                    </div><br/><br/>
+                </div>
+                <div class="slds-align_absolute-center slds-border_top">
+                    <lightning-button class="slds-m-top_small" variant="brand" label="Yes" onclick={handleYes}></lightning-button>&nbsp;&nbsp;
+                    <lightning-button  class="slds-m-top_small" variant="neutral" label="No" onclick={closeModalPopup} ></lightning-button>
+                </div>
+            </lightning-quick-action-panel>
         </template>
-        <template if:false={showSpinner}>
+        <template if:false={showSampleMsg}>
             <template if:true={showAccountPage}>
                 <template if:true={isAccount}>
                     <lightning-quick-action-panel header="Update Account"> 
@@ -28,11 +44,11 @@
                                 </div>
                                 <div class="slds-align_absolute-center slds-border_top">
                                     <lightning-button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Update"></lightning-button>&nbsp;&nbsp;
-                                    <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closePopup} ></lightning-button>
+                                    <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closeModalPopup} ></lightning-button>
                                 </div>
                             </lightning-record-edit-form>
                         </template>
-
+    
                         <template if:false={accFieldsMissing}>
                             <div class="slds-grid slds-gutters">
                                 <div class="slds-col slds-size_1-of-2">
@@ -46,11 +62,11 @@
                             </div>
                             <div class="slds-align_absolute-center slds-border_top">
                                 <lightning-button class="slds-m-top_small" variant="brand" name="update" label="Update" onclick={handleSuccess}></lightning-button>&nbsp;&nbsp;
-                                <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closePopup} ></lightning-button>
+                                <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closeModalPopup} ></lightning-button>
                             </div>
                         </template>                            
                     </lightning-quick-action-panel>
-
+    
                 </template>
                 <template if:false={isAccount}>
                     <!-- Customer Address  -->
@@ -85,7 +101,7 @@
                                 <br/>
                                 <div class="slds-align_absolute-center slds-border_top">
                                     <lightning-button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Update"></lightning-button>&nbsp;&nbsp;
-                                    <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closePopup} ></lightning-button>
+                                    <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closeModalPopup} ></lightning-button>
                                 </div>
                             </lightning-record-edit-form> 
                         </template>
@@ -112,7 +128,7 @@
                             <br/>
                             <div class="slds-align_absolute-center slds-border_top">
                                 <lightning-button class="slds-m-top_small" variant="brand" name="update" label="Update" onclick={handleSuccess}></lightning-button>&nbsp;&nbsp;
-                                <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closePopup} ></lightning-button>
+                                <lightning-button  class="slds-m-top_small" variant="neutral" label="Cancel" onclick={closeModalPopup} ></lightning-button>
                             </div>
                         </template>
                     </lightning-quick-action-panel>
@@ -129,4 +145,6 @@
                 </lightning-quick-action-panel>
             </template>
         </template>
+        
+    </template>
 </template>

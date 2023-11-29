@@ -17,14 +17,14 @@ global without sharing class Optiva_SampleProductUpdate {
             system.debug('updateLineItem :: '+ lineItemWrapper);
             if(String.isBlank(lineItemWrapper.product_code) || String.isBlank(sampleId)) {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Product SSC Code is mandatory'));
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sample_product_update/*', 'POST', 200, processingStartTime, System.now(), sampleId); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sample_product_update/*', 'POST', 200, processingStartTime, System.now(),sampleId); //Log this request
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
                 RestContext.response.statusCode = 400;
                 return;
             }
             if(updateLineItem(lineItemWrapper, sampleId)) {
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Sample updated successfully'));
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sample_product_update/*', 'POST', 200, processingStartTime, System.now(), sampleId); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sample_product_update/*', 'POST', 200, processingStartTime, System.now(),sampleId); //Log this request
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
             }
             else {

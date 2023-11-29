@@ -66,7 +66,7 @@ export default class CreateSampleAccount extends NavigationMixin(LightningElemen
             CurrencyIsoCode : this.oppRecord.CurrencyIsoCode,
 
             Opportunity_Close_Date__c : this.oppRecord.CloseDate,
-            Cost_in_use__c : this.oppRecord.Annual_Volume_Full__c,
+            //Cost_in_use__c : this.oppRecord.Annual_Volume_Full__c,
             Expected_Volume_Unit__c	 : this.oppRecord.Annual_Volume_in_units__c,
             Customer_Target_price__c : this.oppRecord.Target_Price_Kg__c,
             End_Use_category__c : this.oppRecord.End_Use_Category__c,

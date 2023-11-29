@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tax_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Tax Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Spec person responsible for sales/purch tax</fullName>
+                <default>false</default>
+                <label>Spec person responsible for sales/purch tax</label>
+            </value>
+            <value>
+                <fullName>Unspec person responsible for sales/purch tax</fullName>
+                <default>false</default>
+                <label>Unspec person responsible for sales/purch tax</label>
+            </value>
+            <value>
+                <fullName>No person responsible for sales/purch tax</fullName>
+                <default>false</default>
+                <label>No person responsible for sales/purch tax</label>
+            </value>
+            <value>
+                <fullName>Subject to exemption from sales/purch tax</fullName>
+                <default>false</default>
+                <label>Subject to exemption from sales/purch tax</label>
+            </value>
+            <value>
+                <fullName>Sales/purch tax consumer</fullName>
+                <default>false</default>
+                <label>Sales/purch tax consumer</label>
+            </value>
+            <value>
+                <fullName>Taxpayer (monotributario)</fullName>
+                <default>false</default>
+                <label>Taxpayer (monotributario)</label>
+            </value>
+            <value>
+                <fullName>Unclassified taxpayer</fullName>
+                <default>false</default>
+                <label>Unclassified taxpayer</label>
+            </value>
+            <value>
+                <fullName>B2B Customers</fullName>
+                <default>false</default>
+                <label>B2B Customers</label>
+            </value>
+            <value>
+                <fullName>B2C Customers</fullName>
+                <default>false</default>
+                <label>B2C Customers</label>
+            </value>
+            <value>
+                <fullName>B2G Customers</fullName>
+                <default>false</default>
+                <label>B2G Customers</label>
+            </value>
+            <value>
+                <fullName>SEZ Customers</fullName>
+                <default>false</default>
+                <label>SEZ Customers</label>
+            </value>
+            <value>
+                <fullName>Deemed Export Customers</fullName>
+                <default>false</default>
+                <label>Deemed Export Customers</label>
+            </value>
+            <value>
+                <fullName>E - Commerce - Registered</fullName>
+                <default>false</default>
+                <label>E - Commerce - Registered</label>
+            </value>
+            <value>
+                <fullName>E - Commerce - UnRegistered</fullName>
+                <default>false</default>
+                <label>E - Commerce - UnRegistered</label>
+            </value>
+            <value>
+                <fullName>Export Customers</fullName>
+                <default>false</default>
+                <label>Export Customers</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

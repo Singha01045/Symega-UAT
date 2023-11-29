@@ -40,6 +40,7 @@ public class TodayTaskAuraController {
                                    Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,
                                    Account__r.BillingPostalCode,Account__r.BillingCountry,Geo_Location__latitude__s, Geo_Location__longitude__s, Weekly_Beat_Plan__r.Monthly_Beat_Plan__r.Approval_Status__c,Expected_Start_Time__c FROM Visit__c 
                                    WHERE Planned_visit_date__c=:VisitFormatedDate AND Account__r.BillingStreet !=null AND Account__r.BillingCity !=null AND Assigned_User__c=: currentUserId AND Status__c != 'Completed'];
+               System.debug('visitListToShow-->'+visitListToShow);
                 if(visitListToShow.size()>0){
                     integer compVisitCount=0;
                     integer pendingVisitCount =0;

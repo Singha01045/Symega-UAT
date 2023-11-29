@@ -17,8 +17,8 @@ public without sharing class AccountTriggerHandler {
             }
         }
         
-        //if(!parentAccountIdSet.isEmpty())
-            //ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
+        if(!parentAccountIdSet.isEmpty())
+            ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
     }
     
     //Deagle~ : v1.1 added to calculate parent account roll-ups
@@ -30,8 +30,8 @@ public without sharing class AccountTriggerHandler {
             }
         }
         
-        //if(!parentAccountIdSet.isEmpty())
-            //ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
+        if(!parentAccountIdSet.isEmpty())
+            ParentAccountRollupUtility.processSummaryCalculationFuture(parentAccountIdSet);
     }
     
     public void afterUpdate(Map<Id,Account> oldMap,Map<Id,Account> newMap){

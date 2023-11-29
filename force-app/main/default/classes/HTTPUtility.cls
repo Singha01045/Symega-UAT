@@ -83,7 +83,7 @@ public with sharing class HTTPUtility {
     }
 
 
-    public static void createLog(HttpRequest httpReq, HttpResponse httpRes,DateTime sTime, DateTime eTime, Id refId) {
+    public static void createLog(HttpRequest httpReq, HttpResponse httpRes,DateTime sTime, DateTime eTime,String refId) {
         Integration_Log__c logger = new Integration_Log__c();
 
         logger.Integration_Type__c = 'CALLOUT';
@@ -105,7 +105,7 @@ public with sharing class HTTPUtility {
         insert logger;
     }
 
-    public void createServiceLogger(String reqBody, String resBody, String endPoint, String method, Integer statusCode, DateTime startDatetime, DateTime endDateTime, Id refId) {
+    public void createServiceLogger(String reqBody, String resBody, String endPoint, String method, Integer statusCode, DateTime startDatetime, DateTime endDateTime, String refId) {
         try {
             if(symegaConfig != null && symegaConfig.Enable_Apex_Service_Logger__c) {
                 Integration_Log__c logger = new Integration_Log__c();

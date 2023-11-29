@@ -101,7 +101,7 @@
                 <lightning:inputField fieldName="If_Private_Label__c" />
                 
                 <!-- Proposed Commercial Details -->
-                <lightning:inputField fieldName="Cost_in_use__c" />
+                <lightning:inputField fieldName="Customer_Cost_in_USE_CIU__c" />
                 
                 <div class="modal-footer slds-modal__footer slds-size_1-of-1 slds-p-around_large slds-align_absolute-center">
                     <div role="contentinfo">

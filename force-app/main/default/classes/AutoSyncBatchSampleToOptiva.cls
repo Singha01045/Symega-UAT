@@ -229,7 +229,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
             
             
                                 System.debug('Body------'+OpWrapper.toString());
-                                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper));
+                                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper), project.Id);
                                 System.debug('ResponseMap----'+responseMap);
                                 if(responseMap!=null && responseMap.get('status')=='Success'){
                                     isSubmittedToOptiva = true;
@@ -269,7 +269,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                                 Optiva_NPDCreationWrapper OpWrapper = OptivaCreateWrapper.createProjectWrapper(project);
                                 System.debug('Body------'+OpWrapper.toString());
                                 
-                                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper));
+                                responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper), project.Id);
                             }
 
                             if(responseMap!=null && responseMap.get('status')=='Success'){
@@ -321,7 +321,7 @@ public class AutoSyncBatchSampleToOptiva Implements Database.batchable<sobject>,
                         Optiva_NPD_Application_Wrapper OpWrapper = OptivaCreateWrapper.createApplicationWrapper(project);
                         System.debug('Body------'+OpWrapper.toString());
                         Map<String,String> responseMap = new Map<String,String>();
-                        responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper));
+                        responseMap = Optiva_NPDCreationCallout.getInstance().createProject(JSON.serialize(OpWrapper), project.Id);
                         if(responseMap!=null && responseMap.get('status')=='Success'){
                             project.Submit_Sample_To_Optiva__c = false;
                             project.Submitted_To_SAP_Optiva__c = true;

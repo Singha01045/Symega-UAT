@@ -9,7 +9,7 @@ import updateAccRecord from '@salesforce/apex/Optiva_LWC_NPD_Controller.updateAc
 
 export default class SampleCreationSyncingOptiva extends LightningElement {
     @api recordId;
-    @track showSpinner = true;
+    //@track showSpinner = true;
     @track responseMsg='';
     @track response;
     @track msgStyle = 'color:green;'
@@ -44,7 +44,7 @@ export default class SampleCreationSyncingOptiva extends LightningElement {
   showAccSegField = false;
   custAddFieldsMissing = false;
   accFieldsMissing = false;
-    
+  showSampleMsg = false;    
 
     connectedCallback() {
         setTimeout(() => {
@@ -59,58 +59,71 @@ export default class SampleCreationSyncingOptiva extends LightningElement {
             if(data){
                 console.log('Data',data);
                 console.log('recordId ===> '+this.recordId);
-                                    if(data.missingFieldsList.length > 0) {
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
-                         }
-                         this.accId = data.accId;
-                         this.dispId = data.dispId;
-                         this.missingFieldsList = data.missingFieldsList;
-                         this.isAccount = data.isAccount;
-                         if(this.isAccount != true){
-                              this.custAddFieldsMissing = true;
-                         }
-                         else{
-                              this.accFieldsMissing = true;
-                         }
-                    }
-                    if(data.missingFieldsListForUser.length > 0) {
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
-                         }
-                         this.missingFieldsListForUser = data.missingFieldsListForUser;
-                         this.userId = data.userIdList[0];
-                         this.showUserField = true;
-                    }
-                    if(data.missingFieldsListForBH.length > 0) {
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
-                         }
-                         this.missingFieldsListForBH = data.missingFieldsListForBH;
-                         this.bhId = data.bhIdList[0];
-                         this.showBhField = true;
-                    }
-                    if(data.onlyAccMissingFieldList.length>0){
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
-                         }
-                         if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
-                              this.showDlvryPlantField = true;
-                         }
-                         if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
-                              this.showCustTypeField = true;
-                         }
-                         if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
-                              this.showAccSegField = true;
-                         }
-                    }
-                    if(!(data.onlyAccMissingFieldList.length>0 || data.missingFieldsListForBH.length > 0 || data.missingFieldsListForUser.length > 0 || data.missingFieldsList.length > 0)){
-                         this.goalTrackingRecordDetails();
-                    }
 
+                if(data.projRec.RecordType.Name == 'Sample'){
+                    this.showSampleMsg = true;
                     this.showSpinner = false;
-                    console.log('  this.oppProdList---->',  this.oppProdList);
-                    console.log('  this.missingFieldsList --->',  this.missingFieldsList);
+                }
+                else{
+                    if(data.projRec.Is_SAP__c){
+                        if(data.missingFieldsList.length > 0) {
+                             if(this.showAccountPage != true){
+                                 this.showAccountPage = true;
+                             }
+                             this.accId = data.accId;
+                             this.dispId = data.dispId;
+                             this.missingFieldsList = data.missingFieldsList;
+                             this.isAccount = data.isAccount;
+                             if(this.isAccount != true){
+                                  this.custAddFieldsMissing = true;
+                             }
+                             else{
+                                  this.accFieldsMissing = true;
+                             }
+                        }
+                        if(data.missingFieldsListForUser.length > 0) {
+                             if(this.showAccountPage != true){
+                                 this.showAccountPage = true;
+                             }
+                             this.missingFieldsListForUser = data.missingFieldsListForUser;
+                             this.userId = data.userIdList[0];
+                             this.showUserField = true;
+                        }
+                        if(data.missingFieldsListForBH.length > 0) {
+                             if(this.showAccountPage != true){
+                                 this.showAccountPage = true;
+                             }
+                             this.missingFieldsListForBH = data.missingFieldsListForBH;
+                             this.bhId = data.bhIdList[0];
+                             this.showBhField = true;
+                        }
+                        if(data.onlyAccMissingFieldList.length>0){
+                             if(this.showAccountPage != true){
+                                 this.showAccountPage = true;
+                             }
+                             if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
+                                  this.showDlvryPlantField = true;
+                             }
+                             if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
+                                  this.showCustTypeField = true;
+                             }
+                             if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
+                                  this.showAccSegField = true;
+                             }
+                        }
+                        if(!(data.onlyAccMissingFieldList.length>0 || data.missingFieldsListForBH.length > 0 || data.missingFieldsListForUser.length > 0 || data.missingFieldsList.length > 0)){
+                             this.goalTrackingRecordDetails();
+                        }
+    
+                        this.showSpinner = false;
+                        console.log('  this.oppProdList---->',  this.oppProdList);
+                        console.log('  this.missingFieldsList --->',  this.missingFieldsList);
+                    }
+                    else{
+                        this.showSpinner = false;
+                        this.goalTrackingRecordDetails();
+                    }
+                }                
             }
         })
     }
@@ -183,9 +196,15 @@ export default class SampleCreationSyncingOptiva extends LightningElement {
                 console.log('  this.options1---->',JSON.stringify(this.options1));
             }
         })
-     }
+    }
 
-      handleSuccess(){
+    handleYes(){
+        debugger;
+        this.showSampleMsg = false;
+        this.goalTrackingRecordDetails();
+    }
+
+    handleSuccess(){
           debugger;
           this.goalTrackingRecordDetails();
           this.showToast('Success', 'Account updated successfully', 'success');
@@ -202,10 +221,10 @@ export default class SampleCreationSyncingOptiva extends LightningElement {
           if((this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '')){
                updateAccRecord({accId:this.accId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal})
           }
-     }
+    }
 
 
-     handleChange(event){
+    handleChange(event){
           debugger;
           let name = event.target.name;
           if(name == 'UserCode'){
@@ -281,9 +300,15 @@ export default class SampleCreationSyncingOptiva extends LightningElement {
     }
 
     closePopup(){
+        debugger;
         if(this.response && this.response.status=='Success'){
             setTimeout(() => window.location.reload(), 2000);
         }
+        this.dispatchEvent(new CloseActionScreenEvent());
+    }
+
+    closeModalPopup(){
+        debugger;
         this.dispatchEvent(new CloseActionScreenEvent());
     }
 

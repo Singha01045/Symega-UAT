@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Project_Cust_Creation_Message__c</fullName>
+    <externalId>false</externalId>
+    <formula>OR(
+
+
+AND(Is_SAP__c,
+      OR( AND(Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Submitted_to_SAP__c ,  ISBLANK(Opportunity__r.Account.Customer_Code_SAP__c) ), 
+	  AND(NOT(Opportunity__r.Account_Billing_Address__c), Opportunity__r.Customer_Billing_Address__r.Submitted_to_SAP__c  , 
+             ISBLANK(Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c) )
+	  	  
+	  
+	  ) 
+),
+
+ 
+
+AND( NOT(Is_SAP__c ), 
+
+     OR(
+	 
+	 AND(Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Submitted_to_Optiva__c, 
+             ISBLANK(Opportunity__r.Account.Customer_Code_OPTIVA__c) ), 
+			 
+      AND(NOT(Opportunity__r.Account_Billing_Address__c), Opportunity__r.Customer_Billing_Address__r.Submitted_to_OPTIVA__c , 
+          ISBLANK(Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c) )
+		  
+		  
+		  )
+)
+
+
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Show Project Cust Creation Message</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

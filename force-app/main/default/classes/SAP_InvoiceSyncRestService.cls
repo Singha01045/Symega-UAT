@@ -50,22 +50,22 @@ global without sharing class SAP_InvoiceSyncRestService {
             if(getResponse == 'success'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Invoice synced successfully'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 200, processingStartTime, System.now(), ''); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 200, processingStartTime, System.now(),null); //Log this request
             }
             else if(getResponse == 'so not found'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Sale Order Number does not exist'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 400, processingStartTime, System.now(), ''); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 400, processingStartTime, System.now(),null); //Log this request
             }
             else if(getResponse == 'failed'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Internal Server Error in creating Line Item'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 400, processingStartTime, System.now(), ''); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 400, processingStartTime, System.now(),null); //Log this request
             }
             else{
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', getResponse));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
-                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 400, processingStartTime, System.now(), ''); //Log this request
+                HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/sync_invoice/', 'POST', 400, processingStartTime, System.now(),null); //Log this request
             }
         }
     }

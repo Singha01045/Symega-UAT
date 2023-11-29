@@ -9,7 +9,7 @@ public without sharing class Optiva_NPDCreationCallout {
     }
 
     
-    public Map<String,String> createProject(String body){
+    public Map<String,String> createProject(String body, Id refId){
         Map<String,String> responseMap = new Map<String,String>();
         System.debug('Body------'+body);
         try{
@@ -33,7 +33,7 @@ public without sharing class Optiva_NPDCreationCallout {
 
                 DateTime endDate = System.now();
                 
-                HttpUtility.createLog(req,resp,startDate,endDate, '');
+                HttpUtility.createLog(req,resp,startDate,endDate, refId);
                 
                 if(resp.getStatusCode()==200 || resp.getStatusCode()==201){
                     responseMap.put('status','Success');

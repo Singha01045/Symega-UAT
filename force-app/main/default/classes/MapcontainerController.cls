@@ -36,10 +36,11 @@ public class MapcontainerController {
                 Map<String, object> GooglemapResponseMap = (Map<String, Object>)JSON.deserializeUntyped(response.getBody());
                 
                 List<Object> Addresslist = (List<Object>)GooglemapResponseMap.get('results');
+                System.debug('Addresslist =====>> '+Addresslist);
                 integer j=0;
                 for(integer i=0; i<Addresslist.size(); i++){
                     //for(Object obj : Addresslist){
-                    System.debug('Addresslist[i] =====>> '+Addresslist[i]);
+                   // System.debug('Addresslist[i] =====>> '+Addresslist[i]);
                     if(i==0){
                         Map<String, Object> addressmap = (map<String, Object>)Addresslist[i];
                        // System.debug('addressmap =====>> '+addressmap);

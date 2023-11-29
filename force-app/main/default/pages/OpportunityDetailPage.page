@@ -95,33 +95,29 @@
                          </marquee> -->
                     </div>
                     
-                        <!--div class="d-flex text-align-center">
-                            <div class="dropdown">
-                                <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
-                                </i>
-                                <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{conName}}</a></li>
-                                  <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-at me-3"></i>{{email}}</a></li>
-                                  <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
-                                  <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
+                    <div class="d-flex text-align-center">
+                        <div class="dropdown">
+                            <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+                            </i>
+                            <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
+                                <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
                                 <li>
-                                    <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
-                                </li>
-                                </ul>
-                              </div>
-                            </div-->
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
+                                <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li>
+                                <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
+                            </li>
+                            </ul>
+                            </div>
+                        </div>
                 </div>
             </nav>
 
-            <div class="row mx-5">
+            <div class="row mx-5" ng-show="showDetailPage">
                                 <div class="row box-shadow-2 mb-5">
                     <div class="row mt-5 mx-1">
                         <div class="row">
@@ -402,7 +398,7 @@
 
                 </div>
             </div>
-            <div class="col-md-6 mt-3">
+            <div class="col-md-6 mt-3" ng-show="showBackBtn">
                 <button class="blue-btn float-end me-2 mb-5" ng-click="back()" type="button">
                     <i class="fa-solid fa-arrow-left me-2"></i>Back</button>
             </div>
@@ -433,13 +429,13 @@
                                     <option ng-repeat="staff in customerType">{{staff}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mt-3" ng-if="accRecord.BillingCity == undefined">
+                            <div class="col-md-6 mt-3" ng-if="accRecord.Currency__c == undefined">
                                 <label class="font-if">Currency:</label>
                                 <select class="form-control" aria-label="Default select example" ng-model="accRecord.CurrencyIsoCode">
                                     <option ng-repeat="staff in currencyCode">{{staff}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mt-3" ng-if="accRecord.Name == undefined">
+                            <div class="col-md-6 mt-3" ng-if="accRecord.BillingCity == undefined">
                                 <label class="font-if">City:</label>
                                 <input class="form-control" type="text" ng-model="accRecord.BillingCity"/>
                             </div>
@@ -546,149 +542,174 @@
                     	</div>
                         <div class="modal-body">
                             <div class="row" >
-                                <table class="table" ng-repeat="oliRec in OLIList">
+                                <table class="table">
                                     <thead>
-                                        <th style="width:40%;">Field</th>
-                                        <th style="width:60%;">Value</th>
-                                    </thead>
-                                    <tbody>
-                                        <td>Product Name:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Product2.Name" ng-disbled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Packing Type:</td>
-                                        <td><select class="form-control" aria-label="Default select example" ng-model="oliRec.Packaging_Type__c">
+                                    <tr>
+                                    <th style="background-color: #bedb84;">Product Name:</th>
+                                    <td ng-repeat="oliRec in OLIList" style="background-color: #bedb84;"><input class="form-control" type="text" ng-model="oliRec.Product2.Name" ng-disbled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Packing Type:</th>
+                                    <td ng-repeat="oliRec in OLIList"><select class="form-control" aria-label="Default select example" ng-model="oliRec.Packaging_Type__c">
                                             <option ng-repeat="staff in packingType">{{staff}}</option>
                                         </select></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Customer No.:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Customer_Code__c" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Customer No.:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Customer_Code__c" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Customer Name:</td>
-                                        <td><input class="form-control" type="text" ng-model="oppDetails.Account.Name" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Street:</td>
-                                        <td><input class="form-control" type="text" ng-model="oppDetails.Billing_Street__c" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>City:</td>
-                                        <td><input class="form-control" type="text" ng-model="oppDetails.Billing_City__c" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>State:</td>
-                                        <td><input class="form-control" type="text" ng-model="oppDetails.Billing_State__c" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Country:</td>
-                                        <td><input class="form-control" type="text" ng-model="oppDetails.Billing_Country__c" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Postal Code:</td>
-                                        <td><input class="form-control" type="text" ng-model="oppDetails.Billing_Postal_Code__c" ng-disabled="true"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Expected Order Quantity:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Quantity"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Fert Description:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Fert_Description__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Unit Of Measure (Sales Unit):</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Unit_Of_Measure__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Halb Code:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.ProductCode"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Base Qty:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Packaging_Quantity__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Art Work:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Art_Work__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Shelf Life Qty:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Product2.Shelf_Life__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Allergen Status Required:</td>
-                                        <td><input class="form-check-input" type="checkbox" ng-model="oliRec.Product2.Allergen_Status_Required__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Veg/ Non- Veg Logo in Label:</td>
-                                        <td><select class="form-control" aria-label="Default select example" ng-model="oliRec.Product2.Veg_Nonveg_Logo_In_Label__c">
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Customer No.:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Customer_Code__c" ng-disabled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Customer Name:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Account.Name" ng-disabled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Street:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oppDetails.Billing_Street__c" ng-disabled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>City:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oppDetails.Billing_City__c" ng-disabled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>State:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oppDetails.Billing_State__c" ng-disabled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Country:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oppDetails.Billing_Country__c" ng-disabled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Postal Code:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oppDetails.Billing_Postal_Code__c" ng-disabled="true"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Expected Order Quantity:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Quantity"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Fert Description:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Fert_Description__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Unit Of Measure (Sales Unit):</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Unit_Of_Measure__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Halb Code:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.ProductCode"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Base Qty:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Packaging_Quantity__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Art Work:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Packaging_Quantity__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Shelf Life Qty:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Packaging_Quantity__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Allergen Status Required:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-check-input" type="checkbox" ng-model="oliRec.Product2.Allergen_Status_Required__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Veg/ Non- Veg Logo in Label:</th>
+                                    <td ng-repeat="oliRec in OLIList"><select class="form-control" aria-label="Default select example" ng-model="oliRec.Product2.Veg_Nonveg_Logo_In_Label__c">
                                             <option ng-repeat="staff in vegNonVegLabel">{{staff}}</option>
                                         </select></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Customer Customised label:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Customized_Label__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Ingredients List declared with customer:</td>
-                                        <td><select class="form-control" aria-label="Default select example" ng-model="oliRec.Ingredients_List_Declared_With_Customer__c">
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Customer Customised label:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Customized_Label__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Ingredients List declared with customer:</th>
+                                    <td ng-repeat="oliRec in OLIList"><select class="form-control" aria-label="Default select example" ng-model="oliRec.Ingredients_List_Declared_With_Customer__c">
                                             <option ng-repeat="staff in ingredients">{{staff}}</option>
                                         </select></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Ingredients List:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Ingredient_list__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Reveal SYMEGA Identity:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Reveal_Symega_Identity__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Cusinery Identity:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Cusinery_identity__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Label:</td>
-                                        <td><select class="form-control" aria-label="Default select example" ng-model="oliRec.Label__c">
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Ingredients List:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Ingredient_list__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Reveal SYMEGA Identity:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Reveal_Symega_Identity__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Cusinery Identity:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Cusinery_identity__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Label:</th>
+                                    <td ng-repeat="oliRec in OLIList"><select class="form-control" aria-label="Default select example" ng-model="oliRec.Label__c">
                                             <option ng-repeat="staff in label">{{staff}}</option>
                                         </select></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Material Sector:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Material_Sector__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Sales Remarks:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Sales_Remarks__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Plant:</td>
-                                        <td><select class="form-control" aria-label="Default select example" ng-model="oliRec.Plant__c">
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Material Sector:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Material_Sector__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Sales Remarks:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Sales_Remarks__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Plant:</th>
+                                    <td ng-repeat="oliRec in OLIList"><select class="form-control" aria-label="Default select example" ng-model="oliRec.Plant__c">
                                             <option ng-repeat="staff in plant">{{staff}}</option>
                                         </select></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Control Code/HSN Code:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Product2.Control_Code_HSN_Code__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Primary:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Primary__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Secondary:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Secondary__c"/></td>
-                                    </tbody>
-                                    <tbody>
-                                        <td>Teritary:</td>
-                                        <td><input class="form-control" type="text" ng-model="oliRec.Tertiary__c"/></td>
-                                    </tbody>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Control Code/HSN Code:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Control_Code_HSN_Code__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Primary:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Primary__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Secondary:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Secondary__c"/></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <th>Teritary:</th>
+                                    <td ng-repeat="oliRec in OLIList"><input class="form-control" type="text" ng-model="oliRec.Tertiary__c"/></td>
+                                        </tr>
+                                        
+                                    </thead>
                                 </table>
                             </div>
                             <hr class="border mt-3" />
@@ -700,6 +721,45 @@
                             Close</button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="row box-shadow-2" ng-show="showProfile" style="margin-top:10rem!important;margin-right:24rem!important;margin-left:24rem!important;">
+            <div class="row mt-5 mx-1">
+                <div class="col-md-12">
+                    <h3 class="pb-3 color-theme"><b>EDIT PROFILE</b></h3>
+                </div>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label class="font-if">First Name
+                </label>
+                <input class="form-control" type="text" ng-model="conRec.FirstName" ng-disabled="true"/>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label class="font-if">Last Name
+                </label>
+                <input class="form-control" type="text" ng-model="conRec.LastName" ng-disabled="true"/>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label class="font-if">Email
+                </label>
+                <input class="form-control" type="text" ng-model="conRec.Email" ng-disabled="true"/>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label class="font-if">Phone
+                </label>
+                <input class="form-control" type="text" ng-model="conRec.MobilePhone"/>
+            </div>
+            <div class="col-md-6 mt-3 mb-5">
+                <label class="font-if">Password
+                </label>
+                <input class="form-control" type="password" ng-model="conRec.Password__c"/>
+            </div>
+            <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
+                <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
+                    <i class="fa-solid fa-check me-2"></i>Update</button>
+                <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
             </div>
         </div>
         </body>
@@ -753,6 +813,8 @@
                 $scope.showFieldState = true;
                 $scope.showFieldType = true;
                 $scope.showFieldContact = true;
+                $scope.showBackBtn = true;
+                $scope.showDetailPage = true;
                 
                 /* Account */
                 $scope.showAccName = true;
@@ -869,6 +931,72 @@
                         })
                     }
                     $scope.getOpportunityDetails();
+
+                    $scope.getCustomerDetail = function(){
+                    debugger;
+                    OperationsPortalController.getConDetails(userHashId,function(result,event){
+                        debugger;
+                        if(event.status && result){
+                            debugger;
+                            $scope.conRec = result;
+                            $scope.contactName = result.Name;
+                            $scope.$apply();
+                        }
+                    })
+                }
+                $scope.getCustomerDetail();
+
+                    $scope.showProfileDiv=function(){
+                debugger;
+                $scope.showDetailPage=false;
+                $scope.showBackBtn=false;
+                $scope.showProfile = true;
+            }
+
+            $scope.backProfile = function(){
+                debugger;
+                //$scope.showListViewOfSLI=true;
+                //$scope.showDetailPageSLI=false;
+
+                $scope.showProfile = false;
+                $scope.showDetailPage=true;
+                $scope.showBackBtn=true;
+            }
+
+            $scope.saveDetails = function(){
+                debugger;
+                delete($scope.conRec['Account__r']);
+                $scope.showSpinner = true;
+                OperationsPortalController.updateProfile($scope.conRec,function(result,event){
+                    debugger;
+                    if(event.status && result){
+                        $scope.showSpinner = false;
+                        swal("success", "Your profile has been updated.","success");
+                        $scope.backProfile();
+                        $scope.$apply();
+                    }
+                })
+            }
+
+            $scope.LogoutApplicant=function(){  
+                $scope.showSpinner = true;      
+                OperationsPortalController.LogoutApplicant(userHashId, function (result, event) {
+                debugger
+                console.log(result);
+                console.log(event);
+                if(event.status){
+                    $scope.res=result;
+                    $scope.redirect();
+                    $scope.$apply();
+                }
+        });   
+            }
+
+            $scope.redirect = function(){
+                debugger;
+                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations';
+                setTimeout(function() {window.location.replace(window.location.origin + sitePrefix )}, 3000);
+            }
 
                     $scope.back = function(){
                         debugger;

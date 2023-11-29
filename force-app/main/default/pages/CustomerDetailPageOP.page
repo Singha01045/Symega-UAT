@@ -129,7 +129,7 @@ border-top: none;
                             </marquee> -->
                     </div>
                     
-                        <!--div class="d-flex text-align-center">
+                        <div class="d-flex text-align-center">
                             <div class="dropdown">
                                 <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
                                 </i>
@@ -147,14 +147,14 @@ border-top: none;
                                 </li>
                                 </ul>
                                 </div>
-                            </div-->
+                            </div>
                 </div>
             </nav>
 
             <div class="container-fluid px-5">
                 
                 <div class="row mb-5">
-                    <div class="col-md-12">
+                    <div class="col-md-12" ng-show="showTabBar">
                         <div class="tab">
                             <button class="tablinks selectedTab" ng-click="onClickOfDetailPage()" id="DetailTab">Details</button>
                             <button class="tablinks" ng-click="onClickOfSamplePage()" id="SampleTab">Samples</button>
@@ -772,7 +772,7 @@ border-top: none;
                                 <tr ng-repeat="sample in samples3">
                                     <td><input type="checkbox" ng-model="sample.selected" ng-change="onClickOfSample(sample.Id,$index)" /></td>
                                     <td>{{$index+1}}</td>
-                                    <td ng-if="sample.Record_Type_Name__c == 'Sample'">{{sample.Sample_Name__c}}</td>
+                                    <td ng-if="sample.Record_Type_Name__c == 'Sample'" style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
                                     <td ng-if="sample.Record_Type_Name__c == 'Project'">{{sample.Project_Name__c}}</td>
                                     <td>{{sample.Status__c}}</td>
                                     <td>{{sample.Shipping_Type__c}}</td>
@@ -792,7 +792,7 @@ border-top: none;
                 </div>
                 
                 <div class="row mt-5 mx-5" id="sampleDetailtab" ng-show="showFilePage">
-                    <div class="col-md-12">
+                    <div class="col-md-12" ng-show="fileAvailable">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -815,6 +815,9 @@ border-top: none;
                                 <button class="paginationButton" ng-click="handlePrevious('Sample')">&#10229; Previous</button>
                             </div>
                         </div-->
+                    </div>
+                    <div ng-show="noFilesFound">
+                        <apex:image value="{!URLFOR($Resource.noFileFound,'')}" style="display: block; margin-left: auto; margin-right: auto; width: 30%;"/>
                     </div>
                 </div>
                 
@@ -965,14 +968,51 @@ border-top: none;
                 
                 
 <div class="row">
-<div class="col-md-6 mt-3">
+<div class="col-md-6 mt-3" ng-show="showBackButon">
                     <button class="blue-btn float-end me-2 mb-5" ng-click="back()" type="button">
                         <i class="fa-solid fa-arrow-left me-2"></i>Back</button>
     <button ng-if="showSaveButton == true" class="blue-btn float-end me-2 mb-5" style="background: green;" ng-click="saveAccDetails()" type="button">
                         Save</button>
                 </div>
-                </div>
-                    
+                </div>               
+    </div>
+    <div class="row box-shadow-2" ng-show="showProfile" style="margin-top:10rem!important;margin-right:24rem!important;margin-left:24rem!important;">
+        <div class="row mt-5 mx-1">
+            <div class="col-md-12">
+                <h3 class="pb-3 color-theme"><b>EDIT PROFILE</b></h3>
+            </div>
+        </div>
+        <div class="col-md-6 mt-3">
+            <label class="font-if">First Name
+            </label>
+            <input class="form-control" type="text" ng-model="conDetails.FirstName" ng-disabled="true"/>
+        </div>
+        <div class="col-md-6 mt-3">
+            <label class="font-if">Last Name
+            </label>
+            <input class="form-control" type="text" ng-model="conDetails.LastName" ng-disabled="true"/>
+        </div>
+        <div class="col-md-6 mt-3">
+            <label class="font-if">Email
+            </label>
+            <input class="form-control" type="text" ng-model="conDetails.Email" ng-disabled="true"/>
+        </div>
+        <div class="col-md-6 mt-3">
+            <label class="font-if">Phone
+            </label>
+            <input class="form-control" type="text" ng-model="conDetails.MobilePhone"/>
+        </div>
+        <div class="col-md-6 mt-3 mb-5">
+            <label class="font-if">Password
+            </label>
+            <input class="form-control" type="password" ng-model="conDetails.Password__c"/>
+        </div>
+        <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
+            <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
+                <i class="fa-solid fa-check me-2"></i>Update</button>
+            <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
+                <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+        </div>
     </div>
         </body>
 
@@ -988,6 +1028,9 @@ border-top: none;
                 $scope.showDetailPage = true;
                 $scope.showSamplePage = false;
                 $scope.showComments = false;
+                $scope.showBackButon=true;
+                $scope.showProfile=false;
+                $scope.showTabBar=true;
                 $scope.listOfComments = [];
                 $scope.cmnt = {"Reply__c":""};
                 $scope.disbledFields = true;
@@ -1003,7 +1046,16 @@ border-top: none;
                         if(event.status && result){
                             debugger;
                             $scope.conRec = result.conRec;
+                            $scope.conDetails = result.conRec;
+                            $scope.contactName = result.conRec.Name;
                             $scope.filesList = result.filesList;
+                            if(result.filesList != undefined && result.filesList != null && result.filesList.length>0){
+                                $scope.fileAvailable = true;
+                                $scope.noFilesFound = false;
+                            }else{
+                                $scope.fileAvailable = false;
+                                $scope.noFilesFound = true;
+                            }
                             $scope.accDetails = result.accRecord;
                             if(result.accRecord.Next_Follow_up_Date__c != null){
                                 $scope.accDetails.Next_Follow_up_Date__c = new Date(result.accRecord.Next_Follow_up_Date__c);
@@ -1037,6 +1089,81 @@ border-top: none;
                     })
                 }
                 $scope.getCustomerDetail();
+
+                $scope.showProfileDiv=function(){
+                debugger;
+                $scope.showDetailPage=false;
+                $scope.showSamplePage=false;
+                $scope.showFilePage = false;
+                $scope.showComments = false;
+                $scope.showBackButon=false;
+                $scope.showTabBar=false;
+                $scope.showProfile = true;
+            }
+
+            $scope.backProfile = function(){
+                debugger;
+                //$scope.showListViewOfSLI=true;
+                //$scope.showDetailPageSLI=false;
+                var detailTab = document.getElementById("DetailTab");
+                    detailTab.classList.add("selectedTab");
+                    var sampleTab = document.getElementById("SampleTab");
+                    sampleTab.classList.remove("selectedTab");
+                    var FilesTab = document.getElementById("FilesTab");
+                    FilesTab.classList.remove("selectedTab");
+                    if($scope.conRec.Role__c == 'Operation Team'){
+                        var CommentsTab = document.getElementById("CommentsTab");
+                    CommentsTab.classList.remove("selectedTab");   
+                    }
+
+                $scope.showProfile = false;
+                $scope.showDetailPage=true;
+                $scope.showBackButon=true;
+                $scope.showTabBar=true;
+            }
+
+            $scope.saveDetails = function(){
+                debugger;
+                delete($scope.conDetails['Account__r']);
+                $scope.showSpinner = true;
+                OperationsPortalController.updateProfile($scope.conDetails,function(result,event){
+                    debugger;
+                    if(event.status && result){
+                        $scope.showSpinner = false;
+                        swal("success", "Your profile has been updated.","success");
+                        $scope.backProfile();
+                        $scope.$apply();
+                    }
+                })
+            }
+
+            $scope.LogoutApplicant=function(){  
+                $scope.showSpinner = true;      
+                OperationsPortalController.LogoutApplicant(userHashId, function (result, event) {
+                debugger
+                console.log(result);
+                console.log(event);
+                if(event.status){
+                    $scope.res=result;
+                    $scope.redirect();
+                    $scope.$apply();
+                }
+        });   
+            }
+
+            $scope.redirect = function(){
+                debugger;
+                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations';
+                setTimeout(function() {window.location.replace(window.location.origin + sitePrefix )}, 3000);
+            }
+
+                $scope.onClickOpenSampleDetailPage = function(sampleId){
+                    debugger;
+                    $scope.sampleId = sampleId;
+                    var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleDetailPage';
+                    window.location.replace(window.location.origin + sitePrefix +'?id='+userHashId+'&sampleId='+ $scope.sampleId);
+                    $scope.$apply();
+                }
                 
                 $scope.paginateData = function() {
                 debugger;
@@ -1117,6 +1244,9 @@ $scope.$apply();
                     $scope.showSamplePage = false;
                     $scope.showComments = false;
                     $scope.showFilePage = false;
+                    $scope.showBackButon=true;
+                    $scope.showProfile=false;
+                    $scope.showTabBar=true;
                 }
                 $scope.onClickOfSamplePage = function(){
                     debugger;
@@ -1134,6 +1264,9 @@ $scope.$apply();
                     $scope.showDetailPage = false;
                     $scope.showComments = false;
                     $scope.showFilePage = false;
+                    $scope.showBackButon=true;
+                    $scope.showProfile=false;
+                    $scope.showTabBar=true;
                 }
                 
                 $scope.onClickOfFilesPage = function(){
@@ -1152,6 +1285,9 @@ $scope.$apply();
                     $scope.showDetailPage = false;
                     $scope.showComments = false;
                     $scope.showFilePage = true;
+                    $scope.showBackButon=true;
+                    $scope.showProfile=false;
+                    $scope.showTabBar=true;
                 }
 
                 $scope.customerPage = function(){
@@ -1182,6 +1318,9 @@ $scope.$apply();
                     $scope.showDetailPage = false;
                     $scope.showComments = true;
                     $scope.showFilePage = false;
+                    $scope.showBackButon=true;
+                    $scope.showProfile=false;
+                    $scope.showTabBar=true;
                 }
                 
                     $scope.openPopUp = function () {
@@ -1329,6 +1468,9 @@ $scope.$apply();
                     	debugger;
                         if(event.status && result == 'SUCCESS'){
                         	swal("success", "Invoice saved under Account for selected Samples.","success");
+                            $scope.getCustomerDetail();
+                            $('#filePreview').modal('toggle');
+                            $scope.$apply();
                         }
                     })
                 }else{

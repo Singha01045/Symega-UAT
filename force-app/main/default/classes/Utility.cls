@@ -972,8 +972,8 @@ sendTempReqEmail(tempReqList[0].Id,tempReqList[0].Client__r, emailTemplateList[0
     }
     
     public static String checkForInitialSubmissionAddress(String addressId){
-        Dispatch_Address__c addressRec = [	Select Id, Name, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
-                                          Account__r.Tax_Type__c, Account__r.PAN_Number__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, Account__r.Customer_Type__c, Account__r.Payment_terms__c,Account__r.Owner.Email,
+        Dispatch_Address__c addressRec = [	Select Id, Name, Customer_Category__c, PAN_Number__c, Tax_Type__c, FSSAI_Number__c, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
+                                          Account__r.Tax_Type__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, Account__r.Customer_Type__c, Account__r.Payment_terms__c,Account__r.Owner.Email,
                                           Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c, Account__r.Transportation_Terms__c,Account__r.RecordType.Name,Account__r.User__r.SAP_USER_CODE__c From Dispatch_Address__c Where Id =: addressId];
         return sapForInitialFieldsCheckAddress(addressRec);
     }
@@ -1008,8 +1008,8 @@ sendTempReqEmail(tempReqList[0].Id,tempReqList[0].Client__r, emailTemplateList[0
         /*if(String.isBlank(accRec.Owner.SAP_USER_CODE__c)){
 missingFields += ' Owner SAP Code, ';
 }*/
-        if(String.isBlank(accRec.Account__r.RecordType.Name)){
-            missingFields += ' Record Type Name, ';
+        if(String.isBlank(accRec.Customer_Category__c)){
+            missingFields += ' Customer Category, ';
         }
         if(String.isBlank(accRec.Account__r.User__r.SAP_USER_CODE__c)){
             missingFields += ' BH SAP Code, ';
@@ -1044,7 +1044,7 @@ missingFields += ' Owner SAP Code, ';
     
     
     public static String checkSAPCustomerReqFieldAddress(String addressId){
-        Dispatch_Address__c addressRec = [Select Id, Account__r.User__r.SAP_USER_CODE__c, Account__r.RecordType.Name, Initial_SAP_Update__c, Name, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
+        Dispatch_Address__c addressRec = [Select Id, Customer_Category__c, PAN_Number__c, Tax_Type__c, FSSAI_Number__c, Account__r.User__r.SAP_USER_CODE__c, Account__r.RecordType.Name, Initial_SAP_Update__c, Name, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
                                           Account__r.Tax_Type__c, Account__r.PAN_Number__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, Account__r.Customer_Type__c, Account__r.Payment_terms__c, Account__r.Owner.Email,
                                           Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c, Account__r.Transportation_Terms__c From Dispatch_Address__c Where Id =: addressId];
         return sapAccountMFieldsCheckAddress(addressRec);
@@ -1082,8 +1082,8 @@ missingFields += ' Owner SAP Code, ';
             /*if(String.isBlank(accRec.Owner.SAP_USER_CODE__c)){
             missingFields += ' Owner SAP Code, ';
             }*/
-            if(String.isBlank(accRec.Account__r.RecordType.Name)){
-                missingFields += ' Record Type Name, ';
+            if(String.isBlank(accRec.Customer_Category__c)){
+                missingFields += ' Customer Category, ';
             }
             if(String.isBlank(accRec.Account__r.User__r.SAP_USER_CODE__c)){
                 missingFields += ' BH SAP Code, ';
@@ -1105,11 +1105,11 @@ missingFields += ' Owner SAP Code, ';
             }
         }
         
-        if(String.isBlank(accRec.Account__r.Tax_Type__c)){
+        if(String.isBlank(accRec.Tax_Type__c)){
             missingFields += ' Tax Type, ';
         }
-        if(!String.isBlank(accRec.Address__CountryCode__s) && accRec.Address__CountryCode__s.equalsIgnoreCase('India') && (String.isBlank(accRec.Account__r.PAN_Number__c) || String.isBlank(accRec.GST_number__c))){
-            if(String.isBlank(accRec.Account__r.PAN_Number__c)){
+        if(!String.isBlank(accRec.Address__CountryCode__s) && accRec.Address__CountryCode__s.equalsIgnoreCase('IN') && (String.isBlank(accRec.PAN_Number__c) || String.isBlank(accRec.GST_number__c))){
+            if(String.isBlank(accRec.PAN_Number__c)){
                 missingFields += ' Pan Number, ';
             }
             if(String.isBlank(accRec.GST_number__c)){
@@ -1122,7 +1122,7 @@ missingFields += ' Owner SAP Code, ';
         if(String.isBlank(accRec.Account__r.Tax_Collected_At_Source__c)){
             missingFields += ' TCS, ';
         }
-        if(accRec.Account__r.FSSAI__c == null || accRec.Account__r.FSSAI__c == 0){
+        if(accRec.FSSAI_Number__c == null || accRec.FSSAI_Number__c == 0){
             missingFields += ' FSSAI, ';
         }
         if(String.isBlank(accRec.Account__r.Transportation_Terms__c)){
