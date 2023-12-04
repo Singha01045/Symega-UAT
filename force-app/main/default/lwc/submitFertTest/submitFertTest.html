@@ -8,7 +8,7 @@
 
     <template if:false={showSpinner}>
         <template if:true={showAccountPage}>
-                <template if:true={isAccount}>
+                <template if:true={showAccountFields}>
                     <lightning-quick-action-panel header="Update Account"> 
                         <template if:true={accFieldsMissing}>
                             <lightning-record-edit-form record-id={accId} object-api-name="Account" onsuccess={handleSuccess}>
@@ -54,14 +54,14 @@
                     </lightning-quick-action-panel>
 
                 </template>
-                <template if:false={isAccount}>
+                <template if:true={showCustomerFields}>
                     <!-- Customer Address  -->
                     <lightning-quick-action-panel header="Update Customer Address"> 
                         <template if:true={custAddFieldsMissing}>
                             <lightning-record-edit-form record-id={dispId} object-api-name="Dispatch_Address__c" onsuccess={handleSuccess} onerror={handleError}>
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col slds-size_1-of-2">
-                                        <template for:each={missingFieldsList} for:item="mfl">
+                                        <template for:each={missingFieldsListCustAddress} for:item="mfl">
                                             <lightning-input-field key={mfl} field-name={mfl}>
                                             </lightning-input-field>
                                         </template>

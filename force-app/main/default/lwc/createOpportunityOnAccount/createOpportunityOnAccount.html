@@ -22,7 +22,9 @@
                             <lightning-input type="checkbox" data-index={index} data-id={address.id} checked={address.checked}
                                 onchange={onAddressSelect}></lightning-input>
                         </td>
-                        <td> {address.type}</td>
+                         <td> {address.type}</td>
+                        <!-- <td> <lightning-input type="text" disabled data-index={index} data-id={address.id} value={address.type}
+                                onchange={onAddressSelect}></lightning-input> </td> -->
                         <td> {address.street}</td>
                         <td> {address.city}</td>
                         <td> {address.state}</td>

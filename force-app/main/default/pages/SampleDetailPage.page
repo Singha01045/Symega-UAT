@@ -775,7 +775,7 @@
                         debugger;
                         $scope.conRec = result.conRec;
                         if($scope.conRec.Role__c != 'Dispatch Team'){
-                            $('#hideForDispatchu').show();
+                            $('#hideForDispatch').show();
                         }
                         $scope.sampleDetails = result.listOfSamples[0];
                         $scope.sampleId = $scope.sampleDetails.Id;

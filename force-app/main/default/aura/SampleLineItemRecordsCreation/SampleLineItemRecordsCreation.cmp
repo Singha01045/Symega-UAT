@@ -200,7 +200,7 @@
     
     <div class="modal-footer slds-modal__footer slds-size_1-of-1 slds-p-around_large slds-align_absolute-center">
         <div role="contentinfo">
-            <lightning:button label="Save" title="Save" onclick="{! c.SaveSampleDetails }" class="marginTop"/>
+            <lightning:button label="Save" title="Save" onclick="{! c.SaveSampleDetails }" class="marginTop" aura:id="btnDisable"/>
             <lightning:button label="Add Row" title="Add Row" onclick="{! c.addRow }" class="marginTop"/>
             <lightning:button label="Cancel" title="Cancel" onclick="{! c.CloseQuickAction }" class="marginTop"/>
         </div>

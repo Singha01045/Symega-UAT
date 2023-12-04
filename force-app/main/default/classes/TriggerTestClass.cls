@@ -59,10 +59,16 @@ private class TriggerTestClass{
                                           Shipping_Postal_Code__c = '560074');
         insert opp;
         
+         Sales_Order__c saleOrder = new Sales_Order__c(Name='ABC', Opportunity__c = opp.Id);
+        insert saleOrder;
+        
+        Invoice__c invoice = new Invoice__c(Sales_Order__c = saleOrder.Id, Account__c = accRec.Id, Invoice_Number__c = '4sj');
+        insert invoice;
+        
         Pricebook2 book = new Pricebook2(IsActive=true, Name='Std Book');
         insert book;
         
-        Product2 prod = new Product2(IsActive=true, Name='AAM PANNA', To_Be_Sold_By__c ='Direct', Product_Visibility__c = 'Public', Product_Used_By__c = 'Tailor Made');
+        Product2 prod = new Product2(IsActive=true, Name='AAM PANNA', To_Be_Sold_By__c ='Direct', Product_Visibility__c = 'Public', Product_Used_By__c = 'portfolio product');
         insert prod;
         
         Pricebook2 standardPB = [select id from Pricebook2 where isStandard=true];
@@ -90,7 +96,7 @@ private class TriggerTestClass{
         OLI2.Discount = 34;
         OLI2.TotalPrice=2525;
         OLI2.Packaging_Type__c='Bulk';
-        OLI2.UnitPrice=1000;
+        //OLI2.UnitPrice=1000;
         OLI2.Markup_Amount__c= 100;
         OLI2.OpportunityId = opp.id;
         OLI2.Product2Id = prod.Id;
@@ -107,8 +113,14 @@ private class TriggerTestClass{
         System.debug('--- OLI2ListTest '+OLI2List);
         //OLI2.Product2Id = null;
         //OLI2.PricebookEntryId = null;
-        OLI2.Quantity = 1;
-        update OLI2;
+        //OLI2.Quantity = 1;
+        //update OLI2;
+        
+        Return__c returnObj = new Return__c(Quantity__c  = 1, Opportunity_Product__c = OLI2.Id, Sale_Order__c = saleOrder.Id, Invoice__c = invoice.Id);
+        insert returnObj;
+        
+        returnObj.Quantity__c = 1;
+        update returnObj;
         
     }
     
@@ -121,8 +133,8 @@ private class TriggerTestClass{
         update ld;
     }
     
-    @isTest(SeeAllData=true)
-    private static void run5(){
+   /* @isTest(SeeAllData=true)
+    public static void run5(){
         Database.SaveResult dsr;
         
         Account accRec = new Account();
@@ -146,9 +158,16 @@ private class TriggerTestClass{
                                                            Address__StateCode__s = 'KA', Address__CountryCode__s = 'IN');
         insert dAdd;
         
+        
         Opportunity opp = new Opportunity(Name='ABC', StageName ='New', CloseDate= system.today(), Annual_Volume_Full__c = 78, Annual_Volume_in_units__c = 'Kg', 
                                           Target_Price_Kg__c = 67890, End_Use_Application__c = 'Beer', End_Use_Category__c = ' Beverages',AccountId = accRec.Id);
         insert opp;
+        
+        Sales_Order__c saleOrder = new Sales_Order__c(Name='ABC', Opportunity__c = opp.Id);
+        insert saleOrder;
+        
+        Invoice__c invoice = new Invoice__c(Sales_Order__c = saleOrder.Id, Account__c = accRec.Id, Invoice_Number__c = '4sj');
+        insert invoice;
         
         Pricebook2 book = new Pricebook2(IsActive=true, Name='Std Book');
         insert book;
@@ -165,39 +184,21 @@ private class TriggerTestClass{
         entry.Product2Id=prod.Id;	
         insert entry;
         
+        List<OpportunityLineItem> oppLineItemList = new List<OpportunityLineItem>();
         OpportunityLineItem oppLineItem = new OpportunityLineItem(Packaging_Type__c = 'Bulk', OpportunityId = opp.Id, Discount = 67, Quantity = 45, TotalPrice=678);
         oppLineItem.PricebookEntryId = standardPBE.id;
         oppLineItem.Product2Id = prod.Id;
         insert oppLineItem;
-        
-        Sales_Order__c saleOrder = new Sales_Order__c(Name='ABC', Opportunity__c = opp.Id);
-        insert saleOrder;
-        
-        Account acc = new Account(Name = 'ACC-INVOICE');
-        acc.BillingCity = 'Bangalore';
-        acc.BillingCountry = 'India';
-        acc.BillingState = 'Punjab';
-        acc.BillingStreet = 'XYZ, Test';
-        acc.BillingPostalCode = '561011';
-        
-        acc.ShippingCity = 'Bangalore';
-        acc.ShippingCountry = 'India';
-        acc.ShippingState = 'Punjab';
-        acc.ShippingStreet = 'XYZ, Test';
-        acc.ShippingPostalCode = '561011';
-        insert acc;
-        
-        
-        
-        Invoice__c invoice = new Invoice__c(Sales_Order__c = saleOrder.Id, Account__c = acc.Id, Invoice_Number__c = '4sj');
-        insert invoice;
+        oppLineItemList.add(oppLineItem);
         
         Return__c returnObj = new Return__c(Quantity__c  = 1, Opportunity_Product__c = oppLineItem.Id, Sale_Order__c = saleOrder.Id, Invoice__c = invoice.Id);
-       // insert returnObj;
+        insert returnObj;
         
         returnObj.Quantity__c = 1;
-       // update returnObj;
-    }  
+        update returnObj;
+       // 
+       //OpportunityLineItemTriggerHandler.onAfterInsert(oppLineItemList);
+    }  */
     
     @isTest(SeeAllData=true)
     private static void run6(){

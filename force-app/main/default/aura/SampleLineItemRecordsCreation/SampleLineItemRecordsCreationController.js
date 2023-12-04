@@ -118,6 +118,7 @@
     
     SaveSampleDetails : function(Component, helper, event){
         debugger;
+        
         var SampleLineItemDetails = Component.get("v.SampleLineItemList");
         console.log('SampleLineItemDetails', SampleLineItemDetails);
         var CurrentRecId = Component.get("v.recordId");
@@ -224,6 +225,10 @@
             toastEvent.fire();
         }
         else if(allRecords.length>0 && NotEmptySLI == SampleLineItemDetails.length){
+            
+            var myButton = Component.find("btnDisable");
+            myButton.set("v.disabled", true);
+            
             action.setParams({
                 'SLIRecords': allRecords,
                 'deleteIdSet': Component.get("v.recsToDelete"),

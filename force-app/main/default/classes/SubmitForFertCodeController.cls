@@ -34,28 +34,43 @@ public without sharing class SubmitForFertCodeController {
         try{
             List<string> missingFieldsList = new List<string>();
             List<OpportunityLineItem> oppLineItemList = [SELECT ID, Name,Product2.Name, Product2Id,Packaging_Type__c, Art_Work__c, OpportunityId, Opportunity.Customer_Billing_Address__c, Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c, Opportunity.Account_Billing_Address__c, 
-                                                         Opportunity.Account.Customer_Code_SAP__c, Opportunity.AccountId, Opportunity.Account.Name, Opportunity.Billing_Country__c, Opportunity.Billing_State__c, 
-                                                         Opportunity.Billing_Street__c, Opportunity.Billing_City__c, Opportunity.Billing_Postal_Code__c,Quantity,Fert_Description__c,Unit_Of_Measure__c,ProductCode,
+                                                         Opportunity.Account.Customer_Code_SAP__c, Opportunity.Account_Shipping_Address__c, Opportunity.AccountId, Opportunity.Account.Name, Opportunity.Billing_Country__c, Opportunity.Billing_State__c, 
+                                                         Opportunity.Billing_Street__c, Opportunity.Billing_City__c, Opportunity.Customer_Shipping_Address__c,Opportunity.Billing_Postal_Code__c,Quantity,Fert_Description__c,Unit_Of_Measure__c,ProductCode,
                                                          Packaging_Quantity__c, Product2.Shelf_Life__c, Product2.Allergen_Status_Required__c,Product2.Veg_Nonveg_Logo_In_Label__c,Ingredients_List_Declared_With_Customer__c,
                                                          Customized_Label__c,Ingredient_list__c,Reveal_Symega_Identity__c,Cusinery_identity__c,Label__c,Sales_Remarks__c, Product2.Plant__c,Product2.HSN_Code__c,
                                                          Primary__c,Secondary__c,Tertiary__c FROM OpportunityLineItem WHERE OpportunityId =: OppId];
             System.debug('oppLineItemList---->'+oppLineItemList);
             
             Id custId;
+            Id accId;
             oppProdWrapper opWrap = new oppProdWrapper();
             if(oppLineItemList[0].Opportunity.Account_Billing_Address__c){
-                custId = oppLineItemList[0].Opportunity.AccountId;
+                accId = oppLineItemList[0].Opportunity.AccountId;
                 opwrap.isAccount = true;
+                opwrap.isCustomer = false;
             }
-            else{
+            else if(oppLineItemList[0].Opportunity.Customer_Billing_Address__c != null){
                 custId = oppLineItemList[0].Opportunity.Customer_Billing_Address__c;
                 opwrap.isAccount = false;
+                opwrap.isCustomer = true;
+            }
+
+            if(oppLineItemList[0].Opportunity.Account_Shipping_Address__c){
+                accId = oppLineItemList[0].Opportunity.AccountId;
+                opwrap.isAccountShipping = true;
+                opwrap.isCustomerShipping = false;
+            }
+            else if(oppLineItemList[0].Opportunity.Customer_Shipping_Address__c != null){
+                custId = oppLineItemList[0].Opportunity.Customer_Shipping_Address__c;
+                opwrap.isAccountShipping = false;
+                opwrap.isCustomerShipping = true;
             }
             opWrap.oliList = oppLineItemList;
 
-            missingListWrapper selectedAddressWrapper = getOppRelatedAccountDetails(custId, opwrap.isAccount);
+            missingListWrapper selectedAddressWrapper = getOppRelatedAccountDetails(accId, custId, opwrap.isAccount, opwrap.isCustomer, opwrap.isAccountShipping, opwrap.isCustomerShipping);
             
             opWrap.missingFieldsList = selectedAddressWrapper.missingFieldList;
+            opWrap.missingFieldsListCustAddress = selectedAddressWrapper.missingFieldsListCustAddress;
             opWrap.missingFieldsListForUser = selectedAddressWrapper.missingFieldListForUser;
             opWrap.missingFieldsListForBH = selectedAddressWrapper.missingFieldsListForBH;
             opwrap.accId = oppLineItemList[0].Opportunity.AccountId;
@@ -82,6 +97,8 @@ public without sharing class SubmitForFertCodeController {
         @AuraEnabled
         public List<String> missingFieldsList = new list<string>();
         @AuraEnabled
+        public List<String> missingFieldsListCustAddress = new list<string>();
+        @AuraEnabled
         public List<String> missingFieldsListForUser = new list<string>();
         @AuraEnabled
         public List<String> userIdList = new list<string>();
@@ -91,6 +108,12 @@ public without sharing class SubmitForFertCodeController {
         public List<String> bhIdList = new list<string>();
         @AuraEnabled
         public Boolean isAccount;
+        @AuraEnabled
+        public Boolean isCustomer;
+        @AuraEnabled
+        public Boolean isAccountShipping;
+        @AuraEnabled
+        public Boolean isCustomerShipping;
         @AuraEnabled
         public List<String> onlyAccMissingFieldList = new list<string>();
     }
@@ -220,6 +243,8 @@ public without sharing class SubmitForFertCodeController {
         @AuraEnabled
         public List<String> missingFieldList = new list<string>();
         @AuraEnabled
+        public List<String> missingFieldsListCustAddress = new list<string>();
+        @AuraEnabled
         public  List<String> missingFieldListForUser = new list<string>(); 
         @AuraEnabled
         public  List<String> userIdList = new list<string>();
@@ -230,9 +255,10 @@ public without sharing class SubmitForFertCodeController {
         
     }
         
-    private static missingListWrapper getOppRelatedAccountDetails(String accId, Boolean isAccount){
+    private static missingListWrapper getOppRelatedAccountDetails(String accId, String custId, Boolean isAccount, Boolean isCustomer, Boolean isAccountShipping, Boolean isCustomerShipping){
         
         List<String> missingFieldsList = new List<String>();
+        List<String> missingFieldsListCustAddress = new List<String>();
         List<String> onlyAccMissingFieldList = new List<String>();
         List<string> missingFieldsListForUser = new List<string>();
         List<string> userIdList = new List<string>();
@@ -244,7 +270,7 @@ public without sharing class SubmitForFertCodeController {
             Id userId;
             Id bhId;
             
-            if(isAccount){
+            if(isAccount || isAccountShipping){
                 Account accRec = [Select Id, Name, User__c, Customer_Contact__c, Customer_Type__c,OwnerId,CurrencyIsoCode,BillingCity,BillingCountry,BillingStreet,BillingPostalCode,BillingState,Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c From Account Where Id =: accId];
                 userId = accRec.OwnerId;
                 bhId = accRec.User__c;
@@ -294,44 +320,44 @@ public without sharing class SubmitForFertCodeController {
                 }
                 
             }
-            else{
+            if(isCustomer || isCustomerShipping){
                 Dispatch_Address__c disRec = [select id, Customer_Category__c, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, Address__CountryCode__s, Address__StateCode__s,
                 Contact__c,Account__c,Type__c, OwnerId, Account__r.Customer_Type__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, CurrencyIsoCode
-                from Dispatch_Address__c WHERE Id =:accId];
+                from Dispatch_Address__c WHERE Id =:custId];
 
                 userId = disRec.OwnerId;
                 bhId = disRec.Account__r.User__c;
                 
                 if((disRec.Address__city__s == null) || (disRec.Address__city__s == '')){
-                    missingFieldsList.add('Address__city__s');
+                    missingFieldsListCustAddress.add('Address__city__s');
                 }
                 
                 if(((disRec.Address__StateCode__s == null) || (disRec.Address__StateCode__s == '')) && disRec.Account__r.Customer_Type__c!='Export'){
-                    missingFieldsList.add('Address__StateCode__s');
+                    missingFieldsListCustAddress.add('Address__StateCode__s');
                 }               
                 
                 if((disRec.Address__Street__s == null) || (disRec.Address__Street__s == '')){
-                    missingFieldsList.add('Address__Street__s');
+                    missingFieldsListCustAddress.add('Address__Street__s');
                 }
                 
                 if((disRec.Address__CountryCode__s == null) || (disRec.Address__CountryCode__s == '')){
-                    missingFieldsList.add('Address__CountryCode__s');
+                    missingFieldsListCustAddress.add('Address__CountryCode__s');
                 }
                 
                 if((disRec.Address__PostalCode__s == null) || (disRec.Address__PostalCode__s == '')){
-                    missingFieldsList.add('Address__PostalCode__s');
+                    missingFieldsListCustAddress.add('Address__PostalCode__s');
                 }
 
                 if(String.isBlank(disRec.Customer_Category__c)){
-                    missingFieldsList.add('Customer_Category__c');
+                    missingFieldsListCustAddress.add('Customer_Category__c');
                 }
 
                 if(disRec.Contact__c == null){
-                    missingFieldsList.add('Contact__c');
+                    missingFieldsListCustAddress.add('Contact__c');
                 } 
 
                 if((disRec.CurrencyIsoCode == null) || (disRec.CurrencyIsoCode == '')){
-                    missingFieldsList.add('CurrencyIsoCode');
+                    missingFieldsListCustAddress.add('CurrencyIsoCode');
                 }
                 
                 if((disRec.Account__r.Customer_Type__c == null) || (disRec.Account__r.Customer_Type__c == '')){
@@ -350,6 +376,7 @@ public without sharing class SubmitForFertCodeController {
             }
             
             System.debug('missingFieldsList---->'+missingFieldsList); 
+            System.debug('missingFieldsListCustAddress---->'+missingFieldsListCustAddress);
             
             userIdList.add(userId);
             List<User> userRec = [SELECT Id, Name, SAP_USER_CODE__c FROM User WHERE Id =: userId];
@@ -367,8 +394,12 @@ public without sharing class SubmitForFertCodeController {
                 mlw.bhIdList = bhIdList;
             }
             
+            
             mlw.missingFieldList = missingFieldsList;
+            mlw.missingFieldsListCustAddress = missingFieldsListCustAddress;
             mlw.onlyAccMissingFieldList = onlyAccMissingFieldList;
+            System.debug('mlw.missingFieldList---->'+mlw.missingFieldList); 
+            System.debug('mlw.missingFieldsListCustAddress---->'+mlw.missingFieldsListCustAddress);
             return mlw;
         }
         catch(Exception e){

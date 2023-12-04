@@ -293,18 +293,23 @@ public without sharing class LeadApprovalUtility {
     @AuraEnabled
     public static projWrapper getMissingAccountDetails(String projId){
         List<String> missingReqField = new List<String>();
+        List<String> missingReqFieldCustAddress = new List<String>();
         List<String> onlyAccMissingFieldList = new List<String>();
         Project__c projRec = new Project__c();
         projWrapper pWrap = new projWrapper();
         Boolean isAccount = false;
+        Boolean isAccountShipping = false;
+        Boolean isCustomer = false;
+        Boolean isCustomerShipping = false;
             string accValidationsResp = '';
             Id userId;
             Id bhId;
+        	Id addressId;
         System.debug('Inside getMissingAccountDetails && projId ==> ' + projId);
         try{
             if(String.isNotBlank(projId)){
-                projRec = [SELECT Id, Opportunity__r.AccountId, Name, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account.Customer_Code_SAP__c,
-                           Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c                       
+                projRec = [SELECT Id, Opportunity__r.AccountId, Name, Opportunity__r.Account_Billing_Address__c, Opportunity__r.Account_Shipping_Address__c,Opportunity__r.Account.Customer_Code_SAP__c, Opportunity__r.Account.Shipping_Customer_Code_SAP__c,
+                           Opportunity__r.Customer_Billing_Address__c, Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c, Opportunity__r.Customer_Shipping_Address__r.SAP_Customer_Code_Shipping__c                       
                            FROM Project__c WHERE Id=:projId];
             
             pWrap.projectRec = projRec;
@@ -320,6 +325,8 @@ public without sharing class LeadApprovalUtility {
                     pWrap.missingCode = true;
             }
             else if(projRec.Opportunity__r.Customer_Billing_Address__c != null){
+                isCustomer = true;
+                addressId = projRec.Opportunity__r.Customer_Billing_Address__c;
                 isAccount = false;
                 accValidationsResp = Utility.checkForInitialSubmissionAddress(projRec.Opportunity__r.Customer_Billing_Address__c);
                 if(string.isNotBlank(projRec.Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c))
@@ -328,9 +335,28 @@ public without sharing class LeadApprovalUtility {
                     pWrap.missingCode = true;
             }
             
+            if(projRec.Opportunity__r.Account_Shipping_Address__c){
+                isAccountShipping = true;
+                accValidationsResp = Utility.checkForInitialSubmission(projRec.Opportunity__r.AccountId);
+                if(string.isNotBlank(projRec.Opportunity__r.Account.Shipping_Customer_Code_SAP__c))
+                    pWrap.missingCodeShipping = false;
+                else
+                    pWrap.missingCodeShipping = true;
+            }
+            else if(projRec.Opportunity__r.Customer_Shipping_Address__c != null){
+                isCustomerShipping = true;
+                addressId = projRec.Opportunity__r.Customer_Shipping_Address__c;
+                isAccountShipping = false;
+                accValidationsResp = Utility.checkForInitialSubmissionAddress(projRec.Opportunity__r.Customer_Shipping_Address__c);
+                if(string.isNotBlank(projRec.Opportunity__r.Customer_Billing_Address__r.SAP_Customer_Code_Shipping__c))
+                    pWrap.missingCodeShipping = false;
+                else
+                    pWrap.missingCodeShipping = true;
+            }
+            
             
             if(accValidationsResp.equalsIgnoreCase('Success')){
-                if(isAccount){
+                if(isAccount || isAccountShipping){
                     Account acc = [SELECT Id, Initial_SAP_Update__c FROM Account WHERE Id =: projRec.Opportunity__r.AccountId];
                     if(acc.Initial_SAP_Update__c != true){
                         acc.Initial_SAP_Update__c = true;
@@ -338,8 +364,8 @@ public without sharing class LeadApprovalUtility {
                     }
                     
                 }
-                else{
-                    Dispatch_Address__c addr = [SELECT Id, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: projRec.Opportunity__r.Customer_Billing_Address__c];
+                if(isCustomerShipping || isCustomer){
+                    Dispatch_Address__c addr = [SELECT Id, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: addressId];
                     if(addr.Initial_SAP_Update__c != true){
                         addr.Initial_SAP_Update__c = true;
                         update addr;
@@ -347,7 +373,7 @@ public without sharing class LeadApprovalUtility {
                 }                    
             }
             
-            if(isAccount){
+            if(isAccount || isAccountShipping){
                 Account accRec = [Select Id, Name, Customer_Type__c, Customer_Contact__c,CurrencyIsoCode,Delivery_Plant__c, 
                                   BillingCountry, BillingPostalCode, BillingState, BillingCity, BillingStreet, OwnerId, User__c,
                                   ShippingCountry, ShippingPostalCode, ShippingState, ShippingCity, ShippingStreet,Account_Segment__c 
@@ -398,10 +424,10 @@ public without sharing class LeadApprovalUtility {
                 if((accRec.Delivery_Plant__c == null) || (accRec.Delivery_Plant__c == '')){
                     missingReqField.add('Delivery_Plant__c');
                 }
-                
+                if(missingReqField.size()>0)
                 pwrap.isAccount = true;
             }   
-            else{
+            if(isCustomerShipping || isCustomer){
                 Dispatch_Address__c customerAddressRec = [Select ID, Customer_Category__c, Account__r.Account_Segment__c, Account__r.Customer_Type__c, Account__c, Type__c, Contact__c, Address__Street__s, Address__CountryCode__s,
                                                           Address__StateCode__s, Address__PostalCode__s, Address__City__s, CurrencyIsoCode, OwnerId, Account__r.User__c, Account__r.Delivery_Plant__c
                                                           From Dispatch_Address__c Where Id =: projRec.Opportunity__r.Customer_Billing_Address__c];
@@ -409,43 +435,43 @@ public without sharing class LeadApprovalUtility {
                 bhId = customerAddressRec.Account__r.User__c;
                 
                 if((customerAddressRec.Type__c == null) || (customerAddressRec.Type__c == '')){
-                    missingReqField.add('Type__c');
+                    missingReqFieldCustAddress.add('Type__c');
                 }
                 
                 if(customerAddressRec.Account__c == null){
-                    missingReqField.add('Account__c');
+                    missingReqFieldCustAddress.add('Account__c');
                 }
                 
                 if(customerAddressRec.Contact__c == null){
-                    missingReqField.add('Contact__c');
+                    missingReqFieldCustAddress.add('Contact__c');
                 }
                 
                 if((customerAddressRec.Address__Street__s == null) || (customerAddressRec.Address__Street__s == '')){
-                    missingReqField.add('Address__Street__s');
+                    missingReqFieldCustAddress.add('Address__Street__s');
                 }
                 
                 if((customerAddressRec.Address__CountryCode__s == null) || (customerAddressRec.Address__CountryCode__s == '')){
-                    missingReqField.add('Address__CountryCode__s');
+                    missingReqFieldCustAddress.add('Address__CountryCode__s');
                 }
                 
                 if(((customerAddressRec.Address__StateCode__s == null) || (customerAddressRec.Address__StateCode__s == '')) && customerAddressRec.Account__r.Customer_Type__c!='Export'){
-                    missingReqField.add('Address__StateCode__s');
+                    missingReqFieldCustAddress.add('Address__StateCode__s');
                 }
                 
                 if((customerAddressRec.Address__PostalCode__s == null) || (customerAddressRec.Address__PostalCode__s == '')){
-                    missingReqField.add('Address__PostalCode__s');
+                    missingReqFieldCustAddress.add('Address__PostalCode__s');
                 }
                 
                 if((customerAddressRec.Address__City__s == null) || (customerAddressRec.Address__City__s == '')){
-                    missingReqField.add('Address__City__s');
+                    missingReqFieldCustAddress.add('Address__City__s');
                 }
 
                 if(String.isBlank(customerAddressRec.Customer_Category__c)){
-                    missingReqField.add('Customer_Category__c');
+                    missingReqFieldCustAddress.add('Customer_Category__c');
                 }
                 
                 if((customerAddressRec.CurrencyIsoCode == null) || (customerAddressRec.CurrencyIsoCode == '')){
-                    missingReqField.add('CurrencyIsoCode');
+                    missingReqFieldCustAddress.add('CurrencyIsoCode');
                 }
                 if((customerAddressRec.Account__r.Customer_Type__c == null) || (customerAddressRec.Account__r.Customer_Type__c == '')){
                     onlyAccMissingFieldList.add('Customer_Type__c');
@@ -459,7 +485,9 @@ public without sharing class LeadApprovalUtility {
                     onlyAccMissingFieldList.add('Delivery_Plant__c');
                 }
                 pwrap.onlyAccMissingFieldList = onlyAccMissingFieldList;
-                pwrap.isAccount = false;
+                //pwrap.isAccount = false;
+                if(missingReqFieldCustAddress.size()>0 || onlyAccMissingFieldList.size()>0)
+                pWrap.isCustomerAddress = true;
             }
             
             List<User> userRec = [SELECT Id, Name, SAP_USER_CODE__c FROM User WHERE Id =: userId];
@@ -476,11 +504,16 @@ public without sharing class LeadApprovalUtility {
                 } 
             }
             
-            if(missingReqField.size() > 0 || userId != null || bhId != null || onlyAccMissingFieldList.size() > 0)
-                pWrap.missingFields = true;
+            if(pWrap.missingCode || pWrap.missingCodeShipping){
+                if(missingReqField.size() > 0 || userId != null || bhId != null || onlyAccMissingFieldList.size() > 0 || missingReqFieldCustAddress.size()>0){
+                 	pWrap.missingFields = true;   
+                }   
+            }
             
             system.debug('Missing Field List === >'+missingReqField);
+            system.debug('Missing Field List CustAddress === >'+missingReqFieldCustAddress);
             pWrap.missingFieldsList = missingReqField;
+            pWrap.missingFieldsListCustAddress = missingReqFieldCustAddress;
             pWrap.userId = userId;
             pWrap.bhId = bhId;
             pWrap.picklistValues = GetPicklistvalue();
@@ -499,9 +532,13 @@ public without sharing class LeadApprovalUtility {
         @AuraEnabled 
         public List<string> missingFieldsList;
 		@AuraEnabled 
+        public List<string> missingFieldsListCustAddress;
+		@AuraEnabled 
         public List<string> onlyAccMissingFieldList;
         @AuraEnabled 
         public Boolean isAccount = false;
+        @AuraEnabled 
+        public Boolean isCustomerAddress = false;
         @AuraEnabled 
         public Boolean missingFields = false;
         @AuraEnabled 
@@ -514,6 +551,8 @@ public without sharing class LeadApprovalUtility {
         public Id bhId;
         @AuraEnabled 
         public Map<String,Map<String,String>> picklistValues;
+        @AuraEnabled
+        public boolean missingCodeShipping = false;
     }
     
     @AuraEnabled

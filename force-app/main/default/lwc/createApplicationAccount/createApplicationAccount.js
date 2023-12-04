@@ -42,8 +42,8 @@ export default class CreateApplicationAccount extends NavigationMixin(LightningE
 
                 Opportunity_Close_Date__c : this.oppRecord.CloseDate,
                 //Cost_in_use__c : this.oppRecord.Annual_Volume_Full__c,
-                Expected_Volume_Unit__c	 : this.oppRecord.Annual_Volume_in_units__c,
-                Customer_Target_price__c : this.oppRecord.Target_Price_Kg__c,
+                //Expected_Volume_Unit__c	 : this.oppRecord.Annual_Volume_in_units__c,
+                //Customer_Target_price__c : this.oppRecord.Target_Price_Kg__c,
                 End_Use_category__c : this.oppRecord.End_Use_Category__c,
                 End_Use_Applications__c : this.oppRecord.End_Use_Application__c,
                 End_use_application_other__c : this.oppRecord.End_Use_Application_Other__c,

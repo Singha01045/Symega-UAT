@@ -55,6 +55,7 @@ export default class CreateOpportunityOnAccount extends NavigationMixin(Lightnin
     onAddressSelect(event) {
         debugger;
         let addressId = event.currentTarget.dataset.id;
+      //   let Value = event.target.value;
         let selectedIndex = event.currentTarget.dataset.index;
          this.checkedShipAdd = event.target.checked;
          if(this.checkedBillAdd==undefined){
@@ -72,6 +73,18 @@ export default class CreateOpportunityOnAccount extends NavigationMixin(Lightnin
         }else{
               this.nextBtn = true;
         }
+        
+        // for(var i=0; i<this.ship_addresses.length; i++){
+        //     if(addressId == this.ship_addresses[i].id){
+        //         if(this.ship_addresses[i].street != null && this.ship_addresses[i].city != null && this.ship_addresses[i].state != null && this.ship_addresses[i].country != null ){
+
+        //              this.nextBtn = false;
+        //         }else{
+        //               this.nextBtn = true;
+        //         }
+        //     }
+        // }
+
         
     }
 
@@ -119,6 +132,7 @@ export default class CreateOpportunityOnAccount extends NavigationMixin(Lightnin
         }
 
         let selectedAddress = this.ship_addresses[index];
+        
         let addressId = selectedAddress.id;
         let accShipAddress = false;
 
@@ -135,9 +149,18 @@ export default class CreateOpportunityOnAccount extends NavigationMixin(Lightnin
             billAddressId = undefined;
             accountBillAddress = true;
         }
+        if(selectedAddress.state != null && selectedAddress.city != null && selectedAddress.country != null && selectedAddress.street != null && selectedAddress.postalCode != null &&
+                  selectedBillingAddress.state != null && selectedBillingAddress.city != null && selectedBillingAddress.country && selectedBillingAddress.postalCode != null && selectedBillingAddress.street != null){
+             //Console.log('Success');
+              this.openCreateRecordForm(addressId, accShipAddress, billAddressId, accountBillAddress);
+        }else{
+            alert('Selected Address should save the all data');
+            
+        }
+
         
     
-        this.openCreateRecordForm(addressId, accShipAddress, billAddressId, accountBillAddress);
+      //  this.openCreateRecordForm(addressId, accShipAddress, billAddressId, accountBillAddress);
     }    
 
     closeAction(){

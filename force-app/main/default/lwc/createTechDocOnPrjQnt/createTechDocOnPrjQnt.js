@@ -49,7 +49,7 @@ export default class CreateTechDocOnPrjQnt extends NavigationMixin(LightningElem
                 Tech_Doc_Name__c :this.qntRecord.Name,
                 Product_ID__c:this.qntRecord.SSC_Code__c,
                 CurrencyIsoCode : this.qntRecord.CurrencyIsoCode,
-                Account__c : this.qntRecord.Sample_Project_Application__r.Account__c
+              //  Account__c : this.qntRecord.Sample_Project_Application__r.Account__c
             });
 
             this[NavigationMixin.Navigate]({

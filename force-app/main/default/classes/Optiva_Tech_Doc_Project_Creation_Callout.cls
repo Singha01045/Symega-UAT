@@ -85,7 +85,7 @@ public without sharing class Optiva_Tech_Doc_Project_Creation_Callout {
             opWrapper.target_date = pro.Target_Date__c!=null?Utility.parseDateIntoSlash(String.valueOf(pro.Target_Date__c)):'';
             
             //NEW ADDITIONS
-            opWrapper.cust_code = pro.Opportunity__r.Account_Billing_Address__c ? pro.Opportunity__r.Account.Customer_Code_SAP__c : pro.Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c;
+            opWrapper.cust_code = pro.Opportunity__r.Account_Billing_Address__c ? pro.Opportunity__r.Account.Customer_Code_OPTIVA__c : pro.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c ;
             opWrapper.created_by = pro.CreatedBy.Name;
     
             return JSON.serialize(opWrapper);    

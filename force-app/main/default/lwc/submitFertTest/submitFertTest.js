@@ -47,8 +47,13 @@ export default class SubmitFertTest extends LightningElement {
   accId;
   dispId;
   showAccountPage = false;
+  showCustomerFields = false;
+  showAccountFields = false;
   showSpinner = true;
   isAccount = false;
+  isCustomer = false;
+  isAccountShipping = false;
+  isCustomerShipping = false;
   showUserField = false;
   showBhField = false;
   showDlvryPlantField = false;
@@ -63,6 +68,7 @@ export default class SubmitFertTest extends LightningElement {
    }
   wrapperArray = [];
   missingFieldsList;
+  missingFieldsListCustAddress;
   missingFieldsListForUser;
   missingFieldsListForBH;
   dlvryPlantVal;
@@ -160,19 +166,38 @@ export default class SubmitFertTest extends LightningElement {
                     }
 
 
-                    if(data.missingFieldsList.length > 0) {
+                    if(data.missingFieldsList.length > 0 || data.missingFieldsListCustAddress.length > 0) {
                          if(this.showAccountPage != true){
                              this.showAccountPage = true;
                          }
                          this.accId = data.accId;
                          this.dispId = data.dispId;
                          this.missingFieldsList = data.missingFieldsList;
+                         this.missingFieldsListCustAddress = data.missingFieldsListCustAddress;
                          this.isAccount = data.isAccount;
-                         if(this.isAccount != true){
-                              this.custAddFieldsMissing = true;
-                         }
-                         else{
+                         this.isCustomer = data.isCustomer;
+                         this.isAccountShipping = data.isAccountShipping;
+                         this.isCustomerShipping = data.isCustomerShipping;
+                         // if(this.isAccount != true){
+                         //      this.custAddFieldsMissing = true;
+                         // }
+                         // else{
+                         //      this.accFieldsMissing = true;
+                         // }
+                         if((this.isAccount || this.isAccountShipping)&&this.missingFieldsList.length>0){
+                              this.showAccountFields = true;
                               this.accFieldsMissing = true;
+                         }
+                         if(this.isCustomer || this.isCustomerShipping){
+                              if(this.missingFieldsListCustAddress.length>0){
+                                   this.custAddFieldsMissing = true;
+                                   if(this.showAccountFields == true){
+                                        this.bothObjectDisplay = true;
+                                        this.showCustomerFields = false;
+                                   }else{
+                                        this.showCustomerFields = true;
+                                   }
+                              }
                          }
                     }
                     if(data.missingFieldsListForUser.length > 0) {
@@ -438,8 +463,6 @@ export default class SubmitFertTest extends LightningElement {
 
      handleSuccess(){
           debugger;
-          this.showToast('Success', 'Account updated successfully', 'success');
-          this.showAccountPage = false;
           if(this.showUserField){
                console.log('this.userpsap s ', this.userSapCode);
                updateUserRecord({userSAPcode:this.userSapCode, userId:this.userId, accRec : this.accRec})
@@ -451,6 +474,17 @@ export default class SubmitFertTest extends LightningElement {
 
           if((this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '')){
                updateAccRecord({accId:this.accId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal})
+          }
+
+          if(this.bothObjectDisplay){
+               this.showAccountFields = false;
+               this.showCustomerFields = true;
+               this.custAddFieldsMissing = true;
+               this.bothObjectDisplay = false;
+               console.log('Customer Address Fields --> ' + this.missingFieldsListCustAddress);
+          }else{
+          this.showToast('Success', 'Account updated successfully', 'success');
+          this.showAccountPage = false;
           }
           
      }
