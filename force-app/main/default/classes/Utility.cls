@@ -970,6 +970,83 @@ sendTempReqEmail(tempReqList[0].Id,tempReqList[0].Client__r, emailTemplateList[0
         }
         return missingFields;
     }
+
+
+
+    //NEW - SHIPPING
+
+    public static String checkForInitialSubmission_ShippingAccount(String accId){
+        Account acc = [	Select Id, Name, Customer_Type__c, Customer_Contact__c,
+                       ShippingCountry, ShippingPostalCode, ShippingState, ShippingCity, ShippingStreet,
+                       RecordType.Name, Owner.SAP_USER_CODE__c, User__r.SAP_USER_CODE__c, Account_Segment__c,
+                       CurrencyIsoCode, Delivery_Plant__c, Owner.Email
+                       From Account Where Id =:accId];
+        return sapForInitialFieldsCheck(acc);
+    }
+    
+    public static String sapForInitialFieldsCheck_ShippingAccount(Account acc) {
+        String missingFields = '';
+        
+        if(String.isBlank(acc.Name)){
+            missingFields +='Customer Name,';
+        }
+        
+        if(String.isBlank(acc.Customer_Contact__c)){
+            missingFields +='Customer Contact,';
+        }
+        
+        if(String.isBlank(acc.ShippingCity)){
+            missingFields +='ShippingCity,';
+        }
+        if(String.isBlank(acc.ShippingStreet)){
+            missingFields +='ShippingStreet,';
+        }
+        if(String.isBlank(acc.ShippingState) && acc.Customer_Type__c!='Export'){
+            missingFields += ' ShippingState, ';
+        }
+        if(String.isBlank(acc.ShippingCountry)){
+            missingFields +=' ShippingCountry,';
+        }
+        if(String.isBlank(acc.ShippingPostalCode)){
+            missingFields += ' ShippingPostalCode, ';
+        }
+        
+        if(String.isBlank(acc.Owner.SAP_USER_CODE__c)){
+            missingFields += ' Owner SAP Code, ';
+        }
+        if(String.isBlank(acc.RecordType.Name)){
+            missingFields += ' Record Type Name, ';
+        }
+        if(String.isBlank(acc.User__r.SAP_USER_CODE__c)){
+            missingFields += ' BH SAP Code, ';
+        }
+        if(String.isBlank(acc.Account_Segment__c)){
+            missingFields += ' Account Segment, ';
+        }
+        if(String.isBlank(acc.CurrencyIsoCode)){
+            missingFields += ' CurrencyIsoCode, ';
+        }
+        if(String.isBlank(acc.Delivery_Plant__c)){
+            missingFields += ' Delivery Plant, ';
+        }
+        if(String.isBlank(acc.Customer_Type__c)){
+            missingFields += 'Customer Type,';
+        }
+        if(String.isBlank(acc.Owner.Email)){
+            missingFields += ' Owner Email,';
+        }
+        
+        
+        if(missingFields.contains(',')){
+            missingFields = missingFields.removeEnd(',');
+            missingFields += ' are required fields';
+        }
+        
+        if(String.isBlank(missingFields)){
+            missingFields = 'Success';
+        }
+        return missingFields;
+    }
     
     public static String checkForInitialSubmissionAddress(String addressId){
         Dispatch_Address__c addressRec = [	Select Id, Name, Customer_Category__c, PAN_Number__c, Tax_Type__c, FSSAI_Number__c, Account__c, Company_Legal_Name__c, Contact__c, GST_Number__c, Type__c, CurrencyIsoCode, Address__Street__s, Address__PostalCode__s, Address__City__s, Address__StateCode__s, Address__CountryCode__s, 
