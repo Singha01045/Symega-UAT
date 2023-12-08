@@ -268,7 +268,7 @@ $(document).ready(function () {
                 //alert('Error to create visit');
                 swal ({
                     title:"Oops" ,  
-                    text:"Something went wrong!" ,  
+                    text: result, //"Something went wrong!" ,  
                     icon:"error",
                     buttons: false,
                     timer: 1000,
@@ -696,20 +696,20 @@ function handleAddressSelection(date, instance) {
         let account = accMap.get($(instance).attr("data-accid"));
         console.log("Account selected-----",account);
         if(account && account.ShippingCity && account.ShippingCountry && account.ShippingState) {
-            addressMap.set('999', {city: account.ShippingCity, country: account.ShippingCountry, lat: account.Geo_Location__Latitude__s, long: account.Geo_Location__Longitude__s, pCode: account.ShippingPostalCode, state: account.ShippingState, street: account.ShippingStreet});
+            addressMap.set('999', {city: account.ShippingCity, country: account.ShippingCountry, lat: account.ShippingLatitude, long: account.ShippingLongitude, pCode: account.ShippingPostalCode, state: account.ShippingState, street: account.ShippingStreet});
             $("#address-parent").append('<span class="slds-radio"><input type="radio" id="999" value="999" name="address-radio" checked="" /><label class="slds-radio__label" for="999"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.ShippingCity+', <b>Country:</b> '+account.ShippingCountry+', <b>Pin-Code: </b>'+ account.ShippingPostalCode+', <b>State:</b> '+account.ShippingState+', <b>Street: </b> '+account.ShippingStreet+'</span></label></span>');
         }
 
 
         if(account && account.BillingCity && account.BillingCountry && account.BillingState) {
-            addressMap.set('777', {city: account.BillingCity, country: account.BillingCountry, lat: account.Geo_Location__Latitude__s, long: account.Geo_Location__Longitude__s, pCode: account.BillingPostalCode, state: account.BillingState, street: account.BillingStreet});
+            addressMap.set('777', {city: account.BillingCity, country: account.BillingCountry, lat: account.BillingLatitude, long: account.BillingLongitude, pCode: account.BillingPostalCode, state: account.BillingState, street: account.BillingStreet});
             $("#address-parent").append('<span class="slds-radio"><input type="radio" id="777" value="777" name="address-radio" checked="" /><label class="slds-radio__label" for="777"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.BillingCity+', <b>Country:</b> '+account.BillingCountry+', <b>Pin-Code: </b>'+ account.BillingPostalCode+', <b>State:</b> '+account.BillingState+', <b>Street: </b> '+account.BillingStreet+'</span></label></span>');
         }
-        if(account && account.Customer_Address__r) {
-            for(let i = 0; i < account.Customer_Address__r.length; i++) {
-                addressMap.set(i+"", {city: account.Customer_Address__r[i].Address__City__s, country: account.Customer_Address__r[i].Address__CountryCode__s, lat: account.Customer_Address__r[i].Geo_Location__latitude__s, long: account.Customer_Address__r[i].Geo_Location__c, pCode: account.Customer_Address__r[i].Address__PostalCode__s, state: account.Customer_Address__r[i].Address__StateCode__s, street: account.Customer_Address__r[i].Address__Street__s});
-                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Customer_Address__r[i].Address__City__s+', <b>Country:</b> '+account.Customer_Address__r[i].Address__CountryCode__s+', <b>Pin-Code: </b>'+ account.Customer_Address__r[i].Address__PostalCode__s+', <b>State:</b> '+account.Customer_Address__r[i].State__c+', <b>Street: </b> '+account.Customer_Address__r[i].Street__c+'</span></label></span>');
-            }
+        if(account && account.Dispatch_Address__r) {
+            for(let i = 0; i < account.Dispatch_Address__r.length; i++) {
+                addressMap.set(i+"", {city: account.Dispatch_Address__r[i].Address__City__s, country: account.Dispatch_Address__r[i].Address__CountryCode__s, lat: account.Dispatch_Address__r[i].Address__Latitude__s, long: account.Dispatch_Address__r[i].Address__Longitude__s, pCode: account.Dispatch_Address__r[i].Address__PostalCode__s, state: account.Dispatch_Address__r[i].Address__StateCode__s, street: account.Dispatch_Address__r[i].Address__Street__s});
+                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Dispatch_Address__r[i].Address__City__s+', <b>Country:</b> '+account.Dispatch_Address__r[i].Address__CountryCode__s+', <b>Pin-Code: </b>'+ account.Dispatch_Address__r[i].Address__PostalCode__s+', <b>State:</b> '+account.Dispatch_Address__r[i].Address__StateCode__s+', <b>Street: </b> '+account.Dispatch_Address__r[i].Address__Street__s+'</span></label></span>');
+            }   
         }
     }
    
@@ -740,7 +740,10 @@ function handleAddressSelection(date, instance) {
         if(radioId && addressMap && addressMap.has(radioId)) {
             //city: "Bengaluru", country: "India",lat: undefined,long: undefined,pCode: "560076",state: "Karnataka",street: "#SD3, Taj Regency, 7th Main, 12th cross"
             let addressObj = addressMap.get(radioId);
-            let obj = { start : selectedDate._i, City__c: addressObj.city, Country__c: addressObj.country, Geo_Location__latitude__s: addressObj.lat, Geo_Location__longitude__s: addressObj.long, Postal_Code__c: addressObj.pCode, State__c: addressObj.state, Street__c: addressObj.street};
+
+            //DONE BY ANJALI
+
+            //let obj = { start : selectedDate._i, City__c: addressObj.city, Country__c: addressObj.country, Geo_Location__latitude__s: addressObj.lat, Geo_Location__longitude__s: addressObj.long, Postal_Code__c: addressObj.pCode, State__c: addressObj.state, Street__c: addressObj.street};
             AccountId = $(selectedInstance).attr("data-accid");
             let dateTime = visiteDateToApex.toISOString();
             addlat=addressObj.lat;
@@ -751,7 +754,10 @@ function handleAddressSelection(date, instance) {
             startTime=startTimeValue;
             endTime=endTimeValue;
             callVisitAccountCreateRecordMethod(AccountId,apexDate,addlat,addlong,startTime,endTime);
-            console.log('LATLANG',obj);
+
+            //DONE BY ANJALI
+            //console.log('LATLANG',obj);
+
             // if(selectedTab=='first'){
             //     obj.accountId = $(selectedInstance).attr("data-accid");
             // }else{

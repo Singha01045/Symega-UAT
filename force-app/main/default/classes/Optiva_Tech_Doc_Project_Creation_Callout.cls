@@ -85,11 +85,20 @@ public without sharing class Optiva_Tech_Doc_Project_Creation_Callout {
             opWrapper.target_date = pro.Target_Date__c!=null?Utility.parseDateIntoSlash(String.valueOf(pro.Target_Date__c)):'';
             
             //NEW ADDITIONS
-            opWrapper.cust_code = pro.Opportunity__r.Account_Billing_Address__c ? pro.Opportunity__r.Account.Customer_Code_OPTIVA__c : pro.Opportunity__r.Customer_Billing_Address__r.OPTIVA_Customer_Code__c ;
+            String CustCode = null;
+            
+            if(pro.Sample_Line_Item__c != null){
+                CustCode = pro.Sample_Line_Item__r.Sample__r.OPTIVA_Customer_Code__c;
+            }
+            else if(pro.Project_Quotient__c != null){
+                CustCode = pro.Project_Quotient__r.Sample_Project_Application__r.OPTIVA_Customer_Code__c;
+            }
+            opWrapper.cust_code = CustCode;
             opWrapper.created_by = pro.CreatedBy.Name;
     
             return JSON.serialize(opWrapper);    
-        }catch(Exception e){
+        }
+        catch(Exception e){
             System.debug('Error to create wrapper---'+e.getMessage());
             return null;
         }

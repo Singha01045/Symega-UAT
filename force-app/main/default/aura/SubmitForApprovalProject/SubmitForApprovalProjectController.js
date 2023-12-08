@@ -108,11 +108,9 @@
                     component.set("v.ShowSpinner",false);
                     if(data != null && data != undefined){
                         component.set("v.missingCode", data.missingCode);
-                        component.set("v.missingCodeShipping", data.missingCodeShipping);
                         if(data.missingFields == true){
                             component.set("v.Show1stPage",true);
                             component.set("v.MissingFieldList",data.missingFieldsList);   
-                            component.set("v.MissingFieldListCustAddress",data.missingFieldsListCustAddress);   
                             component.set("v.accountId",data.projectRec.Opportunity__r.AccountId);
                             component.set("v.userId", data.userId);
                             component.set("v.bhId", data.bhId);
@@ -120,28 +118,16 @@
                             if(data.isAccount == true){
                                 component.set("v.ShowUpdateAccountPage",true);
                             }
-                            if(data.isCustomerAddress == true){
-                                if(component.get("v.ShowUpdateAccountPage")){
-                                component.set("v.ShowUpdateCustAddressPage",false);
-                                component.set("v.bothObjectDisplay", true);
-                                }else{
-                                component.set("v.ShowUpdateCustAddressPage",true);
-                                }
-                                component.set("v.customerId",data.projectRec.Opportunity__r.Customer_Billing_Address__c);
-                            }
-                            /*else{
+                            else{
                                 component.set("v.ShowUpdateAccountPage",false);
                                 component.set("v.customerId",data.projectRec.Opportunity__r.Customer_Billing_Address__c);
-                            }*/
+                            }
                             
                             if(data.missingFieldsList.length > 0){
                                 if(data.isAccount == true){
                                     component.set("v.accFieldsMissing",true);
                                 }
-                            }
-                            
-                            if(data.missingFieldsListCustAddress.length>0){
-                                if(data.isCustomerAddress == true){
+                                else{
                                     component.set("v.custFieldsMissing",true);
                                 }
                             }
@@ -188,7 +174,6 @@
                         }
                         else{
                             component.set("v.ShowUpdateAccountPage",false);
-                            component.set("v.ShowUpdateCustAddressPage",false);
                             var action = component.get('c.callApprovalMethod');
                             $A.enqueueAction(action);
                         }
@@ -291,11 +276,8 @@
                 helper.callAccountUpdate(component, accId, deliveryPlant, CustomerType, AccSeg);
             }
         }
-        if(component.get('v.bothObjectDisplay')){
-            component.set('v.ShowUpdateAccountPage', false);
-            component.set('v.ShowUpdateCustAddressPage', true);
-        }else{
-            var action = component.get("c.submitProjectBHApproval");
+        
+        var action = component.get("c.submitProjectBHApproval");
         action.setParams({
             "projectId": component.get("v.recordId")
         });
@@ -340,73 +322,6 @@
         $A.enqueueAction(action);
         component.set('v.ShowUpdateAccountPage', false);
         component.set('v.Show1stPage', false);
-        }
-        
-    },
-    
-    handleUpdate2 : function(component, event, helper) {
-        debugger;
-        
-        /*var action = component.get('c.callApprovalMethod');
-        $A.enqueueAction(action);*/
-        
-        var userSapCode = component.get("v.userSapCode");
-        var userId = component.get("v.userId");
-        if(userId != null && userSapCode != null && userSapCode != undefined && userSapCode != ''){
-            helper.callSAPCodeUpdate(component, userId, userSapCode);
-        }
-        
-        var bhSapCode = component.get("v.bhSapCode");
-        var bhId = component.get("v.bhId");
-        if(bhId != null && bhSapCode != null && bhSapCode != undefined && bhSapCode != ''){
-            helper.callSAPCodeUpdate(component, bhId, bhSapCode);
-        }
-            var action = component.get("c.submitProjectBHApproval");
-        action.setParams({
-            "projectId": component.get("v.recordId")
-        });
-        action.setCallback(this, function(response) {
-            var serverResponse = response.getReturnValue();
-            var dismissActionPanel = $A.get("e.force:closeQuickAction");    
-            if (response.getState() === "SUCCESS" && serverResponse === "SUCCESS") {
-                var missingCode = component.get("v.missingCode");
-                var message = '';
-                if(missingCode == true){
-                    message = 'Record Updated Successfully and submitted for BH Approval and Customer Creation will be In-Progress after approving.';
-                }
-                else{
-                    message = 'Record Updated Successfully and submitted for BH Approval...';
-                }
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    title : 'Success',
-                    message: message,
-                    duration:' 5000',
-                    key: 'info_alt',
-                    type: 'success',
-                    mode: 'pester'
-                });
-                toastEvent.fire();
-            } 
-            else {
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    title : 'Error',
-                    message: serverResponse,
-                    duration: '5000',
-                    key: 'info_alt',
-                    type: 'error',
-                    mode: 'pester'
-                });
-                toastEvent.fire();
-            }    
-            dismissActionPanel.fire();
-            $A.get('e.force:refreshView').fire();
-        });
-        $A.enqueueAction(action);
-        component.set('v.ShowUpdateAccountPage', false);
-        component.set('v.Show1stPage', false);
-        
     },
     
     closeModal  : function(component, event) {

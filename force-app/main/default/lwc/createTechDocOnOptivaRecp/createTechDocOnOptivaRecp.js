@@ -50,6 +50,7 @@ export default class CreateTechDocOnOptivaRecp extends NavigationMixin(Lightning
                 Tech_Doc_Name__c :this.recipeRecord.Name,
                 Product_ID__c:this.recipeRecord.SSC_Code__c,
                 CurrencyIsoCode : this.recipeRecord.CurrencyIsoCode,
+                OPTIVA_Recipe__c : this.recordId,
             });
 
             this[NavigationMixin.Navigate]({

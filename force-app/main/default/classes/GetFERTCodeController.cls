@@ -32,7 +32,7 @@ public class GetFERTCodeController {
                            Customer_Billing_Address__r.Customer_Code_SAP__c, Account.Submitted_to_SAP__c, Customer_Billing_Address__r.Submitted_to_SAP__c,
 
                            Account.Shipping_Customer_Code_SAP__c, Account_Shipping_Address__c, Customer_Shipping_Address__c,
-                           Customer_Shipping_Address__r.SAP_Customer_Code_Shipping__c, Account.Shipping_Submitted_to_SAP__c, Customer_Shipping_Address__r.Shipping_Submitted_to_SAP__c
+                           Customer_Shipping_Address__r.Customer_Code_SAP__c, Account.Shipping_Submitted_to_SAP__c, Customer_Shipping_Address__r.Submitted_to_SAP__c
 
                            From Opportunity Where Id=:oppId];
 
@@ -107,9 +107,9 @@ public class GetFERTCodeController {
                             system.debug('Hiii... Inside Shipping Address Part... 3872ujr');
 
                             String customerValidationResShipAdrs = Utility.checkForInitialSubmissionAddress(opp.Customer_Shipping_Address__c);
-                            if(!opp.Customer_Shipping_Address__r.Shipping_Submitted_to_SAP__c){
+                            if(!opp.Customer_Shipping_Address__r.Submitted_to_SAP__c){
                                 if(customerValidationResShipAdrs == 'Success'){
-                                    callFutureForAddress(opp.AccountId);
+                                    callFutureForAddress(opp.Customer_Shipping_Address__c);
                                     opp.Send_Fert_Notification_Email__c = true;
                                     update opp;
                                     response = 'create';
@@ -195,7 +195,7 @@ public class GetFERTCodeController {
                     system.debug('Hiii... Inside Shipping Address Part... 398ijkdsdnfjs');
 
                     String customerValidationRes = Utility.checkForInitialSubmissionAddress(opp.Customer_Shipping_Address__c);
-                    if(!opp.Customer_Shipping_Address__r.Shipping_Submitted_to_SAP__c){
+                    if(!opp.Customer_Shipping_Address__r.Submitted_to_SAP__c){
                         if(customerValidationRes == 'Success'){                        
                             callFutureForAddress(opp.Customer_Shipping_Address__c);
                             opp.Send_Fert_Notification_Email__c = true;

@@ -72,7 +72,8 @@ export default class RequestTecDocOnSLI extends  NavigationMixin(LightningElemen
             let defaultValues = encodeDefaultFieldValues({
                 Tech_Doc_Name__c :this.sliRecord.Line_Item_Name__c,
                 Product_ID__c:this.sliRecord.Product_Name__c,
-                CurrencyIsoCode : this.sliRecord.CurrencyIsoCode,      
+                CurrencyIsoCode : this.sliRecord.CurrencyIsoCode,    
+                Sample_Line_Item__c	: this.recordId,  
              //   Account__c :   this.accVar //null  // this.sliRecord.Sample__r.Opportunity__c ?  this.sliRecord.Sample__r.Opportunity__r.Account.Id :  this.accVar     //? //this.sliRecord.Sample__r.Opportunity__r.Account.Id
                 
                 

@@ -148,7 +148,7 @@ global class MonthlyVisitViewerController {
             if(!String.isBlank(routeName)) {
                 String query = '%' +routeName +'%';
                 System.debug('query ===> '+query);
-                pageData.put('accountList', [SELECT Id,Name,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,ShippingCity,BillingCity,BillingCountry,BillingPostalCode,BillingState,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE BillingStreet LIKE : query LIMIT 10]);
+                pageData.put('accountList', [SELECT Id,Name,BillingLatitude, BillingLongitude,ShippingLatitude, ShippingLongitude,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,ShippingCity,BillingCity,BillingCountry,BillingPostalCode,BillingState,(SELECT Id,Address__City__s, toLabel(Address__CountryCode__s), Address__PostalCode__s, toLabel(Address__StateCode__s), Address__Street__s, Geo_Location__c, Address__Latitude__s, Address__Longitude__s FROM Dispatch_Address__r) FROM Account WHERE BillingStreet LIKE : query LIMIT 10]);
                 pageData.put('leadList', [Select Id, Name,Street FROM Lead WHERE Street LIKE : query ]);
                 System.debug('User Data ::'+pageData);
                 return pageData;
@@ -172,7 +172,7 @@ global class MonthlyVisitViewerController {
         System.debug('repId ::'+repId);
         //System.debug('searchString ::'+searchString);
         //  String searchPattern = '%'+String.escapeSingleQuotes(searchString)+'%';
-        accList = [SELECT Id, Name,Location__r.Name,owner.name,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c FROM Dispatch_Address__r) FROM Account WHERE owner.name = :repId AND  Location__r.Name =: location AND owner.name !='jain'  LIMIT 15];
+        accList = [SELECT Id, Name, BillingLatitude, BillingLongitude,ShippingLatitude, ShippingLongitude, Location__r.Name,owner.name,ShippingCountry,ShippingState,ShippingStreet,ShippingPostalCode,(SELECT Id,Address__City__s, Address__CountryCode__s, Address__PostalCode__s, Address__StateCode__s, Address__Street__s, Geo_Location__c, Address__Latitude__s, Address__Longitude__s FROM Dispatch_Address__r) FROM Account WHERE owner.name = :repId AND  Location__r.Name =: location AND owner.name !='jain'  LIMIT 15];
         System.debug('accList ::'+accList);
         return accList;
     }
@@ -229,6 +229,14 @@ global class MonthlyVisitViewerController {
         System.debug('SobjectId :'+SobjectId);
         String sObjName = SobjectId.getSObjectType().getDescribe().getName();
         System.debug('Object Name ::'+sObjName);
+        try{
+
+        }
+        catch(Exception e){
+            system.debug('Error MESSAGE :' + e.getMessage());
+            system.debug('Error AT LINE NO :' + e.getLineNumber());
+            return e.getMessage();
+        }
         if(datestring!=null){
             Date selectedDate=Date.valueOf(datestring);
             Integer monthNumber = selectedDate.month();

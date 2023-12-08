@@ -8,7 +8,7 @@
     <relationshipLabel>Sample Line Items</relationshipLabel>
     <relationshipName>Sample_Line_Items</relationshipName>
     <required>false</required>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
 </CustomField>

@@ -3,7 +3,7 @@
     <fullName>Customer_Code_SAP__c</fullName>
     <caseSensitive>false</caseSensitive>
     <externalId>true</externalId>
-    <label>SAP Customer Code Billing</label>
+    <label>SAP Customer Code</label>
     <length>255</length>
     <required>false</required>
     <trackHistory>false</trackHistory>

@@ -17,6 +17,7 @@ export default class PushSOToSAP extends LightningElement {
     accRecId;
     dispRecId;
     missingFieldsList;
+    custAddFieldsMissingList;
     onlyAccMissingFieldList;
     userId;
     bhId;
@@ -43,6 +44,9 @@ export default class PushSOToSAP extends LightningElement {
     showTaxCollect = false;
     showPaymentTerms = false;
     showTransportTerms = false;
+    bothObjectDisplay = false;
+    showCustomerFields = false;
+  showAccountFields = false;
 
     @track dlvryPlantList = [];
     @track custTypeList = [];
@@ -86,17 +90,31 @@ export default class PushSOToSAP extends LightningElement {
                     this.dispRecId = data.dispRecId;
 
                     this.missingFieldsList = data.missingFieldsList;
+                    this.custAddFieldsMissingList = data.missingFieldsListCustAddress;
                     this.onlyAccMissingFieldList = data.onlyAccMissingFieldList;
                     this.isAccount = data.isAccount;
+                    this.isCustomer = data.isCustomer;
+                    this.isAccountShipping = data.isAccountShipping;
+                    this.isCustomerShipping = data.isCustomerShipping;
 
-                    if(data.missingFieldsList.length > 0){
-                        if(this.isAccount != true){
-                            this.custAddFieldsMissing = true;
-                        }
-                        else{
+                    if(this.isAccount || this.isAccountShipping){
+                        if(data.missingFieldsList.length > 0){
+                            this.showAccountFields = true;
                             this.accFieldsMissing = true;
                         }
                     }
+                    if(this.isCustomer || this.isCustomerShipping){
+                        if(this.custAddFieldsMissingList.length>0){
+                            this.custAddFieldsMissing = true;
+                                   if(this.showAccountFields == true){
+                                        this.bothObjectDisplay = true;
+                                        this.showCustomerFields = false;
+                                   }else{
+                                        this.custAddFieldsMissing = true;
+                                        this.showCustomerFields = true;
+                                   }
+                              }
+                        }
 
                     if(data.onlyAccMissingFieldList.length>0){
                         
@@ -310,8 +328,6 @@ export default class PushSOToSAP extends LightningElement {
 
     handleSuccess(){
         debugger;
-        this.showToast('Success', 'Account updated successfully', 'success');
-        this.show1stPage = false;
 
         if(this.showUserField){
             console.log('this.userpsap s ', this.userSapCode);
@@ -328,8 +344,16 @@ export default class PushSOToSAP extends LightningElement {
         ){
             updateAccRecord({accId:this.accRecId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal, taxType : this.taxTypeVal, taxCollect : this.taxCollectVal, paymentTerms : this.paymentTermsVal, transportTerms : this.transportTermsVal, Gst : this.gst, Pan : this.pan, fssai : this.fssai})
         }
-
-        this.sendSONotification();
+        if(this.bothObjectDisplay){
+               this.showAccountFields = false;
+               this.showCustomerFields = true;
+               this.bothObjectDisplay = false;
+               console.log('Customer Address Fields --> ' + this.missingFieldsListCustAddress);
+          }else{
+              this.sendSONotification();
+              this.showToast('Success', 'Account updated successfully', 'success');
+              this.show1stPage = false;
+          }
     }
 
     closeModal() {

@@ -86,7 +86,14 @@
                     <div  >
                        <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo" />   <!--styleClass="brand-logo"-->
                     </div>
-                    
+                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;cursor:pointer;margin-left: -40%;" id="customerTab">
+                        <b style="font-size:large;">Home</b>
+                    </a>
+                    <a class="nav-link selectedTabOnSLIDetailPage" style="color:white;cursor:pointer;margin-left: -40%;" id="sampleTab">
+                        <b style="font-size:large;">Sample Products</b>
+                    </a>
+                    <a class="nav-link" id="sampleProdTab">
+                    </a>
                 </div>
                    
                 
@@ -958,6 +965,11 @@
                                 $scope.$apply();
                             }
                         })
+                    }
+                    
+                    $scope.showCustomerssPage = function(){
+                        var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleLineItemDetailPage';
+                        window.location.replace(window.location.origin + sitePrefix +'?id='+userHashId);
                     }
             })
         </script>

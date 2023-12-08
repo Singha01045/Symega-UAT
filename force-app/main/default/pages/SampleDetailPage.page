@@ -115,6 +115,14 @@
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
+                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;cursor:pointer;margin-left: -1%;" id="customerTab">
+                        <b style="font-size:large;">Home</b>
+                    </a>
+                    <a class="nav-link selectedTabOnSLIDetailPage" style="color:white;cursor:pointer;margin-left: -1%;" id="sampleTab">
+                        <b style="font-size:large;">Samples</b>
+                    </a>
+                    <a class="nav-link" id="sampleProdTab">
+                    </a>
                 <div style="width: 50%;">
                     <!-- <marquee>
 <h2 class="nav-link" style="color:white;"><b>Hello We partner with our customers across a project’s lifespan – from inception, through product commercialisation, sharing our experience and expertise. With our informed, committed, and passionate team of professionals, we strive to provide you with solutions that bring your culinary ideas to life, faster and better.</b></h2>
@@ -153,9 +161,10 @@
                         </div>
                         
                         <div class="col-md-4">
-                            <div id="hideForDispatch" style="display:none;" class="buttonContainer">
+                            <div class="buttonContainer">
                                 <button class="blue-btn me-2 mb-5" ng-click="openReleaseToDispatch()" style="background:teal;" type="button">
                                     Release To Dispatch Team</button>
+                                    <div id="hideForDispatch" style="display:none;">
                         <button class="blue-btn me-2 mb-5" ng-click="openGenerateLabel()" style="background:teal;" type="button">
                             Generate Label</button>
                             <button class="blue-btn me-2 mb-5" ng-click="openGenerateNonHazardous()" style="background:teal;" type="button">
@@ -163,6 +172,7 @@
                             <button class="blue-btn float-end me-2 mb-5" ng-click="openAuraPopUp()" style="background:teal;" type="button">
                                 Create/Edit Sample Lineitems</button>
                             </div>
+                        </div>
 
                             <div class="modal" id="releaseToDispatch">
                                 <div class="modal-dialog" style="min-width:95%; margin-top: 30vh;">
@@ -183,33 +193,37 @@
                                                         <thead>
                                                             <tr>
                                                                 <th style="width:0%;">S.No.</th>
-                                                                <th style="width:2%;">Product</th>
+                                                                <th style="width:2%;">Product Name</th>
+                                                                <th ng-if="conRec.Role__c != 'Dispatch Team'" style="width:5%;">Release Status</th>
                                                                 <th style="width:0%;">Sample Invoice Date</th>
                                                                 <th style="width:0%;">Actual Date of Dispatch</th>
                                                                 <th style="width:5%;">Courier</th>
                                                                 <th style="width:5%;">Dispatch Details</th>
                                                                 <th style="width:5%;">Way Bill No.</th>
                                                                 <th style="width:5%;">Additional Comments</th>
-                                                                <th style="width:5%;">Release Status</th>
-                                                                <!--th style="width:10%;">Customer Instructions</th>
-                                                                <th style="width:1%"><i class="fas fa-plus-circle icon ps-3" ng-click="addRow()"></i></th-->
+                                                                
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr ng-repeat="SLI in SLIlist">
                                                                 <!--{{SLIlist}}-->
                                                                 <td>{{$index+1}}</td>
-                                                                <td>{{SLI.Name}}</td>
+                                                                <td>{{SLI.Product_Name__c}}</td>
+                                                                <td ng-if="conRec.Role__c != 'Dispatch Team'"><div class="row">
+                                                                    <div class="col-md-4 pt-3" ng-repeat="status in releaseStatus">
+                                                                    <input type="radio" ng-model="SLI.Release_Status__c" ng-value="status" ng-change="ChangeOfReleaseStatus(status, SLI)" ng-disabled="SLI.alreadyReleased"/>
+                                                                    <label>{{status}}</label>
+                                                                </div>
+                                                                    
+                                                                    </div>
+                                                                    </td>
                                                                 <td><input class="form-control" type="Date" ng-model="SLI.Sample_Invoice_Date__c" ng-disabled="SLI.checkReleaseStatus"/></td>
                                                                 <td><input type="Date" class="form-control" ng-model="SLI.Actual_date_of_dispatch__c" ng-disabled="SLI.checkReleaseStatus"/></td>
                                                                 <td><input type="text" class="form-control" ng-model="SLI.Courier__c" ng-disabled="SLI.checkReleaseStatus" /></td>
                                                                 <td><input type="text" class="form-control" ng-model="SLI.Dispatch_Details__c" ng-disabled="SLI.checkReleaseStatus" /></td>
                                                                 <td><input type="text" class="form-control" ng-model="SLI.Way_Bill_No__c" ng-disabled="SLI.checkReleaseStatus" /></td> 
                                                                 <td><input type="text" class="form-control" ng-model="SLI.Additional_Comments__c" ng-disabled="SLI.checkReleaseStatus" /></td>
-                                                                <td><div class="col-md-4 pt-3" ng-repeat="status in releaseStatus">
-                                                                    <input type="radio" ng-model="SLI.Release_Status__c" ng-value="status" ng-change="ChangeOfReleaseStatus(status, SLI)" />
-                                                                    <label>{{status}}</label>
-                                                                </div></td>
+                                                                
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -231,7 +245,7 @@
                                             <div class="modal-header">
                                                 <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
                                                     <h3>
-                                                        <b>Sample Invoice</b>
+                                                        <b>Generate Label</b>
                                                     </h3>
                                                     </div></h4> 
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -261,7 +275,7 @@
                                             <div class="modal-header">
                                                 <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
                                                     <h3>
-                                                        <b>Sample Invoice</b>
+                                                        <b>Generate Non-Hazardous</b>
                                                     </h3>
                                                     </div></h4> 
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -324,7 +338,7 @@
                                                                     <option value='None'>None</option>
                                                                     </so-dropdown-->
                                                                 <select class="form-control" ng-model="SLI.ProductNm" ng-change="onChangeToAssignProduct(SLI,SLI.ProductNm)" ng-disabled="SLI.check">
-                                                                    <option ng-repeat="item in mergedList" value="{{item.Name}}">{{item.Name}}</option>
+                                                                    <option ng-repeat="item in mergedList | orderBy:'Name'" value="{{item.Name}}">{{item.Name}}</option>
                                                                     </select>
                                                                 </td>
                                                                 <td ng-if="SLI.check == true"><input class="form-control" type="text" ng-model="SLI.Product_Name__c" ng-disabled="SLI.check"/></td>
@@ -333,9 +347,9 @@
                                                                     <option ng-repeat="item in quantityUnit" value="{{item}}">{{item}}</option>
                                                                     </select></td>
                                                                 <td><input type="text" class="form-control" number="SLI.Packaging_Quantity__c" ng-model="SLI.Packaging_Quantity__c" ng-change="calculatePUnit(SLI.Quantity__c,SLI.Packaging_Quantity__c,SLI)" ng-disabled="SLI.check" /></td>
-                                                                <td>{{SLI.calc}}&nbsp;{{SLI.Packaging_Unit__c}}</td> 
-                                                                <td>{{SLI.OPTIVA_Recipe__r.Regulatory__c}}</td>
-                                                                <td>{{SLI. OPTIVA_Recipe__r.Shelf_Life__c}}</td>
+                                                                <td>{{SLI.calc}}</td> 
+                                                                <td>{{SLI.Regulatory_Requirements__c}}</td>
+                                                                <td>{{SLI.Current_Shelf_Life__c}}</td>
                                                                 <td>{{SLI.Expected_Shelf_Life__c}}</td>
                                                                 <td><input type="text" class="form-control" ng-model="SLI.Customer_Instructions__c" ng-disabled="SLI.check" /></td>
                                                                 <td ng-if="SLI.Id == undefined"><i class="fas fa-times-circle icon ps-3" ng-click="removeSALI($index)"></i></td>
@@ -755,6 +769,7 @@
            $scope.challanLink = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/SymegaStickerPDF?id=';
            $scope.challanLinkForNonHazardous = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/NonHarzardousDHLPDF?id=';
             $scope.quantityUnit = quantityUnit;
+            $scope.quantityUnit.unshift('--None--');
             $scope.endUseCategory = endUseCategory;
             $scope.sampleReqBy = sampleReqBy;
             $scope.mainReasonForSelPro = mainReasonForSelPro;
@@ -774,8 +789,11 @@
                     if(event.status && result){
                         debugger;
                         $scope.conRec = result.conRec;
+                        $scope.TeamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
                         if($scope.conRec.Role__c != 'Dispatch Team'){
+                            
                             $('#hideForDispatch').show();
+                            
                         }
                         $scope.sampleDetails = result.listOfSamples[0];
                         $scope.sampleId = $scope.sampleDetails.Id;
@@ -805,9 +823,11 @@
                         if(result.listOfSamples[0].Sample_Line_Items__r != undefined){
                             debugger;
                             $scope.SLIlist = result.listOfSamples[0].Sample_Line_Items__r;
+                            const copiedSLIlist = JSON.parse(JSON.stringify($scope.SLIlist))
                             debugger;
-                            $scope.SLIlistOld = result.listOfSamples[0].Sample_Line_Items__r;
+                            const mapOfSLIs = new Map();
                             for(var i=0;i<$scope.SLIlist.length;i++){
+                                mapOfSLIs.set(copiedSLIlist[i].Id, copiedSLIlist[i]);
                                 $scope.SLIlist[i].calc = $scope.SLIlist[i].Formula_Packaging_Qty__c;
                                 //$scope.SLIlist[i].calc = $scope.SLIlist[i].Quantity__c/$scope.SLIlist[i].Packaging_Quantity__c;
                                  		if($scope.SLIlist[i].Product__c != undefined){
@@ -822,7 +842,10 @@
                                         }else{
                                             $scope.SLIlist[i].productId = "--None--";
                                         }
-                                        if($scope.SLIlist[i].Release_Status__c != 'Released' || $scope.SLIlist[i].Release_to_Dispatch_Team__c == false){
+                                        if($scope.SLIlist[i].Release_Status__c != 'Hold' && $scope.SLIlist[i].Release_Status__c != '' && $scope.SLIlist[i].Release_Status__c != null){
+                                            $scope.SLIlist[i].alreadyReleased = true;
+                                        }
+                                        if(($scope.SLIlist[i].Release_Status__c != 'Released' || $scope.SLIlist[i].Release_to_Dispatch_Team__c == false || $scope.SLIlist[i].alreadyReleased)&& $scope.conRec.Role__c != 'Dispatch Team'){
                                             $scope.SLIlist[i].checkReleaseStatus = true;
                                         }
                                         if($scope.SLIlist[i].Actual_date_of_dispatch__c != null){
@@ -832,6 +855,7 @@
                                     $scope.SLIlist[i].Sample_Invoice_Date__c = new Date($scope.SLIlist[i].Sample_Invoice_Date__c);
                                 }
                             }
+                            $scope.SLIOldById = mapOfSLIs;
                         }else{
                             $scope.SLIlist = [];
                             $scope.SLIlist.push({
@@ -844,13 +868,19 @@
                         $scope.projectQuotientList = result.listOfProQuotient;
                         
                         for(var i=0;i<$scope.productList.length;i++){
-                            $scope.mergedList.push({"Id":$scope.productList[i].Id,"Name":$scope.productList[i].Name});
+                            if($scope.TeamType == $scope.productList[i].Family){
+                                $scope.mergedList.push({"Id":$scope.productList[i].Id,"Name":$scope.productList[i].Name});
+                            }
                         }
                         for(var i=0;i<$scope.optivaRecipeList.length;i++){
-                            $scope.mergedList.push({"Id":$scope.optivaRecipeList[i].Id,"Name":$scope.optivaRecipeList[i].Name});
+                            if($scope.TeamType == $scope.optivaRecipeList[i].Recipe_Family__c){
+                                $scope.mergedList.push({"Id":$scope.optivaRecipeList[i].Id,"Name":$scope.optivaRecipeList[i].Name});
+                            }
                         }
                         for(var i=0;i<$scope.projectQuotientList.length;i++){
-                            $scope.mergedList.push({"Id":$scope.projectQuotientList[i].Id,"Name":$scope.projectQuotientList[i].Name});
+                            if($scope.TeamType == $scope.projectQuotientList[i].Sample_Project_Application__r.Product_Family__c){
+                                $scope.mergedList.push({"Id":$scope.projectQuotientList[i].Id,"Name":$scope.projectQuotientList[i].Name});
+                            }
                         }
                         if($scope.allocationTeam != undefined){
                             for(var i=0;i<$scope.allocationTeam.length;i++){
@@ -874,7 +904,7 @@
             $scope.ChangeOfReleaseStatus = function(value, SLIRec){
                     debugger;
                     //$scope.SLIRec.Release_Status__c = value;
-                    if(value == 'Released'){
+                    if(value == 'Released' && !(SLIRec.alreadyReleased)){
                         SLIRec.checkReleaseStatus = false;
                         SLIRec.Release_to_Dispatch_Team__c = true;
                     }else{
@@ -888,6 +918,7 @@
                     for(var i=-0; i<$scope.SLIlist.length; i++){
                         delete ($scope.SLIlist[i]['$$hashKey']);
                         delete ($scope.SLIlist[i]['checkReleaseStatus']);
+                        delete ($scope.SLIlist[i]['alreadyReleased']);
                         delete ($scope.SLIlist[i]['calc']);
                         delete ($scope.SLIlist[i]['check']);
                         delete ($scope.SLIlist[i]['productId']);
@@ -907,8 +938,10 @@
                             debugger;
                             if(event.status && result){
                                 swal("success", "Records has been updated successfully.","success");
+                                $('#releaseToDispatch').modal('toggle');
                                 $scope.$apply();
                             }
+                            $scope.getSampleDetails();
                         })
                 }
 
@@ -1079,6 +1112,15 @@ $scope.saveLabel = function(){
                 console.log(SLI);
                 debugger;
                 var foundItem = $scope.mergedList.find(item => item.Name === productId);
+                SLI.Quantity__c = null;
+                SLI.Packaging_Unit__c = '--None--';
+                SLI.Quantity_Unit__c = '--None--';
+                SLI.Packaging_Quantity__c = null;
+                SLI.Customer_Instructions__c = null;
+                SLI.Regulatory_Requirements__c = null;
+                SLI.Expected_Shelf_Life__c = null;
+                SLI.Current_Shelf_Life__c = null;
+                SLI.calc = null;
                 if (foundItem) {
                     if (foundItem.Id.startsWith('01t')) {
                         SLI.Product__c = foundItem.Id;
@@ -1095,27 +1137,35 @@ $scope.saveLabel = function(){
             
             $scope.saveSLIDetails = function(){
                 debugger;
+                $scope.showSpinner = true;
+                $scope.editedSLIs = [];
+                $scope.addedSLIs = [];
                 for(var i=0;i<$scope.SLIlist.length;i++){
                     debugger;
                     if($scope.SLIlist[i].Product__c == undefined && $scope.SLIlist[i].OPTIVA_Recipe__c == undefined && $scope.SLIlist[i].Project_Quotient__c == undefined){
+                        $scope.showSpinner = false;
                         swal("info", "Please add Product.","info");
                         return;
                     }
                     if($scope.SLIlist[i].Quantity__c == undefined || $scope.SLIlist[i].Quantity__c == ""){
+                        $scope.showSpinner = false;
                         swal("info", "Please enter quantity.","info");
                         return;
                     }
-                    if($scope.SLIlist[i].Quantity_Unit__c == undefined || $scope.SLIlist[i].Quantity_Unit__c == ""){
+                    if($scope.SLIlist[i].Quantity_Unit__c == undefined || $scope.SLIlist[i].Quantity_Unit__c == "" || $scope.SLIlist[i].Quantity_Unit__c == '--None--'){
+                        $scope.showSpinner = false;
                         swal("info", "Please enter quantity unit.","info");
                         return;
                     }
                     if($scope.SLIlist[i].Packaging_Quantity__c == undefined || $scope.SLIlist[i].Packaging_Quantity__c == ""){
+                        $scope.showSpinner = false;
                         swal("info", "Please enter packaging quantity.","info");
                         return;
                     }
                 }
-                
+                $('#flipFlop').modal('toggle');
                 for(var i=0;i<$scope.SLIlist.length;i++){
+                    $scope.SLIlist[i].Submitted__c = true;
                     delete ($scope.SLIlist[i]['$$hashKey']);
                     delete ($scope.SLIlist[i]['calc']);
                     delete ($scope.SLIlist[i]['check']);
@@ -1124,13 +1174,35 @@ $scope.saveLabel = function(){
                     delete ($scope.SLIlist[i]['Actual_date_of_dispatch__c']);
                     delete ($scope.SLIlist[i]['Sample_Invoice_Date__c']);
                     delete ($scope.SLIlist[i]['checkReleaseStatus']);
+                    delete ($scope.SLIlist[i]['alreadyReleased']);
+                    
+                    if($scope.SLIOldById.has($scope.SLIlist[i].Id)){
+                    	if($scope.SLIOldById.get($scope.SLIlist[i].Id).Formula_Packaging_Qty__c != $scope.SLIlist[i].Formula_Packaging_Qty__c){
+                        	$scope.editedSLIs.push($scope.SLIlist[i]);
+                        }else if($scope.SLIOldById.get($scope.SLIlist[i].Id).Packaging_Quantity__c != $scope.SLIlist[i].Packaging_Quantity__c){
+                        	$scope.editedSLIs.push($scope.SLIlist[i]);
+                        }else if($scope.SLIOldById.get($scope.SLIlist[i].Id).Quantity_Unit__c != $scope.SLIlist[i].Quantity_Unit__c){
+                        	$scope.editedSLIs.push($scope.SLIlist[i]);
+                        }
+                        else if($scope.SLIOldById.get($scope.SLIlist[i].Id).Product_Name__c != $scope.SLIlist[i].Product_Name__c){
+                        	$scope.editedSLIs.push($scope.SLIlist[i]);
+                        }
+                        else if($scope.SLIOldById.get($scope.SLIlist[i].Id).Quantity__c != $scope.SLIlist[i].Quantity__c){
+                        	$scope.editedSLIs.push($scope.SLIlist[i]);
+                        }
+                    }else{
+                        	$scope.addedSLIs.push($scope.SLIlist[i]);
+                        }
                 }
-                OperationsPortalController.saveSLIDetails($scope.SLIlist,userHashId,function(result,event){
+                OperationsPortalController.saveSLIDetails($scope.SLIlist,userHashId,$scope.editedSLIs,$scope.addedSLIs, function(result,event){
                     debugger;
                     if(event.status && result){
                         debugger;
+                        $scope.showSpinner = false;
                         swal("success", "Record has been update successfully.","success");
-                        $('#flipFlop').modal('toggle');
+                    }else{
+                        $scope.showSpinner = false;
+                        swal("error", "Could not Update the Record due to an error","error");
                     }
                     $scope.$apply();
                     $scope.getSampleDetails();
@@ -1146,8 +1218,9 @@ $scope.saveLabel = function(){
             
             $scope.calculatePUnit = function(quantity,pquantity,SLI){
                 debugger;
+                SLI.Packaging_Unit__c = SLI.Quantity_Unit__c;
                 if(pquantity != 0 && pquantity != null && pquantity != undefined){
-                    SLI.calc = quantity/pquantity;
+                    SLI.calc = quantity/pquantity + ' ' + SLI.Quantity_Unit__c;
                 }else{
                     SLI.calc = '';
                 }
@@ -1156,6 +1229,7 @@ $scope.saveLabel = function(){
             $scope.setPackagingUnit = function(qUnit,SLI){
                 debugger;
                 SLI.Packaging_Unit__c = SLI.Quantity_Unit__c;
+                SLI.calc = SLI.calc.split(' ')[0] + ' ' + SLI.Quantity_Unit__c;
                 
             }
             
@@ -1192,6 +1266,12 @@ $scope.saveLabel = function(){
                     }
                     $scope.$apply();
                 })
+            }
+            
+            
+            $scope.showCustomerssPage = function(){
+                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleLineItemDetailPage';
+                window.location.replace(window.location.origin + sitePrefix +'?id='+userHashId);
             }
         })
         

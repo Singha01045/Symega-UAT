@@ -44,7 +44,7 @@ public without sharing class OpportunityCreateSaleOrderController {
     @AuraEnabled
     public static soWrapper getLineItemDetails(String recId){
         List<OpportunityLineItem> lineItems = [SELECT Id, Sales_Order__c, Sales_Order__r.Account__c, Sales_Order__r.Account__r.Initial_SAP_Update__c,
-                                               Sales_Order__r.Opportunity__r.Account_Billing_Address__c, Sales_Order__r.Opportunity__r.AccountId, Sales_Order__r.Opportunity__r.Customer_Billing_Address__c
+                                               Sales_Order__r.Opportunity__r.Account_Billing_Address__c, Sales_Order__r.Opportunity__r.Account_Shipping_Address__c, Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c,Sales_Order__r.Opportunity__r.AccountId, Sales_Order__r.Opportunity__r.Customer_Billing_Address__c
                                                FROM OpportunityLineItem WHERE Sales_Order__c =: recId];
         List<OpportunityLineItem> withFERTcodeItems = [SELECT Id, FERT_Code__c FROM OpportunityLineItem WHERE Sales_Order__c =: recId AND FERT_Code__c != NULL];
         system.debug('withFERTcodeItems.size() -- ' + withFERTcodeItems.size());
@@ -62,27 +62,48 @@ public without sharing class OpportunityCreateSaleOrderController {
         }
         
         string accValidationsResp = '';
+        string accValidationsRespShipping = '';
         Id custId;
+        Id accId;
         
         if(lineItems[0].Sales_Order__r.Opportunity__r.Account_Billing_Address__c){
             accValidationsResp = Utility.checkSAPCustomerReqField(lineItems[0].Sales_Order__r.Opportunity__r.AccountId);
-            custId = lineItems[0].Sales_Order__r.Opportunity__r.AccountId;
+            accId = lineItems[0].Sales_Order__r.Opportunity__r.AccountId;
+            sWrap.accRecId = lineItems[0].Sales_Order__r.Opportunity__r.AccountId;
             sWrap.isAccount = true;
+            sWrap.isCustomer = false;
         }
         else if(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c != null){
             accValidationsResp = Utility.checkSAPCustomerReqFieldAddress(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c);
             sWrap.dispRecId = lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c;
             custId = lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c;
+            sWrap.isCustomer = true;
             sWrap.isAccount = false;
         }
+
+        if(lineItems[0].Sales_Order__r.Opportunity__r.Account_Shipping_Address__c){
+            accValidationsRespShipping = Utility.checkSAPCustomerReqField(lineItems[0].Sales_Order__r.Opportunity__r.AccountId);
+            accId = lineItems[0].Sales_Order__r.Opportunity__r.AccountId;
+            sWrap.accRecId = lineItems[0].Sales_Order__r.Opportunity__r.AccountId;
+            sWrap.isAccountShipping = true;
+            sWrap.isCustomerShipping = false;
+        }
+        else if(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c != null){
+            accValidationsRespShipping = Utility.checkSAPCustomerReqFieldAddress(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c);
+            sWrap.dispRecId = lineItems[0].Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c;
+            custId = lineItems[0].Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c;
+            sWrap.isCustomerShipping = true;
+            sWrap.isAccountShipping = false;
+        }
         
-        if(accValidationsResp.equalsIgnoreCase('success')) {
+        if(accValidationsResp.equalsIgnoreCase('success') && accValidationsRespShipping.equalsIgnoreCase('success')) {
             sWrap.reqFieldsMissing = false;
         }
         else{
             sWrap.reqFieldsMissing = true;
-            missingListWrapper getMissingDetails = getOppRelatedAccountDetails(custId, sWrap.isAccount); 
+            missingListWrapper getMissingDetails = getOppRelatedAccountDetails(custId, accId, sWrap.isAccount, sWrap.isCustomer, sWrap.isAccountShipping, sWrap.isCustomerShipping); 
             sWrap.missingFieldsList = getMissingDetails.missingFieldList;
+            sWrap.missingFieldsListCustAddress = getMissingDetails.missingFieldsListCustAddress;
             sWrap.onlyAccMissingFieldList = getMissingDetails.onlyAccMissingFieldList;
             sWrap.userId = getMissingDetails.userId;
             sWrap.bhId = getMissingDetails.bhId;
@@ -106,12 +127,20 @@ public without sharing class OpportunityCreateSaleOrderController {
         public Id dispRecId;
         @AuraEnabled
         public List<String> missingFieldsList = new list<string>();
+        @AuraEnabled
+        public List<String> missingFieldsListCustAddress = new list<string>();
         @AuraEnabled 
         public Id userId;
         @AuraEnabled 
         public Id bhId;
         @AuraEnabled
         public Boolean isAccount;
+        @AuraEnabled
+        public Boolean isCustomer;
+        @AuraEnabled
+        public Boolean isAccountShipping;
+        @AuraEnabled
+        public Boolean isCustomerShipping;
         @AuraEnabled
         public List<String> onlyAccMissingFieldList = new list<string>();
         
@@ -125,6 +154,8 @@ public without sharing class OpportunityCreateSaleOrderController {
         @AuraEnabled
         public List<String> onlyAccMissingFieldList = new list<string>();
         @AuraEnabled
+        public List<String> missingFieldsListCustAddress = new list<string>();
+        @AuraEnabled
         public List<String> missingFieldList = new list<string>();
         @AuraEnabled 
         public Id userId;
@@ -132,9 +163,10 @@ public without sharing class OpportunityCreateSaleOrderController {
         public Id bhId;
     }
     
-    private static missingListWrapper getOppRelatedAccountDetails(String selectedAddressId, Boolean isAccount){
+    private static missingListWrapper getOppRelatedAccountDetails(String selectedAddressId, string accId, Boolean isAccount, Boolean isCustomer, Boolean isAccountShipping, Boolean isCustomerShipping){
         
         List<String> missingFieldsList = new List<String>();
+        List<String> missingFieldsListCustAddress = new List<String>();
         List<String> onlyAccMissingFieldList = new List<String>();
         missingListWrapper mlw = new missingListWrapper();
         
@@ -142,10 +174,10 @@ public without sharing class OpportunityCreateSaleOrderController {
             Id userId;
             Id bhId;
             
-            if(isAccount){
+            if(isAccount || isAccountShipping){
                 Account accRec = [Select Id, Initial_SAP_Update__c, Name, User__c, Customer_Contact__c, Customer_Type__c,OwnerId,CurrencyIsoCode,BillingCity,BillingCountry,BillingStreet,BillingPostalCode,BillingState,
                                   Delivery_Plant__c,Account_Segment__c,Transportation_Terms__c,PAN_Number__c,GST_number__c,Tax_Type__c, Payment_terms__c, Tax_Collected_At_Source__c, FSSAI__c 
-                                  From Account Where Id =: selectedAddressId];
+                                  From Account Where Id =: accId];
                 userId = accRec.OwnerId;
                 bhId = accRec.User__c;
                 
@@ -220,7 +252,7 @@ public without sharing class OpportunityCreateSaleOrderController {
                 }                
                 
             }
-            else{
+            if(isCustomerShipping || isCustomer){
                 Dispatch_Address__c disRec = [select id, Customer_Category__c, Tax_Type__c, FSSAI_Number__c, PAN_Number__c, Initial_SAP_Update__c, Account__r.User__c, Address__city__s, Address__Street__s, Address__PostalCode__s, Address__CountryCode__s, Address__StateCode__s,
                                               Contact__c,Account__c,Type__c, OwnerId, Account__r.Customer_Type__c, Account__r.Account_Segment__c, Account__r.Delivery_Plant__c, CurrencyIsoCode, GST_Number__c,
                                               Account__r.Transportation_Terms__c, Account__r.PAN_Number__c, Account__r.Tax_Type__c, Account__r.Payment_terms__c, Account__r.Tax_Collected_At_Source__c, Account__r.FSSAI__c
@@ -231,35 +263,35 @@ public without sharing class OpportunityCreateSaleOrderController {
                 
                 if(!disRec.Initial_SAP_Update__c){
                     if((disRec.Address__city__s == null) || (disRec.Address__city__s == '')){
-                        missingFieldsList.add('Address__city__s');
+                        missingFieldsListCustAddress.add('Address__city__s');
                     }
                     
                     if(((disRec.Address__StateCode__s == null) || (disRec.Address__StateCode__s == '')) && disRec.Account__r.Customer_Type__c!='Export'){
-                        missingFieldsList.add('Address__StateCode__s');
+                        missingFieldsListCustAddress.add('Address__StateCode__s');
                     }               
                     
                     if((disRec.Address__Street__s == null) || (disRec.Address__Street__s == '')){
-                        missingFieldsList.add('Address__Street__s');
+                        missingFieldsListCustAddress.add('Address__Street__s');
                     }
                     
                     if((disRec.Address__CountryCode__s == null) || (disRec.Address__CountryCode__s == '')){
-                        missingFieldsList.add('Address__CountryCode__s');
+                        missingFieldsListCustAddress.add('Address__CountryCode__s');
                     }
                     
                     if((disRec.Address__PostalCode__s == null) || (disRec.Address__PostalCode__s == '')){
-                        missingFieldsList.add('Address__PostalCode__s');
+                        missingFieldsListCustAddress.add('Address__PostalCode__s');
                     }
                     
                     if(disRec.Contact__c == null){
-                        missingFieldsList.add('Contact__c');
+                        missingFieldsListCustAddress.add('Contact__c');
                     } 
                     
                     if((disRec.CurrencyIsoCode == null) || (disRec.CurrencyIsoCode == '')){
-                        missingFieldsList.add('CurrencyIsoCode');
+                        missingFieldsListCustAddress.add('CurrencyIsoCode');
                     }
 
                     if(String.isBlank(disRec.Customer_Category__c)){
-                        missingFieldsList.add('Customer_Category__c');
+                        missingFieldsListCustAddress.add('Customer_Category__c');
                     }
                     
                     if((disRec.Account__r.Customer_Type__c == null) || (disRec.Account__r.Customer_Type__c == '')){
@@ -277,18 +309,18 @@ public without sharing class OpportunityCreateSaleOrderController {
                 }
                 
                 if(String.isBlank(disRec.Tax_Type__c)){
-                    missingFieldsList.add('Tax_Type__c');
+                    missingFieldsListCustAddress.add('Tax_Type__c');
                 }
                 if(disRec.FSSAI_Number__c == null || disRec.FSSAI_Number__c == 0){
-                    missingFieldsList.add('FSSAI_Number__c');
+                    missingFieldsListCustAddress.add('FSSAI_Number__c');
                 }
 
                 if(!String.isBlank(disRec.Address__CountryCode__s) && disRec.Address__CountryCode__s.equalsIgnoreCase('IN') && (String.isBlank(disRec.PAN_Number__c) || String.isBlank(disRec.GST_Number__c))){
                     if(String.isBlank(disRec.PAN_Number__c)){
-                        missingFieldsList.add('PAN_Number__c');
+                        missingFieldsListCustAddress.add('PAN_Number__c');
                     }
                     if(String.isBlank(disRec.GST_Number__c)){
-                        missingFieldsList.add('GST_Number__c');
+                        missingFieldsListCustAddress.add('GST_Number__c');
                     }
                 }
                 if(String.isBlank(disRec.Account__r.Payment_terms__c)){
@@ -304,6 +336,7 @@ public without sharing class OpportunityCreateSaleOrderController {
             }
             
             System.debug('missingFieldsList---->'+missingFieldsList); 
+            System.debug('missingFieldsListCustAddress---->'+missingFieldsListCustAddress); 
             
             List<User> userRec = [SELECT Id, Name, SAP_USER_CODE__c FROM User WHERE Id =: userId];
             if(userRec.size()>0 && userRec[0].SAP_USER_CODE__c != null){
@@ -316,6 +349,7 @@ public without sharing class OpportunityCreateSaleOrderController {
             }
             
             mlw.missingFieldList = missingFieldsList;
+            mlw.missingFieldsListCustAddress = missingFieldsListCustAddress;
             mlw.onlyAccMissingFieldList = onlyAccMissingFieldList;
             mlw.userId = userId;
             mlw.bhId = bhId;
@@ -397,10 +431,13 @@ public without sharing class OpportunityCreateSaleOrderController {
         try {
             Sales_Order__c so = [Select Id,Account__c,Opportunity__r.Account.Customer_Code_SAP__c,
                                  Opportunity__r.Account_Billing_Address__c,Opportunity__r.Customer_Billing_Address__c,
-                                 Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c
+                                 Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c,
+
+                                 Opportunity__r.Selected_Billing_Customer_Code__c, Opportunity__r.Selected_Shipping_Customer_Code__c
+
                                  From Sales_Order__c Where Id=:id];
             
-            String customerCode = '';
+            /* String customerCode = '';
             if(so.Opportunity__r.Account_Billing_Address__c){
                 customerCode = so.Opportunity__r.Account.Customer_Code_SAP__c;
             }
@@ -411,7 +448,12 @@ public without sharing class OpportunityCreateSaleOrderController {
             if(String.isEmpty(customerCode)){
                 return 'Customer Creation Initiated';    
             }
-            //Utility.sendSONotification(id);
+            //Utility.sendSONotification(id); */
+
+            if(!so.Opportunity__r.Selected_Billing_Customer_Code__c || !so.Opportunity__r.Selected_Shipping_Customer_Code__c){
+                return 'Customer Creation Initiated';
+            }
+
             return 'Success';
         } catch (Exception e) {
             system.debug('line no ' + e.getLineNumber());
@@ -436,8 +478,15 @@ public without sharing class OpportunityCreateSaleOrderController {
             Sales_Order__c so = [Select Id,Account__c,Opportunity__r.Account.Customer_Code_SAP__c,Opportunity__r.AccountId, Opportunity__r.Customer_Billing_Address__r.SAP_Update_Customer__c,
                                  Opportunity__r.Account_Billing_Address__c,Opportunity__r.Customer_Billing_Address__c,
                                  Opportunity__r.Customer_Billing_Address__r.Customer_Code_SAP__c, Opportunity__r.Account.SAP_Update_Customer__c, Opportunity__r.Account.Submitted_to_SAP__c,
-                                 Opportunity__r.Customer_Billing_Address__r.Submitted_to_SAP__c
-                                 From Sales_Order__c Where Id=:soId];
+                                 Opportunity__r.Customer_Billing_Address__r.Submitted_to_SAP__c,
+
+                                 Opportunity__r.Selected_Billing_Customer_Code__c, Opportunity__r.Selected_Shipping_Customer_Code__c,
+
+                                 Opportunity__r.Account.Shipping_Customer_Code_SAP__c, Opportunity__r.Account_Shipping_Address__c, Opportunity__r.Customer_Shipping_Address__c, 
+                                 Opportunity__r.Customer_Shipping_Address__r.Customer_Code_SAP__c, Opportunity__r.Account.Shipping_Submitted_to_SAP__c, Opportunity__r.Customer_Shipping_Address__r.Submitted_to_SAP__c
+
+                                 From Sales_Order__c Where Id=:soId
+                                 ];
             
             String customerCode = '';
             Boolean isAccount = false;

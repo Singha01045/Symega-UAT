@@ -2,9 +2,7 @@
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="MissingFieldList" type="List"/>
-    <aura:attribute name="MissingFieldListCustAddress" type="List"/>
     <aura:attribute name="ShowUpdateAccountPage" type="Boolean" default="false"/>
-    <aura:attribute name="ShowUpdateCustAddressPage" type="Boolean" default="false"/>
     
     <aura:attribute name="Show1stPage" type="Boolean" default="false"/>
     <aura:attribute name="ShowSpinner" type="Boolean" default="true"/>
@@ -12,13 +10,11 @@
     <aura:attribute name="customerId" type="Id"/>
     <aura:attribute name="userId" type="Id"/>   
     <aura:attribute name="bhId" type="Id"/>
-    <aura:attribute name="missingCodeShipping" type="Boolean" default="false"/>
     <aura:attribute name="missingCode" type="Boolean" default="false"/> 
     <aura:attribute name="userSapCode" type="String"/>    
     <aura:attribute name="bhSapCode" type="String"/>    
     <aura:attribute name="accFieldsMissing" type="Boolean" default="false"/> 
     <aura:attribute name="custFieldsMissing" type="Boolean" default="false"/> 
-    <aura:attribute name="bothObjectDisplay" type="Boolean" default="false"/> 
     
     <aura:attribute name="showDlvryPlantField" type="Boolean" default="false"/> 
     <aura:attribute name="showCustTypeField" type="Boolean" default="false"/> 
@@ -122,16 +118,15 @@
                                         </div>
                                     </aura:set>
                                 </aura:if>
-                            </aura:if>
                                 
                                 <!-- When Customer Address Fields are missing -->
-                                <aura:if isTrue="{!v.ShowUpdateCustAddressPage}">
+                                <aura:set attribute="else">
                                     <!-- When Customer Address Fields are missing -->
                                     <aura:if isTrue="{!v.custFieldsMissing}">
-                                        <lightning:recordEditForm recordId="{!v.customerId}" objectApiName="Dispatch_Address__c" onsuccess="{!c.handleUpdate2}" onerror="{!c.handleError}">
+                                        <lightning:recordEditForm recordId="{!v.customerId}" objectApiName="Dispatch_Address__c" onsuccess="{!c.handleUpdate}" onerror="{!c.handleError}">
                                             <div class="slds-grid slds-gutters">
                                                 <div class="slds-col slds-size_1-of-2">
-                                                    <aura:iteration items="{!v.MissingFieldListCustAddress}" var="mfl">
+                                                    <aura:iteration items="{!v.MissingFieldList}" var="mfl">
                                                         <lightning:inputField fieldName="{!mfl}" />
                                                     </aura:iteration>
                                                 </div>  
@@ -199,7 +194,9 @@
                                         
                                     </aura:if>
                                     
-                                </aura:if>                            
+                                </aura:set>
+                            </aura:if>
+                            
                         </div>
                     </div>
                 </section> 

@@ -981,7 +981,7 @@ sendTempReqEmail(tempReqList[0].Id,tempReqList[0].Client__r, emailTemplateList[0
                        RecordType.Name, Owner.SAP_USER_CODE__c, User__r.SAP_USER_CODE__c, Account_Segment__c,
                        CurrencyIsoCode, Delivery_Plant__c, Owner.Email
                        From Account Where Id =:accId];
-        return sapForInitialFieldsCheck(acc);
+        return sapForInitialFieldsCheck_ShippingAccount(acc);
     }
     
     public static String sapForInitialFieldsCheck_ShippingAccount(Account acc) {

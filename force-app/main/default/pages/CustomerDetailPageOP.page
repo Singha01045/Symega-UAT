@@ -761,11 +761,13 @@ border-top: none;
                                     <td>Select</td>
                                     <td>S.No.</td>
                                     <th>Name</th>
+                                    <th>Sample ID</th>
                                     <th>Status</th>
                                     <th>Shipping Type</th>
                                     <!--th>Product Family</th-->
                                     <th>Sample Requested By</th>
                                     <th>Record Type</th>
+                                    <th>Created Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -773,12 +775,14 @@ border-top: none;
                                     <td><input type="checkbox" ng-model="sample.selected" ng-change="onClickOfSample(sample.Id,$index)" /></td>
                                     <td>{{$index+1}}</td>
                                     <td ng-if="sample.Record_Type_Name__c == 'Sample'" style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
+                                    <td ng-if="sample.Record_Type_Name__c == 'Sample'" style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Name}}</a></td>
                                     <td ng-if="sample.Record_Type_Name__c == 'Project'">{{sample.Project_Name__c}}</td>
                                     <td>{{sample.Status__c}}</td>
                                     <td>{{sample.Shipping_Type__c}}</td>
                                     <!--td>{{sample.Product_Family__c}}</td-->
                                     <td>{{sample.Sample_Requested_by__c}}</td>
                                     <td>{{sample.Record_Type_Name__c}}</td>
+                                    <td>{{sample.CreatedDate | date:'yyyy-MM-dd'}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1161,7 +1165,8 @@ border-top: none;
                     debugger;
                     $scope.sampleId = sampleId;
                     var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleDetailPage';
-                    window.location.replace(window.location.origin + sitePrefix +'?id='+userHashId+'&sampleId='+ $scope.sampleId);
+                    //window.location.replace(window.location.origin + sitePrefix +'?id='+userHashId+'&sampleId='+ $scope.sampleId);
+                    window.open(window.location.origin + sitePrefix +'?id='+userHashId+'&sampleId='+ $scope.sampleId, '_blank')
                     $scope.$apply();
                 }
                 

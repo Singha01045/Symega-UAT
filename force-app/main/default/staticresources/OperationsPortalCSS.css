@@ -17,7 +17,7 @@
 }
 
 .buttonContainer{
-    display: inline-block;
+    display: inline-flex;
     width:max-content;
     float: right;
 }

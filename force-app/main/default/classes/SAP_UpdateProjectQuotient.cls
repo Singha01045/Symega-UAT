@@ -23,7 +23,7 @@ global without sharing class SAP_UpdateProjectQuotient {
                 HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/pro_quotient_update', 'POST', 200, processingStartTime, System.now() , projectId); //Log 
             }
             else{
-                responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Something went wrong'));
+                responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', getResponse));
                 RestContext.response.statusCode = 400;
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
                 HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/pro_quotient_update', 'POST', 200, processingStartTime, System.now(), projectId); //Log 
@@ -47,7 +47,7 @@ global without sharing class SAP_UpdateProjectQuotient {
                 system.debug('sscCodeToPRMap :: ' + sscCodeToPRMap);
                 system.debug('quotientList :: ' + quotientList);
                 
-                if(quotientList != null) {
+                if(quotientList != null && !quotientList.isEmpty() && quotientList.size()>0) {
                     for(SAP_ProjectQuotientWrapper.cls_PRODUCT_OUTCOME prRec : quotientList) {
                         if(!String.isBlank(prRec.HALB_CODE)) {
                             string capitalHALB = Utility.capitalizeString(prRec.HALB_CODE);
@@ -74,11 +74,12 @@ global without sharing class SAP_UpdateProjectQuotient {
                     }
                     if(!sscCodeToPRMap.isEmpty())
                         upsert sscCodeToPRMap.values();
-                }
-                
-                return 'Success';
+                    
+                    return 'Success';
+                }                
+                return 'Incomplete Request';
             }
-            return 'err';
+            return 'Id is not mentioned';
         }
         catch(Exception e){
             System.debug(' --- Error Msg '+ e.getMessage());
