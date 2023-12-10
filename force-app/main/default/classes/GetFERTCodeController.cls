@@ -315,7 +315,8 @@ public class GetFERTCodeController {
     }
 
     public static void sendFertCodeEmailBulkAddress(List<Id> addrId){
-        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity Where Customer_Billing_Address__c IN : addrId AND Send_Fert_Notification_Email__c=true];
+        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity 
+                                     Where (Customer_Billing_Address__c IN : addrId OR Customer_Shipping_Address__c IN : addrId) AND Send_Fert_Notification_Email__c=true];
         for(Opportunity opp : oppList){
             sendFertCodeReqHelper(opp.Id, opp.OwnerId, opp.Owner.Email);
             opp.Send_Fert_Notification_Email__c = false;
@@ -324,7 +325,8 @@ public class GetFERTCodeController {
     }
     
     public static void sendFertCodeEmailBulk(List<Id> accId){
-        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity Where AccountId IN : accId AND Send_Fert_Notification_Email__c=true];
+        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity
+                                     Where AccountId IN : accId AND Send_Fert_Notification_Email__c=true];
         for(Opportunity opp : oppList){
             sendFertCodeReqHelper(opp.Id, opp.OwnerId, opp.Owner.Email);
             opp.Send_Fert_Notification_Email__c = false;

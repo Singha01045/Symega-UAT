@@ -1,8 +1,8 @@
 import { LightningElement, api, wire, track} from 'lwc';
 import {CloseActionScreenEvent} from 'lightning/actions';
 import sendSONotification from '@salesforce/apex/OpportunityCreateSaleOrderController.sendSONotification'
-import getLineItemDet from '@salesforce/apex/OpportunityCreateSaleOrderController.getLineItemDetails'
-import updateOpp from '@salesforce/apex/OpportunityCreateSaleOrderController.updateOpp'
+import getLineItemDet from '@salesforce/apex/TestClass.getLineItemDetails'
+import updateOpp from '@salesforce/apex/TestClass.testMethod1'
 import updateUserRecord from '@salesforce/apex/OpportunityCreateSaleOrderController.updateUser';
 import updateAccRecord from '@salesforce/apex/OpportunityCreateSaleOrderController.updateAccount';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
@@ -11,17 +11,28 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class PushSOToSAP extends LightningElement {
 
     @api recordId;
-    initiallySubmitted = false;
     show1stPage = false;
     showSpinner = true;
+    
     accRecId;
-    dispRecId;
-    missingFieldsList;
-    custAddFieldsMissingList;
+    billingDispRecId;
+    shippingDispRecId;
+
+    isBilling_ShippingAccount = false;
+    isAccBilling_ShippigCustomer = false;
+    isBillingCustomer_AccShipping = false;
+    isCustomerBilling_Shipping = false;
+
+    accountMissingFieldList;
+    billingCustMissingFieldList;
+    shippingCustMissingFieldList;
     onlyAccMissingFieldList;
+
     userId;
+    addressUserId
     bhId;
     isAccount = false;
+
     pickValList;
     pan;
     gst;
@@ -29,14 +40,16 @@ export default class PushSOToSAP extends LightningElement {
 
     showUserField = false;
     showBhField = false;
+    showAddressUserField = false;
+
+
+    showAccountOnScreen = false;
+    showCustAddrssOnShippingScreen = false;
+    showCustAddrssOnBillingScreen = false;
+
     custAddFieldsMissing = false;
     accFieldsMissing = false;
-    showPAN = false;
-    showGST = false;
-    showFSSAI = false;
 
-    showUserField = false;
-    showBhField = false;
     showDlvryPlantField = false;
     showCustTypeField = false;
     showAccSegField = false;
@@ -44,9 +57,6 @@ export default class PushSOToSAP extends LightningElement {
     showTaxCollect = false;
     showPaymentTerms = false;
     showTransportTerms = false;
-    bothObjectDisplay = false;
-    showCustomerFields = false;
-  showAccountFields = false;
 
     @track dlvryPlantList = [];
     @track custTypeList = [];
@@ -84,80 +94,79 @@ export default class PushSOToSAP extends LightningElement {
                 }
                 else{
                     this.show1stPage = true;
-                    this.initiallySubmitted = data.initiallySubmitted;
 
                     this.accRecId = data.accRecId;
-                    this.dispRecId = data.dispRecId;
+                    this.billingDispRecId = data.billingDispRecId;
+                    this.shippingDispRecId = data.shippingDispRecId;
 
-                    this.missingFieldsList = data.missingFieldsList;
-                    this.custAddFieldsMissingList = data.missingFieldsListCustAddress;
+                    this.accountMissingFieldList = data.accountMissingFieldList;
+                    this.billingCustMissingFieldList = data.billingCustMissingFieldList;
+                    this.shippingCustMissingFieldList = data.shippingCustMissingFieldList;
                     this.onlyAccMissingFieldList = data.onlyAccMissingFieldList;
-                    this.isAccount = data.isAccount;
-                    this.isCustomer = data.isCustomer;
-                    this.isAccountShipping = data.isAccountShipping;
-                    this.isCustomerShipping = data.isCustomerShipping;
 
-                    if(this.isAccount || this.isAccountShipping){
-                        if(data.missingFieldsList.length > 0){
-                            this.showAccountFields = true;
-                            this.accFieldsMissing = true;
+
+                    this.isBilling_ShippingAccount = data.isBilling_ShippingAccount;
+                    this.isAccBilling_ShippigCustomer = data.isAccBilling_ShippigCustomer;
+                    this.isBillingCustomer_AccShipping = data.isBillingCustomer_AccShipping;
+                    this.isCustomerBilling_Shipping = data.isCustomerBilling_Shipping;   
+
+                    // this.userId = data.userId;
+                    // this.addressUserId = data.addressUserId;
+                    // this.bhId = data.bhId;
+
+                    // if(data.userId != null || data.userId != undefined){
+                    //     this.showUserField = true;
+                    // }
+                    // if(data.bhId != null || data.bhId != undefined){
+                    //     this.showBhField = true;
+                    // }
+                    // if(data.addressUserId != null || data.addressUserId != undefined){
+                    //     this.showAddressUserField = true;
+                    // }
+
+
+                    if(data.accountMissingFieldList.length > 0){
+                        this.showAccountOnScreen = true;
+                    }
+                    else{
+                        if(this.shippingCustMissingFieldList.length > 0){
+                            this.showCustAddrssOnShippingScreen = true;
+                        }
+                        if(this.billingCustMissingFieldList.length > 0){
+                            this.showCustAddrssOnBillingScreen = true;
+                            this.showCustAddrssOnShippingScreen = false;
                         }
                     }
-                    if(this.isCustomer || this.isCustomerShipping){
-                        if(this.custAddFieldsMissingList.length>0){
-                            this.custAddFieldsMissing = true;
-                                   if(this.showAccountFields == true){
-                                        this.bothObjectDisplay = true;
-                                        this.showCustomerFields = false;
-                                   }else{
-                                        this.custAddFieldsMissing = true;
-                                        this.showCustomerFields = true;
-                                   }
-                              }
-                        }
 
-                    if(data.onlyAccMissingFieldList.length>0){
+                    
+                    if(this.isCustomerBilling_Shipping){
+                        if(this.onlyAccMissingFieldList.length>0){
+                            this.showCustAddrssOnBillingScreen = true;
+                            this.showCustAddrssOnShippingScreen = false;
+
+                            if(!this.billingCustMissingFieldList.length > 0){
+                                this.showAccountOnScreen = true;
+                            }
                         
-                        if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
-                             this.showDlvryPlantField = true;
+                            if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
+                                 this.showDlvryPlantField = true;
+                            }
+                            if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
+                                 this.showCustTypeField = true;
+                            }
+                            if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
+                                 this.showAccSegField = true;
+                            }
+                            if(data.onlyAccMissingFieldList.includes('Payment_terms__c')){
+                                this.showPaymentTerms = true;
+                            }
+                            if(data.onlyAccMissingFieldList.includes('Tax_Collected_At_Source__c')){
+                                this.showTaxCollect = true;
+                            }
+                            if(data.onlyAccMissingFieldList.includes('Transportation_Terms__c')){
+                                this.showTransportTerms = true;
+                            }
                         }
-                        if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
-                             this.showCustTypeField = true;
-                        }
-                        if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
-                             this.showAccSegField = true;
-                        }
-                        // if(data.onlyAccMissingFieldList.includes('Tax_Type__c')){
-                        //     this.showTaxType = true;
-                        // }
-                        // if(data.onlyAccMissingFieldList.includes('PAN_Number__c')){
-                        //     this.showPAN = true;
-                        // }
-                        // if(data.onlyAccMissingFieldList.includes('GST_number__c')){
-                        //     this.showGST = true;
-                        // }
-                        if(data.onlyAccMissingFieldList.includes('Payment_terms__c')){
-                            this.showPaymentTerms = true;
-                        }
-                        if(data.onlyAccMissingFieldList.includes('Tax_Collected_At_Source__c')){
-                            this.showTaxCollect = true;
-                        }
-                        // if(data.onlyAccMissingFieldList.includes('FSSAI__c')){
-                        //     this.showFSSAI = true;
-                        // }
-                        if(data.onlyAccMissingFieldList.includes('Transportation_Terms__c')){
-                            this.showTransportTerms = true;
-                        }
-
-                   }
-
-                    this.userId = data.userId;
-                    this.bhId = data.bhId;
-                    if(data.userId != null || data.userId != undefined){
-                        this.showUserField = true;
-                    }
-                    if(data.bhId != null || data.bhId != undefined){
-                        this.showBhField = true;
                     }
 
                     this.pickValList = data.pickValList;
@@ -216,6 +225,8 @@ export default class PushSOToSAP extends LightningElement {
                         }
                         this.accSegList=option7;
                     }
+
+                    
                 }
             }
         })
@@ -226,9 +237,11 @@ export default class PushSOToSAP extends LightningElement {
         sendSONotification({id : this.recordId}).then(data=>{
             if(data=='Success'){
                 this.showToast('Success','Notification Sent Successfully','success');
-            }else{
-                this.showToast('Success',data,'success');
             }
+            // else{
+            //     this.showToast('Success',data,'success');
+            // }
+
             if(this.showSpinner == true){
                 this.showSpinner = false;
             }
@@ -301,10 +314,24 @@ export default class PushSOToSAP extends LightningElement {
         updateOpp({soId:this.recordId}).then(result =>{
             console.log('Opp Update Result',result);
 
+            // if(result!='Success'){
+            //     this.showToast('Failed',result,'error');
+            //     this.dispatchEvent(new CloseActionScreenEvent());        
+            // }
+            // else{
+            //     this.closePopup();
+            // }
+
             if(result!='Success'){
-                this.showToast('Failed',result,'error');
-                this.dispatchEvent(new CloseActionScreenEvent());        
-            }else{
+                if(result.includes('in Progress')){
+                    this.showToast('Success',result,'success');
+                    this.dispatchEvent(new CloseActionScreenEvent());        
+                }
+                else{
+                    this.showToast('Error',result,'error');     
+                }
+            }
+            else{
                 this.closePopup();
             }
         }).catch(err =>{
@@ -326,41 +353,119 @@ export default class PushSOToSAP extends LightningElement {
         this.dispatchEvent(evt);
     }
 
-    handleSuccess(){
+
+    handleAccountBillingAndShipping(){
         debugger;
+        this.sendSONotification();
+        this.showToast('Success', 'Account updated successfully', 'success');
+        this.show1stPage = false;
+    }
 
-        if(this.showUserField){
-            console.log('this.userpsap s ', this.userSapCode);
-            updateUserRecord({userSAPcode:this.userSapCode, userId:this.userId, accRec : this.accRec})
+    handleAccountBillingAndCustomerShipping_Account(){
+        debugger;
+        this.showAccountOnScreen = false;
+        if(this.shippingCustMissingFieldList.length > 0){
+            this.showCustAddrssOnShippingScreen = true;
         }
-        if(this.showBhField){
-            console.log('this.bhSapCode ', this.bhSapCode);
-            updateUserRecord({userSAPcode:this.bhSapCode, userId:this.bhId, accRec : this.accRec})
+        else{
+            this.sendSONotification();
+            this.showToast('Success', 'Account updated successfully', 'success');
+            this.show1stPage = false;
         }
+    }
 
-        if((this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '') ||
-        /*(this.taxTypeVal != undefined && this.taxTypeVal != '') ||*/ (this.taxCollectVal != undefined && this.taxCollectVal != '') || (this.paymentTermsVal != undefined && this.paymentTermsVal != '') ||
-        (this.transportTermsVal != undefined && this.transportTermsVal != '') /*|| (this.pan != undefined && this.pan != '') || (this.gst != undefined && this.gst != '') || (this.fssai != undefined && this.fssai > 0 )*/
-        ){
+    handleAccountBillingAndCustomerShipping_CustAddr(){
+        debugger;
+        this.sendSONotification();
+        this.showToast('Success', 'Customer Address updated successfully', 'success');
+        this.show1stPage = false;
+    }
+
+    handleCustomerBillingAndAccountShipping_Account(){
+        debugger;
+        this.showAccountOnScreen = false;
+        if(this.billingCustMissingFieldList.length > 0){
+            this.showCustAddrssOnBillingScreen = true;
+        }
+        else{
+            this.sendSONotification();
+            this.showToast('Success', 'Account updated successfully', 'success');
+            this.show1stPage = false;
+        }
+    }
+
+    handleCustomerBillingAndAccountShipping_CustAddr(){
+        debugger;
+        this.sendSONotification();
+        this.showToast('Success', 'Customer Address updated successfully', 'success');
+        this.show1stPage = false;
+    }
+
+    handleCustomerBilling(){
+        debugger;
+        this.showCustAddrssOnBillingScreen = false;
+
+        if( (this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '') ||
+        (this.taxCollectVal != undefined && this.taxCollectVal != '') || (this.paymentTermsVal != undefined && this.paymentTermsVal != '') ||
+        (this.transportTermsVal != undefined && this.transportTermsVal != '') )
+        {
             updateAccRecord({accId:this.accRecId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal, taxType : this.taxTypeVal, taxCollect : this.taxCollectVal, paymentTerms : this.paymentTermsVal, transportTerms : this.transportTermsVal, Gst : this.gst, Pan : this.pan, fssai : this.fssai})
         }
-        if(this.bothObjectDisplay){
-               this.showAccountFields = false;
-               this.showCustomerFields = true;
-               this.bothObjectDisplay = false;
-               console.log('Customer Address Fields --> ' + this.missingFieldsListCustAddress);
-          }else{
-              this.sendSONotification();
-              this.showToast('Success', 'Account updated successfully', 'success');
-              this.show1stPage = false;
-          }
+
+        if(this.shippingCustMissingFieldList.length > 0){
+            this.showCustAddrssOnShippingScreen = true;
+        }
+        else{
+            this.sendSONotification();
+            this.showToast('Success', 'Customer updated successfully', 'success');
+            this.show1stPage = false;
+        }
     }
+
+    handleCustomerShipping(){
+        debugger;
+        this.sendSONotification();
+        this.showToast('Success', 'Customer Address updated successfully', 'success');
+        this.show1stPage = false;
+    }
+
+
+    // handleSuccess(){
+    //     debugger;
+
+    //     if(this.showUserField){
+    //         console.log('this.userpsap s ', this.userSapCode);
+    //         updateUserRecord({userSAPcode:this.userSapCode, userId:this.userId, accRec : this.accRec})
+    //     }
+    //     if(this.showBhField){
+    //         console.log('this.bhSapCode ', this.bhSapCode);
+    //         updateUserRecord({userSAPcode:this.bhSapCode, userId:this.bhId, accRec : this.accRec})
+    //     }
+
+    //     if((this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '') ||
+    //     /*(this.taxTypeVal != undefined && this.taxTypeVal != '') ||*/ (this.taxCollectVal != undefined && this.taxCollectVal != '') || (this.paymentTermsVal != undefined && this.paymentTermsVal != '') ||
+    //     (this.transportTermsVal != undefined && this.transportTermsVal != '') /*|| (this.pan != undefined && this.pan != '') || (this.gst != undefined && this.gst != '') || (this.fssai != undefined && this.fssai > 0 )*/
+    //     ){
+    //         updateAccRecord({accId:this.accRecId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal, taxType : this.taxTypeVal, taxCollect : this.taxCollectVal, paymentTerms : this.paymentTermsVal, transportTerms : this.transportTermsVal, Gst : this.gst, Pan : this.pan, fssai : this.fssai})
+    //     }
+    //     if(this.bothObjectDisplay){
+    //            this.showAccountFields = false;
+    //            this.showCustomerFields = true;
+    //            this.bothObjectDisplay = false;
+    //            console.log('Customer Address Fields --> ' + this.missingFieldsListCustAddress);
+    //       }else{
+    //           this.sendSONotification();
+    //           this.showToast('Success', 'Account updated successfully', 'success');
+    //           this.show1stPage = false;
+    //       }
+    // }
 
     closeModal() {
         this.dispatchEvent(new CloseActionScreenEvent());
     }
 
-    handleError(){
+    handleError(event){
         debugger;
+        console.log('ERROR -- ', event.detail.detail);
     }
 }

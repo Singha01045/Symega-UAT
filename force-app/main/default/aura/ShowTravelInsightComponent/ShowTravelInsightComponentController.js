@@ -1,5 +1,5 @@
 ({
-	parentComponentEvent:function(component ,event ,helper) {
+    parentComponentEvent:function(component ,event ,helper) {
         
         var MPlist=[];
         var Month = event.getParam("Month");
@@ -17,24 +17,30 @@
             month:Month,
             year:Year
         });
-         action.setCallback(this, function(response) {
-             if(response.getState() === "SUCCESS"){
-                 helper.helperMethod(component ,event ,helper,Month,year);
-                 var data = response.getReturnValue();
-                 if(data !=null && data!=undefined){
-                     component.set("v.ShowToCreateMonthlyBeatPlan",false);
-                     component.set("v.MonthlyBeatPlanDataList",data);
-                      component.set("v.userName",data.Sales_User__r.Name);
-                 }else{
-                     component.set("v.ShowToCreateMonthlyBeatPlan",true);
-                 } 
-                 
-             }else{
-                 component.set("v.ShowToCreateMonthlyBeatPlan",true); 
-             }
+        action.setCallback(this, function(response) {
+            if(response.getState() === "SUCCESS"){
+                helper.helperMethod(component ,event ,helper,Month,year);
+                var data = response.getReturnValue();
+                if(data !=null && data!=undefined){
+                    var mbplRecord =data.mbplRecord;
+                    var approvalData =data.approvalData;
+                    
+                    // Set MonthlyBeatPlanDataList attribute
+                    component.set("v.MonthlyBeatPlanDataList", mbplRecord);
+                    component.set("v.approvalDetails", approvalData);
+                    // Set userName attribute
+                    component.set("v.userName", mbplRecord.Sales_User__r.Name);
+                    component.set("v.ShowToCreateMonthlyBeatPlan",false);
+                }else{
+                    component.set("v.ShowToCreateMonthlyBeatPlan",true);
+                } 
+                
+            }else{
+                component.set("v.ShowToCreateMonthlyBeatPlan",true); 
+            }
         });
-           $A.enqueueAction(action);
-
+        $A.enqueueAction(action);
+        
     }    
-     
+    
 })

@@ -11,18 +11,24 @@
             month:MonthName,
             year:year
         });
-         action.setCallback(this, function(response) {
-             if(response.getState() === "SUCCESS"){
-                 var data = response.getReturnValue();
-                 if(data !=null){
-                     component.set("v.MonthlyBeatPlanDataList",data);
-                      component.set("v.userName",data.Sales_User__r.Name);
-                 }
-             }
-        
+        action.setCallback(this, function(response) {
+            if(response.getState() === "SUCCESS"){
+                var data = response.getReturnValue();
+                if(data !=null){
+                    var mbplRecord =data.mbplRecord;
+                    var approvalData =data.approvalData;
+                    
+                    // Set MonthlyBeatPlanDataList attribute
+                    component.set("v.MonthlyBeatPlanDataList", mbplRecord);
+                    component.set("v.approvalDetails", approvalData);
+                    // Set userName attribute
+                    component.set("v.userName", mbplRecord.Sales_User__r.Name);
+                }
+            }
+            
         });
-           $A.enqueueAction(action);
-
+        $A.enqueueAction(action);
+        
     }    
-  
+    
 })

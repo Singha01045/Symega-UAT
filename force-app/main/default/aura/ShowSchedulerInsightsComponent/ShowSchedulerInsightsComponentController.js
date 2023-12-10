@@ -1,5 +1,5 @@
 ({
-	parentComponentEvent:function(component ,event ,helper) {
+    parentComponentEvent:function(component ,event ,helper) {
         debugger;
         var MPlist=[];
         var Month = event.getParam("Month");
@@ -11,7 +11,7 @@
         component.set("v.selectedMonth",Month);
         component.set("v.selectedYear",Year);
         
-         let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let date=new Date();
         let year=date.getFullYear();
         let month=date.getMonth();
@@ -21,24 +21,29 @@
             month:Month,
             year:Year
         });
-         action.setCallback(this, function(response) {
-             if(response.getState() === "SUCCESS"){
-                 var data = response.getReturnValue();
-                 if(data !=null && data!=undefined){
-                     component.set("v.ShowToCreateMonthlyBeatPlan",false);
-                     component.set("v.MonthlyBeatPlanDataList",data);
-                      component.set("v.userName",data.Sales_User__r.Name);
-                     component.set('v.refresh', true);
-                 }else{
-                     component.set("v.ShowToCreateMonthlyBeatPlan",true);
-                 }     
-             }else{
-                 component.set("v.ShowToCreateMonthlyBeatPlan",true); 
-             }
-        
+        action.setCallback(this, function(response) {
+            if(response.getState() === "SUCCESS"){
+                var data = response.getReturnValue();
+                if(data !=null && data!=undefined){
+                    var mbplRecord =data.mbplRecord;
+                    var approvalData =data.approvalData;
+                    
+                    // Set MonthlyBeatPlanDataList attribute
+                    component.set("v.MonthlyBeatPlanDataList", mbplRecord);
+                    component.set("v.approvalDetails", approvalData);
+                    // Set userName attribute
+                    component.set("v.userName", mbplRecord.Sales_User__r.Name);
+                    component.set('v.refresh', true);
+                }else{
+                    component.set("v.ShowToCreateMonthlyBeatPlan",true);
+                }     
+            }else{
+                component.set("v.ShowToCreateMonthlyBeatPlan",true); 
+            }
+            
         });
-           $A.enqueueAction(action);
-
+        $A.enqueueAction(action);
+        
     }    
-     
+    
 })

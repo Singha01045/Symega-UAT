@@ -4,7 +4,8 @@
     <aura:attribute name="selectedMonthNumber" type="Integer" />
     <aura:attribute name="selectedMonth" type="String" />
     <aura:attribute name="selectedYear" type="String" />
-    <aura:attribute name="MonthlyBeatPlanDataList" type="sObject" default="{sObjecttype:'Monthly_Beat_Plan__c'}"/>  
+    <aura:attribute name="MonthlyBeatPlanDataList" type="Object"/>
+    <aura:attribute name="approvalDetails" type="object" />
     <aura:attribute name="userName" type="String" />
     <aura:attribute name="refresh" type="Boolean" default="true"/>
     

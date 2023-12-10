@@ -279,7 +279,7 @@
 
     createOpportunityHandle: function (component, event, helper) {
         debugger;
-        let Fields = ['AccountId', , 'Amount','CloseDate','Name','StageName','Approval_Status__c','Basement_Completion_Amount__c','Batch_No__c','Booking_Amount__c','ContractId','Total_Amount__c','Sub_Stage__c','Status__c','Product_Team__c','Sales_Note__c'];
+        let Fields = ['AccountId', , 'Amount','CloseDate','Name','StageName','Approval_Status__c','Basement_Completion_Amount__c','Batch_No__c','Booking_Amount__c','ContractId','Total_Amount__c','Sub_Stage__c','Status__c','Product_Team__c','Sales_Note__c','Annual_Volume_in_units__c','Annual_Volume_Full__c','ROI_Analysis_Completed__c'];
         component.set("v.SobjectApiName", 'Opportunity');
         component.set("v.fields", Fields);
         component.set("v.ShowModal", true);
@@ -289,6 +289,10 @@
     onCancel: function (component, event, helper) {
         component.set("v.ShowModal", false);
 
+    },
+
+    closeModel: function (component, event, helper){
+        component.set("v.ShowModal", false);
     },
     
 

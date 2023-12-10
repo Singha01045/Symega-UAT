@@ -6,7 +6,8 @@
     <aura:attribute name="months" type="String"/>
     <aura:handler name="init" value="{!this}" action="{!c.init}"/>
     <aura:attribute name="ShowBeatPlannerName" type="Boolean" default="true"/>
-    <aura:attribute name="MonthlyBeatPlanDataList" type="sObject" default="{sObjecttype:'Monthly_Beat_Plan__c'}"/>                                                                      
+    <aura:attribute name="MonthlyBeatPlanDataList" type="Object"/>
+    <aura:attribute name="approvalDetails" type="object" />\
     <aura:attribute name="userName" type="String" />
     
     <!--<aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent" />-->
@@ -27,7 +28,7 @@
                 </header>
             </div>
             <div class="slds-card__body slds-card__body_inner">
-                   <p class="createDate">Created Date:&nbsp;<lightning:formattedDateTime value="{!v.MonthlyBeatPlanDataList.CreatedDate}" year="numeric" month="numeric" day="numeric"/> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>    <p class="Approved">Approved By: Chandan Kumar</p>       
+                   <p class="createDate">Created Date:&nbsp;<lightning:formattedDateTime value="{!v.MonthlyBeatPlanDataList.CreatedDate}" year="numeric" month="numeric" day="numeric"/> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>    <p class="Approved">Approved By:{!v.approvalDetails.name}</p>       
             </div>
         </article>
     </div>

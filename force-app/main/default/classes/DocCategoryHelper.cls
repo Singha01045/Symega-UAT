@@ -37,7 +37,7 @@ global class DocCategoryHelper {
             List<Document_Category__c> propAppList=  [Select id,Name from Document_Category__c where  deal__c=:dealId];
             String Obj = '';
             if(propAppList.size() > 0){
-                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r where Active__c =true order by createddate DESC limit 1) FROM Document_Category__c WHERE deal__c =:dealId ORDER BY CreatedDate]) {
+                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r) FROM Document_Category__c WHERE deal__c =:dealId ORDER BY CreatedDate]) {
                     //Handle First level cat Here
                     DocumentTreeWrapper appDocWrapper;
                     
@@ -58,7 +58,7 @@ global class DocCategoryHelper {
             List<Document_Category__c> propAppList=  [Select id,Name from Document_Category__c where  Account__c=:dealId];
             String Obj = '';
             if(propAppList.size() > 0){
-                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r where Active__c =true order by createddate DESC limit 1) FROM Document_Category__c WHERE Account__c =:dealId ORDER BY CreatedDate]) {
+                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r) FROM Document_Category__c WHERE Account__c =:dealId ORDER BY CreatedDate]) {
                     //Handle First level cat Here
                     DocumentTreeWrapper appDocWrapper;
                     
@@ -79,7 +79,7 @@ global class DocCategoryHelper {
             List<Document_Category__c> propAppList=  [Select id,Name from Document_Category__c where  Opportunity__c=:dealId];
             String Obj = '';
             if(propAppList.size() > 0){
-                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r where Active__c =true order by createddate DESC limit 1) FROM Document_Category__c WHERE Opportunity__c =:dealId ORDER BY CreatedDate]) {
+                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r) FROM Document_Category__c WHERE Opportunity__c =:dealId ORDER BY CreatedDate]) {
                     //Handle First level cat Here
                     DocumentTreeWrapper appDocWrapper;
                     
@@ -100,7 +100,7 @@ global class DocCategoryHelper {
             List<Document_Category__c> propAppList=  [Select id,Name from Document_Category__c where  deal__c=:dealId];
             String Obj = '';
             if(propAppList.size() > 0){
-                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r where Active__c =true order by createddate DESC limit 1) FROM Document_Category__c WHERE Monthly_Beat_Plan__c =:dealId ORDER BY CreatedDate]) {
+                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r) FROM Document_Category__c WHERE Monthly_Beat_Plan__c =:dealId ORDER BY CreatedDate]) {
                     //Handle First level cat Here
                     DocumentTreeWrapper appDocWrapper;
                     
@@ -122,7 +122,7 @@ global class DocCategoryHelper {
             List<Document_Category__c> propAppList=  [Select id,Name from Document_Category__c where  Visit__c=:dealId];
             String Obj = '';
             if(propAppList.size() > 0){
-                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r where Active__c =true order by createddate DESC limit 1) FROM Document_Category__c WHERE Visit__c =:dealId ORDER BY CreatedDate]) {
+                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name,Active__c FROM Documents_Attachments__r) FROM Document_Category__c WHERE Visit__c =:dealId ORDER BY CreatedDate]) {
                     //Handle First level cat Here
                     DocumentTreeWrapper appDocWrapper;
                     

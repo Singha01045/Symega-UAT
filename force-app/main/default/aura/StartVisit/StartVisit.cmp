@@ -205,9 +205,9 @@
                         <li class="slds-button-group-item">
                            <lightning:button onclick="{!c.createTicket}" label="New Ticket" class="visitMainButtonsSecond"/>
                         </li>
-                        <li class="slds-button-group-item">
+                        <!-- <li class="slds-button-group-item">
                             <lightning:button onclick="{!c.createLogCall}" label="Log a call" class="visitMainButtonsSecond"/>
-                        </li>
+                        </li> -->
                          <li class="slds-button-group-item">
                            <lightning:button onclick="{!c.createTask}" label="Log an Activity" class="visitMainButtonsSecond"/>
                         </li>
@@ -311,15 +311,21 @@
                     <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
                         <div class="slds-modal__container">
                             <div class="slds-modal__header">
-                                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">New Opportunity</h1>
+                                <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
                             </div>
                             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                                <lightning:recordForm
+                                <!-- <c:lWCComponent2 aura:id="lWCComponent2"></c:lWCComponent2>   -->
+                                <c:createOpportunityOnAccount aura:id="createOpportunity" recordId="{!v.accID}" ></c:createOpportunityOnAccount>
+                                <!-- <lightning:recordForm
                                                       objectApiName="{!v.SobjectApiName}"
                                                       fields="{!v.fields}"
                                                       columns="2"
                                                       oncancel="{!c.onCancel}"
-                                                      onsuccess="{!c.handleSuccess}" />
+                                                      onsuccess="{!c.handleSuccess}" /> -->
                             </div>
                         </div>
                     </section>
@@ -332,7 +338,7 @@
                             <lightning:button onclick="{!c.createTicket}" label="New Ticket" class="visitMainButtons"/>
                             <lightning:button onclick="{!c.createOpportunityHandle}" label="New Opportunity" class="visitMainButtons"/>
                             <lightning:button label="Open Google Maps" onclick="{!c.openGoogleMaps}" class="visitMainButtons"/>
-                            <lightning:button onclick="{!c.createLogCall}" label="Log a call" class="visitMainButtons"/>
+                            <!-- <lightning:button onclick="{!c.createLogCall}" label="Log a call" class="visitMainButtons"/> -->
                             <lightning:button onclick="{!c.createTask}" label="Log an Activity" class="visitMainButtons"/>
                             <lightning:button onclick="{!c.checkOutHandler}" label="Check-Out" disabled="{!v.ShowCheckOutButton}" class="visitMainButtons"/>
                             <lightning:button onclick="{!c.checkInHandler}" label="Check-In" disabled="{!v.ShowCheckInButton}" class="visitMainButtons"/>
@@ -523,7 +529,7 @@
                                                     </td>
                                                     <td style="background-color:#F5F5F5;">
                                                         <div data-id="{!val.Id}" onclick="{!c.handleOppClick}" style="cursor:pointer;">
-                                                            {!val.Name}
+                                                            <h2 style="color: blue; text-decoration: underline;"> {!val.Name}</h2>
                                                         </div>
                                                     </td>
                                                     <td style="background-color:#F5F5F5;">

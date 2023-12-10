@@ -22,7 +22,7 @@ public class Scheduler_Insights_Handler {
             List<Invoices__c> geAllinvoceRecordList = [Select Id,Name,Payment_Option__c,Payment_Mode__c,Amount__c,Invoice_Date__c,Account__c,Opportunity__c,CreatedDate From Invoices__c Where Account__c!=null AND CALENDAR_MONTH(CreatedDate) =: monthNumber AND CALENDAR_YEAR(CreatedDate) =: yearNumber LIMIT :pageSize OFFSET :offset];
             List<Case> getAllcaseRecordList = [Select Id,CaseNumber,AccountId,Account.Name,Status,CreatedDate,Subject,Description,Origin From Case Where  AccountId !=null AND CALENDAR_MONTH(CreatedDate) =: monthNumber AND CALENDAR_YEAR(CreatedDate) =: yearNumber LIMIT :pageSize OFFSET :offset];
             List<Feedback__c> getAllFeedbackRecordList = [Select Id,Name,Account__c,Description__c,Feedback_Rating__c,CreatedDate From Feedback__c Where Account__c!=null AND CALENDAR_MONTH(CreatedDate) =: monthNumber AND CALENDAR_YEAR(CreatedDate) =: yearNumber LIMIT :pageSize OFFSET :offset];
-            List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c,CreatedDate From Day_Visit_Plan__c where Service_Executive__c =: userInfo.getUserId() AND CALENDAR_MONTH(CreatedDate) =: monthNumber AND CALENDAR_YEAR(CreatedDate) =: yearNumber LIMIT :pageSize OFFSET :offset];
+            List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c,Total_Covered_Distance__c,CreatedDate From Day_Visit_Plan__c where Service_Executive__c =: userInfo.getUserId() AND CALENDAR_MONTH(CreatedDate) =: monthNumber AND CALENDAR_YEAR(CreatedDate) =: yearNumber LIMIT :pageSize OFFSET :offset];
             List<KPI_Target__c> getAllKpiTargetRecList  = [Select Id,Monthly_Beat_Plan__c,Roles_and_KPI__c,CreatedDate from KPI_Target__c WHERE CALENDAR_MONTH(CreatedDate) =: monthNumber AND CALENDAR_YEAR(CreatedDate) =: yearNumber LIMIT :pageSize OFFSET :offset];
             SchedulerInsightsWrapper sw= new  SchedulerInsightsWrapper();
             if(getAllvisitRecordList.size()>0){
@@ -100,7 +100,7 @@ public class Scheduler_Insights_Handler {
     
     // September 2023
     public static List<Day_Visit_Plan__c> getAllDateOfTravelDayVisitPlan(String month,string year){
-        List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c From Day_Visit_Plan__c where Service_Executive__c =: userInfo.getUserId() AND Month_year__c=:year AND Month_Name__c=:month];
+        List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c,Total_Covered_Distance__c From Day_Visit_Plan__c where Service_Executive__c =: userInfo.getUserId() AND Month_year__c=:year AND Month_Name__c=:month];
         
         return getAllDayVisitPlanRecList;
     }

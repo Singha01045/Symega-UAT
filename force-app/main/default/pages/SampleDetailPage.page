@@ -1,21 +1,22 @@
 <apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="OperationsPortalController">
     <html>
         <head>
+            <apex:stylesheet value="{!$Resource.OperationsPortalCSS}" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.6/semantic.css"/>
             <apex:includeLightning />
             <c:Libraries2 ></c:Libraries2>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.6/semantic.css"/>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+            <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>  -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+            <link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet"/>
+            
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.js"/>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.6/semantic.js">
-                    </script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.6/semantic.js">
             </script>
-            <link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" rel="stylesheet"/>
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <apex:stylesheet value="{!$Resource.OperationsPortalCSS}" />
-            
             <style>
                 .loadingBackground {
                 position: fixed;
@@ -331,15 +332,17 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                            
                                                             <tr ng-repeat="SLI in SLIlist">
-                                                                <!--{{SLIlist}}-->
                                                                 <td>{{$index+1}}</td>
-                                                                <td ng-if="SLI.check == false"><!--so-dropdown ng-model="SLI.productId" dropdown-items="mergedList" ng-change="onChangeToAssignProduct(SLI,SLI.productId.Id)" ng-disabled="SLI.check">
+                                                                
+                                                                <td ng-if="SLI.check == false">
+                                                                    <so-dropdown class="form-control" ng-model="SLI.ProductNm" ng-change="onChangeToAssignProduct(SLI,SLI.ProductNm)" dropdown-items="mergedList" ng-disabled="SLI.check">
                                                                     <option value='None'>None</option>
-                                                                    </so-dropdown-->
-                                                                <select class="form-control" ng-model="SLI.ProductNm" ng-change="onChangeToAssignProduct(SLI,SLI.ProductNm)" ng-disabled="SLI.check">
+                                                                    </so-dropdown>
+                                                                <!-- <select class="form-control" ng-model="SLI.ProductNm" ng-change="onChangeToAssignProduct(SLI,SLI.ProductNm)" ng-disabled="SLI.check">
                                                                     <option ng-repeat="item in mergedList | orderBy:'Name'" value="{{item.Name}}">{{item.Name}}</option>
-                                                                    </select>
+                                                                    </select> -->
                                                                 </td>
                                                                 <td ng-if="SLI.check == true"><input class="form-control" type="text" ng-model="SLI.Product_Name__c" ng-disabled="SLI.check"/></td>
                                                                 <td><input type="text" class="form-control" number="SLI.Quantity__c" ng-model="SLI.Quantity__c" ng-change="calculatePUnit(SLI.Quantity__c,SLI.Packaging_Quantity__c,SLI)" ng-disabled="SLI.check"/></td>
@@ -712,6 +715,10 @@
                         <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
                 </div>
             </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.js"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.6/semantic.js">
+    </script>
         </body>
         
         <script>
@@ -779,10 +786,12 @@
             $scope.showDetailPage=true;
             $scope.showbackAndSaveBtn=true;
             $scope.releaseStatus = releaseStatus;
+            $scope.mergedList = [{Id:'--None--', Name:'--None--'}];
+            $scope.productIdTest = "01t5j000005iDRPAA2";
             
             $scope.getSampleDetails = function(){
                 debugger;
-                $scope.mergedList = [{Id:'--None--', Name:'--None--'}];
+                
                 //productId = {Id:'', Name:''};
                 OperationsPortalController.getSampleDetails(sampleId,userHashId,function(result,event){
                     debugger;
@@ -820,6 +829,41 @@
                         $scope.contactName = result.conRec.Name;
                         $scope.accId = result.
                         accId;
+
+                        if(result.listOfProducts != undefined){
+                            $scope.productList = result.listOfProducts;
+                        }
+
+                        if(result.listOfOptivaRecipe != undefined){
+                            $scope.optivaRecipeList = result.listOfOptivaRecipe;
+                        }
+                        if(result.listOfProQuotient != undefined){
+                            $scope.projectQuotientList = result.listOfProQuotient;
+                        }
+                        
+                        
+                        for(var i=0;i<$scope.productList.length;i++){
+                            if($scope.TeamType == $scope.productList[i].Family){
+                                $scope.mergedList.push({"Id":$scope.productList[i].Id,"Name":$scope.productList[i].Name});
+                            }
+                        }
+                        if($scope.optivaRecipeList != undefined){
+                            for(var i=0;i<$scope.optivaRecipeList.length;i++){
+                            if($scope.TeamType == $scope.optivaRecipeList[i].Recipe_Family__c){
+                                $scope.mergedList.push({"Id":$scope.optivaRecipeList[i].Id,"Name":$scope.optivaRecipeList[i].Name});
+                            }
+                        }
+                        }
+                        
+                        if($scope.projectQuotientList != undefined){
+                            for(var i=0;i<$scope.projectQuotientList.length;i++){
+                                if($scope.TeamType == $scope.projectQuotientList[i].Sample_Project_Application__r.Product_Family__c){
+                                    $scope.mergedList.push({"Id":$scope.projectQuotientList[i].Id,"Name":$scope.projectQuotientList[i].Name});
+                                }
+                            }
+
+                        }
+
                         if(result.listOfSamples[0].Sample_Line_Items__r != undefined){
                             debugger;
                             $scope.SLIlist = result.listOfSamples[0].Sample_Line_Items__r;
@@ -831,13 +875,13 @@
                                 $scope.SLIlist[i].calc = $scope.SLIlist[i].Formula_Packaging_Qty__c;
                                 //$scope.SLIlist[i].calc = $scope.SLIlist[i].Quantity__c/$scope.SLIlist[i].Packaging_Quantity__c;
                                  		if($scope.SLIlist[i].Product__c != undefined){
-                                     		$scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Product__r.Name;
+                                     		$scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Product__r.Id;
                                             $scope.SLIlist[i].productId = $scope.SLIlist[i].Product__c;
                                         }else if($scope.SLIlist[i].OPTIVA_Recipe__c != undefined){
-                                            $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].OPTIVA_Recipe__r.Name;
+                                            $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].OPTIVA_Recipe__r.Id;
                                             $scope.SLIlist[i].productId = $scope.SLIlist[i].OPTIVA_Recipe__c;
                                         }else if($scope.SLIlist[i].Project_Quotient__c != undefined){
-                                            $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Project_Quotient__r.Name;
+                                            $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Project_Quotient__r.Id;
                                             $scope.SLIlist[i].productId = $scope.SLIlist[i].Project_Quotient__c;
                                         }else{
                                             $scope.SLIlist[i].productId = "--None--";
@@ -863,25 +907,8 @@
                             })
                         }
                         
-                        $scope.productList = result.listOfProducts;
-                        $scope.optivaRecipeList = result.listOfOptivaRecipe;
-                        $scope.projectQuotientList = result.listOfProQuotient;
                         
-                        for(var i=0;i<$scope.productList.length;i++){
-                            if($scope.TeamType == $scope.productList[i].Family){
-                                $scope.mergedList.push({"Id":$scope.productList[i].Id,"Name":$scope.productList[i].Name});
-                            }
-                        }
-                        for(var i=0;i<$scope.optivaRecipeList.length;i++){
-                            if($scope.TeamType == $scope.optivaRecipeList[i].Recipe_Family__c){
-                                $scope.mergedList.push({"Id":$scope.optivaRecipeList[i].Id,"Name":$scope.optivaRecipeList[i].Name});
-                            }
-                        }
-                        for(var i=0;i<$scope.projectQuotientList.length;i++){
-                            if($scope.TeamType == $scope.projectQuotientList[i].Sample_Project_Application__r.Product_Family__c){
-                                $scope.mergedList.push({"Id":$scope.projectQuotientList[i].Id,"Name":$scope.projectQuotientList[i].Name});
-                            }
-                        }
+                        
                         if($scope.allocationTeam != undefined){
                             for(var i=0;i<$scope.allocationTeam.length;i++){
                                 $scope.teamTypeList.push($scope.allocationTeam[i].Sample_Assignment_Team_Type__c);
@@ -889,12 +916,14 @@
                         }
                         for(var i=0;i<$scope.SLIlist.length;i++){
                             if($scope.teamTypeList.includes($scope.SLIlist[i].Product_Family__c)){
-                               	$scope.SLIlist[i].check = false;
+                              $scope.SLIlist[i].check = false;
+                            //   $scope.counter = 2 ;
                             }else{
                                $scope.SLIlist[i].check = true;
                                }
                         }
                         //$scope.mergedList = [].concat($scope.productList, $scope.optivaRecipeList, $scope.projectQuotientList);
+                        console.log($scope.SLIlist);
                         $scope.$apply();
                     }
                 })
@@ -1106,33 +1135,38 @@ $scope.saveLabel = function(){
                     // Append the component to the container
                     container.appendChild(lwcElement);
                 });
-            };
+            }
             
+            // $scope.counter =1;
             $scope.onChangeToAssignProduct = function(SLI,productId){
-                console.log(SLI);
                 debugger;
-                var foundItem = $scope.mergedList.find(item => item.Name === productId);
-                SLI.Quantity__c = null;
-                SLI.Packaging_Unit__c = '--None--';
-                SLI.Quantity_Unit__c = '--None--';
-                SLI.Packaging_Quantity__c = null;
-                SLI.Customer_Instructions__c = null;
-                SLI.Regulatory_Requirements__c = null;
-                SLI.Expected_Shelf_Life__c = null;
-                SLI.Current_Shelf_Life__c = null;
-                SLI.calc = null;
-                if (foundItem) {
-                    if (foundItem.Id.startsWith('01t')) {
-                        SLI.Product__c = foundItem.Id;
-                    }else if(foundItem.Id.startsWith('a0S')){
-                        SLI.Project_Quotient__c = foundItem.Id;
-                        //$scope.productId = SLI.Project_Quotient__r.Name;
-                    }else if(foundItem.Id.startsWith('a0Y')){
-                        SLI.OPTIVA_Recipe__c = foundItem.Id;
-                        //$scope.productId = SLI.OPTIVA_Recipe__r.Name;
-                    }else{
-                    }
-                }
+                // if($scope.counter == 1){
+                    console.log(SLI);
+                    debugger;
+                    //var foundItem = $scope.mergedList.find(item => item.Name === productId);
+                    SLI.Quantity__c = null;
+                    SLI.Packaging_Unit__c = '--None--';
+                    SLI.Quantity_Unit__c = '--None--';
+                    SLI.Packaging_Quantity__c = null;
+                    SLI.Customer_Instructions__c = null;
+                    SLI.Regulatory_Requirements__c = null;
+                    SLI.Expected_Shelf_Life__c = null;
+                    SLI.Current_Shelf_Life__c = null;
+                    SLI.calc = null;
+                    // if (foundItem) {
+                    //     if (foundItem.Id.startsWith('01t')) {
+                            SLI.Product__c = productId;
+                    //     }else if(foundItem.Id.startsWith('a0S')){
+                    //         SLI.Project_Quotient__c = foundItem.Id;
+                    //         //$scope.productId = SLI.Project_Quotient__r.Name;
+                    //     }else if(foundItem.Id.startsWith('a0Y')){
+                    //         SLI.OPTIVA_Recipe__c = foundItem.Id;
+                    //         //$scope.productId = SLI.OPTIVA_Recipe__r.Name;
+                    //     }else{
+                    //     }
+                    // }
+                // }
+                
             }
             
             $scope.saveSLIDetails = function(){

@@ -67,11 +67,21 @@ export default class ChangeAddress extends  NavigationMixin(LightningElement) {
             
        })
     }
-    
+      
+      selectedAddressId;
       onAddressSelect(event) {
         debugger;
+        this.selectedAddressId =  event.currentTarget.dataset.id;
+        console.log('this.selectedAddressId --->', this.selectedAddressId);
         let addressId = event.currentTarget.dataset.id;
         let selectedIndex = event.currentTarget.dataset.index;
+        for(var i=0; i<this.ship_addresses.length; i++){
+            if(selectedIndex == i){
+                this.ship_addresses[i].checked = true;
+            }else{
+                this.ship_addresses[i].checked = false;
+            }
+        }
          this.checkedShipAdd = event.target.checked;
          if(this.checkedBillAdd==undefined){
               this.checkedBillAdd=true;
@@ -211,6 +221,7 @@ export default class ChangeAddress extends  NavigationMixin(LightningElement) {
             shipState : shippingAddress.state,
             shipStreet : shippingAddress.street,
             shipCode : shippingAddress.postalCode,
+            custShipAdd : this.selectedAddressId,
 
             billCity : billingAddress.city,
             billState : billingAddress.state,
@@ -225,6 +236,7 @@ export default class ChangeAddress extends  NavigationMixin(LightningElement) {
                 if(result == 'SUCCESS'){
                     this.showToast();
                     this.closeAction();
+                    eval("$A.get('e.force:refreshView').fire();");
                 }              
             })
             .catch(error => {

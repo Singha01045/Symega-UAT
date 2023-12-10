@@ -21,7 +21,13 @@ public with sharing class OpportunityHanlder {
          
         //  CustomerAddressWrapper csw = new CustomerAddressWrapper();
         try{
-
+             
+         
+           // System.debug('acc--->'+acc);
+           
+           // System.debug('Dispatch Address-->'+custAddress);
+           // System.debug('acc--->'+acc.Id);
+            
             opportunity oppRec = [SELECT ID,Name FROM Opportunity WHERE ID =:oppId LIMIT 1];
             System.debug('oppRec---->'+oppRec);
              //Billing_State__c, Billing_Street__c, Billing_Country__c, Billing_Postal_Code__c, Billing_City__c, Shipping_State__c, Shipping_Street__c, Shipping_Country__c, Shipping_City__c, Shipping_Postal_Code__c
@@ -31,12 +37,29 @@ public with sharing class OpportunityHanlder {
                 oppRec.Billing_Country__c  = recordAddress.billCountry;
                 oppRec.Billing_Postal_Code__c = recordAddress.billCode;
                  oppRec.Billing_City__c = recordAddress.billCity;
+              
                // shipping Address
                 oppRec.Shipping_State__c =  recordAddress.shipState;
                 oppRec.Shipping_Street__c =  recordAddress.shipStreet;
                 oppRec.Shipping_Country__c  =  recordAddress.shipCountry;
                 oppRec.Shipping_City__c =  recordAddress.shipCity;
                 oppRec.Shipping_Postal_Code__c =  recordAddress.shipCode;
+                 
+                List<Dispatch_Address__c> custAddress = [SELECT Id, Address__Street__s, Address__StateCode__s, Address__PostalCode__s, GST_Number__c, Address__CountryCode__s, Address__City__s, Type__c FROM Dispatch_Address__c WHERE Id =:recordAddress.custShipAdd];
+               
+                if(custAddress != null && !custAddress.isEmpty()){
+                      OppRec.Customer_Shipping_Address__c = recordAddress.custShipAdd;
+                }else if(custAddress != null) {
+                      OppRec.Customer_Shipping_Address__c = null;
+                }
+                 
+                List<Account> acc = [SELECT ID,Name From Account WHERE ID =:recordAddress.custShipAdd ];
+               if(acc != null && !acc.isEmpty()){
+                    oppRec.Account_Shipping_Address__c = true;
+               } else if(acc == null){
+                    oppRec.Account_Shipping_Address__c = false;
+               }
+               
 
                 Update oppRec;
 
@@ -57,6 +80,7 @@ public with sharing class OpportunityHanlder {
         @AuraEnabled public String shipCode{get;set;}
         @AuraEnabled public String shipState{get;set;}
         @AuraEnabled public String shipStreet{get;set;}
+        @AuraEnabled public String custShipAdd{get;set;}
         
         @AuraEnabled public String billCity{get;set;}
         @AuraEnabled public String billCountry{get;set;}
@@ -146,27 +170,45 @@ public with sharing class OpportunityHanlder {
             System.debug('--- custId'+custId);
             if(!String.isBlank(custId)) {
               //  Opportunity oppRec = [SELECT ID,NAME,AccountId FROM Opportunity WHERE Id = : custId];
-              //  Account customerAcc = [SELECT Id, Name, CurrencyIsoCode, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, GST_Number__c, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :oppRec.AccountId];
-                  Opportunity customerAcc = [SELECT Id, Name,AccountId, CurrencyIsoCode, Billing_State__c, Billing_Street__c, Billing_Country__c, Billing_Postal_Code__c, Billing_City__c, Shipping_State__c, Shipping_Street__c, Shipping_Country__c, Shipping_City__c, Shipping_Postal_Code__c FROM Opportunity WHERE Id = :custId];
+              
+                  Opportunity customerAcc = [SELECT Id,Account_Shipping_Address__c,Customer_Shipping_Address__c, Name,AccountId, CurrencyIsoCode, Billing_State__c, Billing_Street__c, Billing_Country__c, Billing_Postal_Code__c, Billing_City__c, Shipping_State__c, Shipping_Street__c, Shipping_Country__c, Shipping_City__c, Shipping_Postal_Code__c FROM Opportunity WHERE Id = :custId];
+                 
                 
                 if(customerAcc != null && !String.isBlank(customerAcc.Billing_Country__c)) {
                     customerBillingAddressWrapper.add(new CustomerAddressWrapper('Billing', customerAcc.Billing_Street__c, customerAcc.Billing_State__c, customerAcc.Billing_Country__c, customerAcc.Billing_City__c, customerAcc.Billing_Postal_Code__c, 'Billing', true));  // customerAcc.GST_Number__c,
                     returnWrapperMap.put('ship_selected_index', 0);
                 }
                 
-                if(customerAcc != null && !String.isBlank(customerAcc.Shipping_Country__c)) {
-                    customerShippingAddressWrapper.add(new CustomerAddressWrapper('Shipping', customerAcc.Shipping_Street__c, customerAcc.Shipping_State__c, customerAcc.Shipping_Country__c, customerAcc.Shipping_City__c, customerAcc.Shipping_Postal_Code__c, 'Shipping', true));  //customerAcc.GST_Number__c
-                    returnWrapperMap.put('bill_selected_index', 0);
-                }
+                // Hiding Opportunity Address
+                // if(customerAcc != null && !String.isBlank(customerAcc.Shipping_Country__c) && customerAcc.Account_Shipping_Address__c == false && customerAcc.Customer_Shipping_Address__c == null) {
+                //     customerShippingAddressWrapper.add(new CustomerAddressWrapper('Shipping', customerAcc.Shipping_Street__c, customerAcc.Shipping_State__c, customerAcc.Shipping_Country__c, customerAcc.Shipping_City__c, customerAcc.Shipping_Postal_Code__c, 'Shipping', true));  //customerAcc.GST_Number__c
+                //     returnWrapperMap.put('bill_selected_index', 0);
+                // }else{
+                //     customerShippingAddressWrapper.add(new CustomerAddressWrapper('Shipping', customerAcc.Shipping_Street__c, customerAcc.Shipping_State__c, customerAcc.Shipping_Country__c, customerAcc.Shipping_City__c, customerAcc.Shipping_Postal_Code__c, 'Shipping', false));  //customerAcc.GST_Number__c
+                //     returnWrapperMap.put('bill_selected_index', 0);
+                // }
 
                 for(Dispatch_Address__c custAddress :[SELECT Id, Address__Street__s, ToLabel(Address__StateCode__s), Address__PostalCode__s, GST_Number__c, ToLabel(Address__CountryCode__s), Address__City__s, Type__c FROM Dispatch_Address__c WHERE Account__c =:customerAcc.AccountId]) {
 
                     if(custAddress.Type__c == 'Billing') {
                         customerBillingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, false)); //custAddress.GST_Number__c,
-                    }else {
-                        customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, false)); //custAddress.GST_Number__c,
+                    }
+
+                    if(custAddress.Type__c == 'Shipping' && customerAcc.Customer_Shipping_Address__c != null) {
+                        customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, true)); //custAddress.GST_Number__c,
+                    }else{
+                         customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, false));
                     }
                 }
+                
+                Account accShipp = [SELECT Id, Name, CurrencyIsoCode, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, GST_Number__c, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :customerAcc.AccountId];
+                
+                if(accShipp != null && customerAcc.Account_Shipping_Address__c){
+                       customerShippingAddressWrapper.add(new customerAddressWrapper(accShipp.Id, accShipp.ShippingStreet, accShipp.ShippingState, accShipp.ShippingCountry, accShipp.ShippingCity, accShipp.ShippingPostalCode,  'Shipping', true));
+                }else{
+                      customerShippingAddressWrapper.add(new customerAddressWrapper(accShipp.Id, accShipp.ShippingStreet, accShipp.ShippingState, accShipp.ShippingCountry, accShipp.ShippingCity, accShipp.ShippingPostalCode,  'Shipping', false));
+                }
+
 
                 //System.debug('--- customerAddressWrapper'+customerAddressWrapper);
                 returnWrapperMap.put('account', customerAcc);

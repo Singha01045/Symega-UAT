@@ -6,7 +6,8 @@
     <aura:attribute name="selectedYear" type="String" />
     <aura:registerEvent name="travelTableDataEvent" type="c:travelTableDataEvent" />
     
-    <aura:attribute name="MonthlyBeatPlanDataList" type="sObject" default="{sObjecttype:'Monthly_Beat_Plan__c'}"/>  
+  <aura:attribute name="MonthlyBeatPlanDataList" type="Object"/>
+    <aura:attribute name="approvalDetails" type="object" />
     <aura:attribute name="userName" type="String" />
     <aura:attribute name="dataList" type="List"/>
     

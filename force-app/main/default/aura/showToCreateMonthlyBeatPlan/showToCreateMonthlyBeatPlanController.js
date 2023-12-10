@@ -17,14 +17,43 @@
             'November',
             'December'
         ];
+
         const today = new Date();
         let month = today.getMonth() + 1;
-        var selectedMonthName = component.get("v.selectedMonthNumber");     
-  var selectedMonthNumber = (months.indexOf(selectedMonthName) + 1);
-        if(selectedMonthNumber < month){
+        let year = today.getFullYear();
+        var selectedMonthName = component.get("v.selectedMonthNumber");   
+        var selectedYear = component.get("v.selectedYear");   
+
+        //  code added by Dinesh - 07/12/2023
+        // ----Start----
+
+        var selectedMothYear = selectedMonthName + selectedYear;
+        let convertedStringSelectedMonthYear = selectedMothYear.replace(/(\d{4})$/, ' $1');
+
+        var currentMonthName = months[month - 1];
+        var currentMonthYear = currentMonthName + year;
+        let convertedStringCurrentMonthYear = currentMonthYear.replace(/(\d{4})$/, ' $1');
+
+
+        var Selecteddate1 = new Date(convertedStringSelectedMonthYear);
+        var Currentdate2 = new Date(convertedStringCurrentMonthYear);
+        if (JSON.stringify(Selecteddate1) > JSON.stringify(Currentdate2)) {
+            console.log('Show Create Plan Button');
+            
+        } else {
+            console.log('Hide Create Beat Plan Button');
             var cmpTarget = component.find('changeIt');
             $A.util.addClass(cmpTarget, 'removeAddplanButton');
         }
+//         const today = new Date();
+//         let month = today.getMonth() + 1;
+//         var selectedMonthName = component.get("v.selectedMonthNumber");    
+//         var selectedYear = component.get("v.selectedYear");     
+//   var selectedMonthNumber = (months.indexOf(selectedMonthName) + 1);
+//         if(selectedMonthNumber < month ){
+//             var cmpTarget = component.find('changeIt');
+//             $A.util.addClass(cmpTarget, 'removeAddplanButton');
+//         }
     },
     HandleNewBeatPal:function(component, event, helper) {
         debugger;

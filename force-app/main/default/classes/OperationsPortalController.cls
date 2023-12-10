@@ -278,13 +278,13 @@ public without sharing class OperationsPortalController {
                 }
             }
             List<Product2> productList = [SELECT Id,ProductCode,Name,Family FROM Product2 WHERE Family IN : typeList];
-            List<OPTIVA_Recipe__c> opRecipeList = [SELECT Id,Name,SSC_Code__c,Recipe_Family__c FROM OPTIVA_Recipe__c WHERE Recipe_Family__c IN : typeList];
-            List<Project_Quotient__c> proQuotientList = [SELECT Id,Name,SSC_Code__c,Sample_Project_Application__c,Sample_Project_Application__r.Product_Family__c FROM Project_Quotient__c WHERE Sample_Project_Application__r.Product_Family__c IN : typeList];
+            //List<OPTIVA_Recipe__c> opRecipeList = [SELECT Id,Name,SSC_Code__c,Recipe_Family__c FROM OPTIVA_Recipe__c WHERE Recipe_Family__c IN : typeList];
+            //List<Project_Quotient__c> proQuotientList = [SELECT Id,Name,SSC_Code__c,Sample_Project_Application__c,Sample_Project_Application__r.Product_Family__c FROM Project_Quotient__c WHERE Sample_Project_Application__r.Product_Family__c IN : typeList];
             wrapper.listOfSamples = sampleRec;
             wrapper.listOfProducts = productList;
             wrapper.accId = sampleRec[0].Opportunity__r.AccountId;
-            wrapper.listOfOptivaRecipe = opRecipeList;
-            wrapper.listOfProQuotient = proQuotientList;
+            //wrapper.listOfOptivaRecipe = opRecipeList;
+            //wrapper.listOfProQuotient = proQuotientList;
             wrapper.conRec = conRec[0];
             
             return wrapper;

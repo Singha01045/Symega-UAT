@@ -430,7 +430,7 @@ public class TodayTaskAuraController {
         List<Opportunity> oppList = new List<Opportunity>();
         try{
             if(String.isNotBlank(accId)){
-                oppList = [SELECT Id, Name, StageName, CloseDate, LeadSource FROM Opportunity WHERE AccountId=:accId LIMIT 10];
+                oppList = [SELECT Id, Name, StageName, CloseDate, LeadSource FROM Opportunity WHERE AccountId=:accId order by createdDate desc ];
                 if(oppList !=null){
                     System.debug('oppList === >'+oppList);
                     return oppList;
