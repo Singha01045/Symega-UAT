@@ -59,12 +59,18 @@ public without sharing class Optiva_Tech_Doc_Project_Creation_Callout {
                 String objName = Id.valueOf(pro.Product_ID__c).getSObjectType().getDescribe().getName();
                 if(objName=='Product2'){
                     sscCode = [Select ProductCode From Product2 Where Id=:pro.Product_ID__c].ProductCode;
-                }else if(objName=='OPTIVA_Recipe__c'){
+                }
+                else if(objName=='OPTIVA_Recipe__c'){
                     sscCode = [Select SSC_Code__c From OPTIVA_Recipe__c Where Id=:pro.Product_ID__c].SSC_Code__c;
-                }else{
+                }
+                else if(objName=='Sample_Line_Item__c'){
+                    sscCode = [Select Product_Code__c From Sample_Line_Item__c Where Id=: pro.Product_ID__c ].Product_Code__c;
+                }
+                else{
                     sscCode = pro.Product_ID__c;
                 }
-            }catch(Exception e){
+            }
+            catch(Exception e){
                 sscCode = pro.Product_ID__c;
             }
             

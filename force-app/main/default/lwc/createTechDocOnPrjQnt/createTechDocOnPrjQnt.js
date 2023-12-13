@@ -47,7 +47,7 @@ export default class CreateTechDocOnPrjQnt extends NavigationMixin(LightningElem
             let recordTypeId = result;
             let defaultValues = encodeDefaultFieldValues({
                 Tech_Doc_Name__c :this.qntRecord.Name,
-                Product_ID__c:this.qntRecord.SSC_Code__c,
+                Product_ID__c:this.recordId,
                 CurrencyIsoCode : this.qntRecord.CurrencyIsoCode,
                 Project_Quotient__c : this.recordId,
               //  Account__c : this.qntRecord.Sample_Project_Application__r.Account__c

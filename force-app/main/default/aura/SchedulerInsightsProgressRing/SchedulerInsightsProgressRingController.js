@@ -26,7 +26,7 @@
                 if(result != null){
                     var oppRecCount = result;
                     var tempLength=0;
-                    var temparray = [];                  
+                    var temparray = [];    
                     
                     for (let i = 0; i < oppRecCount.length; i++) {
                         tempLength++;

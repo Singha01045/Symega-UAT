@@ -8,8 +8,18 @@ public class BoundaryMapControllerTest {
         
         Account accRec = new Account();
         accRec.Name = 'Test FSL';
-        accRec.BillingStreet = 'JP nagar';
+        
         accRec.BillingCity = 'Bangalore';
+        accRec.BillingCountry = 'India';
+        accRec.BillingState = 'Punjab';
+        accRec.BillingStreet = 'XYZ, Test';
+        accRec.BillingPostalCode = '561011';
+        accRec.ShippingCity = 'Bangalore';
+        accRec.ShippingCountry = 'India';
+        accRec.ShippingState = 'Punjab';
+        accRec.ShippingStreet = 'XYZ, Test';
+        accRec.ShippingPostalCode = '561011';
+        
         accRec.SAP_Update_Customer__c = true;
         insert accRec;
         accList.add(accRec);

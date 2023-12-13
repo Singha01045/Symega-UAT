@@ -38,4 +38,22 @@ global without sharing class BoundaryMapController {
         }
         return filters;
     }
+    
+    @RemoteAction
+    global static List<Route__c> getBoundaryMapp(){
+        List<Route__c> routes = [SELECT Id, Name, Route_Name_del__c,Predefined_Area__c FROM Route__c   WHERE Sales_User__c = :UserInfo.getUserId()];
+        return routes;
+    }
+    
+    public String getLocationsJSON() {
+        // Fetch and format your locations data as a JSON string
+        List<Map<String, String>> locations = new List<Map<String, String>>{
+            new Map<String, String>{'name' => 'Koramangala', 'address' => 'Koramangala, 560034 India'},
+                new Map<String, String>{'name' => 'J. P. Nagar', 'address' => 'J. P. Nagar, 560078 India'},
+                    new Map<String, String>{'name' => 'Pune', 'address' => 'Pune, India'}
+            // Add more locations as needed
+        };
+            
+            return JSON.serialize(locations);
+    }
 }

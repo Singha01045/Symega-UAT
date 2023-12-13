@@ -14,11 +14,18 @@ public class UservisitTrackingControllerTest {
         acc.Account_Segment__c = 'Key';
         acc.Currency__c = 'INR';
         acc.Email__c = 'test@gmail.com';
+        
         acc.BillingStreet = 'jayanagar';
         acc.BillingCity = 'Bengaluru';
         acc.BillingState = 'karnataka';
         acc.BillingCountry = 'India';
         acc.BillingPostalCode = '57689';
+        acc.ShippingCity = 'Bangalore';
+        acc.ShippingCountry = 'India';
+        acc.ShippingState = 'Punjab';
+        acc.ShippingStreet = 'XYZ, Test';
+        acc.ShippingPostalCode = '561011';
+        
         acc.Website = 'https://chat.openai.com/c/e1e8178b-6bd6-4d49-b71e-ca03caba95f6';
         acc.Phone = '4567889000';
         insert acc;

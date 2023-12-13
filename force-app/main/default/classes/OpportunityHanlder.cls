@@ -194,11 +194,12 @@ public with sharing class OpportunityHanlder {
                         customerBillingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, false)); //custAddress.GST_Number__c,
                     }
 
-                    if(custAddress.Type__c == 'Shipping' && customerAcc.Customer_Shipping_Address__c != null) {
+                    if(custAddress.Type__c == 'Shipping' && customerAcc.Customer_Shipping_Address__c != null && customerAcc.Customer_Shipping_Address__c == custAddress.Id ) {
                         customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, true)); //custAddress.GST_Number__c,
-                    }else{
-                         customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, false));
-                    }
+                     }
+                     else  if(custAddress.Type__c == 'Shipping' && customerAcc.Customer_Shipping_Address__c != null) {
+                          customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s,  custAddress.Type__c, false));
+                     }
                 }
                 
                 Account accShipp = [SELECT Id, Name, CurrencyIsoCode, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, GST_Number__c, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :customerAcc.AccountId];

@@ -13,6 +13,18 @@ public with sharing class Scheduler_Insights_HandlerTest {
         
         Account accRec = new Account();
         accRec.Name = 'Test FSL';
+
+        accRec.BillingCity = 'Bangalore';
+        accRec.BillingCountry = 'India';
+        accRec.BillingState = 'Punjab';
+        accRec.BillingStreet = 'XYZ, Test';
+        accRec.BillingPostalCode = '561011';
+        accRec.ShippingCity = 'Bangalore';
+        accRec.ShippingCountry = 'India';
+        accRec.ShippingState = 'Punjab';
+        accRec.ShippingStreet = 'XYZ, Test';
+        accRec.ShippingPostalCode = '561011';
+        
         insert accRec;
         
         Lead ledRec = new Lead();

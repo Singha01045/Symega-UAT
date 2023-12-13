@@ -105,78 +105,95 @@
             if(response.getState() === "SUCCESS"){
                 if(response.getReturnValue() !=null){
                     var data = response.getReturnValue();
-                    component.set("v.ShowSpinner",false);
                     if(data != null && data != undefined){
-                        component.set("v.missingCode", data.missingCode);
-                        if(data.missingFields == true){
-                            component.set("v.Show1stPage",true);
-                            component.set("v.MissingFieldList",data.missingFieldsList);   
-                            component.set("v.accountId",data.projectRec.Opportunity__r.AccountId);
-                            component.set("v.userId", data.userId);
-                            component.set("v.bhId", data.bhId);
-                            
-                            if(data.isAccount == true){
-                                component.set("v.ShowUpdateAccountPage",true);
+                        if(data.projectRec.Opportunity__r.Customer_Billing_Address__c == null && !data.projectRec.Opportunity__r.Account_Billing_Address__c){
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                title : 'Error',
+                                message: 'Address is Missing',
+                                duration:' 5000',
+                                key: 'info_alt',
+                                type: 'error',
+                                mode: 'pester'
+                            });
+                            toastEvent.fire();
+                            var dismissActionPanel = $A.get("e.force:closeQuickAction");  
+                            dismissActionPanel.fire();
+                        }
+                        else{
+                            component.set("v.ShowSpinner",false);
+                            component.set("v.missingCode", data.missingCode);
+                            if(data.missingFields == true){
+                                component.set("v.Show1stPage",true);
+                                component.set("v.MissingFieldList",data.missingFieldsList);   
+                                component.set("v.accountId",data.projectRec.Opportunity__r.AccountId);
+                                component.set("v.userId", data.userId);
+                                component.set("v.bhId", data.bhId);
+                                
+                                if(data.isAccount == true){
+                                    component.set("v.ShowUpdateAccountPage",true);
+                                }
+                                else{
+                                    component.set("v.ShowUpdateAccountPage",false);
+                                    component.set("v.customerId",data.projectRec.Opportunity__r.Customer_Billing_Address__c);
+                                }
+                                
+                                if(data.missingFieldsList.length > 0){
+                                    if(data.isAccount == true){
+                                        component.set("v.accFieldsMissing",true);
+                                    }
+                                    else{
+                                        component.set("v.custFieldsMissing",true);
+                                    }
+                                }
+                                
+                                if(data.onlyAccMissingFieldList.length>0){
+                                    
+                                    var picklistResult = data.picklistValues;
+                                    var fieldMapCustType = [];
+                                    var fieldMapAccSeg = [];
+                                    var fieldMapDlvryPlant = [];
+                                    for(var key in result){
+                                        debugger;
+                                        if(key == 'CustType'){
+                                            for(var pickVal in result[key]){
+                                                fieldMapCustType.push({key: pickVal, value: result[key][pickVal]});    
+                                            }
+                                        }
+                                        else if(key == 'AccSegm'){
+                                            for(var pickVal in result[key]){
+                                                fieldMapAccSeg.push({key: pickVal, value: result[key][pickVal]});    
+                                            }
+                                        }
+                                            else if(key == 'DlvryPlant'){
+                                                for(var pickVal in result[key]){
+                                                    fieldMapDlvryPlant.push({key: pickVal, value: result[key][pickVal]});    
+                                                }
+                                            }
+                                    }
+                                    component.set("v.custTypOptions", fieldMapCustType);
+                                    component.set("v.accSegOptions", fieldMapAccSeg);
+                                    component.set("v.dlvryPlantOptions", fieldMapDlvryPlant);                                   
+                                    
+                                    if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
+                                        component.set("v.showDlvryPlantField",true);
+                                    }
+                                    if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
+                                        component.set("v.showCustTypeField",true);
+                                    }
+                                    if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
+                                        component.set("v.showAccSegField",true);
+                                    }
+                                }
+                                
                             }
                             else{
                                 component.set("v.ShowUpdateAccountPage",false);
-                                component.set("v.customerId",data.projectRec.Opportunity__r.Customer_Billing_Address__c);
+                                var action = component.get('c.callApprovalMethod');
+                                $A.enqueueAction(action);
                             }
-                            
-                            if(data.missingFieldsList.length > 0){
-                                if(data.isAccount == true){
-                                    component.set("v.accFieldsMissing",true);
-                                }
-                                else{
-                                    component.set("v.custFieldsMissing",true);
-                                }
-                            }
-                            
-                            if(data.onlyAccMissingFieldList.length>0){
-                                
-                                var picklistResult = data.picklistValues;
-                                var fieldMapCustType = [];
-                                var fieldMapAccSeg = [];
-                                var fieldMapDlvryPlant = [];
-                                for(var key in result){
-                                    debugger;
-                                    if(key == 'CustType'){
-                                        for(var pickVal in result[key]){
-                                            fieldMapCustType.push({key: pickVal, value: result[key][pickVal]});    
-                                        }
-                                    }
-                                    else if(key == 'AccSegm'){
-                                        for(var pickVal in result[key]){
-                                            fieldMapAccSeg.push({key: pickVal, value: result[key][pickVal]});    
-                                        }
-                                    }
-                                    else if(key == 'DlvryPlant'){
-                                        for(var pickVal in result[key]){
-                                            fieldMapDlvryPlant.push({key: pickVal, value: result[key][pickVal]});    
-                                        }
-                                    }
-                                }
-                                component.set("v.custTypOptions", fieldMapCustType);
-                                component.set("v.accSegOptions", fieldMapAccSeg);
-                                component.set("v.dlvryPlantOptions", fieldMapDlvryPlant);                                   
-                                
-                                if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
-                                    component.set("v.showDlvryPlantField",true);
-                                }
-                                if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
-                                    component.set("v.showCustTypeField",true);
-                                }
-                                if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
-                                    component.set("v.showAccSegField",true);
-                                }
-                            }
-                                                        
                         }
-                        else{
-                            component.set("v.ShowUpdateAccountPage",false);
-                            var action = component.get('c.callApprovalMethod');
-                            $A.enqueueAction(action);
-                        }
+                        
                     }
                 }
             }

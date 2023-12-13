@@ -212,7 +212,14 @@
                         Generate Invoice</button>
                 </div-->
                 <div class="row">
-                    <form name="myForm" ng-controller="sample_ctrl" class="col-md-2">
+                    <button type="button" class="blue-btn me-2 mb-5" ng-click="showFilterDiv()" style="width: 8vw; height: fit-content;
+                    margin-left: 1vw;"> + Add Filter</button>
+                    <form name="myForm" ng-controller="sample_ctrl" class="col-md-2" id="filterDivForm" style="display:none;margin: 0px 0px 10px 10px;
+                    box-shadow: rgb(23, 19, 71) 1px 1px 10px;
+                    border-radius: 7px;
+                    background-color: rgb(55 50 121);
+                    color: white;">
+                        <label>Filter By:</label><br/>
                         <label>
                           <input type="radio" ng-model="filterType" value="Date" ng-change="handleFilterTypeChange('Date')">
                           Date
@@ -230,7 +237,13 @@
                         </label><br/>
                        </form>
                        <div id="dateSearch" style="display:none;">
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="margin: 0px 0px 10px 10px;
+                        box-shadow: rgb(23, 19, 71) 1px 1px 10px;
+                        border-radius: 7px;
+                        background-color: rgb(55 50 121);
+                        color: white;
+                        height: fit-content;
+                        padding: 10px;">
                             <label>
                                 <input type="radio" ng-model="filterType" value="today" ng-change="handleDateFilterChange('today')">
                                 Today
@@ -243,7 +256,13 @@
                               </label>
                      </div>
                      <div id = "customDateDiv" style="display: none;">
-                     <div class="col-md-5" style="display:inline-flex;">
+                     <div class="col-md-8" style="display:inline-flex;margin: 0px 0px 10px 10px;
+                     box-shadow: rgb(23, 19, 71) 1px 1px 10px;
+                     border-radius: 7px;
+                     background-color: rgb(55 50 121);
+                     color: white;
+                     height: fit-content;
+                     padding: 10px;">
                         <label>
                             Start Date
                             <input type="Date" ng-model="StartDate" value="StartDate" style="margin-right:2vw;" ng-change="handleStartDateChange(StartDate)">
@@ -258,7 +277,13 @@
                 </div>
                  </div>
                        <div id="nameSearch" style="display:none;">
-                       <div class="col-md-4">
+                       <div class="col-md-4" style="margin: 0px 0px 10px 10px;
+                       box-shadow: rgb(23, 19, 71) 1px 1px 10px;
+                       border-radius: 7px;
+                       background-color: rgb(55 50 121);
+                       color: white;
+                       height: fit-content;
+                       padding: 10px;">
                         <input type="text" class="form-control" ng-model="searchKeySample" placeholder="Search by Sample Name or Customer Name"/>
                     </div>
                     <div class="col-md-4">
@@ -267,12 +292,20 @@
                     </div>
                 </div>
                 <div id="familySearch" style="display:none;">
+                    <div class="col-md-2" style="display:inline-flex;margin: 0px 0px 10px 10px;
+                     box-shadow: rgb(23, 19, 71) 1px 1px 10px;
+                     border-radius: 7px;
+                     background-color: rgb(55 50 121);
+                     color: white;
+                     height: fit-content;
+                     padding: 10px;">
                     <label>
                         Product Family:
-                    <select class="form-select" ng-model="selectedProdFamily" ng-change="onChangeProductFamily(selectedProdFamily)" style="font-size:16px;">
+                    <select class="form-select" ng-model="selectedProdFamily" ng-change="onChangeProductFamily(selectedProdFamily)" style="font-size:16px;    width: 193%;">
                         <option ng-repeat="item in productFamily | orderBy:'Name'" value="{{item}}">{{item}}</option>
                         </select>
                     </label>
+                    </div>
                  <!--div class="col-md-4">
                      <button class="blue-btn me-2 mb-5" ng-click="searchSample()" type="button">Search</button>
                      <button class="blue-btn me-2 mb-5" ng-click="clearFilter('Sample')" type="button">Clear Filter</button>
@@ -731,6 +764,20 @@
                         $scope.endDate = null;
                         $scope.isToday = false;
                     }
+                }
+
+                $scope.showFilterDiv = function(value) {
+                    debugger;
+                    //alert('Chosen Value ==> ' + value);
+                        //$('#nameSearch').show();
+                        //document.getElementById('filterDivForm').style.display="contents"; 
+                        $('#dateSearch').hide();
+                        $('#familySearch').hide();
+                        $('#filterDivForm').toggle();
+                        $scope.startDate = null;
+                        $scope.endDate = null;
+                        $scope.selProductFamily = null;
+                        $scope.isToday = false;
                 }
 
                 $scope.handleDateFilterChange = function(value) {

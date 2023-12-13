@@ -34,7 +34,8 @@
                     if(result.visitList != undefined && result.visitList != null && result.visitList != ''){
                         if(result.isApproved == true){
                             /*for(var i in result.visitList){
-                                 var address = result.visitList[i].Account__r.BillingStreet +','+ result.visitList[i].Account__r.BillingCity + ',' + result.visitList[i].Account__r.BillingState;
+                                 var address = result.visi
+                                 tList[i].Account__r.BillingStreet +','+ result.visitList[i].Account__r.BillingCity + ',' + result.visitList[i].Account__r.BillingState;
                                 var endLat = searchLatAndLngByStreet(address).latitude;
                                 var endLong = searchLatAndLngByStreet(address).longitude;
                             }*/

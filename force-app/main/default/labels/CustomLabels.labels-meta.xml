@@ -8,6 +8,13 @@
         <value>Submitted for Application</value>
     </labels>
     <labels>
+        <fullName>Admin_Mail_Id</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Admin Mail Id</shortDescription>
+        <value>jishena.satish@symega.com</value>
+    </labels>
+    <labels>
         <fullName>COLOR</fullName>
         <language>en_US</language>
         <protected>false</protected>

@@ -40,5 +40,14 @@ public class SampleTriggerTest {
         insert ud;
         ud.Application_Name__c = 'Test';
         update ud;
+        
+        
+        
+        Project_Quotient__c projQuoRec = new Project_Quotient__c();
+        projQuoRec.Product_Name__c = 'xyz';
+        projQuoRec.SSC_Code__c  = '1234';
+        projQuoRec.Sample_Project_Application__c = ud.Id;
+        insert projQuoRec;
+        
     }
 }

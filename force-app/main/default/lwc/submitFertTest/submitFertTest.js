@@ -47,13 +47,8 @@ export default class SubmitFertTest extends LightningElement {
   accId;
   dispId;
   showAccountPage = false;
-  showCustomerFields = false;
-  showAccountFields = false;
   showSpinner = true;
   isAccount = false;
-  isCustomer = false;
-  isAccountShipping = false;
-  isCustomerShipping = false;
   showUserField = false;
   showBhField = false;
   showDlvryPlantField = false;
@@ -68,7 +63,6 @@ export default class SubmitFertTest extends LightningElement {
    }
   wrapperArray = [];
   missingFieldsList;
-  missingFieldsListCustAddress;
   missingFieldsListForUser;
   missingFieldsListForBH;
   dlvryPlantVal;
@@ -128,12 +122,18 @@ export default class SubmitFertTest extends LightningElement {
                     this.oppProdList = data.oliList;
                     this.accordionList = data.oliList[0];
 
-                    if( data.oliList[0].Opportunity.Account_Billing_Address__c){
-                      this.custNo =     data.oliList[0].Opportunity.Account.Customer_Code_SAP__c ;
-                    }else{
-                          this.custNo =  data.oliList[0].Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c;
+                    if(!data.oliList[0].Opportunity.Account_Billing_Address__c && (data.oliList[0].Opportunity.Customer_Billing_Address__c == null || data.oliList[0].Opportunity.Customer_Billing_Address__c == undefined)){
+                         this.showToast('Error', 'Address is missing', 'error');
+                         this.closeModal();
                     }
-                     
+                    else{
+                         if( data.oliList[0].Opportunity.Account_Billing_Address__c){
+                              this.custNo = data.oliList[0].Opportunity.Account.Customer_Code_SAP__c ;
+                         }
+                         else{
+                              this.custNo =  data.oliList[0].Opportunity.Customer_Billing_Address__r.Customer_Code_SAP__c;
+                         }
+                         
                          this.billStreet    =  data.oliList[0].Opportunity.Billing_Street__c;
                          this.billCity      =  data.oliList[0].Opportunity.Billing_City__c;
                          this.billCountry   =  data.oliList[0].Opportunity.Billing_Country__c;
@@ -143,100 +143,79 @@ export default class SubmitFertTest extends LightningElement {
                          this.custName = data.oliList[0].Opportunity.Account.Name ;
                          console.log('  this.custName ---->',  this.custName );
 
-                    //      custNo;
-                    //    custAddress;
-                    debugger;
-                    console.log('recordId ===> '+this.recordId);
-                    if(this.oppProdList.length!=0){
-                    
-                         for(let i=0;i<this.oppProdList.length;i++){
-                              let ProdRecord=  {Id:null,Plant__c:null,Control_Code_HSN_Code__c:null,Shelf_Life__c:null,Allergen_Status_Required__c:null,Veg_Nonveg_Logo_In_Label__c:null}
-                              if(this.oppProdList[i].Product2Id){
+                         console.log('recordId ===> '+this.recordId);
+                         if(this.oppProdList.length!=0){
+                         
+                              for(let i=0;i<this.oppProdList.length;i++){
+                                   let ProdRecord=  {Id:null,Plant__c:null,Control_Code_HSN_Code__c:null,Shelf_Life__c:null,Allergen_Status_Required__c:null,Veg_Nonveg_Logo_In_Label__c:null}
+                                   if(this.oppProdList[i].Product2Id){
 
-                                   ProdRecord.Id=this.oppProdList[i].Product2Id;
-                                   ProdRecord.Plant__c = this.oppProdList[i].Product2.Plant__c;
-                                   ProdRecord.Control_Code_HSN_Code__c = this.oppProdList[i].Product2.Control_Code_HSN_Code__c;
-                                   ProdRecord.Shelf_Life__c = this.oppProdList[i].Product2.Shelf_Life__c;
-                                   ProdRecord.Allergen_Status_Required__c =  this.oppProdList[i].Product2.Allergen_Status_Required__c;
-                                   ProdRecord.Veg_Nonveg_Logo_In_Label__c = this.oppProdList[i].Product2.Veg_Nonveg_Logo_In_Label__c;
-                              }
-                              this.prod2List.push(ProdRecord);
-                         }
-                         console.log('  this.prod2List---->',  JSON.stringify(this.prod2List));
-                    }
-
-
-                    if(data.missingFieldsList.length > 0 || data.missingFieldsListCustAddress.length > 0) {
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
-                         }
-                         this.accId = data.accId;
-                         this.dispId = data.dispId;
-                         this.missingFieldsList = data.missingFieldsList;
-                         this.missingFieldsListCustAddress = data.missingFieldsListCustAddress;
-                         this.isAccount = data.isAccount;
-                         this.isCustomer = data.isCustomer;
-                         this.isAccountShipping = data.isAccountShipping;
-                         this.isCustomerShipping = data.isCustomerShipping;
-                         // if(this.isAccount != true){
-                         //      this.custAddFieldsMissing = true;
-                         // }
-                         // else{
-                         //      this.accFieldsMissing = true;
-                         // }
-                         if((this.isAccount || this.isAccountShipping)&&this.missingFieldsList.length>0){
-                              this.showAccountFields = true;
-                              this.accFieldsMissing = true;
-                         }
-                         if(this.isCustomer || this.isCustomerShipping){
-                              if(this.missingFieldsListCustAddress.length>0){
-                                   this.custAddFieldsMissing = true;
-                                   if(this.showAccountFields == true){
-                                        this.bothObjectDisplay = true;
-                                        this.showCustomerFields = false;
-                                   }else{
-                                        this.showCustomerFields = true;
+                                        ProdRecord.Id=this.oppProdList[i].Product2Id;
+                                        ProdRecord.Plant__c = this.oppProdList[i].Product2.Plant__c;
+                                        ProdRecord.Control_Code_HSN_Code__c = this.oppProdList[i].Product2.Control_Code_HSN_Code__c;
+                                        ProdRecord.Shelf_Life__c = this.oppProdList[i].Product2.Shelf_Life__c;
+                                        ProdRecord.Allergen_Status_Required__c =  this.oppProdList[i].Product2.Allergen_Status_Required__c;
+                                        ProdRecord.Veg_Nonveg_Logo_In_Label__c = this.oppProdList[i].Product2.Veg_Nonveg_Logo_In_Label__c;
                                    }
+                                   this.prod2List.push(ProdRecord);
+                              }
+                              console.log('  this.prod2List---->',  JSON.stringify(this.prod2List));
+                         }
+
+
+                         if(data.missingFieldsList.length > 0) {
+                              if(this.showAccountPage != true){
+                              this.showAccountPage = true;
+                              }
+                              this.accId = data.accId;
+                              this.dispId = data.dispId;
+                              this.missingFieldsList = data.missingFieldsList;
+                              this.isAccount = data.isAccount;
+                              if(this.isAccount != true){
+                                   this.custAddFieldsMissing = true;
+                              }
+                              else{
+                                   this.accFieldsMissing = true;
                               }
                          }
-                    }
-                    if(data.missingFieldsListForUser.length > 0) {
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
+                         if(data.missingFieldsListForUser.length > 0) {
+                              if(this.showAccountPage != true){
+                              this.showAccountPage = true;
+                              }
+                              this.missingFieldsListForUser = data.missingFieldsListForUser;
+                              this.userId = data.userIdList[0];
+                              this.showUserField = true;
                          }
-                         this.missingFieldsListForUser = data.missingFieldsListForUser;
-                         this.userId = data.userIdList[0];
-                         this.showUserField = true;
-                    }
-                    if(data.missingFieldsListForBH.length > 0) {
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
+                         if(data.missingFieldsListForBH.length > 0) {
+                              if(this.showAccountPage != true){
+                              this.showAccountPage = true;
+                              }
+                              this.missingFieldsListForBH = data.missingFieldsListForBH;
+                              this.bhId = data.bhIdList[0];
+                              this.showBhField = true;
                          }
-                         this.missingFieldsListForBH = data.missingFieldsListForBH;
-                         this.bhId = data.bhIdList[0];
-                         this.showBhField = true;
-                    }
-                    if(data.onlyAccMissingFieldList.length>0){
-                         if(this.showAccountPage != true){
-                             this.showAccountPage = true;
+                         if(data.onlyAccMissingFieldList.length>0){
+                              if(this.showAccountPage != true){
+                              this.showAccountPage = true;
+                              }
+                              if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
+                                   this.showDlvryPlantField = true;
+                              }
+                              if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
+                                   this.showCustTypeField = true;
+                              }
+                              if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
+                                   this.showAccSegField = true;
+                              }
                          }
-                         if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
-                              this.showDlvryPlantField = true;
-                         }
-                         if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
-                              this.showCustTypeField = true;
-                         }
-                         if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
-                              this.showAccSegField = true;
-                         }
+
+                         this.showSpinner = false;
+                         console.log('  this.oppProdList---->',  this.oppProdList);
+                         console.log('  this.missingFieldsList --->',  this.missingFieldsList);
                     }
 
-                    this.showSpinner = false;
-                    console.log('  this.oppProdList---->',  this.oppProdList);
-                    console.log('  this.missingFieldsList --->',  this.missingFieldsList);
                }
-               })
-          
+          })
      }
 
      GetPicklistValues_Object(){
@@ -463,6 +442,8 @@ export default class SubmitFertTest extends LightningElement {
 
      handleSuccess(){
           debugger;
+          this.showToast('Success', 'Account updated successfully', 'success');
+          this.showAccountPage = false;
           if(this.showUserField){
                console.log('this.userpsap s ', this.userSapCode);
                updateUserRecord({userSAPcode:this.userSapCode, userId:this.userId, accRec : this.accRec})
@@ -474,17 +455,6 @@ export default class SubmitFertTest extends LightningElement {
 
           if((this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '')){
                updateAccRecord({accId:this.accId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal})
-          }
-
-          if(this.bothObjectDisplay){
-               this.showAccountFields = false;
-               this.showCustomerFields = true;
-               this.custAddFieldsMissing = true;
-               this.bothObjectDisplay = false;
-               console.log('Customer Address Fields --> ' + this.missingFieldsListCustAddress);
-          }else{
-          this.showToast('Success', 'Account updated successfully', 'success');
-          this.showAccountPage = false;
           }
           
      }

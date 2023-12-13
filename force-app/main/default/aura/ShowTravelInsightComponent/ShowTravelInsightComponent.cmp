@@ -20,7 +20,7 @@
                 <c:TravelInsightsComponent MonthlyBeatPlanDataList="{!v.MonthlyBeatPlanDataList}" userName="{!v.userName}"/>
             </div>
             <div class="slds-col slds-size_12-of-12" style="margin-top:10px;">
-                <c:TravelDayVisitPlanDataTable dataList="{!v.dataList}" selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
+                <c:TravelDayVisitPlanDataTable selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
             </div>
         </aura:if>
         <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">

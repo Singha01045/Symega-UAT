@@ -530,27 +530,27 @@ callFutureForShippingAccountUpdation(soRec.Opportunity__r.AccountId);
         sWrap.shippingDispRecId = lineItems[0].Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c;
         
         if(lineItems[0].Sales_Order__r.Opportunity__r.Account_Billing_Address__c){
-            if (lineItems[0].Sales_Order__r.Opportunity__r.Account_Shipping_Address__c) {
+            if(lineItems[0].Sales_Order__r.Opportunity__r.Account_Shipping_Address__c) {
                 
                 system.debug('Handle Account Billing And Shipping -->> ');
                 sWrap.isBilling_ShippingAccount = true;
                 getMissingDetails = ValidateAccountBillingAndShipping(soRec);
             } 
-            else {
+            else if(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c != null){
                 
                 system.debug('Handle Account Billing And Customer Address Shipping -->> ');
                 sWrap.isAccBilling_ShippigCustomer = true;
                 getMissingDetails = ValidateAccountBillingAndCustomerShipping(soRec);
             }
         }
-        else{
+        else if(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Billing_Address__c != null){
             if (lineItems[0].Sales_Order__r.Opportunity__r.Account_Shipping_Address__c) {
                 
                 system.debug('Handle Customer Billing And Account Shipping -->> ');
                 sWrap.isBillingCustomer_AccShipping = true;
                 getMissingDetails = ValidateCustomerBillingAndAccountShipping(soRec);
             } 
-            else {
+            else if(lineItems[0].Sales_Order__r.Opportunity__r.Customer_Shipping_Address__c != null){
                 
                 system.debug('Handle Customer Billing And Shipping -->> ');
                 sWrap.isCustomerBilling_Shipping = true;

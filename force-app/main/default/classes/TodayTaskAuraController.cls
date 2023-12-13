@@ -380,16 +380,26 @@ public class TodayTaskAuraController {
     @AuraEnabled
     public static Visit__c checkOutUpdateVisit(String checkOutLat,string checkOutLong, String recId){
         System.debug('checkOutLat--> ' + checkOutLat + 'checkOutLong--> '+ checkOutLong + 'recId--> '+ recId);
-        Visit__c visRec =[SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s, Check_Out__Latitude__s, Check_Out__Longitude__s, Visit_Status__c FROM Visit__c WHERE Id=:recId];
+        Visit__c visRec =[SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s, Check_Out__Latitude__s, Check_Out__Longitude__s, Visit_Status__c,Visit_Plan__c FROM Visit__c WHERE Id=:recId];
         System.debug('visRec--> ' + visRec);
         try{
             if(String.isNotBlank(checkOutLat) && String.isNotBlank(checkOutLong)){
+                location visitCheckOut = location.newInstance(Decimal.valueOf(checkOutLat),Decimal.valueOf(checkOutLong));
+                Day_Visit_Plan__c updateLocationDis=[SELECT id,Name,Start_Location__c,End_Location__c from Day_Visit_Plan__c WHERE id=:visRec.Visit_Plan__c ];
                 visRec.Check_Out__Latitude__s = Decimal.valueOf(checkOutLat);
                 visRec.Check_Out__Longitude__s =  Decimal.valueOf(checkOutLong);
                 visRec.Visit_Status__c = 'COMPLETED';
                 visRec.Check_Out_Time__c = System.now();
+                visRec.Distance_Km__c=Location.getDistance(updateLocationDis.Start_Location__c, visitCheckOut, 'km');
                 update visRec;
+
+                Day_Visit_Plan__c updatDayVsitStartLocation  = new Day_Visit_Plan__c();
+                updatDayVsitStartLocation.Start_Location__Latitude__s=Decimal.valueOf(checkOutLat);
+                updatDayVsitStartLocation.Start_Location__Longitude__s=Decimal.valueOf(checkOutLong);
+                updatDayVsitStartLocation.id=updateLocationDis.id;
+                update updatDayVsitStartLocation;
                 System.debug('Check Out Visit Update Record === >'+visRec);
+                
                 return visRec;
             }
         }catch(Exception e){

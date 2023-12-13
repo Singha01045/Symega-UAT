@@ -5,7 +5,7 @@
     <aura:attribute name="currentMonth" type="String" />
     <aura:attribute name="currentYear" type="String" />
     <aura:attribute name="months" type="String" />
-    <!--aura:handler name="init" value="{!this}" action="{!c.doInit}"/-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="dataList" type="List"/>
     <aura:handler event="c:travelTableDataEvent" action="{!c.travelTableDataEvent}"/>
     <div class="" >
@@ -21,7 +21,7 @@
                                     <th scope="col" style="background-color:#6CA1E9;">
                                         <strong>
                                             <div class="slds-truncate slds-text-align_center slds-has-flexi-truncate"
-                                                 title="S. No." style="color:#FFFFFF;">S. No.</div>
+                                                 title="S. No." style="color:#FFFFFF;">Ss. No.</div>
                                         </strong>
                                     </th>
                                     <th scope="col" style="background-color:#6CA1E9;">

@@ -89,145 +89,153 @@ export default class PushSOToSAP extends LightningElement {
                 this.closePopup();
             }
             else{
-                if(data.reqFieldsMissing == false){
-                    this.sendSONotification();
+                if(!data.isBilling_ShippingAccount && !data.isAccBilling_ShippigCustomer && !data.isBillingCustomer_AccShipping && !data.isCustomerBilling_Shipping){
+                    this.showToast('Error', 'Address is missing', 'error');
+                    this.closeModal();
                 }
                 else{
-                    this.show1stPage = true;
-
-                    this.accRecId = data.accRecId;
-                    this.billingDispRecId = data.billingDispRecId;
-                    this.shippingDispRecId = data.shippingDispRecId;
-
-                    this.accountMissingFieldList = data.accountMissingFieldList;
-                    this.billingCustMissingFieldList = data.billingCustMissingFieldList;
-                    this.shippingCustMissingFieldList = data.shippingCustMissingFieldList;
-                    this.onlyAccMissingFieldList = data.onlyAccMissingFieldList;
-
-
-                    this.isBilling_ShippingAccount = data.isBilling_ShippingAccount;
-                    this.isAccBilling_ShippigCustomer = data.isAccBilling_ShippigCustomer;
-                    this.isBillingCustomer_AccShipping = data.isBillingCustomer_AccShipping;
-                    this.isCustomerBilling_Shipping = data.isCustomerBilling_Shipping;   
-
-                    // this.userId = data.userId;
-                    // this.addressUserId = data.addressUserId;
-                    // this.bhId = data.bhId;
-
-                    // if(data.userId != null || data.userId != undefined){
-                    //     this.showUserField = true;
-                    // }
-                    // if(data.bhId != null || data.bhId != undefined){
-                    //     this.showBhField = true;
-                    // }
-                    // if(data.addressUserId != null || data.addressUserId != undefined){
-                    //     this.showAddressUserField = true;
-                    // }
-
-
-                    if(data.accountMissingFieldList.length > 0){
-                        this.showAccountOnScreen = true;
+                    if(data.reqFieldsMissing == false){
+                        this.sendSONotification();
                     }
                     else{
-                        if(this.shippingCustMissingFieldList.length > 0){
-                            this.showCustAddrssOnShippingScreen = true;
-                        }
-                        if(this.billingCustMissingFieldList.length > 0){
-                            this.showCustAddrssOnBillingScreen = true;
-                            this.showCustAddrssOnShippingScreen = false;
-                        }
-                    }
+                        this.show1stPage = true;
 
-                    
-                    if(this.isCustomerBilling_Shipping){
-                        if(this.onlyAccMissingFieldList.length>0){
-                            this.showCustAddrssOnBillingScreen = true;
-                            this.showCustAddrssOnShippingScreen = false;
+                        this.accRecId = data.accRecId;
+                        this.billingDispRecId = data.billingDispRecId;
+                        this.shippingDispRecId = data.shippingDispRecId;
 
-                            if(!this.billingCustMissingFieldList.length > 0){
-                                this.showAccountOnScreen = true;
+                        this.accountMissingFieldList = data.accountMissingFieldList;
+                        this.billingCustMissingFieldList = data.billingCustMissingFieldList;
+                        this.shippingCustMissingFieldList = data.shippingCustMissingFieldList;
+                        this.onlyAccMissingFieldList = data.onlyAccMissingFieldList;
+
+
+                        this.isBilling_ShippingAccount = data.isBilling_ShippingAccount;
+                        this.isAccBilling_ShippigCustomer = data.isAccBilling_ShippigCustomer;
+                        this.isBillingCustomer_AccShipping = data.isBillingCustomer_AccShipping;
+                        this.isCustomerBilling_Shipping = data.isCustomerBilling_Shipping;   
+
+                        // this.userId = data.userId;
+                        // this.addressUserId = data.addressUserId;
+                        // this.bhId = data.bhId;
+
+                        // if(data.userId != null || data.userId != undefined){
+                        //     this.showUserField = true;
+                        // }
+                        // if(data.bhId != null || data.bhId != undefined){
+                        //     this.showBhField = true;
+                        // }
+                        // if(data.addressUserId != null || data.addressUserId != undefined){
+                        //     this.showAddressUserField = true;
+                        // }
+
+
+                        if(data.accountMissingFieldList.length > 0){
+                            this.showAccountOnScreen = true;
+                        }
+                        else{
+                            if(this.shippingCustMissingFieldList.length > 0){
+                                this.showCustAddrssOnShippingScreen = true;
                             }
+                            if(this.billingCustMissingFieldList.length > 0){
+                                this.showCustAddrssOnBillingScreen = true;
+                                this.showCustAddrssOnShippingScreen = false;
+                            }
+                        }
+
                         
-                            if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
-                                 this.showDlvryPlantField = true;
-                            }
-                            if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
-                                 this.showCustTypeField = true;
-                            }
-                            if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
-                                 this.showAccSegField = true;
-                            }
-                            if(data.onlyAccMissingFieldList.includes('Payment_terms__c')){
-                                this.showPaymentTerms = true;
-                            }
-                            if(data.onlyAccMissingFieldList.includes('Tax_Collected_At_Source__c')){
-                                this.showTaxCollect = true;
-                            }
-                            if(data.onlyAccMissingFieldList.includes('Transportation_Terms__c')){
-                                this.showTransportTerms = true;
+                        if(this.isCustomerBilling_Shipping){
+                            if(this.onlyAccMissingFieldList.length>0){
+                                this.showCustAddrssOnBillingScreen = true;
+                                this.showCustAddrssOnShippingScreen = false;
+
+                                if(!this.billingCustMissingFieldList.length > 0){
+                                    this.showAccountOnScreen = true;
+                                }
+                            
+                                if(data.onlyAccMissingFieldList.includes('Delivery_Plant__c')){
+                                    this.showDlvryPlantField = true;
+                                }
+                                if(data.onlyAccMissingFieldList.includes('Customer_Type__c')){
+                                    this.showCustTypeField = true;
+                                }
+                                if(data.onlyAccMissingFieldList.includes('Account_Segment__c')){
+                                    this.showAccSegField = true;
+                                }
+                                if(data.onlyAccMissingFieldList.includes('Payment_terms__c')){
+                                    this.showPaymentTerms = true;
+                                }
+                                if(data.onlyAccMissingFieldList.includes('Tax_Collected_At_Source__c')){
+                                    this.showTaxCollect = true;
+                                }
+                                if(data.onlyAccMissingFieldList.includes('Transportation_Terms__c')){
+                                    this.showTransportTerms = true;
+                                }
                             }
                         }
+
+                        this.pickValList = data.pickValList;
+
+                        if(this.pickValList != undefined){
+                            let Arr5  = this.pickValList.Delivery_Plant__c.Delivery_Plant__c;
+                            let Arr6 = this.pickValList.Customer_Type__c.Customer_Type__c;
+                            let Arr7 = this.pickValList.Account_Segment__c.Account_Segment__c;
+
+                            let Arr1 = this.pickValList.Tax_Type__c.Tax_Type__c;
+                            let Arr2 = this.pickValList.Tax_Collected_At_Source__c.Tax_Collected_At_Source__c;
+                            let Arr3 = this.pickValList.Payment_terms__c.Payment_terms__c;
+                            let Arr4 = this.pickValList.Transportation_Terms__c.Transportation_Terms__c;
+
+
+                            let option1=[]
+                            for(var i=0; i < Arr1.length; i++){
+                                option1.push({label:Arr1[i],value:Arr1[i]});
+                            }
+                            this.taxTypeList=option1;
+
+                            let option2=[]
+                            for(var i=0; i < Arr2.length; i++){
+                                option2.push({label:Arr2[i],value:Arr2[i]});
+                            }
+                            this.taxCollectList=option2;
+
+                            let option3=[]
+                            for(var i=0; i < Arr3.length; i++){
+                                option3.push({label:Arr3[i],value:Arr3[i]});
+                            }
+                            this.paymentTermsList=option3;
+
+                            let option4=[]
+                            for(var i=0; i < Arr4.length; i++){
+                                option4.push({label:Arr4[i],value:Arr4[i]});
+                            }
+                            this.transportTermsList=option4;
+
+
+                            let option5=[]
+                            for(var i=0; i < Arr5.length; i++){
+                                option5.push({label:Arr5[i],value:Arr5[i]});
+                            }
+                            this.dlvryPlantList=option5;
+
+                            let option6=[]
+                            for(var i=0; i < Arr6.length; i++){
+                                option6.push({label:Arr6[i],value:Arr6[i]});
+                            }
+                            this.custTypeList=option6;
+
+                            let option7=[]
+                            for(var i=0; i < Arr7.length; i++){
+                                option7.push({label:Arr7[i],value:Arr7[i]});
+                            }
+                            this.accSegList=option7;
+                        }
+
+                        
                     }
 
-                    this.pickValList = data.pickValList;
-
-                    if(this.pickValList != undefined){
-                        let Arr5  = this.pickValList.Delivery_Plant__c.Delivery_Plant__c;
-                        let Arr6 = this.pickValList.Customer_Type__c.Customer_Type__c;
-                        let Arr7 = this.pickValList.Account_Segment__c.Account_Segment__c;
-
-                        let Arr1 = this.pickValList.Tax_Type__c.Tax_Type__c;
-                        let Arr2 = this.pickValList.Tax_Collected_At_Source__c.Tax_Collected_At_Source__c;
-                        let Arr3 = this.pickValList.Payment_terms__c.Payment_terms__c;
-                        let Arr4 = this.pickValList.Transportation_Terms__c.Transportation_Terms__c;
-
-
-                        let option1=[]
-                        for(var i=0; i < Arr1.length; i++){
-                            option1.push({label:Arr1[i],value:Arr1[i]});
-                        }
-                        this.taxTypeList=option1;
-
-                        let option2=[]
-                        for(var i=0; i < Arr2.length; i++){
-                            option2.push({label:Arr2[i],value:Arr2[i]});
-                        }
-                        this.taxCollectList=option2;
-
-                        let option3=[]
-                        for(var i=0; i < Arr3.length; i++){
-                            option3.push({label:Arr3[i],value:Arr3[i]});
-                        }
-                        this.paymentTermsList=option3;
-
-                        let option4=[]
-                        for(var i=0; i < Arr4.length; i++){
-                            option4.push({label:Arr4[i],value:Arr4[i]});
-                        }
-                        this.transportTermsList=option4;
-
-
-                        let option5=[]
-                        for(var i=0; i < Arr5.length; i++){
-                            option5.push({label:Arr5[i],value:Arr5[i]});
-                        }
-                        this.dlvryPlantList=option5;
-
-                        let option6=[]
-                        for(var i=0; i < Arr6.length; i++){
-                            option6.push({label:Arr6[i],value:Arr6[i]});
-                        }
-                        this.custTypeList=option6;
-
-                        let option7=[]
-                        for(var i=0; i < Arr7.length; i++){
-                            option7.push({label:Arr7[i],value:Arr7[i]});
-                        }
-                        this.accSegList=option7;
-                    }
-
-                    
                 }
+
             }
         })
     }

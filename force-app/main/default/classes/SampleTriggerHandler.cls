@@ -31,37 +31,52 @@ public without sharing class SampleTriggerHandler {
     
     
     public void onBeforeUpdate(Map<Id,Project__c> oldMap,Map<Id,Project__c> newMap){
-        
-        Set<Id> projectIds = new Set<Id>();
-        Set<Id> applicationIds = new Set<Id>();
-        
-        String projectRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Project').getRecordTypeId();
-        String applicationRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Application').getRecordTypeId();
-        
-        for(Project__c proj : newMap.values()){
-            if(proj.Product_Family__c != null && ((PROJECT_SAP_FAMILY_SET.contains(proj.Product_Family__c) && proj.Status__c == PROJECT_STATUS_PRD) || (PROJECT_OPTIVA_FAMILY_SET.contains(proj.Product_Family__c))) && proj.Total_Project_Quotient__c > 0 && proj.Total_Project_Quotient__c != oldMap.get(proj.Id).Total_Project_Quotient__c && proj.RecordTypeId==projectRecId){
-                projectIds.add(proj.Id);
-            }else if(proj.Total_Project_Quotient__c > 0 && proj.Total_Project_Quotient__c!=oldMap.get(proj.Id).Total_Project_Quotient__c && proj.RecordTypeId==applicationRecId){
-                applicationIds.add(proj.Id);
+        try{
+            Set<Id> projectIds = new Set<Id>();
+            Set<Id> applicationIds = new Set<Id>();
+            
+            String projectRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Project').getRecordTypeId();
+            String applicationRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Application').getRecordTypeId();
+            
+            system.debug('onBeforeUpdate oldMap.values-->'+oldMap.values());
+            system.debug(' onBeforeUpdate newMap.values()--->'+newMap.values());
+            for(Project__c proj : newMap.values()){
+                if(proj.Product_Family__c != null && ((PROJECT_SAP_FAMILY_SET.contains(proj.Product_Family__c) && proj.Status__c == PROJECT_STATUS_PRD) || (PROJECT_OPTIVA_FAMILY_SET.contains(proj.Product_Family__c))) && proj.Total_Project_Quotient__c > 0 && proj.Total_Project_Quotient__c != oldMap.get(proj.Id).Total_Project_Quotient__c && proj.RecordTypeId==projectRecId){
+                    projectIds.add(proj.Id);
+                }else if(proj.Total_Project_Quotient__c > 0 && proj.Total_Project_Quotient__c!=oldMap.get(proj.Id).Total_Project_Quotient__c && proj.RecordTypeId==applicationRecId){
+                    applicationIds.add(proj.Id);
+                }
             }
+            if(!projectIds.isEmpty()){
+                createSampleAndSampleLineItem(projectIds);
+            }
+            if(!applicationIds.isEmpty()){
+                createSampleAndSampleLineItem(applicationIds);
+            }
+            
+        }catch(Exception e){
+            System.debug('Exception Message--->'+e.getMessage());
+            System.debug('Exception  Line Number--->'+e.getLineNumber());
         }
-        if(!projectIds.isEmpty()){
-            createSampleAndSampleLineItem(projectIds);
-        }
-        if(!applicationIds.isEmpty()){
-            createSampleAndSampleLineItem(applicationIds);
-        }
+        
     }
     
     public void onAfterUpdate(Map<Id,Project__c> oldMap, Map<Id,Project__c> newMap){
         
-        Set<Id> projectIds = new Set<Id>();
-        Set<Id> applicationIds = new Set<Id>();
-        for(Project__c proj : newMap.values()){
-            if(proj.Approval_Status__c == 'Accepted by Business Head' && proj.Approval_Status__c != oldMap.get(proj.Id).Approval_Status__c){
-                system.debug('proj.Record_Type_Name__c -- ' + proj.Record_Type_Name__c);
-                call_OPTIVA_API(proj.Id, proj.Record_Type_Name__c);
-            }
+        try{
+            Set<Id> projectIds = new Set<Id>();
+            Set<Id> applicationIds = new Set<Id>();
+            system.debug('onAfterUpdate oldMap.values-->'+oldMap.values());
+            system.debug('onAfterUpdate newMap.values()--->'+newMap.values());
+            for(Project__c proj : newMap.values()){
+                if(proj.Approval_Status__c == 'Accepted by Business Head' && proj.Approval_Status__c != oldMap.get(proj.Id).Approval_Status__c){
+                    system.debug('proj.Record_Type_Name__c -- ' + proj.Record_Type_Name__c);
+                    call_OPTIVA_API(proj.Id, proj.Record_Type_Name__c);
+                }
+            }  
+        }catch(Exception e){
+            System.debug('Exception Message--->'+e.getMessage());
+            System.debug('Exception  Line Number--->'+e.getLineNumber());
         }
     }
     
@@ -92,7 +107,7 @@ public without sharing class SampleTriggerHandler {
         String projectRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Sample').getRecordTypeId();
         Map<String,Boolean> checkValues = new Map<String,Boolean>();
         Map<Id,Project__c> samples = new Map<Id,Project__c>();
-        Map<Id,Project__c> projects = new Map<Id,Project__c>([Select Id,Opportunity__r.Billing_City__c, Opportunity__r.Billing_Country__c, Opportunity__r.Billing_State__c, 
+        Map<Id,Project__c> projects = new Map<Id,Project__c>([Select Id,Opportunity__r.AccountId,Opportunity__r.OwnerId,Opportunity__r.Billing_City__c, Opportunity__r.Billing_Country__c, Opportunity__r.Billing_State__c, 
                                                               Opportunity__r.Shipping_Street__c, Opportunity__r.Shipping_State__c,Opportunity__r.Shipping_City__c,
                                                               Opportunity__r.Shipping_Postal_Code__c ,Opportunity__r.Shipping_Country__c,
                                                               Opportunity__r.Billing_Street__c,Opportunity__r.Billing_Postal_Code__c,  Name,Opportunity__c,Sampling_Quantity_Unit__c,
@@ -103,7 +118,7 @@ public without sharing class SampleTriggerHandler {
             
             Project__c sample = new Project__c();
             sample.RecordTypeId = projectRecId;
-            sample.Account__c = !String.isEmpty(proj.Account__c)?proj.Account__c:null;
+            sample.Account__c = !String.isEmpty(proj.Opportunity__r.AccountId)?proj.Opportunity__r.AccountId:null;
             sample.Opportunity__c = !String.isEmpty(proj.Opportunity__c)?proj.Opportunity__c:null;
             sample.Sample_Name__c = proj.Name + ' - Sample';
             sample.CurrencyIsoCode = proj.CurrencyIsoCode;
@@ -113,10 +128,10 @@ public without sharing class SampleTriggerHandler {
             sample.Expected_Annual_Value__c = proj.Expected_Annual_Value__c ;
             sample.Sample_Project__c = proj.Id;
             if(proj.Opportunity__c != null){
-                sample.OwnerId = proj.Opportunity__r.Account.OwnerId;
+                sample.OwnerId = proj.Opportunity__r.OwnerId;
                 
                 //Add address fields here.
-                system.debug('proj.Opportunity__r.Shipping_Street__c.length() ' + proj.Opportunity__r.Shipping_Street__c.length());
+                //  system.debug('proj.Opportunity__r.Shipping_Street__c.length() ' + proj.Opportunity__r.Shipping_Street__c.length());
                 if(proj.Opportunity__r.Account.Customer_Contact__c != null && proj.Opportunity__r.Account.Customer_Contact__r.MailingAddress != null) {
                     sample.City__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingCity;
                     sample.State__c = proj.Opportunity__r.Account.Customer_Contact__r.MailingState;

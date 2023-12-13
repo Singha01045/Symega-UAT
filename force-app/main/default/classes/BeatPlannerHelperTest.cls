@@ -10,6 +10,18 @@ public class BeatPlannerHelperTest {
         
         Account accRec = new Account();
         accRec.Name = 'Test FSL';
+        
+        accRec.BillingCity = 'Bangalore';
+        accRec.BillingCountry = 'India';
+        accRec.BillingState = 'Punjab';
+        accRec.BillingStreet = 'XYZ, Test';
+        accRec.BillingPostalCode = '561011';
+        accRec.ShippingCity = 'Bangalore';
+        accRec.ShippingCountry = 'India';
+        accRec.ShippingState = 'Punjab';
+        accRec.ShippingStreet = 'XYZ, Test';
+        accRec.ShippingPostalCode = '561011';
+        
         insert accRec;
         
         Roles_and_KPI__c roleKpiRec = new Roles_and_KPI__c();

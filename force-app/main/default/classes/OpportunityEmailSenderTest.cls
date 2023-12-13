@@ -7,6 +7,18 @@ public class OpportunityEmailSenderTest {
         Account acc = new Account();
         acc.Name = 'Test Account';
         acc.Email__c ='test1@gmail.com';
+        
+        acc.BillingCity = 'Bangalore';
+        acc.BillingCountry = 'India';
+        acc.BillingState = 'Punjab';
+        acc.BillingStreet = 'XYZ, Test';
+        acc.BillingPostalCode = '561011';
+        acc.ShippingCity = 'Bangalore';
+        acc.ShippingCountry = 'India';
+        acc.ShippingState = 'Punjab';
+        acc.ShippingStreet = 'XYZ, Test';
+        acc.ShippingPostalCode = '561011';
+        
         insert acc;
         
         Opportunity opp = new Opportunity();

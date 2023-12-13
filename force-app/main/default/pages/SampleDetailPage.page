@@ -132,19 +132,27 @@
                 
                 <div class="d-flex text-align-center">
                     <div class="dropdown">
-                        <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+                        <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-expanded="false" style="color:white;">
                         </i>
                         <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-                            <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
+                            <li><a class="dropdown-item pe-5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                              </svg>&nbsp;{{contactName}}</a></li>
                             <li>
                             <hr class="dropdown-divider" />
                         </li>
-                        <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
+                        <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                          </svg>&nbsp;Edit Profile</a></li>
                             <li>
                             <hr class="dropdown-divider" />
                         </li>
                         <li>
-                            <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
+                            <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                              </svg>&nbsp;Logout</a>
                         </li>
                         </ul>
                         </div>
@@ -184,7 +192,7 @@
                                                     <b>Release To Dispatch Team</b>
                                                 </h3>
                                                 </div></h4> 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close" data-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row mt-3 mx-5" style="margin: 0px!important;">
@@ -233,7 +241,7 @@
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md-6 mb-5">
-                                                <button type="button" ng-click="saveSLIList()" class="blue-btn float-end">Save</button>
+                                                <button type="button" ng-click="saveSLIList()" class="blue-btn float-end" data-dismiss="modal">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -249,7 +257,7 @@
                                                         <b>Generate Label</b>
                                                     </h3>
                                                     </div></h4> 
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                <button type="button" class="btn-close" data-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row mt-3 mx-5" style="margin: 0px!important;">
@@ -260,10 +268,10 @@
                                             </div>
                                             <div class="row mt-3">
                                                 <div class="col-md-6 mb-5">
-                                                    <button type="button" ng-click="saveLabel()" class="blue-btn float-end">Save</button>
+                                                    <button type="button" ng-click="saveLabel()" class="blue-btn float-end" data-dismiss="modal">Save</button>
                                                 </div>
                                                 <div class="col-md-6 mb-5">
-                                                    <button type="button" data-bs-dismiss="modal" class="blue-btn">Cancel</button>
+                                                    <button type="button" data-dismiss="modal" class="blue-btn">Cancel</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,7 +287,7 @@
                                                         <b>Generate Non-Hazardous</b>
                                                     </h3>
                                                     </div></h4> 
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                <button type="button" class="btn-close" data-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row mt-3 mx-5" style="margin: 0px!important;">
@@ -290,10 +298,10 @@
                                             </div>
                                             <div class="row mt-3">
                                                 <div class="col-md-6 mb-5">
-                                                    <button type="button" ng-click="saveNonHazardous()" class="blue-btn float-end">Save</button>
+                                                    <button type="button" ng-click="saveNonHazardous()" class="blue-btn float-end" data-dismiss="modal">Save</button>
                                                 </div>
                                                 <div class="col-md-6 mb-5">
-                                                    <button type="button" data-bs-dismiss="modal" class="blue-btn">Cancel</button>
+                                                    <button type="button" data-dismiss="modal" class="blue-btn">Cancel</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -309,7 +317,7 @@
                                                     <b>Create Sample Line Items :</b>
                                                 </h3>
                                                 </div></h4> 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close" data-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row mt-3 mx-5" style="margin: 0px!important;">
@@ -390,7 +398,7 @@
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md-6 mb-5">
-                                                <button type="button" ng-click="saveSLIDetails()" class="blue-btn float-end">Save</button>
+                                                <button type="button" ng-click="saveSLIDetails()" class="blue-btn float-end" data-dismiss="modal">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -952,6 +960,7 @@
                         delete ($scope.SLIlist[i]['check']);
                         delete ($scope.SLIlist[i]['productId']);
                         delete ($scope.SLIlist[i]['ProductNm']);
+                        delete ($scope.SLIlist[i]['productFamily']);
                         if($scope.SLIlist[i].Actual_date_of_dispatch__c != null){
                             const dateString = $scope.SLIlist[i].Actual_date_of_dispatch__c;
                     const epochTimestamp = new Date(dateString).getTime() / 1000;
@@ -967,10 +976,11 @@
                             debugger;
                             if(event.status && result){
                                 swal("success", "Records has been updated successfully.","success");
-                                $('#releaseToDispatch').modal('toggle');
+                                //$('#releaseToDispatch').modal('toggle');
                                 $scope.$apply();
                             }
-                            $scope.getSampleDetails();
+                            //$scope.getSampleDetails();
+                            window.location.reload();
                         })
                 }
 
@@ -1050,13 +1060,13 @@ $scope.saveLabel = function(){
                             //$scope.contentVersionId = result[0].ContentVersionId;
                             $scope.showSpinner = false;
                             swal("success", "Label has been successfully saved!","success");
-                            $('#genrateLabelModal').modal('toggle');
+                            //$('#genrateLabelModal').modal('toggle');
                             $scope.$apply();
                             //$scope.filePreviewHandler(result);
                     }else{
                         swal("error", "Label wasn't saved due to an error!","error");
                         $scope.showSpinner = false;
-                            $('#genrateLabelModal').modal('toggle');
+                            //$('#genrateLabelModal').modal('toggle');
                             $scope.$apply();
                     }
                 });
@@ -1071,13 +1081,13 @@ $scope.saveLabel = function(){
                             //$scope.contentVersionId = result[0].ContentVersionId;
                             $scope.showSpinner = false;
                             swal("success", "Label has been successfully saved!","success");
-                            $('#genrateNonHazardousModal').modal('toggle');
+                            //$('#genrateNonHazardousModal').modal('toggle');
                             $scope.$apply();
                             //$scope.filePreviewHandler(result);
                     }else{
                         swal("error", "Label wasn't saved due to an error!","error");
                         $scope.showSpinner = false;
-                            $('#genrateNonHazardousModal').modal('toggle');
+                            //$('#genrateNonHazardousModal').modal('toggle');
                             $scope.$apply();
                     }
                 });
@@ -1144,18 +1154,22 @@ $scope.saveLabel = function(){
                     console.log(SLI);
                     debugger;
                     //var foundItem = $scope.mergedList.find(item => item.Name === productId);
-                    SLI.Quantity__c = null;
-                    SLI.Packaging_Unit__c = '--None--';
-                    SLI.Quantity_Unit__c = '--None--';
-                    SLI.Packaging_Quantity__c = null;
-                    SLI.Customer_Instructions__c = null;
-                    SLI.Regulatory_Requirements__c = null;
-                    SLI.Expected_Shelf_Life__c = null;
-                    SLI.Current_Shelf_Life__c = null;
-                    SLI.calc = null;
+                    // SLI.Quantity__c = null;
+                    // SLI.Packaging_Unit__c = '--None--';
+                    // SLI.Quantity_Unit__c = '--None--';
+                    // SLI.Packaging_Quantity__c = null;
+                    // SLI.Customer_Instructions__c = null;
+                    // SLI.Regulatory_Requirements__c = null;
+                    // SLI.Expected_Shelf_Life__c = null;
+                    // SLI.Current_Shelf_Life__c = null;
+                    // SLI.calc = null;
                     // if (foundItem) {
                     //     if (foundItem.Id.startsWith('01t')) {
+                        if(productId != null && productId != undefined){
                             SLI.Product__c = productId;
+                        }else{
+                            SLI.ProductNm = SLI.Product__c;
+                        }
                     //     }else if(foundItem.Id.startsWith('a0S')){
                     //         SLI.Project_Quotient__c = foundItem.Id;
                     //         //$scope.productId = SLI.Project_Quotient__r.Name;
@@ -1197,7 +1211,11 @@ $scope.saveLabel = function(){
                         return;
                     }
                 }
-                $('#flipFlop').modal('toggle');
+                //$('#flipFlop').modal('toggle');
+                // $('body').removeClass("modal-open");
+                // $(".modal-backdrop").remove();
+                // var myModal = new bootstrap.Modal(document.getElementById('flipFlop'));
+                // myModal.hide();
                 for(var i=0;i<$scope.SLIlist.length;i++){
                     $scope.SLIlist[i].Submitted__c = true;
                     delete ($scope.SLIlist[i]['$$hashKey']);
@@ -1209,6 +1227,7 @@ $scope.saveLabel = function(){
                     delete ($scope.SLIlist[i]['Sample_Invoice_Date__c']);
                     delete ($scope.SLIlist[i]['checkReleaseStatus']);
                     delete ($scope.SLIlist[i]['alreadyReleased']);
+                    delete ($scope.SLIlist[i]['productFamily']);
                     
                     if($scope.SLIOldById.has($scope.SLIlist[i].Id)){
                     	if($scope.SLIOldById.get($scope.SLIlist[i].Id).Formula_Packaging_Qty__c != $scope.SLIlist[i].Formula_Packaging_Qty__c){
@@ -1234,13 +1253,14 @@ $scope.saveLabel = function(){
                         debugger;
                         $scope.showSpinner = false;
                         swal("success", "Record has been update successfully.","success");
+                        window.location.reload();
                     }else{
                         $scope.showSpinner = false;
                         swal("error", "Could not Update the Record due to an error","error");
                     }
-                    $scope.$apply();
-                    $scope.getSampleDetails();
+                    //$scope.getSampleDetails();
                 })
+                $scope.$apply();
             }
             
             $scope.addRow=function(){

@@ -32,6 +32,7 @@ export default class ChangeAddress extends  NavigationMixin(LightningElement) {
     }
 
     getRecordDetails(){
+        debugger;
         getOppRecord({oppId:this.recordId}).then(data=>{
             if(data){
                 this.oppRecord = data[0];

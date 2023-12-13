@@ -230,7 +230,7 @@ public without sharing class OperationsPortalController {
             Target_Price__c,Target_Saving_Percentage__c,Technical_Complexity__c,Tech_Doc_Name__c,Tested_at_Flavor_Level__c,Time_Duration_in_hours__c,Total_Project_Quotient__c,
             Total_Solids__c,Type_of_PR__c,Usage_Levels_in_Recipes_Average__c,Way_Bill_No__c,Wet_Dry__c,Where_Used__c,who_requested_the_sample__c,
             Opportunity__r.Name,Opportunity__r.AccountId,Account__r.Name,(SELECT Id, Sample_Invoice_Date__c,Courier__c, Actual_date_of_dispatch__c, Release_to_Dispatch_Team__c, Release_Status__c, Dispatch_Details__c, Way_Bill_No__c, Name, Product__c,Project_Quotient__c,OPTIVA_Recipe__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c,OPTIVA_Recipe__r.Name, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Product_Family__c,
-                                                  Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c,Sample__r.Owner.Email,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Product_Name__c
+                                                  Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c,Sample__r.Owner.Email,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Family, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Product_Name__c
                                                   FROM Sample_Line_Items__r WHERE Release_Status__c = 'Released') FROM Project__c WHERE Id =: sampleId];
             }else{
                 sampleRec = [SELECT Account__c,Acc_Email__c,Acidity__c,Actual_Date_of_Dispatch__c,Additional_Comments__c,Additive_Status__c,
@@ -266,7 +266,7 @@ public without sharing class OperationsPortalController {
             Target_Price__c,Target_Saving_Percentage__c,Technical_Complexity__c,Tech_Doc_Name__c,Tested_at_Flavor_Level__c,Time_Duration_in_hours__c,Total_Project_Quotient__c,
             Total_Solids__c,Type_of_PR__c,Usage_Levels_in_Recipes_Average__c,Way_Bill_No__c,Wet_Dry__c,Where_Used__c,who_requested_the_sample__c,
             Opportunity__r.Name,Opportunity__r.AccountId,Account__r.Name,(SELECT Id, Sample_Invoice_Date__c,Courier__c, Actual_date_of_dispatch__c, Release_to_Dispatch_Team__c, Release_Status__c, Dispatch_Details__c, Way_Bill_No__c, Name, Product__c,Project_Quotient__c,OPTIVA_Recipe__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c,OPTIVA_Recipe__r.Name, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Product_Family__c,
-                                                  Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c,Sample__r.Owner.Email,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Product_Name__c
+                                                  Expected_Shelf_Life__c, Additional_Comments__c, Product__r.Family,Customer_Instructions__c, Sample__c,Sample__r.Owner.Email,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Product_Name__c
                                                   FROM Sample_Line_Items__r) FROM Project__c WHERE Id =: sampleId];
             }
 
@@ -1137,10 +1137,36 @@ public without sharing class OperationsPortalController {
         try{
             Id orgWideEmailAddressId = [SELECT Id FROM OrgWideEmailAddress ].Id;
             String ownerEmail = ListOfSLI[0].Sample__r.Owner.Email;
-            String productFamily = ListOfSLI[0].Product_Family__c;
-            Sample_Assignment_Team__c sampleAssignmentTeam = [SELECT Id, Name, Team_Type__c FROM Sample_Assignment_Team__c WHERE Team_Type__c =: productFamily LIMIT 1];
+            //String productFamily = ListOfSLI[0].Product_Family__c;
+            Sample_Assignment_Team__c sampleAssignmentTeamSPD = [SELECT Id, Name, Team_Type__c FROM Sample_Assignment_Team__c WHERE Team_Type__c = 'SPD' LIMIT 1];
+            Sample_Assignment_Team__c sampleAssignmentTeamCPD = [SELECT Id, Name, Team_Type__c FROM Sample_Assignment_Team__c WHERE Team_Type__c = 'CPD' LIMIT 1];
+            Sample_Assignment_Team__c sampleAssignmentTeamPLANTBASED = [SELECT Id, Name, Team_Type__c FROM Sample_Assignment_Team__c WHERE Team_Type__c = 'PLANT BASED' LIMIT 1];
+            Set<Id> productIds = new Set<Id>();
+            Map<Id, String> prodFamilyById = new Map<Id, String>();
             for(Sample_Line_Item__c sliRec : ListOfSLI){
-                sliRec.Sample_Assignment_Team__c = sampleAssignmentTeam.Id;
+                System.debug('sliRec.Product__c==> ' + sliRec.Product__c);
+                productIds.add(sliRec.Product__c);
+            }
+
+            List<Product2> prodList = [SELECT Id, Name, Family FROM Product2 WHERE Id IN: productIds];
+            for(Product2 prodRec : prodList){
+                if(!prodFamilyById.containsKey(prodRec.Id)){
+                    prodFamilyById.put(prodRec.Id, prodRec.Family);
+                }
+            }
+
+            for(Sample_Line_Item__c sliRec : ListOfSLI){
+                if(prodFamilyById.containsKey(sliRec.Product__c)){
+                    System.debug('prodFamilyById.get(sliRec.Product__c)==> ' + prodFamilyById.get(sliRec.Product__c));
+                    if(prodFamilyById.get(sliRec.Product__c) == 'CPD'){
+                        sliRec.Sample_Assignment_Team__c = sampleAssignmentTeamCPD.Id;
+                    }else if(prodFamilyById.get(sliRec.Product__c)  == 'SPD'){
+                        sliRec.Sample_Assignment_Team__c = sampleAssignmentTeamSPD.Id;
+                    }else if(prodFamilyById.get(sliRec.Product__c) == 'PLANT BASED'){
+                        sliRec.Sample_Assignment_Team__c = sampleAssignmentTeamPLANTBASED.Id;
+                    }
+                }
+                System.debug('sliRec.Sample_Assignment_Team__c==> ' + sliRec.Sample_Assignment_Team__c);
             }
             /*set<Id> setOfAssignmentTeamId = New set<Id>();
              List<Sample_Assignment_Team__c> listOfAssignmentTeam = New List<Sample_Assignment_Team__c>();
