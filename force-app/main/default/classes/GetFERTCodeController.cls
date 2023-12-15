@@ -26,208 +26,57 @@ public class GetFERTCodeController {
         
         //TODO: Anjali use this method to send notification, this method should be called from button on parent opportunity.
         String response = '';  //  Owner.Email,
-        Opportunity opp = [Select Id,Name, OwnerId,  Send_Fert_Notification_Email__c, Owner.Email, Selected_Billing_Customer_Code__c, Selected_Shipping_Customer_Code__c, 
-
+        Opportunity opp = [Select Id,Name, OwnerId,  Send_Fert_Notification_Email__c, Owner.Email,
                            AccountId, Account.Customer_Code_SAP__c, Account_Billing_Address__c,Customer_Billing_Address__c,
-                           Customer_Billing_Address__r.Customer_Code_SAP__c, Account.Submitted_to_SAP__c, Customer_Billing_Address__r.Submitted_to_SAP__c,
-
-                           Account.Shipping_Customer_Code_SAP__c, Account_Shipping_Address__c, Customer_Shipping_Address__c,
-                           Customer_Shipping_Address__r.Customer_Code_SAP__c, Account.Shipping_Submitted_to_SAP__c, Customer_Shipping_Address__r.Submitted_to_SAP__c
-
+                           Customer_Billing_Address__r.Customer_Code_SAP__c, Account.Submitted_to_SAP__c, Customer_Billing_Address__r.Submitted_to_SAP__c
                            From Opportunity Where Id=:oppId];
 
-        Boolean isBillingAccount;
+        String customerCode = '';
+        Boolean isAccount;
         if(opp.Account_Billing_Address__c){
-            isBillingAccount = true;
+            customerCode = opp.Account.Customer_Code_SAP__c;
+            isAccount = true;
         }
         else if(opp.Customer_Billing_Address__c != null){
-            isBillingAccount = false;
+            customerCode = opp.Customer_Billing_Address__r.Customer_Code_SAP__c;
+            isAccount = false;
         }
 
-        Boolean isShippingAccount;
-        if(opp.Account_Shipping_Address__c){
-            isShippingAccount = true;
-        }
-        else if(opp.Customer_Shipping_Address__c != null){
-            isShippingAccount = false;
-        }
-
-        if(opp.Selected_Billing_Customer_Code__c && opp.Selected_Shipping_Customer_Code__c){
+        if(!String.isEmpty(customerCode)){
             system.debug('Hiiiiii...');
             sendFertCodeReqHelper(oppId, opp.OwnerId, opp.Owner.Email);
+            /*Task taskRec = new Task();
+            taskRec.Subject = 'Update once the FERT is ready by OPS team';
+            taskRec.OwnerId =  opp.OwnerId;
+            taskRec.ActivityDate = System.today(); 
+            taskRec.Status = 'Open';
+            taskRec.WhatId = oppId;
+            insert taskRec;*/
             response = 'Success';
         }
         else{
 
-            if(!opp.Selected_Billing_Customer_Code__c){
-                system.debug('Hiii... Inside Empty BILLING Customer Code Part... Test 123');
-
-                if(isBillingAccount){ 
-                    system.debug('Hiii... Inside Billing Account Part... Test 123278');
-                    
-                    String customerValidationRes = Utility.checkForInitialSubmission(opp.AccountId);
-                    if(!opp.Account.Submitted_to_SAP__c){
-                        if(customerValidationRes == 'Success'){
-                            callFutureForAccount(opp.AccountId);
-                            opp.Send_Fert_Notification_Email__c = true;
-                            update opp;
-                            response = 'create';
-                        }
-                        else{
-                            response = customerValidationRes;
-                        }
-                    }
-                    else{
-                        response = 'progress';
-                    }
-                    
-                    if(!opp.Selected_Shipping_Customer_Code__c){
-                       system.debug('Hiii... Inside Empty Shipping Customer Code Part... Test 1232uoi2');
-
-                        if(isShippingAccount){
-                            system.debug('Hiii... Inside Shipping Acount Part... 2eu83ui');
-
-                            String customerValidationResShipping = Utility.checkForInitialSubmission_ShippingAccount(opp.AccountId);
-                            if(!opp.Account.Shipping_Submitted_to_SAP__c){
-                                if(customerValidationResShipping == 'Success'){
-                                    callFutureForShippingAccount(opp.AccountId);
-                                    opp.Send_Fert_Notification_Email__c = true;
-                                    update opp;
-                                    response = 'create';
-                                }
-                                else{
-                                    response = customerValidationResShipping;
-                                }
-                            }
-                            else{
-                                response = 'progress';
-                            }
-                        }
-                        else{
-                            system.debug('Hiii... Inside Shipping Address Part... 3872ujr');
-
-                            String customerValidationResShipAdrs = Utility.checkForInitialSubmissionAddress(opp.Customer_Shipping_Address__c);
-                            if(!opp.Customer_Shipping_Address__r.Submitted_to_SAP__c){
-                                if(customerValidationResShipAdrs == 'Success'){
-                                    callFutureForAddress(opp.Customer_Shipping_Address__c);
-                                    opp.Send_Fert_Notification_Email__c = true;
-                                    update opp;
-                                    response = 'create';
-                                }
-                                else{
-                                    response = customerValidationResShipAdrs;
-                                }
-                            }
-                            else{
-                                response = 'progress';
-                            }
-                        }
-                    }   
-                }
-                else if(!isBillingAccount){
-                    system.debug('Hiii... Inside Billing Address Part... 398ijkd');
-
-                    String customerValidationRes = Utility.checkForInitialSubmissionAddress(opp.Customer_Billing_Address__c);
-                    if(!opp.Customer_Billing_Address__r.Submitted_to_SAP__c){
-                        if(customerValidationRes == 'Success'){                        
-                            callFutureForAddress(opp.Customer_Billing_Address__c);
-                            opp.Send_Fert_Notification_Email__c = true;
-                            update opp;
-                            response = 'create';
-                        }
-                        else{
-                            response = customerValidationRes;
-                        }
-                    }
-                    else{
-                        response = 'progress';
-                    }
-
-                    if(!opp.Selected_Shipping_Customer_Code__c){
-                        system.debug('Hiii... Inside Missing Shipping Customer Code Part... ieqjwqk');
-
-                        if(isShippingAccount){
-                            system.debug('Hiii... Inside Shipping Account Part NSMSNSMSNKKNS...');
-
-                            String customerValidationResShip = Utility.checkForInitialSubmission_ShippingAccount(opp.AccountId);
-                            if(!opp.Account.Shipping_Submitted_to_SAP__c){
-                                if(customerValidationResShip == 'Success'){
-                                    callFutureForShippingAccount(opp.AccountId);
-                                    opp.Send_Fert_Notification_Email__c = true;
-                                    update opp;
-                                    response = 'create';
-                                }
-                                else{
-                                    response = customerValidationResShip;
-                                }
-                            }
-                            else{
-                                response = 'progress';
-                            }
-                        }
-                    } 
-                }
-            }
-            else if(!opp.Selected_Shipping_Customer_Code__c){
-    
-                system.debug('Hiii... Inside Empty SHIPPING Customer Code Part... Test 123dks');
-
-                if(isShippingAccount){ 
-                    system.debug('Hiii... Inside Shipping Account Part... Test 123hgj278');
-                    
-                    String customerValidationRes = Utility.checkForInitialSubmission_ShippingAccount(opp.AccountId);
-                    if(!opp.Account.Shipping_Submitted_to_SAP__c){
-                        if(customerValidationRes == 'Success'){
-                            callFutureForShippingAccount(opp.AccountId);
-                            opp.Send_Fert_Notification_Email__c = true;
-                            update opp;
-                            response = 'create';
-                        }
-                        else{
-                            response = customerValidationRes;
-                        }
-                    }
-                    else{
-                        response = 'progress';
-                    }
-                }
-                else{
-                    system.debug('Hiii... Inside Shipping Address Part... 398ijkdsdnfjs');
-
-                    String customerValidationRes = Utility.checkForInitialSubmissionAddress(opp.Customer_Shipping_Address__c);
-                    if(!opp.Customer_Shipping_Address__r.Submitted_to_SAP__c){
-                        if(customerValidationRes == 'Success'){                        
-                            callFutureForAddress(opp.Customer_Shipping_Address__c);
-                            opp.Send_Fert_Notification_Email__c = true;
-                            update opp;
-                            response = 'create';
-                        }
-                        else{
-                            response = customerValidationRes;
-                        }
-                    }
-                    else{
-                        response = 'progress';
-                    }
-                }
-            }
-
-        }
-
-
-
-
-        /*if(!String.isEmpty(customerCode)){
-            system.debug('Hiiiiii...');
-            sendFertCodeReqHelper(oppId, opp.OwnerId, opp.Owner.Email);
-            response = 'Success';
-        }
-        else{
             if(isAccount){
                 String customerValidationRes = Utility.checkForInitialSubmission(opp.AccountId);
                 if(!opp.Account.Submitted_to_SAP__c){
+                    //String customerValidationRes = Utility.checkSAPCustomerReqField(opp.AccountId);
                     if(customerValidationRes == 'Success'){
+                        // Account accRec = [SELECT Id, Submitted_to_SAP__c FROM Account WHERE Id =: opp.AccountId];
+                        // String resp = SAP_CreateCustomerCallout.createCustomer(opp.AccountId, true); // method signature changed
+                        // if(resp.equalsIgnoreCase('Success')){
+                        //     if(accRec.Submitted_to_SAP__c != true){
+                        //         accRec.Submitted_to_SAP__c = true;
+                        //         update accRec;
+                        //     }
+                        // }
+
+                        // if(accRec.Initial_SAP_Update__c != true){
+                        //     accRec.Initial_SAP_Update__c = true;
+                        //     update accRec;
+                        // }
+
                         callFutureForAccount(opp.AccountId);
+
                         opp.Send_Fert_Notification_Email__c = true;
                         update opp;
                         response = 'create';
@@ -243,8 +92,25 @@ public class GetFERTCodeController {
             else if(!isAccount){
                 String customerValidationRes = Utility.checkForInitialSubmissionAddress(opp.Customer_Billing_Address__c);
                 if(!opp.Customer_Billing_Address__r.Submitted_to_SAP__c){
-                    if(customerValidationRes == 'Success'){                        
+                    if(customerValidationRes == 'Success'){
+                        //Dispatch_Address__c addr = [SELECT Id, Initial_SAP_Update__c FROM Dispatch_Address__c WHERE Id =: opp.Customer_Billing_Address__c];
+                        
                         callFutureForAddress(opp.Customer_Billing_Address__c);
+
+                        /*String resp = SAP_CreateAddressCustomerCallout.createCustomer(opp.Customer_Billing_Address__c, true); // method signature changed
+                        if(resp.equalsIgnoreCase('Success')){
+                            Dispatch_Address__c addrRec = [SELECT Id, Submitted_to_SAP__c FROM Dispatch_Address__c WHERE Id =: opp.Customer_Billing_Address__c];
+                            if(addrRec.Submitted_to_SAP__c != true){
+                                addrRec.Submitted_to_SAP__c = true;
+                                update addrRec;
+                            }
+                        }*/
+
+                        // if(addr.Initial_SAP_Update__c != true){
+                        //     addr.Initial_SAP_Update__c = true;
+                        //     update addr;
+                        // }
+                        
                         opp.Send_Fert_Notification_Email__c = true;
                         update opp;
                         response = 'create';
@@ -257,7 +123,7 @@ public class GetFERTCodeController {
                     response = 'progress';
                 }
             }
-        } */
+        } 
         
         return response;
     }
@@ -297,26 +163,8 @@ public class GetFERTCodeController {
 
     }
 
-    @future(callout=true)
-    public static void callFutureForShippingAccount(Id accId){
-        Account accRec = [SELECT Id, Shipping_Submitted_to_SAP__c, Shipping_Initial_SAP_Update__c FROM Account WHERE Id =: accId];
-        String resp = SAP_CreateShippingCustomerCallout_NEW.createCustomer(accId, true);
-        if(resp.equalsIgnoreCase('Success')){
-            if(accRec.Shipping_Submitted_to_SAP__c != true){
-                accRec.Shipping_Submitted_to_SAP__c = true;
-                update accRec;
-            }
-        }
-
-        if(accRec.Shipping_Initial_SAP_Update__c != true){
-            accRec.Shipping_Initial_SAP_Update__c = true;
-            update accRec;
-        }
-    }
-
     public static void sendFertCodeEmailBulkAddress(List<Id> addrId){
-        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity 
-                                     Where (Customer_Billing_Address__c IN : addrId OR Customer_Shipping_Address__c IN : addrId) AND Send_Fert_Notification_Email__c=true];
+        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity Where Customer_Billing_Address__c IN : addrId AND Send_Fert_Notification_Email__c=true];
         for(Opportunity opp : oppList){
             sendFertCodeReqHelper(opp.Id, opp.OwnerId, opp.Owner.Email);
             opp.Send_Fert_Notification_Email__c = false;
@@ -325,8 +173,7 @@ public class GetFERTCodeController {
     }
     
     public static void sendFertCodeEmailBulk(List<Id> accId){
-        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity
-                                     Where AccountId IN : accId AND Send_Fert_Notification_Email__c=true];
+        List<Opportunity> oppList = [Select Id, Name, OwnerId, Owner.Email, Send_Fert_Notification_Email__c From Opportunity Where AccountId IN : accId AND Send_Fert_Notification_Email__c=true];
         for(Opportunity opp : oppList){
             sendFertCodeReqHelper(opp.Id, opp.OwnerId, opp.Owner.Email);
             opp.Send_Fert_Notification_Email__c = false;

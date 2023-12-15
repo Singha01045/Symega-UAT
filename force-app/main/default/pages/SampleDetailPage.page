@@ -891,6 +891,7 @@
                                         }else if($scope.SLIlist[i].Project_Quotient__c != undefined){
                                             $scope.SLIlist[i].ProductNm = $scope.SLIlist[i].Project_Quotient__r.Id;
                                             $scope.SLIlist[i].productId = $scope.SLIlist[i].Project_Quotient__c;
+                                            $scope.SLIlist[i].check = true;
                                         }else{
                                             $scope.SLIlist[i].productId = "--None--";
                                         }
@@ -923,7 +924,7 @@
                             }
                         }
                         for(var i=0;i<$scope.SLIlist.length;i++){
-                            if($scope.teamTypeList.includes($scope.SLIlist[i].Product_Family__c)){
+                            if($scope.teamTypeList.includes($scope.SLIlist[i].Product_Family__c) && $scope.SLIlist[i].Project_Quotient__c == undefined){
                               $scope.SLIlist[i].check = false;
                             //   $scope.counter = 2 ;
                             }else{

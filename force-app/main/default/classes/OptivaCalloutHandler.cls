@@ -278,7 +278,10 @@ public without sharing class OptivaCalloutHandler {
                     system.debug('sli.Product__r.Famil -- ' + sli.Product__r.Family);
                     //system.debug('sli.orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family) -- ' + orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family));
                     
-                    if(!String.isEmpty(sli.OPTIVA_Recipe__c) || (!String.isEmpty(sli.Project_Quotient__c) && !String.isEmpty(sli.Project_Quotient__r.Sample_Project_Application__c) && sli.Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName == 'Project' && (sli.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c==Constants.FLAVOUR_API_NAME || sli.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c==Constants.COLOR_API_NAME)) || (!String.isEmpty(sli.Product__c) && !String.isEmpty(sli.Product__r.Family) && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family))){
+                    if(!String.isEmpty(sli.OPTIVA_Recipe__c) || 
+                       (!String.isEmpty(sli.Project_Quotient__c) && !String.isEmpty(sli.Project_Quotient__r.Sample_Project_Application__c) && (sli.Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName == 'Project' || sli.Project_Quotient__r.Sample_Project_Application__r.RecordType.DeveloperName == 'Application') && (sli.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c==Constants.FLAVOUR_API_NAME || sli.Project_Quotient__r.Sample_Project_Application__r.Product_Family__c==Constants.COLOR_API_NAME)) || 
+                       (!String.isEmpty(sli.Product__c) && !String.isEmpty(sli.Product__r.Family) && orgConfig.Prod_Families_Send_To_Optiva__c.contains(sli.Product__r.Family)))
+                    {
                         optivaRecipieSLineItems.put(sli.Id,sli);
                     }else{
                         system.debug('HII');

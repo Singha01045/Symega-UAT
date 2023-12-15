@@ -43,6 +43,23 @@ public without sharing class ProjectHanlder {
     }
 
     @AuraEnabled
+    public static Project__c getProjRecord(String projectId){
+        try {
+            if(String.isBlank(projectId))
+                return null;
+            return [Select Id, Name, Opportunity__c, Opportunity__r.CloseDate, Opportunity__r.Primary_Contact__c, Opportunity__r.End_Use_Application_Other__c, Opportunity__r.End_Use_Category__c, Opportunity__r.End_Use_Application__c, Opportunity__r.Target_Price_Kg__c, Opportunity__r.Annual_Volume_Full__c, Opportunity__r.Annual_Volume_in_units__c, 
+                    Opportunity__r.Annual_Potential_Value__c, Opportunity__r.Actual_Annual_Potential_Value__c,Opportunity__r.CurrencyIsoCode,
+                    Opportunity__r.Name, Opportunity__r.AccountId, Opportunity__r.Account.Name, Opportunity__r.Account.Customer_Contact__c, Opportunity__r.Amount,
+                    Opportunity__r.Billing_City__c, Opportunity__r.Billing_State__c, Opportunity__r.Billing_Street__c, Opportunity__r.Billing_Postal_Code__c, Opportunity__r.Billing_Country__c, 
+                    Opportunity__r.Shipping_City__c, Opportunity__r.Shipping_State__c, Opportunity__r.Shipping_Street__c, Opportunity__r.Shipping_Postal_Code__c, Opportunity__r.Shipping_Country__c
+                    FROM Project__c where Id =: projectId];
+                    
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Opportunity getOppRecordLWC(String id){
         try {
             if(String.isBlank(id))

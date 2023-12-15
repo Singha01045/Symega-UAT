@@ -101,7 +101,7 @@ public without sharing class SampleTriggerHandler {
     }
     
     
-    private static void createSampleAndSampleLineItem(Set<Id> projectIds){
+    public static void createSampleAndSampleLineItem(Set<Id> projectIds){
         //TODO:- Map missing fields on sample after confirmation;
         
         String projectRecId = Schema.SObjectType.Project__c.getRecordTypeInfosByName().get('Sample').getRecordTypeId();

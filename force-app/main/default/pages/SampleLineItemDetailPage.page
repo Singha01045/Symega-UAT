@@ -450,6 +450,8 @@
                                 <th>Sample LineItem No.</th>
                                 <th>Product</th>
                                 <th>Product Code</th>
+                                <th>Sample Name</th>
+                                <th>Is Dispatched?</th>
                                 <th>Dispatch Date</th>
                                 <th>Sample Request Status</th>
                                 <th>Product Family</th>
@@ -461,6 +463,8 @@
                                 <td><a href="#" ng-click="onClickOpenSLIDetailPage(SLI.Id)">{{SLI.Name}}</a></td>
                                 <td>{{SLI.Product__r.Name}}</td>
                                 <td>{{SLI.Product_Code__c}}</td>
+                                <td>{{SLI.Sample__r.Name}}</td>
+                                <td>{{SLI.isDispatched}}</td>
                                 <td>{{SLI.Actual_date_of_dispatch__c| date:'yyyy-MM-dd'}}</td>
                                 <td>{{SLI.Sample_Request_Status__c}}</td>
                                 <td>{{SLI.Product_Family__c}}</td>
@@ -670,6 +674,11 @@
                                     if(result.listOfSLI[i].Actual_date_of_dispatch__c != null){
                                     result.listOfSLI[i].Actual_date_of_dispatch__c = new Date(result.listOfSLI[i].Actual_date_of_dispatch__c);
                                 	} 
+                                    if(result.listOfSLI[i].SLI_Dispatched__c == false){
+                                    result.listOfSLI[i].isDispatched = 'No';
+                                	}else{
+                                        result.listOfSLI[i].isDispatched = 'Yes'; 
+                                    } 
                                 }
                             }
                             

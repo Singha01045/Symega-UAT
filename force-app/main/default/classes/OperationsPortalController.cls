@@ -106,10 +106,10 @@ public without sharing class OperationsPortalController {
             
             if(conRecord.Role__c == 'Dispatch Team'){
                 system.debug('Dipatch Team');
-               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Release_to_Dispatch_Team__c = True];
+               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,SLI_Dispatched__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Release_to_Dispatch_Team__c = True];
             }else{
                 system.debug('Operation & Sample Team');
-               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample_Type__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample'];
+               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,SLI_Dispatched__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample'];
             }
             system.debug('listOfAllSLI ====> '+listOfAllSLI);
             accountDetailWrapper wrapper = new accountDetailWrapper();
