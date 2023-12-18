@@ -158,7 +158,21 @@ public without sharing class SampleTriggerHandler {
             
             samples.put(proj.Id,sample);
             checkValues.put(proj.Id,proj.Auto_Submit_Sample__c); 
+            
+            //NEW
+            Map<String, String> sampleTeamByProdFamily = new Map<String, String>();
+            List<Sample_Assignment_Team__c> smTeamList = [SELECT Id, Name, Team_Type__c FROM Sample_Assignment_Team__c WHERE Team_Type__c != null ];
+            
+            for(Sample_Assignment_Team__c sTeam : smTeamList){
+                sampleTeamByProdFamily.put(sTeam.Team_Type__c, sTeam.Id);
+            }
+            //
+            
             for(Project_Quotient__c pq :proj.Project_Quotients__r){
+                Id teamId;
+                if( pq.Sample_Project_Application__r.Product_Family__c != null){
+                    teamId = sampleTeamByProdFamily.containsKey(pq.Sample_Project_Application__r.Product_Family__c) ? sampleTeamByProdFamily.get(pq.Sample_Project_Application__r.Product_Family__c) : null;
+                }
                 
                 Sample_Line_Item__c sli = new Sample_Line_Item__c();
                 sli.Project_Quotient__c = pq.Id;
@@ -167,9 +181,13 @@ public without sharing class SampleTriggerHandler {
                 sli.Additional_Comments__c = pq.Description__c;
                 sli.Packaging_Unit__c = proj.Sampling_Quantity_Unit__c;
                 
+                if(teamId != null)
+                    sli.Sample_Assignment_Team__c = teamId;
+                
                 if(projSampleLineItemMap.containsKey(proj.Id)){
                     projSampleLineItemMap.get(proj.Id).add(sli);
-                }else{
+                }
+                else{
                     projSampleLineItemMap.put(proj.Id,new List<Sample_Line_Item__c>{sli});
                 }
             }

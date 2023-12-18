@@ -108,8 +108,8 @@ public class MonthlyVisitViewerControllerTest {
         MonthlyVisitViewerController.tagKIPToVisit(visirtRec.Id,kpiTarRec.Id);
         MonthlyVisitViewerController.getCurrentRecordGeoLocation(ledRec.Id);
         MonthlyVisitViewerController.getCurrentRecordGeoLocation(accRec.Id);
-        MonthlyVisitViewerController.createVisitObjectTypev1(ledRec.Id, '2023-11-11', '12.890992','77.570802','6:32:00','7:32:00');
-        MonthlyVisitViewerController.createVisitObjectTypev1(accRec.Id, '2023-11-11', '12.890992','77.570802','6:32:00','7:32:00');
+       // MonthlyVisitViewerController.createVisitObjectTypev1(ledRec.Id, '2023-11-11', '12.890992','77.570802','6:32:00','7:32:00');
+        //MonthlyVisitViewerController.createVisitObjectTypev1(accRec.Id, '2023-11-11', '12.890992','77.570802','6:32:00','7:32:00');
         MonthlyVisitViewerController.createVisitObjectType(ledRec.Id, '2023-11-11', '12.890992','77.570802');
         MonthlyVisitViewerController.createVisitObjectType(accRec.Id, '2023-11-11', '12.890992','77.570802');
         MonthlyVisitViewerController.getUserVisits('JP Nagar');

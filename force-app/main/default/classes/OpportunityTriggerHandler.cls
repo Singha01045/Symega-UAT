@@ -28,6 +28,20 @@ public without sharing class OpportunityTriggerHandler {
         }
     }
     
+    //NEW
+    public void onMarkdownAddition(List<Opportunity> opportunityList, Map<id,Opportunity> oldOppMap) {
+        for(Opportunity opp : opportunityList) {
+            if(opp.Total_Unit_Price__c != null && ( (opp.Total_Unit_Price__c != oldOppMap.get(opp.Id).Total_Unit_Price__c) || (opp.Total_List_Price__c != null && opp.Total_List_Price__c != oldOppMap.get(opp.Id).Total_List_Price__c) ) && opp.Total_Unit_Price__c < opp.Total_List_Price__c && opp.Total_Unit_Price__c > 0 && opp.Total_List_Price__c > 0){
+                system.debug('onMarkdownAddition Opp -- ' + opp);
+                if(opp.Approved_by_Manager__c){
+                    opp.Approved_by_Manager__c = false;
+                    opp.Approved_by_Business_Head__c = false;
+                    opp.Approved_by_MD__c = false;                    
+                }
+            }
+        }
+    }
+    
     public void intiateApprovalProcess(list<opportunity> newOppList,Map<id,Opportunity> oldOppMap){
         Savepoint sp = Database.setSavepoint();
         try{

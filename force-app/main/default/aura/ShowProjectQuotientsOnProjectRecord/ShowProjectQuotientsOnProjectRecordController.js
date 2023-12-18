@@ -58,7 +58,8 @@
         var action = component.get("c.updateProjectQuotientValues");
         var recordList =component.get("v.qntList")
         action.setParams({
-            "projectlist": recordList
+            "projectlist": recordList,
+            "projId" : component.get('v.recordId')
         });
         action.setCallback(this, function(response){
             var state = response.getState();
@@ -89,8 +90,8 @@
                         mode: 'sticky'
                     });
                     toastEvent.fire();
-                    var dismissActionPanel = $A.get("e.force:closeQuickAction");
-                    dismissActionPanel.fire();
+                    /*var dismissActionPanel = $A.get("e.force:closeQuickAction");
+                    dismissActionPanel.fire();*/
                 }
                 
             }

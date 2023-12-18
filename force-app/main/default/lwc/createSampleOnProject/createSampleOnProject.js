@@ -19,7 +19,7 @@ export default class CreateSampleOnProject extends LightningElement {
                 console.log('Data',data);
                 const evt = new ShowToastEvent({
                     title: 'Success',
-                    message: 'Auto-Sample created and Submitted',
+                    message: 'Auto-Sample and Line Items have been created',
                     variant: 'success',
                 });
                 this.dispatchEvent(evt);

@@ -4,6 +4,9 @@ trigger TriggerOnOpportunity on Opportunity (before insert, after update, before
         OpportunityTriggerHandler handlerInstance = OpportunityTriggerHandler.getInstance();
         if(Trigger.isBefore && (Trigger.isInsert || Trigger.isUpdate)) {
             handlerInstance.onBeforeInsert(Trigger.New);
+            if(Trigger.isUpdate){
+                handlerInstance.onMarkdownAddition(trigger.new,trigger.oldMap);
+            }
         }
         if(trigger.isAfter && trigger.isUpdate) {
             System.debug('Trigger fired');

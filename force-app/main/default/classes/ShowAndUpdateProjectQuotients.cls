@@ -1,9 +1,10 @@
 public class ShowAndUpdateProjectQuotients {
+    
     @AuraEnabled
     public static List<Project_Quotient__c> showProjectQuotientRec(string proRecId){
         List<Project_Quotient__c> prolist;
         if(proRecId != null){
-            prolist   = [Select Id, Name, Stage__c, Lost_Reason__c from Project_Quotient__c where Sample_Project_Application__c =: proRecId];
+            prolist   = [Select Id, Name, Stage__c, Lost_Reason__c, Product_Name__c, SSC_Code__c, Email_Sent__c from Project_Quotient__c where Sample_Project_Application__c =: proRecId];
             if(prolist.size()>0){
                 return prolist;
             }  
@@ -11,6 +12,7 @@ public class ShowAndUpdateProjectQuotients {
         }
         return null;
     }
+    
     @AuraEnabled
     public static List<String> getStagePicklistValues() {
         Schema.DescribeFieldResult fieldResult = Project_Quotient__c.Stage__c.getDescribe();
@@ -25,10 +27,43 @@ public class ShowAndUpdateProjectQuotients {
     }
     
     @AuraEnabled
-    public static string updateProjectQuotientValues( List<Project_Quotient__c> projectlist){
+    public static string updateProjectQuotientValues( List<Project_Quotient__c> projectlist, String projId){
         try{
-            update projectlist;
-            return 'success';
+            if(projectlist.size() > 0){
+                               
+                Integer wonQntCnt = 0;
+                Integer lostQntCnt = 0;
+                
+                Project__c projectRec = [SELECT ID, OwnerId, Owner.FirstName, Owner.Email, Manager_Email__c, Name, Project_Name__c FROM Project__c WHERE Id =: projId];
+                List<Project_Quotient__c> wonProjQntlist = new List<Project_Quotient__c>();
+                List<Project_Quotient__c> lostProjQntlist = new List<Project_Quotient__c>();
+                
+                update projectlist;
+                
+                system.debug('projectlist -- ' + projectlist);
+
+                for(Project_Quotient__c pQnt :  projectlist){
+                    if(!pQnt.Email_Sent__c){
+                        if(pQnt.Stage__c == 'Won'){
+                            wonQntCnt ++;
+                            wonProjQntlist.add(pQnt);
+                        }
+                        if(pQnt.Stage__c == 'Lost'){
+                            lostQntCnt ++;
+                            lostProjQntlist.add(pQnt);
+                        }
+                    }
+                }
+
+                if(wonProjQntlist.size()>0){
+                    sendWonEmail(projectRec, wonQntCnt, wonProjQntlist);
+                }
+                if(lostProjQntlist.size()>0){
+                    sendLostEmail(projectRec, lostQntCnt, lostProjQntlist);
+                }
+                return 'success';
+            }
+            return 'Please perform updation before saving';
         }
         catch(exception e){
             system.debug('Error Msg :: ' + e.getMessage());
@@ -37,7 +72,111 @@ public class ShowAndUpdateProjectQuotients {
         }
     }
     
-     @AuraEnabled
+    public static void sendWonEmail( Project__c projRec, Integer wonCount, List<Project_Quotient__c> projQntList){
+        try{
+            String  adminMail = System.Label.Admin_Mail_Id;
+            system.debug('adminMail--->'+adminMail);
+            
+            List<Messaging.SingleEmailMessage> semList = new List<Messaging.SingleEmailMessage>(); 
+            Messaging.SingleEmailMessage mymail;      
+            mymail = new Messaging.SingleEmailMessage();
+            String mailSubject ;
+            mailSubject = projRec.Project_Name__c + '-'+ projRec.Name +' - ' + wonCount + ' - Project Quotients are Won';
+            List<String> emailList = new List<String>();
+            emailList.add(projRec.Owner.Email);
+            if(projRec.Manager_Email__c != null)
+                emailList.add(projRec.Manager_Email__c);
+            if(adminMail != null)
+                emailList.add(adminMail);
+            mymail.setToAddresses(emailList);            
+            mymail.setSenderDisplayName('Symega');
+            mymail.setSubject(mailSubject);
+            mymail.setSaveAsActivity(false);   
+            semList.add(mymail);  
+            
+            string htmlBody = 'Hi '+ projRec.Owner.FirstName +',' +'<br/>'+ '<br/>'+' The following Project Quotients are won, request to initiate commercialisation process and update.'+'<br/>';
+            htmlBody += '<br><br> <table border="2" style="border-collapse: collapse"><tr><th>Project Quotient Name</th><th>Product Name</th><th>Product Code</th></tr>';
+            
+            for(Project_Quotient__c pqRec: projQntList){
+                String qntName = '<html><a href="'+URL.getSalesforceBaseUrl().toExternalForm()+'/'+ pqRec.Id+'">'+ pqRec.Name+'</a></html>';
+                String prodName = pqRec.Product_Name__c == null ? '' : pqRec.Product_Name__c;
+                String sscCode = pqRec.SSC_Code__c == null ? '' : pqRec.SSC_Code__c;
+                htmlBody += '<tr><td>' + qntName + '</td><td>' + prodName + '</td><td>' + sscCode + '</td></tr>' ; 
+                if(!pqRec.Email_Sent__c)
+                    pqRec.Email_Sent__c = true;
+            }      
+            update projQntList;
+            
+            htmlBody += '</table>';
+            htmlBody += '<br><br> Thanks & Regards';
+            htmlBody += '<br>Symega';
+            mymail.setHtmlBody(htmlBody);
+            
+            if(semList != null){
+                Messaging.sendEmail(semList);
+                System.debug('Email Sent');
+            }
+        }
+        catch(Exception e){
+            System.debug('Exception Line Number--->'+e.getLineNumber());
+            System.debug('Exception Message-->'+e.getMessage());
+        }
+    }
+    
+    public static void sendLostEmail( Project__c projRec, Integer lostCount, List<Project_Quotient__c> projQntList){
+        try{
+            String  adminMail = System.Label.Admin_Mail_Id;
+            system.debug('adminMail--->'+adminMail);
+            
+            List<Messaging.SingleEmailMessage> semList = new List<Messaging.SingleEmailMessage>(); 
+            Messaging.SingleEmailMessage mymail;      
+            mymail = new Messaging.SingleEmailMessage();
+            String mailSubject ;
+            mailSubject = projRec.Project_Name__c + '-'+ projRec.Name +' - ' + lostCount + ' - Project Quotients are Lost';
+            List<String> emailList = new List<String>();
+            emailList.add(projRec.Owner.Email);
+            if(projRec.Manager_Email__c != null)
+                emailList.add(projRec.Manager_Email__c);
+            if(adminMail != null)
+                emailList.add(adminMail);
+            mymail.setToAddresses(emailList);            
+            mymail.setSenderDisplayName('Symega');
+            mymail.setSubject(mailSubject);
+            mymail.setSaveAsActivity(false);   
+            semList.add(mymail);  
+            
+            string htmlBody = 'Hi '+ projRec.Owner.FirstName +',' +'<br/>'+ '<br/>'+' The following Project Quotients are Rejected.'+'<br/>';
+            htmlBody += '<br><br> <table border="2" style="border-collapse: collapse"><tr><th>Project Quotient Name</th><th>Product Name</th><th>Product Code</th><th>Rejection Reason</th></tr>';
+            
+            for(Project_Quotient__c pqRec: projQntList){
+                String qntName = '<html><a href="'+URL.getSalesforceBaseUrl().toExternalForm()+'/'+ pqRec.Id+'">'+ pqRec.Name+'</a></html>';
+                String prodName = pqRec.Product_Name__c == null ? '' : pqRec.Product_Name__c;
+                String sscCode = pqRec.SSC_Code__c == null ? '' : pqRec.SSC_Code__c;
+                String rejectionReason = pqRec.Lost_Reason__c;
+                htmlBody += '<tr><td>' + qntName + '</td><td>' + prodName + '</td><td>' + sscCode + '</td><td>' + rejectionReason + '</td></tr>' ; 
+                if(!pqRec.Email_Sent__c)
+                    pqRec.Email_Sent__c = true;
+            }
+            
+            update projQntList;
+
+            htmlBody += '</table>';
+            htmlBody += '<br><br> Thanks & Regards';
+            htmlBody += '<br>Symega';
+            mymail.setHtmlBody(htmlBody);
+            
+            if(semList != null){
+                Messaging.sendEmail(semList);
+                System.debug('Email Sent');
+            }
+        }
+        catch(Exception e){
+            System.debug('Exception Line Number--->'+e.getLineNumber());
+            System.debug('Exception Message-->'+e.getMessage());
+        }
+    }
+    
+    @AuraEnabled
     public static List<String> getSampleStatusPicklistValues() {
         Schema.DescribeFieldResult fieldResult = Sample_Line_Item__c.Sample_Request_Status__c.getDescribe();
         List<Schema.PicklistEntry> picklistValues = fieldResult.getPicklistValues();
@@ -49,7 +188,8 @@ public class ShowAndUpdateProjectQuotients {
         
         return StageValues;
     }
-     @AuraEnabled
+    
+    @AuraEnabled
     public static List<Sample_Line_Item__c> showSamplelineRec(string proRecId){
         List<Sample_Line_Item__c> samplelist;
         if(proRecId != null){
@@ -61,6 +201,7 @@ public class ShowAndUpdateProjectQuotients {
         }
         return null;
     }
+    
     @AuraEnabled
     public static string updateSamplelineItemValues( List<Sample_Line_Item__c> samplelineIemlist){
         try{

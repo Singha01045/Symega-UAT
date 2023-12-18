@@ -10,7 +10,7 @@ public without sharing class sampleAssignNotification_ProdFamily {
                 List<Sample_Line_Item__c> slis = [SELECT Id, Name, Product__r.Family, Project_Quotient__r.Sample_Project_Application__r.Product_Family__c, OwnerId FROM Sample_Line_Item__c WHERE Id IN :sliIdsList];
                 system.debug('slis :: ' + slis);
                 
-                Map<String, String> sampleTeamByProdFamily = returnEmailByProdFamilyMap();
+                Map<String, String> sampleTeamByProdFamily = new Map<String, String>(); //returnEmailByProdFamilyMap();
                 List<Sample_Assignment_Team__c> smTeamList = [SELECT Id, Name, Team_Type__c FROM Sample_Assignment_Team__c WHERE Team_Type__c != null ];
                 
                 for(Sample_Assignment_Team__c sTeam : smTeamList){
