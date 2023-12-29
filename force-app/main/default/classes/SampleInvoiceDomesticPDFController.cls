@@ -12,7 +12,7 @@ public without sharing class SampleInvoiceDomesticPDFController {
             
             sampDetails = [select Id, MasterLabel,CIN__c,City__c,Country__c,Hno__c,Landmark__c,mobile1__c,mobile2__c,Name__c,Pancode__c,Pincode__c,State__c,SyntPark__c,NHC_HNO__c,Email__c,Website__c,PAN__c,FSSAI_Nr__c,GST__c from SamplePdfDetails__mdt];
 
-            projRec = [SELECT ID, Name, City__c,State__c,Street__c,Postal_Code__c,Country__c, No_Of_Cartoons__c,Mode_Of_Courier__c, Invoice_No__c, Airport_Of_Departure__c,Airport_Of_Destination__c, AWB_NO__c ,OwnerId,
+            projRec = [SELECT ID, Name,Billling_PAN_Number__c,Shipping_Pan_Number__c,Billing_StateCode__c,Shipping_State_Code__c,Billing_Shipping_Telephone__c, City__c,State__c,Street__c,Postal_Code__c,Country__c, No_Of_Cartoons__c,Mode_Of_Courier__c, Invoice_No__c, Airport_Of_Departure__c,Airport_Of_Destination__c, AWB_NO__c ,OwnerId,
                        Customers_Contact__c, Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Billing_Street__c,Billing_City__c,Billing_State__c,Billing_Country__c,Billing_Postal_Code__c,
                        Opportunity__r.CurrencyIsoCode, Opportunity__r.Account.Name, Opportunity__r.Account.Transportation_Terms__c, Opportunity__r.Account.Payment_terms__c, Opportunity__c,Opportunity__r.AccountId,
                        Opportunity__r.Account.ShippingCity,  Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.Account.ShippingCountry,

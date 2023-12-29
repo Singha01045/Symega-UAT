@@ -86,9 +86,9 @@
                     {!projRec.Billing_Street__c} <br/>
                     {!projRec.Billing_City__c},{!projRec.Billing_State__c} <br/>
                     {!projRec.Billing_Country__c} - {!projRec.Billing_Postal_Code__c} <br/>
-                    Tel: {!projRec.Customers_Contact__r.Phone} <br/>
-                    State Code:19/GSTIN: {!projRec.Opportunity__r.Account.GST_number__c}<BR/>
-                    PAN: {!projRec.Opportunity__r.Account.PAN_Number__c}
+                    Tel:  {!projRec.Billing_Shipping_Telephone__c} <br/> <!-- {!projRec.Customers_Contact__r.Phone} -->
+                    State Code:19/GSTIN: {!projRec.Billing_StateCode__c}{!projRec.Opportunity__r.Account.GST_number__c}<BR/>
+                    PAN:   {!projRec.Billling_PAN_Number__c}<!-- {!projRec.Opportunity__r.Account.PAN_Number__c} -->
                 </p>
                 
             </div>
@@ -106,9 +106,9 @@
                     {!projRec.Street__c} <br/>
                     {!projRec.City__c},{!projRec.State__c} <br/>
                     {!projRec.Country__c} - {!projRec.Postal_Code__c} <br/>
-                    Tel: {!projRec.Customers_Contact__r.Phone} <br/>
-                    State Code:19/GSTIN: {!projRec.Opportunity__r.Account.GST_number__c}<BR/>
-                    PAN: {!projRec.Opportunity__r.Account.PAN_Number__c}
+                    Tel: {!projRec.Billing_Shipping_Telephone__c} <br/> <!-- {!projRec.Customers_Contact__r.Phone} <br/> -->
+                    State Code:19/GSTIN:{!projRec.Shipping_State_Code__c} {!projRec.Opportunity__r.Account.GST_number__c}<BR/>
+                    PAN:  {!projRec.Shipping_Pan_Number__c} <!-- {!projRec.Opportunity__r.Account.PAN_Number__c} -->
                     
                 </p>
             </div>

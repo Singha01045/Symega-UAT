@@ -13,6 +13,7 @@ public without sharing class sendInvoiceToCustomersBatch implements Database.Bat
                 Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
                 email.setToAddresses(new String[] {opp.Finalized_School__r.Email__c});
                 email.setSubject('Invoice'); 
+                email.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 string emailBody = opp.Finalized_School__r.Name + ', \n\nPlease find the attached invoice for the obtained service.\n\nThanks & Regards,\nEduStoke';
                 email.setPlainTextBody(emailBody);
                 Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();

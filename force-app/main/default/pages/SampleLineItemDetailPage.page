@@ -325,7 +325,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th></th>
+                                <!--th></th-->
                                 <th>S.No.</th>
                                 <th>Name</th>
                                 <th>Sample Id</th>
@@ -341,7 +341,7 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="sample in listOfSamples3">
-                                <td><input type="checkbox" ng-model="sample.selected" ng-change="onClickOfSample(sample.Id,$index)" /></td>
+                                <!--td><input type="checkbox" ng-model="sample.selected" ng-change="onClickOfSample(sample.Id,$index)" /></td-->
                                 <td>{{$index+1}}</td>
                                 <td style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
                                 <td style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Name}}</a></td>
@@ -1009,23 +1009,23 @@
                  
                  $scope.handleNext = function(){
                      debugger;
-                     if ($scope.currentPage < $scope.totalPages){
+                     if ($scope.currentPage < $scope.totalPages && $scope.showSLI){
                          $scope.currentPage += 1;
                          $scope.paginateData($scope.listOfSLI);
                      }
-                     if($scope.currentPage < $scope.totalPagesSample){
+                     if($scope.currentPage < $scope.totalPagesSample && $scope.showSamples){
                          $scope.currentPage += 1;
                          $scope.paginateData($scope.listOfSamples);
                      }
-                     if($scope.currentPage < $scope.totalPagesOpp){
+                     if($scope.currentPage < $scope.totalPagesOpp && $scope.showOppSection){
                          $scope.currentPage += 1;
                          $scope.paginateData($scope.listOfOpportunity);
                      }
-                     if($scope.currentPage < $scope.totalPagesOLI){
+                     if($scope.currentPage < $scope.totalPagesOLI && $scope.showOLISection){
                          $scope.currentPage += 1;
                          $scope.paginateData($scope.oppProductList);
                      }
-                     if($scope.currentPage < $scope.totalPagesAcc){
+                     if($scope.currentPage < $scope.totalPagesAcc && $scope.showCustomerDetails){
                          $scope.currentPage += 1;
                          $scope.paginateData($scope.accDetails);
                      }
@@ -1248,8 +1248,9 @@
                 debugger;
                 //$scope.showListViewOfSLI=true;
                 //$scope.showDetailPageSLI=false;
+                $scope.showCustomerssPage();
                 $scope.showProfile = false;
-                $scope.showCustomerDetails=true;
+                //$scope.showCustomerDetails=true;
             }
 
             $scope.saveDetails = function(){
@@ -1260,9 +1261,10 @@
                     if(event.status && result){
                         $scope.showSpinner = false;
                         swal("success", "Your profile has been updated.","success");
-                        $scope.showListViewOfSLI=true;
-                        $scope.showDetailPageSLI=false;
-                        $scope.showProfile = false;
+                        //$scope.showListViewOfSLI=true;
+                        //$scope.showDetailPageSLI=false;
+                        //$scope.showProfile = false;
+                        $scope.backProfile();
                         $scope.$apply();
                     }
                 })

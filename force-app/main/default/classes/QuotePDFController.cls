@@ -122,7 +122,7 @@ public without sharing class QuotePDFController {
                 mail.setSubject(subject);
                 mail.setHtmlBody(htmlBody);
                 mail.setSaveAsActivity(true);
-                
+                mail.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
                 efa.setFileName('Quote Invoice');
                 efa.setBody(emailAttach);

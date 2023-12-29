@@ -6,11 +6,12 @@ public  without sharing class NonHarzardousDHLPDFController {
     public string recordId = System.currentPageReference().getParameters().get('id'); 
     public User userRec {get; set;}
     public Integer totalQuantity {get; set;}
+    public Date Today { get { return Date.today(); }}
     
     public NonHarzardousDHLPDFController() {
                 try{
             
-            sampDetails = [select Id, MasterLabel,CIN__c,City__c,Country__c,Hno__c,Landmark__c,mobile1__c,mobile2__c,Name__c,Pancode__c,Pincode__c,State__c,SyntPark__c,NHC_HNO__c from SamplePdfDetails__mdt];
+            sampDetails = [select Id, MasterLabel,CIN__c,City__c,Country__c,Hno__c,Landmark__c,mobile1__c,mobile2__c,Name__c,Pancode__c,Pincode__c,State__c,SyntPark__c,NHC_HNO__c,GST__c,Telephone__c,Fax__c from SamplePdfDetails__mdt];
                       //ShippingCity,ShippingState,ShippingStreet,ShippingPostalCode,ShippingCountry   Opportunity__r.Account.ShippingCity,  Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.AccountShippingCountry
                       projRec = [SELECT ID,Name,Opportunity__c,Opportunity__r.AccountId,Opportunity__r.Account.Customer_Number__c,Invoice_No__c,Opportunity__r.CurrencyIsoCode,City__c,State__c,Street__c,Postal_Code__c,Country__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email, No_Of_Cartoons__c,Mode_Of_Courier__c, Opportunity__r.Account.ShippingCity,  Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.Account.ShippingCountry,Airport_Of_Departure__c,Airport_Of_Destination__c, AWB_NO__c  ,OwnerId FROM Project__c WHERE ID =:recordId];
                      userRec = [SELECT ID,FirstName,LastName FROM User where Id =:projRec.OwnerId];

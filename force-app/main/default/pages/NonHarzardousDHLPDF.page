@@ -20,8 +20,8 @@
                        {!sampDetails.City__c} District <br/>
                        {!sampDetails.State__c} -{!sampDetails.Pincode__c},{!sampDetails.Country__c}  <br/>   
                        CIN-{!sampDetails.CIN__c} <br/> 
-                       GST:32AAKCS0062P1Z6  <br/> <br/>
-                      <b>19.08.2023</b> 
+                       GST: {!sampDetails.GST__c}  <br/> <br/> <!--32AAKCS0062P1Z6 -->
+                       <b><apex:outputText > <apex:page > {!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())} </apex:page> </apex:outputText></b>  <!-- 19.08.2023 -->
                        </p> </td>
                       
                 <td style="padding-right:20px;" >  <span style="float:right;"><apex:image url="{!$Resource.logo}" width="120px" height="30px"/></span> <br/> <br/> 
@@ -81,8 +81,8 @@
          
          <span>
             E:info@symega.com <br/>
-            T: +91 (0) 484 2714636 <BR/>
-            F: +91 (0) 484 2731470 <br/>
+            T: {!sampDetails.Telephone__c}  <BR/>  
+            F: {!sampDetails.Fax__c}  <br/>   
         </span>
         <span style="color:Red;">www.symega.com</span>
     </body>

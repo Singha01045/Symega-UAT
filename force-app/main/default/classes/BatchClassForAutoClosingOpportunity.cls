@@ -50,6 +50,7 @@ Global  class BatchClassForAutoClosingOpportunity implements Database.Batchable<
                 mymail.setToAddresses(new string[]  {userMap.get(keyS).Email} );  
                 mymail.setSenderDisplayName('Symega'); 
                 mymail.setSubject('Opportunities CLOSED due to date lapse');
+                mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 mymail.setSaveAsActivity(false);
                 
                 String emailBody = 'Hi ' + userMap.get(keyS).FirstName + ',';

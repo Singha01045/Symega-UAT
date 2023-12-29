@@ -140,25 +140,25 @@ public without sharing class OperationsPortalController {
                     System.debug('inside product family filter');
                     listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
                 Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND Product_Family__c =:selProdFamily ORDER By CreatedDate DESC];
+                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND Product_Family__c =:selProdFamily ORDER By LastModifiedDate DESC];
                 }else if(startDate != null && endDate != null){
                     System.debug('inside date filter');
                     DateTime startDateAPEX = Datetime.valueOf(startDate.replace('T', ' '));
                     DateTime endDateAPEX = Datetime.valueOf(endDate.replace('T', ' '));
                     listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
                 Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate >=: startDateAPEX AND CreatedDate <=: endDateAPEX ORDER By CreatedDate DESC]; 
+                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate >=: startDateAPEX AND CreatedDate <=: endDateAPEX ORDER By LastModifiedDate DESC]; 
                 }else if(isToday){
                     System.debug('inside today filter');
                     listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
                 Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate = TODAY ORDER By CreatedDate DESC]; 
+                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate = TODAY ORDER By LastModifiedDate DESC]; 
                 }
                 
                 else{
                     listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
                 Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' ORDER By CreatedDate DESC];
+                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' ORDER By LastModifiedDate DESC];
                 }
             }
             wrapper.accList = allCustomerList;

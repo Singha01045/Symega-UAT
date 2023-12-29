@@ -17,6 +17,7 @@ public class SendEmailHandler {
             mail.setToAddresses(toAddresses);
             
             mail.setSubject(Subject);
+            mail.setReplyTo(UserInfo.getUserEmail()); //recently Added
             String htmlBody = Message;
             mail.setHtmlBody(htmlBody);
             Messaging.SendEmailResult [] results = Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});

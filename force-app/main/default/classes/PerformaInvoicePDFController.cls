@@ -151,6 +151,7 @@ public without sharing class PerformaInvoicePDFController {
                 system.debug('recipients------'+recipients);
                 mail.setToAddresses(recipients);
                 mail.setSenderDisplayName('Symega');
+                mail.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 String subject = 'Proforma Invoice';
                 String htmlBody = 'Dear ' + opprec[0].Account.Name +', ';
                 htmlBody += ' <br> <br> Kindly find attached the Proforma Invoice for products of your interest. ';
@@ -198,6 +199,7 @@ public without sharing class PerformaInvoicePDFController {
                 system.debug('recipients------'+recipients);
                 mail.setToAddresses(recipients);
                 mail.setSenderDisplayName('Symega');
+                mail.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 String subject = 'Test Subject';
                 String htmlBody = 'Test Email Body';
                 mail.setSubject(subject);

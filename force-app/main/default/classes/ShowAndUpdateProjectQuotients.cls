@@ -90,6 +90,7 @@ public class ShowAndUpdateProjectQuotients {
                 emailList.add(adminMail);
             mymail.setToAddresses(emailList);            
             mymail.setSenderDisplayName('Symega');
+            mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
             mymail.setSubject(mailSubject);
             mymail.setSaveAsActivity(false);   
             semList.add(mymail);  
@@ -141,6 +142,7 @@ public class ShowAndUpdateProjectQuotients {
                 emailList.add(adminMail);
             mymail.setToAddresses(emailList);            
             mymail.setSenderDisplayName('Symega');
+            mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
             mymail.setSubject(mailSubject);
             mymail.setSaveAsActivity(false);   
             semList.add(mymail);  

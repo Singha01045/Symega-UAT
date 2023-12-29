@@ -39,6 +39,7 @@ public without sharing class AccountReevaluateBusinessPotentialBatch implements 
             if(!marketingUsersEmailIdList.isEmpty()) {
                 Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
                 email.setToAddresses(marketingUsersEmailIdList);
+                email.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 email.setSubject('Followup:Re-Evaluate Business Potential');
                 email.setHtmlBody('Hello Marketing Team, <br/><br/>This email is to notify you that the following account needs re-evaluation. <br/> Account Name: '+acc.Name+'<br/>Account Email: '+acc.Email__c);
                 email.setPlainTextBody('Hello Marketing Team, \n This email is to notify you that the following account needs re-evaluation. Account Name: '+acc.Name+'\nAccount Email: '+acc.Email__c);

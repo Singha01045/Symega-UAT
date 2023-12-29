@@ -13,7 +13,7 @@ public class OpportunityEmailSender {
                 Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
                 email.setToAddresses(new String[] {opp.Account.Email__c});
                 email.setSubject('Opportunity Update: ' + opp.Name);
-
+                email.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 String body = 'Hello,\n\n';
                 body += 'This is an update for Opportunity "' + opp.Name + '"\n';
                 body += 'Account: ' + opp.Account.Name + '\n';

@@ -93,6 +93,7 @@ mail.setOrgWideEmailAddressId(owa[0].id);
 else*/
             
             mail.setSenderDisplayName('Symega Food');
+            mail.setReplyTo(UserInfo.getUserEmail()); //recently Added
             mail.setTemplateId(templateId); 
             mail.setSaveAsActivity(false);
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});

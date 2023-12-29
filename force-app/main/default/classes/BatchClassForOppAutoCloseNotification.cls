@@ -48,6 +48,7 @@ global class BatchClassForOppAutoCloseNotification implements Database.Batchable
                 Messaging.SingleEmailMessage mymail = new Messaging.SingleEmailMessage();
                 mymail.setToAddresses(new string[]  {userMap.get(keyS).Email} );  
                 mymail.setSenderDisplayName('Symega'); 
+                mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 mymail.setSubject('Final Reminder - Opportunities closure date lapse');
                 mymail.setSaveAsActivity(false);
                 

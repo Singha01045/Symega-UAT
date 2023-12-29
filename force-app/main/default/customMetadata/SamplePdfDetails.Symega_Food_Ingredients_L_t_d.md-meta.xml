@@ -23,6 +23,10 @@
         <value xsi:type="xsd:string">10019041001749</value>
     </values>
     <values>
+        <field>Fax__c</field>
+        <value xsi:type="xsd:string">+91 (0) 484 2731470</value>
+    </values>
+    <values>
         <field>GST__c</field>
         <value xsi:type="xsd:string">32AAKCS0062P1Z6</value>
     </values>
@@ -65,6 +69,10 @@
     <values>
         <field>SyntPark__c</field>
         <value xsi:type="xsd:string">Synthite Taste Park</value>
+    </values>
+    <values>
+        <field>Telephone__c</field>
+        <value xsi:type="xsd:string">+91 (0) 484 2714636</value>
     </values>
     <values>
         <field>Website__c</field>

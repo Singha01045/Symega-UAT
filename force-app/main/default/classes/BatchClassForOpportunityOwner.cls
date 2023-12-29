@@ -55,6 +55,7 @@ Global class BatchClassForOpportunityOwner implements Database.Batchable<sObject
                 Messaging.SingleEmailMessage mymail = new Messaging.SingleEmailMessage();
                 mymail.setToAddresses(new string[]  {userMap.get(keyS).Email} );  
                 mymail.setSenderDisplayName('Symega');
+                mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
                 mymail.setSubject('Reminder mail no. 1 - Opportunities closure date lapse');
                 mymail.setSaveAsActivity(false);
                 

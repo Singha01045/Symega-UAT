@@ -172,12 +172,12 @@
                         <div class="col-md-4">
                             <div class="buttonContainer">
                                 <button class="blue-btn me-2 mb-5" ng-click="openReleaseToDispatch()" style="background:teal;" type="button">
-                                    Release To Dispatch Team</button>
-                                    <div id="hideForDispatch" style="display:none;">
-                        <button class="blue-btn me-2 mb-5" ng-click="openGenerateLabel()" style="background:teal;" type="button">
+                                    {{dispatchButtonText}}</button>
+                                <button class="blue-btn me-2 mb-5" ng-click="openGenerateLabel()" style="background:teal;" type="button">
                             Generate Label</button>
                             <button class="blue-btn me-2 mb-5" ng-click="openGenerateNonHazardous()" style="background:teal;" type="button">
                                 Generate Non-Hazardous</button>
+                                    <div id="hideForDispatch" style="display:none;">
                             <button class="blue-btn float-end me-2 mb-5" ng-click="openAuraPopUp()" style="background:teal;" type="button">
                                 Create/Edit Sample Lineitems</button>
                             </div>
@@ -796,6 +796,7 @@
             $scope.releaseStatus = releaseStatus;
             $scope.mergedList = [{Id:'--None--', Name:'--None--'}];
             $scope.productIdTest = "01t5j000005iDRPAA2";
+            $scope.dispatchButtonText = "Release To Dispatch Team";
             
             $scope.getSampleDetails = function(){
                 debugger;
@@ -811,7 +812,9 @@
                             
                             $('#hideForDispatch').show();
                             
-                        }
+                        }else{
+                            $scope.dispatchButtonText = "Add Dispatch Details";
+                            }
                         $scope.sampleDetails = result.listOfSamples[0];
                         $scope.sampleId = $scope.sampleDetails.Id;
                         $scope.URLused = $sce.trustAsResourceUrl($scope.challanLink + $scope.sampleId);

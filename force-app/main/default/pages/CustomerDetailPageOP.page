@@ -1076,7 +1076,7 @@ border-top: none;
                             if($scope.listOfComments.length > 0){
                                 for(var i=0;i<$scope.listOfComments.length;i++){
                                     if($scope.listOfComments[i].Comment__c != undefined || $scope.listOfComments[i].Comment__c != ''){
-                                        $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c ? $scope.listOfComments[i].Comment__c.replace(/&amp;/g,'&').replaceAll('&amp;amp;','&').replaceAll('&amp;gt;','>').replaceAll('&lt;','<').replaceAll('lt;','<').replaceAll('&gt;','>').replaceAll('gt;','>').replaceAll('&amp;','&').replaceAll('amp;','&').replaceAll('&quot;','\'') : $scope.listOfComments[i].Comment__c;
+                                        $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c ? $scope.listOfComments[i].Comment__c.replace(/&amp;/g,'&').replaceAll('&amp;amp;','&').replaceAll('&amp;gt;','>').replaceAll('&lt;','<').replaceAll('lt;','<').replaceAll('&gt;','>').replaceAll('gt;','>').replaceAll('&amp;','&').replaceAll('amp;','&').replaceAll('&quot;','\'').replaceAll('&<p&>','').replaceAll('&</p&>','') : $scope.listOfComments[i].Comment__c;
                                     }
                                 }
                             }

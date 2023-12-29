@@ -70,6 +70,7 @@ public without sharing class ProjectQuotientController {
                         emailList.add(adminMail);
                     mymail.setToAddresses(emailList);            
                     mymail.setSenderDisplayName('Symega');
+                    mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
                     mymail.setSubject(mailSubject);
                     mymail.setSaveAsActivity(false);   
                     semList.add(mymail);  

@@ -22,6 +22,7 @@ public class CancelVisitController {
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
         email.setToAddresses(new String[] {schl.Email__c});
         email.setSubject('Edustoke - Onboarding Form'); 
+        email.setReplyTo(UserInfo.getUserEmail()); //recently Added
         string formLink = 'https://sales-production--fsldemo--c.sandbox.vf.force.com/apex/ApplicationFormPage?id=' + schoolId;
         string emailBody = 'Hi ' + schl.School_Coordinator__c + ', \n\nGreetings. Kindly find the registration link pasted below in this email. You are requested to fill this registration form to complete the onboarding process with Edustoke.\n' + formLink + '\n\nThanks & Regards,\nEduStoke';
         email.setPlainTextBody(emailBody);
