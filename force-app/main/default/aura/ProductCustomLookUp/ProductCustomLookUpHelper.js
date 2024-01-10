@@ -1,6 +1,9 @@
 ({
     searchHelper : function(component,event,getInputkeyWord) {
         
+        //debugger;
+        //alert('Im inside Search Helper');
+        
         var searchCode = component.get("v.searchKeyword");
         // call the apex class method 
         var action = component.get("c.fetchLookUpValues");

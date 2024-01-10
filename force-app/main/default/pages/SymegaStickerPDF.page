@@ -11,7 +11,7 @@
             .watermark {
             opacity: 0.3;
             background-repeat: repeat;
-            background-image: url("{!URLFOR($Resource.Symega_Watermark)}");
+             background-image: url("{!URLFOR($Resource.Symega_New_WaterMark)}");
             }
             
             .col-container {
@@ -42,8 +42,8 @@
                     <b>
                         <span>{!sliList.Product_Name__c}</span><br/>
                         <span style="font-size:12px;">Ref:No  : {!sliList.Product_Code__c}</span><br/>
-                        <span style="font-size:12px;">RAD :</span><br/>
-                        <span style="font-size:12px;">MGF DATE:&nbsp;<apex:outputText value="{0,date,MM/dd/yy}"> <apex:param value="{!sliList.Mfg_Date__c}" /></apex:outputText> </span>
+                        <span style="font-size:12px;">RAD : {!sliList.RAD__c}</span><br/>
+                        <span style="font-size:12px;">MGF DATE:&nbsp;<apex:outputText value="{0,date,MM/dd/yy}"> <apex:param value="{!sliList.Product_Mfg_Date__c}" /></apex:outputText> </span>
                     </b>
                 </div>  
             </apex:repeat> 

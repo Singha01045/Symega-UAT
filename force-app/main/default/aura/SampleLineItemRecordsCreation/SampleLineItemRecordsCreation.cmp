@@ -23,6 +23,7 @@
         }
     </aura:html>
     
+    <aura:attribute name="defaultGST" type="string" default="{!$Label.c.Default_GST}"/>    
     <aura:attribute name="responseMap" type="Map"/>
     <aura:attribute name="recordId" type="Id" />
     <aura:attribute name="recordTypeIds" type="string" />
@@ -41,6 +42,7 @@
     <aura:attribute name="SamplelineItemSize" type="Integer" />
     <aura:attribute name="productXqtyMap" type="Map" default="{'123':['a','b','c']}" />
     <aura:attribute name="recsToDelete" type="List" default="[]"/>
+    <aura:attribute name="stateList" type="List" default="[]" />
     
     <aura:handler name="newProductAddition" event="c:newProductUnitEvent" action="{!c.handleNewProductUnitEvent}" />
     
@@ -72,10 +74,15 @@
                         <th scope="col">
                             <div class="slds-truncate" >Packaging Quantity</div>
                         </th>
-                        
                         <th scope="col">
                             <div class="slds-truncate" >Packaging Unit</div>
-                        </th>    
+                        </th> 
+                        <th scope="col">
+                            <div class="slds-truncate" >Plant State</div>
+                        </th> 
+                        <th scope="col">
+                            <div class="slds-truncate" >Sampling Price</div>
+                        </th> 
                          <th scope="col">
                             <div class="slds-truncate" >Customer Preferred Name</div>
                         </th>
@@ -137,8 +144,47 @@
                             <td style="width:10%; text-align:center;">
                                 <lightning:formattedNumber name="Packaging Quantity Unit" label="Packaging Quantity Unit:" maximumFractionDigits="2" value="{!SLI.Quantity__c / SLI.Packaging_Quantity__c}" />&nbsp;{!SLI.Quantity_Unit__c}                                
                             </td>
+                            <!-- NEW -->
+                            <td style="width:10%;">
+                                <lightning:select name="mySelectQU" label="Plant State:" aura:id="mySelectQU" value="{!SLI.Plant_State__c}" >
+                                    <option value="Kerala">Kerala</option>
+                                    <aura:iteration items="{!v.stateList}" var="item">
+                                        <option text="{!item.value}" value="{!item.key}" selected="{!item.selected}" />
+                                    </aura:iteration>
+                                </lightning:select>
+                                
+                            </td>
                             
-                             <td style="width:10%;">
+                           <!-- <td style="width:10%">
+                                <lightning:input name="{!index}" type="number" label="Sampling Price" onchange="{!c.update}" value="{!SLI.Sampling_Price__c}" min="0.0" step="any"/>
+                            </td> -->
+                            
+                            
+                             <td style="width:10%; text-align:center;">                                
+                                <aura:if isTrue="{!SLI.samplingPrice}">
+                                    <div class="slds-truncate" title="Sampling Price">{!SLI.samplingPrice}</div>
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!SLI.OPTIVA_Recipe__c}">
+                                            <div class="slds-truncate" title="Sampling Price">{!SLI.OPTIVA_Recipe__r.Sampling_Price__c}</div>
+                                            <aura:set attribute="else">
+                                                
+                                                <aura:if isTrue="{!SLI.Project_Quotient__c}">
+                                                    <div class="slds-truncate" title="Sampling Price"> {!v.defaultGST}</div>
+                                                    <aura:set attribute="else">
+                                                        <div class="slds-truncate" title="Sampling Price">{!SLI.Product__r.Sampling_Price__c}</div>
+                                                    </aura:set>
+                                                </aura:if>
+                                                
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                                 
+                                
+                            </td> 
+                            
+                            
+                            <td style="width:10%;">
                                 <lightning:input name="{!index}" type="text" label="CustomerPrefferedName"  onchange="{!c.update}"  value="{!SLI.Customer_Preferred_Name__c}"/>                              
                             </td>
                             

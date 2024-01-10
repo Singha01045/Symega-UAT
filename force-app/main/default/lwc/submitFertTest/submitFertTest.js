@@ -27,6 +27,7 @@ export default class SubmitFertTest extends LightningElement {
  @track options2 =[];
  @track options3 = [];
  @track options4 = [];
+ @track options12 = [];
  @track dlvryPlantList = [];
  @track custTypeList = [];
  @track accSegList = [];
@@ -35,6 +36,7 @@ export default class SubmitFertTest extends LightningElement {
  @track secondList = [];
  @track tertList = [];
  @track uomList =[];
+
 
 
   idValueMap = new Map();
@@ -147,12 +149,12 @@ export default class SubmitFertTest extends LightningElement {
                          if(this.oppProdList.length!=0){
                          
                               for(let i=0;i<this.oppProdList.length;i++){
-                                   let ProdRecord=  {Id:null,Plant__c:null,Control_Code_HSN_Code__c:null,Shelf_Life__c:null,Allergen_Status_Required__c:null,Veg_Nonveg_Logo_In_Label__c:null}
+                                   let ProdRecord=  {Id:null,Plant__c:null,HSN_Code__c:null,Shelf_Life__c:null,Allergen_Status_Required__c:null,Veg_Nonveg_Logo_In_Label__c:null}
                                    if(this.oppProdList[i].Product2Id){
 
                                         ProdRecord.Id=this.oppProdList[i].Product2Id;
                                         ProdRecord.Plant__c = this.oppProdList[i].Product2.Plant__c;
-                                        ProdRecord.Control_Code_HSN_Code__c = this.oppProdList[i].Product2.Control_Code_HSN_Code__c;
+                                        ProdRecord.HSN_Code__c = this.oppProdList[i].Product2.HSN_Code__c;
                                         ProdRecord.Shelf_Life__c = this.oppProdList[i].Product2.Shelf_Life__c;
                                         ProdRecord.Allergen_Status_Required__c =  this.oppProdList[i].Product2.Allergen_Status_Required__c;
                                         ProdRecord.Veg_Nonveg_Logo_In_Label__c = this.oppProdList[i].Product2.Veg_Nonveg_Logo_In_Label__c;
@@ -237,7 +239,8 @@ export default class SubmitFertTest extends LightningElement {
                let Arr8 = data.Primary__c.Primary__c;
                let Arr9 = data.Secondary__c.Secondary__c;
                let Arr10 = data.Tertiary__c.Tertiary__c;
-               let Arr11 = data.Unit_Of_Measure__c.Unit_Of_Measure__c;
+               let Arr11 = data.Quantity_Unit__c.Quantity_Unit__c;
+               let Arr12=data.Material_Sector__c.	Material_Sector__c;
 
                 let option=[]
                 for(var i=0; i < Arr.length; i++){
@@ -311,8 +314,18 @@ export default class SubmitFertTest extends LightningElement {
                }
                this.uomList =  option11;
 
+                let option12=[]
+                for(var i=0; i < Arr12.length; i++){
+                  option12.push({label:Arr12[i],value:Arr12[i]});
+                }
+                 this.options12=option12;
+
                 console.log('  this.options---->',JSON.stringify(this.options));
                 console.log('  this.options1---->',JSON.stringify(this.options1));
+                console.log('  this.options12---->',JSON.stringify(this.options12));
+
+
+
             }
         })
      }
@@ -396,25 +409,42 @@ export default class SubmitFertTest extends LightningElement {
     
     updateOppProdList(){
           debugger;
-          updateOppProdList({oppLineList:this.oppProdList,prod2List:this.prod2List}).then(data=>{
-               if(data == 'Success'){
-                    console.log('Data',data);
-                    this.showToast('Success', 'Notification to Sales Ops sent successfully!', 'success');
-                    this.closeModal();
+
+          var errorOccured = false;
+          for (let i = 0; i < this.oppProdList.length; i++) {
+               if (this.oppProdList[i].Material_Sector__c == null || this.oppProdList[i].Material_Sector__c == undefined || this.oppProdList[i].Material_Sector__c == '') {
+                    errorOccured = true;
+                    alert('Material Sector is missing in one or more records.');
+                    return;
                }
-               else if(data == 'create'){
-                    console.log('Data',data);
-                    this.showToast('Success', 'Customer Creation Initiated!', 'success');
-                    this.closeModal();
+               if (this.oppProdList[i].Quantity_Unit__c == null || this.oppProdList[i].Quantity_Unit__c == undefined || this.oppProdList[i].Quantity_Unit__c == '') {
+                    errorOccured = true;
+                    alert('UOM is missing in one or more records.');
+                    return;
                }
-               else if(data == 'progress'){
-                    this.showToast('Success', 'Customer Creation already in Progress!', 'success');
-                    this.closeModal();
-               }
-               else{
-                    this.showToast('Error', data, 'error');
-               }
-          })
+          }
+          
+          if(!errorOccured){
+               updateOppProdList({oppLineList:this.oppProdList,prod2List:this.prod2List}).then(data=>{
+                    if(data == 'Success'){
+                         console.log('Data',data);
+                         this.showToast('Success', 'Notification to Sales Ops sent successfully!', 'success');
+                         this.closeModal();
+                    }
+                    else if(data == 'create'){
+                         console.log('Data',data);
+                         this.showToast('Success', 'Customer Creation Initiated!', 'success');
+                         this.closeModal();
+                    }
+                    else if(data == 'progress'){
+                         this.showToast('Success', 'Customer Creation already in Progress!', 'success');
+                         this.closeModal();
+                    }
+                    else{
+                         this.showToast('Error', data, 'error');
+                    }
+               })
+          }
     }
 
      showToast(title, message, variant) {

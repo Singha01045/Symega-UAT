@@ -8,13 +8,6 @@
         <value>Submitted for Application</value>
     </labels>
     <labels>
-        <fullName>Admin_Mail_Id</fullName>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Admin Mail Id</shortDescription>
-        <value>anku5588singh@gmail.com</value>
-    </labels>
-    <labels>
         <fullName>COLOR</fullName>
         <language>en_US</language>
         <protected>false</protected>
@@ -34,6 +27,20 @@
         <protected>false</protected>
         <shortDescription>CreateSaleOrder</shortDescription>
         <value>The Sale Order will be created with the following address. If you wish to change, then cancel this window and use the address change option provided on this Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>Default_GST</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Default GST %</shortDescription>
+        <value>18</value>
+    </labels>
+    <labels>
+        <fullName>Default_Sampling_Price</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Default Sampling Price</shortDescription>
+        <value>0.55</value>
     </labels>
     <labels>
         <fullName>Domestic_Sample_Invoice_URL</fullName>

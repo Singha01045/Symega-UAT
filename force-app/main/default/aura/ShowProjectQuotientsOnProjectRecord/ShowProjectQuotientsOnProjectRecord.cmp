@@ -46,7 +46,7 @@
                 <tbody>
                     <aura:iteration items="{!v.qntList}" var="project"  indexVar="index">
                         <tr id ="{!index}">
-                            <td>{!project.Name}</td>
+                            <td>{!project.Product_Name__c}</td>
                             <td data-id="{!project.Id}"> 
                                 <lightning:select aura:Id="selectpick" name="{!project.Id}" value="{!project.Stage__c}" onchange="{!c.handleSelectChange}">
                                     <aura:iteration items="{!v.stagepicklist}" var="stage">

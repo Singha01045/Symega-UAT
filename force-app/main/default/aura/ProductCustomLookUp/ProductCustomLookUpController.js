@@ -87,6 +87,13 @@
         mainList.forEach(function(item,index){
             if(parentId == index){
                 item.lookupObj = {};
+                item.regRequirement = null;
+                item.cShelfLife = null;
+                item.maxSampleQnty = null;
+                item.samplingQuantity = [];
+                item.samplingPrice = null;
+                item.Product__c = null;
+                
                 //component.set("v.displayLabel",selectedAccountGetFromEvent.Name);
                 component.set("v.searchKeyword","");
                 component.set("v.filled",false);
@@ -99,6 +106,7 @@
     // This function call when the end User Select any record from the result list.   
     handleComponentEvent : function(component, event, helper) {
         debugger;
+        //alert('Im inside handleComponentEvent');
         // get the selected Account record from the COMPONETN event 	 
         var selectedAccountGetFromEvent = event.getParam("recordByEvent");
         

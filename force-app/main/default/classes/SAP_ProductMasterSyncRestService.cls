@@ -40,23 +40,23 @@ global without sharing class SAP_ProductMasterSyncRestService {
         //Now as you have the request string You can parse it in APex   
         System.debug('--- rquestString'+ requestString);
         SAP_ProductMasterWrapper rWrapper = (SAP_ProductMasterWrapper)JSON.deserialize(requestString, SAP_ProductMasterWrapper.class);
-        String responseBody;
         if(rWrapper != null && rWrapper.PRODUCT_DATA != null) {
             system.debug('updateProduct :: ' + updateProduct(rWrapper.PRODUCT_DATA));
-            if(updateProduct(rWrapper.PRODUCT_DATA)) {
+            String responseBody = updateProduct(rWrapper.PRODUCT_DATA);
+            if(responseBody == 'Success'){
                 responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Success', 'Products synced successfully'));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
                 HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/products', 'POST', 200, processingStartTime, System.now(),null); //Log 
             }
             else {
-                responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', 'Something went wrong'));
+                responseBody = JSON.serialize(new SAPIntegrationWrappers.APIResponseWrapper('Error', responseBody));
                 RestContext.response.responseBody = Blob.valueOf(responseBody);
                 HttpUtility.getInstance().createServiceLogger(requestString, responseBody, '/products', 'POST', 400, processingStartTime, System.now(),null); //Log 
             }
         }
     }
 
-    private static Boolean updateProduct(List<SAP_ProductMasterWrapper.ProductMasterSyncWrapper> sapProductList){
+    private static String updateProduct(List<SAP_ProductMasterWrapper.ProductMasterSyncWrapper> sapProductList){
         try{
             
             Map<String, SAP_ProductMasterWrapper.ProductMasterSyncWrapper> sapReqProductMap = new Map<String, SAP_ProductMasterWrapper.ProductMasterSyncWrapper>();
@@ -110,7 +110,7 @@ global without sharing class SAP_ProductMasterSyncRestService {
                     //You will get id here
                     Id priceBookId = [SELECT id, name FROM Pricebook2 WHERE isStandard = true].Id;
                     
-                    List<PricebookEntry> inrEntries = [SELECT Id,ProductCode FROM PriceBookEntry WHERE Product2.ProductCode IN : codeToProductMap.keySet() AND CurrencyIsoCode = 'INR'];
+                    List<PricebookEntry> inrEntries = [SELECT Id, ProductCode FROM PriceBookEntry WHERE Product2.ProductCode IN : codeToProductMap.keySet() AND CurrencyIsoCode = 'INR' AND Pricebook2.IsStandard = true];
 
                     Map<String, PricebookEntry> pInrToPBEMap = new Map<String, PricebookEntry>();
                     for(PriceBookEntry pbe : inrEntries) {
@@ -129,14 +129,25 @@ global without sharing class SAP_ProductMasterSyncRestService {
                     }
                     if(!pInrToPBEMap.isEmpty())
                         upsert pInrToPBEMap.values();
+                    
+                    
+                    //Update Other PriceBooks Price
+                    List<PricebookEntry> otherEntries = [SELECT Id, ProductCode, UnitPrice FROM PriceBookEntry WHERE Product2.ProductCode IN : codeToProductMap.keySet() AND CurrencyIsoCode = 'INR' AND Pricebook2.IsStandard = false];
+                    
+                    for(PriceBookEntry pbe : otherEntries) {                        
+                        pbe.UnitPrice = sapReqProductMap.containsKey(pbe.ProductCode) && sapReqProductMap.get(pbe.ProductCode).LISTPRICE != null && sapReqProductMap.get(pbe.ProductCode).LISTPRICE > 0 ? sapReqProductMap.get(pbe.ProductCode).LISTPRICE : pbe.UnitPrice;
+                    }
+                    if(!otherEntries.isEmpty())
+                        update otherEntries;
+                    
                 }
             }
-            return true;
+            return 'Success';
         }catch(Exception e){
             System.debug(' --- Error Msg '+ e.getMessage());
             System.debug(' --- Error LineNo '+ e.getLineNumber());
             HandleBusinessException.captureError('SAP_ProductMasterSyncRestService','updateProduct', e);
-            return false;
+            return e.getMessage();
         }
     }
 

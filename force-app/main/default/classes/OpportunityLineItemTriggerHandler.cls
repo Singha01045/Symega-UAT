@@ -24,7 +24,8 @@ public without sharing class OpportunityLineItemTriggerHandler {
                 //FERT
                 opTooppMap.put(lineItem.Id, lineItem.OpportunityId);
                 productIdSet.add(lineItem.Product2Id);
-            }else if(lineItem.Is_Parent_Opportunity__c){
+            }
+            else if(lineItem.Is_Parent_Opportunity__c){
                 fertCloneOppList.add(new OpportunityLineItem(Id = lineItem.Id, FERT_Code__c = lineItem.ProductCode));
             }
         }

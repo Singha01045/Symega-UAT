@@ -1,6 +1,7 @@
 ({
     loadOptions: function (component, event, helper) {
         debugger;
+        
         helper.getPicklistValues(component, event);
         helper.getSLIExistingRecords(component, event);
         
@@ -40,6 +41,7 @@
                         component.set("v.SampleLineItemList",[{
                             'Product__c': '',
                             'OPTIVA_Recipe__c': '',
+                            'Sampling_Price__c': 0,
                             'Project_Quotient__c' : '',
                             'Quantity__c': '',
                             'Quantity_Unit__c': '',
@@ -60,6 +62,33 @@
             
         });
         $A.enqueueAction(action);
+        var quote = component.get('c.getStates');
+        $A.enqueueAction(quote);
+       
+    },
+    
+    getStates:function(component, event, helper){
+              var action = component.get("c.getStateValues");
+           var plantStates = [];
+        // Call back method
+        action.setCallback(this, function(response) {
+            
+            var responseValue = response.getReturnValue(); 
+          
+            //  plantStates = 
+                  for(var i=0; i < responseValue.length; i++){
+                   //   alert('check');
+                          plantStates.push({ value: responseValue[i], label: responseValue[i] });
+                  }
+            console.log('plantStates----->',plantStates);
+            component.set("v.stateList",plantStates);
+        });
+        
+        // Enqueue Action
+        $A.enqueueAction(action);
+        
+    
+        
     },
     
     addRow: function(component, event, helper) {
@@ -257,6 +286,9 @@
                         $A.get('e.force:refreshView').fire();
                     }
                     else{
+                        var myButton = Component.find("btnDisable");
+                        myButton.set("v.disabled", false);
+                        
                         var warningMsg = '';
                         for(var key in storeResponseMap){
                             debugger;
@@ -319,6 +351,7 @@
     
     handleNewProductUnitEvent : function(component, event, helper){
         debugger;
+        //alert('Im inside handleNewProductUnitEvent MAIN COMP');
         let productUnits = event.getParam("productUnits");
         let selectedProduct = event.getParam("product");
         let sliList = component.get("v.SampleLineItemList");
@@ -333,9 +366,14 @@
             sli.regRequirement = selectedProduct.lkp.regulatoryReq;
             sli.cShelfLife = selectedProduct.lkp.currentShelfLife;
             sli.maxSampleQnty = selectedProduct.lkp.maxSampleQty;
-            console.log('cShelfLife :: ' , cShelfLife);
-            console.log('regRequirement :: ' , regRequirement);
+            sli.samplingPrice = selectedProduct.lkp.samplingPrice;
+            console.log('cShelfLife :: ' , sli.cShelfLife);
+            console.log('regRequirement :: ' , sli.regRequirement);
+            console.log('samplingPrice :: ' , sli.samplingPrice);
+            console.log('sliList :: ' , sliList);
             component.set("v.SampleLineItemList", sliList);
+            //alert('HII');
         }
     }
+   
 })

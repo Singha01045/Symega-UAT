@@ -66,6 +66,7 @@
             recordList.push({
                 'Product__c': '',
                 'OPTIVA_Recipe__c': '',
+                'Sampling_Price__c': 0,
                 'Project_Quotient__c' : '',
                 'Quantity__c': '',
                 'Quantity_Unit__c': 'GM',

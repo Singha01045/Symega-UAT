@@ -49,11 +49,16 @@ public without sharing class ProjectQuotientController {
     
     public void sendEmail( Map<Id,Integer> projListmap,  Map<Id,List<Project_Quotient__c>> projQMapList){
         try{
-            String  adminMail = System.Label.Admin_Mail_Id;
-            system.debug('adminMail--->'+adminMail);
+            String adminMail = null;
+            list<Admin_Mail_Id__mdt> mdtList = Admin_Mail_Id__mdt.getAll().values();
+            if(mdtList.size() >0 && mdtList[0].Email__c != null){
+                adminMail = mdtList[0].Email__c;
+            }
             
-            Map<Id,Project__c>  ProjList = new Map<Id,Project__c>([SELECT ID, OwnerId, Owner.FirstName, Owner.Email, Manager_Email__c, Name, Quotient_Mail_Sent__c, Project_Name__c FROM Project__c where Quotient_Mail_Sent__c = false and Id In :projListmap.keyset()]);
+            system.debug('adminMail--->'+adminMail);
                         
+            Map<Id,Project__c>  ProjList = new Map<Id,Project__c>([SELECT ID, OwnerId, Owner.FirstName, Owner.Email, Manager_Email__c, Name, Quotient_Mail_Sent__c, Project_Name__c FROM Project__c where Quotient_Mail_Sent__c = false and Id In :projListmap.keyset()]);
+            
             List<Messaging.SingleEmailMessage> semList = new List<Messaging.SingleEmailMessage>(); 
             Messaging.SingleEmailMessage mymail;      
             List<Project__c> updateProjList = new List<Project__c>();
@@ -70,7 +75,11 @@ public without sharing class ProjectQuotientController {
                         emailList.add(adminMail);
                     mymail.setToAddresses(emailList);            
                     mymail.setSenderDisplayName('Symega');
-                    mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
+                    
+                    Symega_Configuration__c orgConfig = Symega_Configuration__c.getValues('Symega Configuration');
+                    String replyTo =  orgConfig.Symega_Email_Id__c == null ? projRec.Owner.Email : orgConfig.Symega_Email_Id__c;
+                    mymail.setReplyTo(replyTo); //recently Added
+                    
                     mymail.setSubject(mailSubject);
                     mymail.setSaveAsActivity(false);   
                     semList.add(mymail);  

@@ -67,15 +67,15 @@
                 </div>
             </div>
             <nav class="navbar navbar-expand-lg navbar-light">
-                <div class="wrapper px-5" ng-if="contactRole == 'Sample' || contactRole == 'Dispatch Team'">
+                <div class="wrapper px-5" ng-if="contactRole == 'Sample'">
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
-                    <a class="nav-link selectedTabOnSLIDetailPage" ng-click="showCustomerssPage()" style="color:white;" id="customerTab">
-                        Customer
-                    </a>
-                    <a class="nav-link" ng-click="showSamplesPage()" style="color:white;" id="sampleTab">
+                    <a class="nav-link selectedTabOnSLIDetailPage" ng-click="showSamplesPage()" style="color:white;" id="sampleTab">
                         Samples
+                    </a>
+                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;" id="customerTab">
+                        Customer
                     </a>
                     <a class="nav-link" ng-click="showSamplesSLI()" style="color:white;" id="sampleProdTab">
                         Sample Products
@@ -92,7 +92,7 @@
                                 <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
                                 </i>
                                 <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
+                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}} - {{teamType}}</a></li>
                                   <li>
                                     <hr class="dropdown-divider" />
                                 </li>
@@ -111,15 +111,56 @@
                               </div>
                             </div>
                 </div>
+
+
+                <div class="wrapper px-5" ng-if="contactRole == 'Dispatch Team'">
+                    <div>
+                        <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
+                    </div>
+                    <a class="nav-link selectedTabOnSLIDetailPage" ng-click="showSamplesSLI()" style="color:white;" id="sampleProdTab">
+                        Sample Products
+                    </a>
+                    <a class="nav-link" ng-click="showSamplesPage()" style="color:white;" id="sampleTab">
+                        Samples
+                    </a>
+                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;" id="customerTab">
+                        Customer
+                    </a>
+
+                    <div style="width: 50%;">
+                    </div>
+                    
+                        <div class="d-flex text-align-center">
+                            <div class="dropdown">
+                                <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+                                </i>
+                                <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
+                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}} - {{teamType}}</a></li>
+                                  <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li><a class="dropdown-item pe-5" ng-click="showProfileDiv()"><i class="fa-solid fa-edit me-3"></i>Edit Profile</a></li>
+                                  <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li>
+                                    <a class="dropdown-item pe-5" ng-click="LogoutApplicant()"><i class="fa-solid fa-right-from-bracket me-3"></i>Logout</a>
+                                </li>
+                                </ul>
+                              </div>
+                            </div>
+                </div>
+
+
                 <div class="wrapper px-5" ng-if="contactRole == 'Operation Team'">
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
-                    <a class="nav-link selectedTabOnSLIDetailPage" ng-click="showCustomerssPage()" style="color:white;" id="customerTab">
-                        Customer
-                    </a>
-                    <a class="nav-link" ng-click="showOpportunitySection()" style="color:white;" id="opportunityTab">
+                    <a class="nav-link selectedTabOnSLIDetailPage" ng-click="showOpportunitySection()" style="color:white;" id="opportunityTab">
                         Opportunity
+                    </a>
+                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;" id="customerTab">
+                        Customer
                     </a>
                     <a class="nav-link" ng-click="showOLISectionList()" style="color:white;" id="oppProdTab">
                         Opportunity Products
@@ -136,7 +177,7 @@
                                 <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
                                 </i>
                                 <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
+                                  <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}} - {{teamType}}</a></li>
                                   <li>
                                     <hr class="dropdown-divider" />
                                 </li>
@@ -169,6 +210,12 @@
                     <div class="col-md-4">
                         <button class="blue-btn me-2 mb-5" ng-click="searchAccount()" type="button">Search</button>
                         <button class="blue-btn me-2 mb-5" ng-click="clearFilter('Account')" type="button">Clear Filter</button>
+                        
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-info btn-lg float-end" ng-click="refreshTable()">
+                            <span class="glyphicon glyphicon-refresh"></span> Refresh
+                          </a>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -221,8 +268,13 @@
                     color: white;">
                         <label>Filter By:</label><br/>
                         <label>
-                          <input type="radio" ng-model="filterType" value="Date" ng-change="handleFilterTypeChange('Date')">
-                          Date
+                          <input type="radio" ng-model="filterType" value="subDate" ng-change="handleFilterTypeChange('subDate')">
+                          Submitted Date
+                        </input>
+                        </label><br/>
+                    <label>
+                          <input type="radio" ng-model="filterType" value="Date" ng-change="handleFilterTypeChange('createdDate')">
+                          Created Date
                         </input>
                         </label><br/>
                         <label>
@@ -265,17 +317,64 @@
                      padding: 10px;">
                         <label>
                             Start Date
-                            <input type="Date" ng-model="StartDate" value="StartDate" style="margin-right:2vw;" ng-change="handleStartDateChange(StartDate)">
+                            <input type="Date" ng-model="StartDate" value="StartDate" style="margin-right:2vw;color:black;" ng-change="handleStartDateChange(StartDate)">
                           </input>
                           </label><br/>
                           <label>
                             End Date
-                            <input type="Date" ng-model="EndDate" value="EndDate" ng-change="handleEndDateChange(EndDate)">
+                            <input type="Date" ng-model="EndDate" value="EndDate" ng-change="handleEndDateChange(EndDate)" style="color:black;">
                           </input>
                           </label>
                  </div>
+                 <div class="col-md-3">
+                    <button class="blue-btn me-2 mb-5" ng-click="refreshTable()" type="button">Clear Filter</button>
                 </div>
+                    </div>
+                        </div>
+<div id="createdDateSearch" style="display:none;">
+                        <div class="col-md-2" style="margin: 0px 0px 10px 10px;
+                        box-shadow: rgb(23, 19, 71) 1px 1px 10px;
+                        border-radius: 7px;
+                        background-color: rgb(55 50 121);
+                        color: white;
+                        height: fit-content;
+                        padding: 10px;">
+                            <label>
+                                <input type="radio" ng-model="filterType" value="createdToday" ng-change="handleCreatedDateFilterChange('today')">
+                                Today
+                              </input>
+                              </label><br/>
+                              <label>
+                                <input type="radio" ng-model="filterType" value="createdCustom" ng-change="handleCreatedDateFilterChange('custom')">
+                                Custom
+                              </input>
+                              </label>
+                     </div>
+                     <div id = "customCreatedDateDiv" style="display: none;">
+                     <div class="col-md-8" style="display:inline-flex;margin: 0px 0px 10px 10px;
+                     box-shadow: rgb(23, 19, 71) 1px 1px 10px;
+                     border-radius: 7px;
+                     background-color: rgb(55 50 121);
+                     color: white;
+                     height: fit-content;
+                     padding: 10px;">
+                        <label>
+                            Start Date
+                            <input type="Date" ng-model="StartDate" value="StartCreatedDate" style="margin-right:2vw;color:black;" ng-change="handleStartCreatedDateChange(StartDate)">
+                          </input>
+                          </label><br/>
+                          <label>
+                            End Date
+                            <input type="Date" ng-model="EndDate" value="EndCreatedDate" style="color:black;" ng-change="handleEndCreatedDateChange(EndDate)">
+                          </input>
+                          </label>
+                          
                  </div>
+                 <div class="col-md-3">
+                    <button class="blue-btn me-2 mb-5" ng-click="refreshTable()" type="button">Clear Filter</button>
+                </div>
+                    </div>
+                        </div>
                        <div id="nameSearch" style="display:none;">
                        <div class="col-md-4" style="margin: 0px 0px 10px 10px;
                        box-shadow: rgb(23, 19, 71) 1px 1px 10px;
@@ -284,7 +383,7 @@
                        color: white;
                        height: fit-content;
                        padding: 10px;">
-                        <input type="text" class="form-control" ng-model="searchKeySample" placeholder="Search by Sample Name or Customer Name"/>
+                        <input type="text" class="form-control" ng-model="searchKeySample" placeholder="Search by Sample, Sample Name or Customer Name"/>
                     </div>
                     <div class="col-md-4">
                         <button class="blue-btn me-2 mb-5" ng-click="searchSample()" type="button">Search</button>
@@ -292,7 +391,7 @@
                     </div>
                 </div>
                 <div id="familySearch" style="display:none;">
-                    <div class="col-md-2" style="display:inline-flex;margin: 0px 0px 10px 10px;
+                    <div class="col-md-3" style="display:inline-flex;margin: 0px 0px 10px 10px;
                      box-shadow: rgb(23, 19, 71) 1px 1px 10px;
                      border-radius: 7px;
                      background-color: rgb(55 50 121);
@@ -321,38 +420,45 @@
                         <button class="blue-btn me-2 mb-5" ng-click="clearFilter('Sample')" type="button">Clear Filter</button>
                     </div>
                 </div-->
+                <div class="col-md-12 mb-2">
+                    <a class="btn btn-info btn-lg float-end" ng-click="refreshTable()">
+                        <span class="glyphicon glyphicon-refresh"></span> Refresh
+                    </a>
+                </div>
                 <div class="col-md-12">
                     <table class="table">
                         <thead>
                             <tr>
                                 <!--th></th-->
                                 <th>S.No.</th>
+                                <th>Sample</th>
                                 <th>Name</th>
-                                <th>Sample Id</th>
                                 <th>Customer</th>
                                 <th>Customer Contact</th>
                                 <th>Status</th>
                                 <th>Shipping Type</th>
-                                <th>Product Family</th>
+                                <!-- <th>Product Family</th> -->
                                 <th>Sample Requested By</th>
-                                <th>Record Type</th>
+                                <!-- <th>Record Type</th> -->
                                 <th>Created Date</th>
+                                <th>Sample Submitted Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="sample in listOfSamples3">
                                 <!--td><input type="checkbox" ng-model="sample.selected" ng-change="onClickOfSample(sample.Id,$index)" /></td-->
                                 <td>{{$index+1}}</td>
-                                <td style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
                                 <td style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Name}}</a></td>
+                                <td style="cursor:pointer;"><a href="#" ng-click="onClickOpenSampleDetailPage(sample.Id)">{{sample.Sample_Name__c}}</a></td>
                                 <td style="cursor:pointer;" ng-click="onClickOpenCustomerDetail(sample.Account__c)" data-id="{{sample.Account__c}}"><a href="">{{sample.Account__r.Name}}</a></td>
                                 <td style="cursor:pointer;" ng-click="onClickOpenCustomerContactDetail($index,sample.Customers_Contact__c)" data-id="{{sample.Customers_Contact__r.Name}}"><a href="">{{sample.Customers_Contact__r.Name}}</a></td>
                                 <td>{{sample.Status__c}}</td>
                                 <td>{{Shipping_Type__c}}</td>
-                                <td>{{sample.Product_Family__c}}</td>
+                                <!-- <td>{{sample.Product_Family__c}}</td> -->
                                 <td>{{sample.Sample_Requested_by__c}}</td>
-                                <td>{{sample.Record_Type_Name__c}}</td>
+                                <!-- <td>{{sample.Record_Type_Name__c}}</td> -->
                                 <td>{{sample.CreatedDate | date:'yyyy-MM-dd'}}</td>
+                                <td>{{sample.Sample_Submitted_Date__c | date:'yyyy-MM-dd'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -441,6 +547,11 @@
                         <button class="blue-btn me-2 mb-5" ng-click="searchSLI()" type="button">Search</button>
                         <button class="blue-btn me-2 mb-5" ng-click="clearFilter('SLI')" type="button">Clear Filter</button>
                     </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-info btn-lg float-end" ng-click="refreshTable()">
+                            <span class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
+                    </div>
                 </div>
                 <div class="col-md-12">
                     <table class="table">
@@ -451,8 +562,10 @@
                                 <th>Product</th>
                                 <th>Product Code</th>
                                 <th>Sample Name</th>
+                                <th>Customer Name</th>
                                 <th>Is Dispatched?</th>
                                 <th>Dispatch Date</th>
+                                <th>Release Date</th>
                                 <th>Sample Request Status</th>
                                 <th>Product Family</th>
                             </tr>
@@ -461,11 +574,13 @@
                             <tr ng-repeat="SLI in listOfSLI3">
                                 <td>{{$index+1}}</td>
                                 <td><a href="#" ng-click="onClickOpenSLIDetailPage(SLI.Id)">{{SLI.Name}}</a></td>
-                                <td>{{SLI.Product__r.Name}}</td>
+                                <td>{{SLI.Product_Name__c}}</td>
                                 <td>{{SLI.Product_Code__c}}</td>
                                 <td>{{SLI.Sample__r.Name}}</td>
+                                <td>{{SLI.Customer_Name__c}}</td>
                                 <td>{{SLI.isDispatched}}</td>
                                 <td>{{SLI.Actual_date_of_dispatch__c| date:'yyyy-MM-dd'}}</td>
+                                <td>{{ SLI.Release_Date_Time__c | date:'yyyy-MM-dd HH:mm:ss' }}</td>
                                 <td>{{SLI.Sample_Request_Status__c}}</td>
                                 <td>{{SLI.Product_Family__c}}</td>
                             </tr>
@@ -492,6 +607,11 @@
                     <div class="col-md-4">
                         <button class="blue-btn me-2 mb-5" ng-click="searchOpportunity()" type="button">Search</button>
                         <button class="blue-btn me-2 mb-5" ng-click="clearFilter('Opportunity')" type="button">Clear Filter</button>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-info btn-lg float-end" ng-click="refreshTable()">
+                            <span class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -544,6 +664,11 @@
                     <div class="col-md-4">
                         <button class="blue-btn me-2 mb-5" ng-click="searchOppProds()" type="button">Search</button>
                         <button class="blue-btn me-2 mb-5" ng-click="clearFilter('OLI')" type="button">Clear Filter</button>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-info btn-lg float-end" ng-click="refreshTable()">
+                            <span class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -608,18 +733,22 @@
                 <div class="col-md-6 mt-3">
                     <label class="font-if">Phone
                     </label>
-                    <input class="form-control" type="text" ng-model="conDetails.MobilePhone"/>
+                    <input class="form-control" type="text" ng-model="conDetails.MobilePhone" number="conDetails.MobilePhone" maxlength="10" ng-disabled="disabled"/>
                 </div>
                 <div class="col-md-6 mt-3 mb-5">
-                    <label class="font-if">Password
-                    </label>
-                    <input class="form-control" type="password" ng-model="conDetails.Password__c"/>
+                    <div style="position: relative;">
+                        <label>Password</label>
+                        <input class="form-control" type="password" ng-model="conDetails.Password__c" id="psw" ng-disabled="disabled"/>
+                        <i class="fa fa-eye eye-icon" style="position:absolute;right:15px;top:40px;" ng-click="showHideLoginPassword('psw')"></i>
+                    </div>
                 </div>
                 <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
                     <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
                         <i class="fa-solid fa-check me-2"></i>Update</button>
                     <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
                         <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+                        <button class="blue-btn float-end me-2" ng-click="editProfile()" type="button">
+                            <i class="fa-solid fa-pencil me-2"></i>Edit</button>
                 </div>
             </div>
 
@@ -628,10 +757,31 @@
         <script>
             var productFamily = JSON.parse('{!productFamily}');
             var userHashId = '{!$CurrentPage.parameters.id}';
-            var app = angular.module('sample_app', []);
+
+            angular.module('number', [])
+        .directive('number', function () {
+            return {
+                require: 'ngModel',
+                restrict: 'A',
+                link: function (scope, element, attrs, ctrl) {
+                    ctrl.$parsers.push(function (input) {
+                        if (input == undefined) return ''
+                        var inputNumber = input.toString().replace(/[^0-9]/g, '');
+                        if (inputNumber != input) {
+                            ctrl.$setViewValue(inputNumber);
+                            ctrl.$render();
+                        }
+                        return inputNumber;
+                    });
+                }
+            };
+        });
+
+            var app = angular.module('sample_app', ['number']);
             app.controller('sample_ctrl', function ($scope,$sce,$rootScope){
                 debugger;
-                $scope.showCustomerDetails = true;
+                $scope.disabled = true;
+                $scope.showCustomerDetails = false;
                 $scope.showPDF = false;
                 $scope.customerDetPage = false;
                 $scope.showSpinner = false;
@@ -652,19 +802,29 @@
 
                 $scope.getCustomerDetails = function(){
                     debugger;
-                    OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,function(result,event){
+                    $scope.isCreatedDate=false;
+                    $scope.showSpinner = true;
+                    $scope.selProductFamily = null;
+                    $scope.startDate = null;
+                    $scope.endDate = null;
+                    $scope.isToday = false;
+                    OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,$scope.isCreatedDate,function(result,event){
                         debugger;
                         if(event.status && result){
                             debugger;
                             $scope.conDetails = result.conRec;
-                            $scope.showCustomerDetails = true;
+                            $scope.showCustomerDetails = false;
                             $scope.customerDetPage = false;
                             $scope.showSpinner = false;
                             $scope.showProfile = false;
-                            $scope.showSamples = false;
-                            $scope.showSLI = false;
+                            if($scope.conDetails.Role__c == 'Sample'){
+                                $scope.showSamples = true;
+                            }else if($scope.conDetails.Role__c == 'Operation Team'){
+                                $scope.showOppSection = true;
+                            }else{
+                                $scope.showSLI = true;
+                            }
                             $scope.showOLISection = false;
-                            $scope.showOppSection = false;
                             $scope.accDetails = result.accList;
                             $scope.accDetails2 = result.accList;
                             $scope.listOfSamples = result.listOfSamples;
@@ -686,6 +846,7 @@
                             $scope.listOfSLI2 = result.listOfSLI;
                             $scope.conName = result.conRec.Name;
                             $rootScope.contactName = $scope.conName;
+                            $rootScope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
                             $scope.contactRole = result.conRec.Role__c;
                             if(result.oppList != undefined){
                                 for(var i=0; i<result.oppList.length; i++){
@@ -712,6 +873,7 @@
                             $scope.totalRecordsAcc = $scope.accDetails.length;
                             $scope.totalPagesAcc = Math.ceil($scope.totalRecordsAcc / $scope.pageSize);
                             $scope.paginateData();
+                            $scope.showSpinner = false;
                             $scope.$apply();
                         }
                     })
@@ -744,6 +906,21 @@
                      $scope.accDetails3 = $scope.accDetails.slice(startIndex, endIndex);
                 }
 
+                $scope.editProfile = function(){
+                    debugger;
+                    $scope.disabled = false;
+                }
+
+                $scope.showHideLoginPassword = function(controlid){
+                    debugger;
+                    var x = document.getElementById(controlid);
+                    if (x.type === "password") {
+                        x.type = "text";
+                    } else {
+                        x.type = "password";
+                    }
+                }
+
                 $scope.handleFilterTypeChange = function(value) {
                     debugger;
                     //alert('Chosen Value ==> ' + value);
@@ -751,15 +928,25 @@
                         //$('#nameSearch').show();
                         document.getElementById('nameSearch').style.display="contents"; 
                         $('#dateSearch').hide();
+                        $('#createdDateSearch').hide();
                         $('#familySearch').hide();
                         $scope.startDate = null;
                         $scope.endDate = null;
                         $scope.selProductFamily = null;
                         $scope.isToday = false;
                     }
-                    if(value == 'Date'){
+                    if(value == 'subDate'){
                        // $('#dateSearch').show();
                         document.getElementById('dateSearch').style.display="contents"; 
+                        $('#familySearch').hide();
+                        $('#createdDateSearch').hide();
+                        $('#nameSearch').hide();
+                        $scope.selProductFamily = null;
+                    }
+                    if(value == 'createdDate'){
+                       // $('#dateSearch').show();
+                        document.getElementById('createdDateSearch').style.display="contents";
+                        $('#dateSearch').hide();
                         $('#familySearch').hide();
                         $('#nameSearch').hide();
                         $scope.selProductFamily = null;
@@ -769,6 +956,7 @@
                         document.getElementById('familySearch').style.display="contents"; 
                         $('#nameSearch').hide();
                         $('#dateSearch').hide();
+                        $('#createdDateSearch').hide();
                         $scope.startDate = null;
                         $scope.endDate = null;
                         $scope.isToday = false;
@@ -795,10 +983,12 @@
                     if(value == 'today'){
                         $('#customDateDiv').hide();
                         $scope.isToday = true;
+                        $scope.isCreatedDate=false;
                         $scope.selProductFamily=null;
                         $scope.startDate=null;
-                        $scope.endDat=null;
-                        OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,function(result,event){
+                        $scope.endDate=null;
+                        $scope.showSpinner = true;
+                        OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,$scope.isCreatedDate,function(result,event){
                         debugger;
                         if(event.status && result){
                             debugger;
@@ -818,6 +1008,7 @@
                             $scope.listOfSLI2 = result.listOfSLI;
                             $scope.conName = result.conRec.Name;
                             $rootScope.contactName = $scope.conName;
+                            $rootScope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
                             $scope.contactRole = result.conRec.Role__c;
                             if(result.oppList != undefined){
                                 for(var i=0; i<result.oppList.length; i++){
@@ -844,6 +1035,7 @@
                             $scope.totalRecordsAcc = $scope.accDetails.length;
                             $scope.totalPagesAcc = Math.ceil($scope.totalRecordsAcc / $scope.pageSize);
                             $scope.paginateData();
+                            $scope.showSpinner = false;
                             $scope.$apply();
                         }
                     })
@@ -855,7 +1047,100 @@
                       //  $('#nameSearch').hide();
                     }
                 }
+                
+                $scope.handleCreatedDateFilterChange = function(value) {
+                    debugger;
+                    //alert('Chosen Value ==> ' + value);
+                    if(value == 'today'){
+                        $('#customDateDiv').hide();
+                        $('#customCreatedDateDiv').hide();
+                        $scope.isToday = true;
+                        $scope.isCreatedDate=true;
+                        $scope.selProductFamily=null;
+                        $scope.startDate=null;
+                        $scope.endDate=null;
+                        $scope.showSpinner = true;
+                        OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,$scope.isCreatedDate,function(result,event){
+                        debugger;
+                        if(event.status && result){
+                            debugger;
+                            $scope.accDetails = result.accList;
+                            $scope.accDetails2 = result.accList;
+                            $scope.listOfSamples = result.listOfSamples;
+                            $scope.listOfSamples2 = result.listOfSamples;
+                            if(result.listOfSLI != undefined){
+                                for(var i=0;i<result.listOfSLI.length;i++){
+                                    if(result.listOfSLI[i].Actual_date_of_dispatch__c != null){
+                                    result.listOfSLI[i].Actual_date_of_dispatch__c = new Date(result.listOfSLI[i].Actual_date_of_dispatch__c);
+                                	} 
+                                }
+                            }
+                            
+                            $scope.listOfSLI = result.listOfSLI;
+                            $scope.listOfSLI2 = result.listOfSLI;
+                            $scope.conName = result.conRec.Name;
+                            $rootScope.contactName = $scope.conName;
+                            $rootScope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
+                            $scope.contactRole = result.conRec.Role__c;
+                            if(result.oppList != undefined){
+                                for(var i=0; i<result.oppList.length; i++){
+                                    result.oppList[i].CloseDate = new Date(result.oppList[i].CloseDate);
+                                }
+                            }
+                            $scope.listOfOpportunity = result.oppList;
+                            $scope.listOfOpportunity2 = result.oppList;
+                            $scope.oppProductList = result.oppProductList;
+                            $scope.oppProductList2 = result.oppProductList;
+                            /* SLI */
+                            $scope.totalRecords = $scope.listOfSLI.length;
+                            $scope.totalPages = Math.ceil($scope.totalRecords / $scope.pageSize);
+                            /* Sample */
+                            $scope.totalRecordsSample = $scope.listOfSamples.length;
+                            $scope.totalPagesSample = Math.ceil($scope.totalRecordsSample / $scope.pageSize);
+                            /* Opportunity */
+                            $scope.totalRecordsOpp = $scope.listOfOpportunity.length;
+                            $scope.totalPagesOpp = Math.ceil($scope.totalRecordsOpp / $scope.pageSize);
+                            /* OLI */
+                            $scope.totalRecordsOLI = $scope.oppProductList.length;
+                            $scope.totalPagesOLI = Math.ceil($scope.totalRecordsOLI / $scope.pageSize);
+                            /* Account */
+                            $scope.totalRecordsAcc = $scope.accDetails.length;
+                            $scope.totalPagesAcc = Math.ceil($scope.totalRecordsAcc / $scope.pageSize);
+                            $scope.paginateData();
+                            $scope.showSpinner = false;
+                            $scope.$apply();
+                        }
+                    })
+                    }
+                    if(value == 'custom'){
+                        $('#customCreatedDateDiv').show();
+                        $scope.isToday = false;
+                       // $('#familySearch').hide();
+                      //  $('#nameSearch').hide();
+                    }
+                }
 
+                $scope.handleStartCreatedDateChange = function(value) {
+                    debugger;
+                    value.setHours(0,0,0,0);
+                    value.setDate(value.getDate() + 1);
+                    //const formattedDate = value.toLocaleDateString('en-US', {  month: '2-digit',  day: '2-digit',  year: 'numeric'});
+                    var formattedDate = value.toISOString();
+                    formattedDate = formattedDate.split('T')[0].concat('T05:30:00.000Z');
+                    $scope.startDate = formattedDate;
+                    //alert('Chosen Value ==> ' + formattedDate);
+                    // if(value == 'today'){
+                    //     $('#customDateDiv').hide();
+                    //    // $('#dateSearch').hide();
+                    //    // $('#familySearch').hide();
+                    // }
+                    // if(value == 'custom'){
+                    //     $('#customDateDiv').show();
+                    //    // $('#familySearch').hide();
+                    //   //  $('#nameSearch').hide();
+                    // }
+                }
+                
                 $scope.handleStartDateChange = function(value) {
                     debugger;
                     value.setHours(0,0,0,0);
@@ -884,11 +1169,13 @@
                     var formattedDate = value.toISOString();
                     formattedDate = formattedDate.split('T')[0].concat('T05:30:00.000Z');
                     $scope.endDate = formattedDate;
+                    $scope.isCreatedDate=false;
                     //const formattedDate = value.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
                     if($scope.endDate < $scope.startDate){
                         alert('End Date is Less than Start Date ');
                     }else{
-                        OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,function(result,event){
+                        $scope.showSpinner = true;
+                        OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,$scope.isCreatedDate,function(result,event){
                         debugger;
                         if(event.status && result){
                             debugger;
@@ -908,6 +1195,7 @@
                             //$scope.listOfSLI2 = result.listOfSLI;
                             $scope.conName = result.conRec.Name;
                             $rootScope.contactName = $scope.conName;
+                            $rootScope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
                             $scope.contactRole = result.conRec.Role__c;
                             // if(result.oppList != undefined){
                             //     for(var i=0; i<result.oppList.length; i++){
@@ -934,6 +1222,86 @@
                             // $scope.totalRecordsAcc = $scope.accDetails.length;
                             // $scope.totalPagesAcc = Math.ceil($scope.totalRecordsAcc / $scope.pageSize);
                             $scope.paginateData();
+                            $scope.showSpinner = false;
+                            $scope.$apply();
+                        }
+                    })
+                    }
+
+                    
+                    // if(value == 'today'){
+                    //     $('#customDateDiv').hide();
+                    //    // $('#dateSearch').hide();
+                    //    // $('#familySearch').hide();
+                    // }
+                    // if(value == 'custom'){
+                    //     $('#customDateDiv').show();
+                    //    // $('#familySearch').hide();
+                    //   //  $('#nameSearch').hide();
+                    // }
+                }
+                
+                $scope.handleEndCreatedDateChange = function(value) {
+                    debugger;
+                    value.setDate(value.getDate() + 1);
+                    value.setHours(0,0,0,0);
+                    var formattedDate = value.toISOString();
+                    formattedDate = formattedDate.split('T')[0].concat('T05:30:00.000Z');
+                    $scope.endDate = formattedDate;
+                    $scope.isCreatedDate=true;
+                    //const formattedDate = value.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+                    if($scope.endDate < $scope.startDate){
+                        alert('End Date is Less than Start Date ');
+                    }else{
+                        $scope.showSpinner = true;
+                        OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,$scope.isCreatedDate,function(result,event){
+                        debugger;
+                        if(event.status && result){
+                            debugger;
+                            // $scope.accDetails = result.accList;
+                            // $scope.accDetails2 = result.accList;
+                            $scope.listOfSamples = result.listOfSamples;
+                            //$scope.listOfSamples2 = result.listOfSamples;
+                            if(result.listOfSLI != undefined){
+                                for(var i=0;i<result.listOfSLI.length;i++){
+                                    if(result.listOfSLI[i].Actual_date_of_dispatch__c != null){
+                                    result.listOfSLI[i].Actual_date_of_dispatch__c = new Date(result.listOfSLI[i].Actual_date_of_dispatch__c);
+                                	} 
+                                }
+                            }
+                            
+                            $scope.listOfSLI = result.listOfSLI;
+                            //$scope.listOfSLI2 = result.listOfSLI;
+                            $scope.conName = result.conRec.Name;
+                            $rootScope.contactName = $scope.conName;
+                            $rootScope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
+                            $scope.contactRole = result.conRec.Role__c;
+                            // if(result.oppList != undefined){
+                            //     for(var i=0; i<result.oppList.length; i++){
+                            //         result.oppList[i].CloseDate = new Date(result.oppList[i].CloseDate);
+                            //     }
+                            // }
+                            // $scope.listOfOpportunity = result.oppList;
+                            // $scope.listOfOpportunity2 = result.oppList;
+                            // $scope.oppProductList = result.oppProductList;
+                            // $scope.oppProductList2 = result.oppProductList;
+                            // /* SLI */
+                            // $scope.totalRecords = $scope.listOfSLI.length;
+                            // $scope.totalPages = Math.ceil($scope.totalRecords / $scope.pageSize);
+                            /* Sample */
+                            $scope.totalRecordsSample = $scope.listOfSamples.length;
+                            $scope.totalPagesSample = Math.ceil($scope.totalRecordsSample / $scope.pageSize);
+                            /* Opportunity */
+                            // $scope.totalRecordsOpp = $scope.listOfOpportunity.length;
+                            // $scope.totalPagesOpp = Math.ceil($scope.totalRecordsOpp / $scope.pageSize);
+                            // /* OLI */
+                            // $scope.totalRecordsOLI = $scope.oppProductList.length;
+                            // $scope.totalPagesOLI = Math.ceil($scope.totalRecordsOLI / $scope.pageSize);
+                            // /* Account */
+                            // $scope.totalRecordsAcc = $scope.accDetails.length;
+                            // $scope.totalPagesAcc = Math.ceil($scope.totalRecordsAcc / $scope.pageSize);
+                            $scope.paginateData();
+                            $scope.showSpinner = false;
                             $scope.$apply();
                         }
                     })
@@ -956,7 +1324,9 @@
                     debugger;
                     //alert('Chosen Value ==> ' + value);
                     $scope.selProductFamily = value;
-                    OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,function(result,event){
+                    $scope.isCreatedDate=false;
+                    $scope.showSpinner = true;
+                    OperationsPortalController.getCustomerDetails(userHashId,$scope.selProductFamily,$scope.startDate,$scope.endDate,$scope.isToday,$scope.isCreatedDate,function(result,event){
                         debugger;
                         if(event.status && result){
                             debugger;
@@ -976,6 +1346,7 @@
                             $scope.listOfSLI2 = result.listOfSLI;
                             $scope.conName = result.conRec.Name;
                             $rootScope.contactName = $scope.conName;
+                            $rootScope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
                             $scope.contactRole = result.conRec.Role__c;
                             if(result.oppList != undefined){
                                 for(var i=0; i<result.oppList.length; i++){
@@ -1002,6 +1373,7 @@
                             $scope.totalRecordsAcc = $scope.accDetails.length;
                             $scope.totalPagesAcc = Math.ceil($scope.totalRecordsAcc / $scope.pageSize);
                             $scope.paginateData();
+                            $scope.showSpinner = false;
                             $scope.$apply();
                         }
                     })
@@ -1248,13 +1620,26 @@
                 debugger;
                 //$scope.showListViewOfSLI=true;
                 //$scope.showDetailPageSLI=false;
-                $scope.showCustomerssPage();
+                if($scope.conDetails.Role__c == 'Sample'){
+                    $scope.showSamplesPage();
+                }else if($scope.conDetails.Role__c == 'Operation Team'){
+                    $scope.showOpportunitySection();
+                }else{
+                    $scope.showSamplesSLI();
+                }
+                
                 $scope.showProfile = false;
                 //$scope.showCustomerDetails=true;
             }
 
             $scope.saveDetails = function(){
                 debugger;
+                if($scope.conDetails.MobilePhone != undefined || $scope.conDetails.MobilePhone != ""){
+                    if($scope.conDetails.MobilePhone.length < 10){
+                        swal("error", "Phone number should be of 10 digit.","error");
+                        return;
+                    }
+                }
                 $scope.showSpinner = true;
                 OperationsPortalController.updateProfile($scope.conDetails,function(result,event){
                     debugger;
@@ -1272,10 +1657,20 @@
 
             $scope.searchSLI = function(){
                 debugger;
-                OperationsPortalController.searchOLI($scope.searchKey,userHashId,function(result,event){
+                $scope.showSpinner = true;
+                if($scope.listOfSLI3 != undefined){
+                    for(var i=0;i<$scope.listOfSLI3.length;i++){
+                        delete($scope.listOfSLI3[i]['Actual_date_of_dispatch__c']);
+                        delete($scope.listOfSLI3[i]['Release_Date_Time__c']);
+                        delete($scope.listOfSLI3[i]['isDispatched']);
+                        delete($scope.listOfSLI3[i]['$$hashKey']);
+                    }
+                }
+                OperationsPortalController.searchOLI($scope.searchKey,userHashId,$scope.listOfSLI3,function(result,event){
                     debugger;
                     if(event.status && result){
                         $scope.listOfSLI3 = result;
+                        $scope.showSpinner = false;
                         $scope.$apply();
                     }
                 })
@@ -1283,6 +1678,7 @@
             
             $scope.searchSample = function(){
                 debugger;
+                $scope.showSpinner = true;
                 for(let i=0; i<$scope.listOfSamples.length; i++){
                     delete ($scope.listOfSamples[i]['$$hashKey']);
                 }
@@ -1290,6 +1686,7 @@
                     debugger;
                     if(event.status && result){
                         $scope.listOfSamples3 = result;
+                        $scope.showSpinner = false;
                         $scope.$apply();
                     }
                 })
@@ -1297,27 +1694,40 @@
             
             $scope.searchOpportunity = function(){
                 debugger;
+                $scope.showSpinner = true;
                 for(let i=0; i<$scope.listOfOpportunity.length; i++){
                     delete ($scope.listOfOpportunity[i]['$$hashKey']);
+                    delete ($scope.listOfOpportunity[i]['Account']);
+                    delete ($scope.listOfOpportunity[i]['CloseDate']);
+                    delete ($scope.listOfOpportunity[i]['RecordType']); 
                 }
                 OperationsPortalController.searchOpportunity($scope.searchKeyOpp,$scope.listOfOpportunity,function(result,event){
                     debugger;
                     if(event.status && result){
                         $scope.listOfOpportunity3 = result;
+                        $scope.showSpinner = false;
                         $scope.$apply();
                     }
                 })
             }
             
+            $scope.olifiltered = false;
             $scope.searchOppProds = function(){
                 debugger;
+                $scope.showSpinner = true;
                 for(let i=0; i<$scope.oppProductList.length; i++){
                     delete ($scope.oppProductList[i]['$$hashKey']);
                 }
                 OperationsPortalController.searchOppProds($scope.searchKeyOLI,$scope.oppProductList,function(result,event){
                     debugger;
                     if(event.status && result){
+                        // $scope.oppProductList = result;
                         $scope.oppProductList3 = result;
+                        // $scope.olifiltered = true;
+                        // $scope.totalRecordsOLI = $scope.oppProductList3.length;
+                        // $scope.totalPagesOLI = Math.ceil($scope.totalRecordsOLI / $scope.pageSize);
+                        // $scope.paginateData2();
+                        $scope.showSpinner = false;
                         $scope.$apply();
                     }
                 })
@@ -1325,13 +1735,19 @@
             
             $scope.searchAccount = function(){
                 debugger;
+                $scope.showSpinner = true;
                 for(let i=0; i<$scope.accDetails.length; i++){
                     delete ($scope.accDetails[i]['$$hashKey']);
                 }
                 OperationsPortalController.searchAccount($scope.searchKeyAccount,$scope.accDetails,function(result,event){
                     debugger;
                     if(event.status && result){
+                        // $scope.accDetails = result;
                         $scope.accDetails3 = result;
+                        // $scope.totalRecordsSample = $scope.accDetails3.length;
+                        // $scope.totalPagesSample = Math.ceil($scope.totalRecordsSample / $scope.pageSize);
+                        // $scope.paginateData();
+                        $scope.showSpinner = false;
                         $scope.$apply();
                     }
                 })
@@ -1344,7 +1760,7 @@
                 	this.paginateData(this.listOfSLI3);
                 }else if(name == 'Sample'){
                     $scope.listOfSamples3 = $scope.listOfSamples2;
-                	//this.paginateData(this.listOfSamples3);
+                	this.paginateData(this.listOfSamples3);
                 }else if(name == 'Opportunity'){
                     this.paginateData(this.listOfOpportunity3);
                 }else if(name == 'OLI'){
@@ -1406,6 +1822,7 @@
                     }
                     $scope.$apply();
                 })
+                
             }
             
             $scope.saveInvoiceUnderAccount = function(){
@@ -1420,6 +1837,63 @@
                 }else{
                 	swal("info", "Some Data is Missing","info");    
                 }
+                }
+
+                $scope.refreshTable = function(){
+                    debugger;
+                    $scope.showSpinner = true;
+                    OperationsPortalController.getCustomerDetails(userHashId,null,null,null,false,false,function(result,event){
+                        $scope.accDetails = result.accList;
+                            $scope.accDetails2 = result.accList;
+                            $scope.listOfSamples = result.listOfSamples;
+                            $scope.listOfSamples2 = JSON.parse(JSON.stringify(result.listOfSamples));
+                            if(result.listOfSLI != undefined){
+                                for(var i=0;i<result.listOfSLI.length;i++){
+                                    if(result.listOfSLI[i].Actual_date_of_dispatch__c != null){
+                                    result.listOfSLI[i].Actual_date_of_dispatch__c = new Date(result.listOfSLI[i].Actual_date_of_dispatch__c);
+                                	} 
+                                    if(result.listOfSLI[i].SLI_Dispatched__c == false){
+                                    result.listOfSLI[i].isDispatched = 'No';
+                                	}else{
+                                        result.listOfSLI[i].isDispatched = 'Yes'; 
+                                    } 
+                                }
+                            }
+                            
+                            $scope.listOfSLI = result.listOfSLI;
+                            $scope.listOfSLI2 = result.listOfSLI;
+                            $scope.conName = result.conRec.Name;
+                            $rootScope.contactName = $scope.conName;
+                            $rootScope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
+                            $scope.contactRole = result.conRec.Role__c;
+                            if(result.oppList != undefined){
+                                for(var i=0; i<result.oppList.length; i++){
+                                    result.oppList[i].CloseDate = new Date(result.oppList[i].CloseDate);
+                                }
+                            }
+                            $scope.listOfOpportunity = result.oppList;
+                            $scope.listOfOpportunity2 = result.oppList;
+                            $scope.oppProductList = result.oppProductList;
+                            $scope.oppProductList2 = result.oppProductList;
+                            /* SLI */
+                            $scope.totalRecords = $scope.listOfSLI.length;
+                            $scope.totalPages = Math.ceil($scope.totalRecords / $scope.pageSize);
+                            /* Sample */
+                            $scope.totalRecordsSample = $scope.listOfSamples.length;
+                            $scope.totalPagesSample = Math.ceil($scope.totalRecordsSample / $scope.pageSize);
+                            /* Opportunity */
+                            $scope.totalRecordsOpp = $scope.listOfOpportunity.length;
+                            $scope.totalPagesOpp = Math.ceil($scope.totalRecordsOpp / $scope.pageSize);
+                            /* OLI */
+                            $scope.totalRecordsOLI = $scope.oppProductList.length;
+                            $scope.totalPagesOLI = Math.ceil($scope.totalRecordsOLI / $scope.pageSize);
+                            /* Account */
+                            $scope.totalRecordsAcc = $scope.accDetails.length;
+                            $scope.totalPagesAcc = Math.ceil($scope.totalRecordsAcc / $scope.pageSize);
+                            $scope.paginateData();
+                            $scope.showSpinner = false;
+                            $scope.$apply();
+                    })
                 }
         })
         </script>

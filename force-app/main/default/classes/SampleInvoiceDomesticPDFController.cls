@@ -22,7 +22,7 @@ public without sharing class SampleInvoiceDomesticPDFController {
             
             userRec = [SELECT ID,FirstName,LastName FROM User where Id =:projRec.OwnerId];
             
-            sampLineItemList = [SELECT ID,Sample__c,Product_Code__c,Product_Name__c,Product__c,Product__r.HSN_Code__c,Quantity__c,Quantity_Unit__c,Packaging_Quantity__c,Packaging_Unit__c FROM Sample_Line_Item__c WHERE Sample__c =:recordId];
+            sampLineItemList = [SELECT ID,Sample__c,Product_Code__c,Product_Name__c,Product__c,Product__r.HSN_Code__c, Product__r.HSN_TAX__c,Quantity__c,Quantity_Unit__c,Packaging_Quantity__c,Packaging_Unit__c,Rate_Per_100_G__c,Freight_Value__c,CGST_Amount__c,SGST_Amount__c,IGSTC_Amount__c,Taxable_Value__c,Value__c,Quantity_In_Grams__c,Total_GST_Amount__c,Total__c,Total_GST_Percent__c FROM Sample_Line_Item__c WHERE Sample__c =:recordId];
             
             for(Sample_Line_Item__c sliRec: sampLineItemList){
                 

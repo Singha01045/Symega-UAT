@@ -41,10 +41,48 @@ public class SampleLineItemCreation_UI {
     @AuraEnabled
     public static List<Sample_Line_Item__c> getSLIList(string sampleId){
         system.debug('sampleId ====>' + sampleId);
-        List<Sample_Line_Item__c> lineItemList = [SELECT Id, Name, Product__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Customer_Preferred_Name__c,
-                                                  Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c
+        List<Sample_Line_Item__c> lineItemList = [SELECT Id, Name, Sampling_Price__c, Product__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Customer_Preferred_Name__c, OPTIVA_Recipe__r.Sampling_Price__c,
+                                                  Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.Sampling_Price__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Plant_State__c
                                                   FROM Sample_Line_Item__c WHERE Sample__c =: sampleId];
         return lineItemList;
+    }
+    
+   // @AuraEnabled
+    public static List<SelectOption> getStates()
+    {
+        List<SelectOption> options = new List<SelectOption>();
+        Schema.DescribeFieldResult fieldResult = Sample_Line_Item__c.Plant_State__c	.getDescribe();
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+        for( Schema.PicklistEntry f : ple)
+        {  
+           options.add(new SelectOption(f.getLabel(), f.getValue()));
+        }
+        System.debug('options--->'+options);
+        return options;
+    }
+    
+    @AuraEnabled
+     public static List<String> getStateValues() {
+        List<String> picklistValues = new List<String>();
+
+        // Get the SObject Describe for the given object
+        Schema.DescribeSObjectResult describeObject = Schema.getGlobalDescribe().get('Sample_Line_Item__c').getDescribe();
+
+        // Get the DescribeFieldResult for the given field
+        DescribeFieldResult fieldDescribe = describeObject.fields.getMap().get('Plant_State__c').getDescribe();
+
+        // Check if the field is a picklist
+      
+            // Retrieve the picklist values
+            List<Schema.PicklistEntry> picklistEntries = fieldDescribe.getPicklistValues();
+            
+            // Iterate through picklist values and add them to the list
+            for (Schema.PicklistEntry entry : picklistEntries) {
+                picklistValues.add(entry.getValue());
+            }
+        
+         system.debug('picklistValues-->'+picklistValues);
+        return picklistValues;
     }
     
     @AuraEnabled

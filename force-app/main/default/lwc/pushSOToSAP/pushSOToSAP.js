@@ -1,12 +1,10 @@
 import { LightningElement, api, wire, track} from 'lwc';
 import {CloseActionScreenEvent} from 'lightning/actions';
 import sendSONotification from '@salesforce/apex/OpportunityCreateSaleOrderController.sendSONotification'
-import getLineItemDet from '@salesforce/apex/TestClass.getLineItemDetails'
-import updateOpp from '@salesforce/apex/TestClass.testMethod1'
-import updateUserRecord from '@salesforce/apex/OpportunityCreateSaleOrderController.updateUser';
+import getLineItemDet from '@salesforce/apex/saleOrderSubmissionController.getLineItemDetails'
+import updateOpp from '@salesforce/apex/saleOrderSubmissionController.submitSaleOrder'
 import updateAccRecord from '@salesforce/apex/OpportunityCreateSaleOrderController.updateAccount';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
 
 export default class PushSOToSAP extends LightningElement {
 
@@ -114,21 +112,6 @@ export default class PushSOToSAP extends LightningElement {
                         this.isAccBilling_ShippigCustomer = data.isAccBilling_ShippigCustomer;
                         this.isBillingCustomer_AccShipping = data.isBillingCustomer_AccShipping;
                         this.isCustomerBilling_Shipping = data.isCustomerBilling_Shipping;   
-
-                        // this.userId = data.userId;
-                        // this.addressUserId = data.addressUserId;
-                        // this.bhId = data.bhId;
-
-                        // if(data.userId != null || data.userId != undefined){
-                        //     this.showUserField = true;
-                        // }
-                        // if(data.bhId != null || data.bhId != undefined){
-                        //     this.showBhField = true;
-                        // }
-                        // if(data.addressUserId != null || data.addressUserId != undefined){
-                        //     this.showAddressUserField = true;
-                        // }
-
 
                         if(data.accountMissingFieldList.length > 0){
                             this.showAccountOnScreen = true;
@@ -246,10 +229,6 @@ export default class PushSOToSAP extends LightningElement {
             if(data=='Success'){
                 this.showToast('Success','Notification Sent Successfully','success');
             }
-            // else{
-            //     this.showToast('Success',data,'success');
-            // }
-
             if(this.showSpinner == true){
                 this.showSpinner = false;
             }
@@ -301,35 +280,9 @@ export default class PushSOToSAP extends LightningElement {
         }
     }
 
-    // @wire(sendSONotification,{id : '$recordId'})
-    // wiredResponse(result){
-    //     debugger;
-    //     if(result.data){
-    //         console.log('DATA----',result.data);
-            
-    //         if(result.data=='Success'){
-    //             this.showToast('Success','Notification Sent Successfully','success');
-    //         }else{
-    //             this.showToast('Success',result.data,'success');
-    //         }
-
-    //         this.updateOpp();
-    //         console.log(result);
-    //     }
-    // }
-
     updateOpp(){
         updateOpp({soId:this.recordId}).then(result =>{
             console.log('Opp Update Result',result);
-
-            // if(result!='Success'){
-            //     this.showToast('Failed',result,'error');
-            //     this.dispatchEvent(new CloseActionScreenEvent());        
-            // }
-            // else{
-            //     this.closePopup();
-            // }
-
             if(result!='Success'){
                 if(result.includes('in Progress')){
                     this.showToast('Success',result,'success');
@@ -436,37 +389,6 @@ export default class PushSOToSAP extends LightningElement {
         this.showToast('Success', 'Customer Address updated successfully', 'success');
         this.show1stPage = false;
     }
-
-
-    // handleSuccess(){
-    //     debugger;
-
-    //     if(this.showUserField){
-    //         console.log('this.userpsap s ', this.userSapCode);
-    //         updateUserRecord({userSAPcode:this.userSapCode, userId:this.userId, accRec : this.accRec})
-    //     }
-    //     if(this.showBhField){
-    //         console.log('this.bhSapCode ', this.bhSapCode);
-    //         updateUserRecord({userSAPcode:this.bhSapCode, userId:this.bhId, accRec : this.accRec})
-    //     }
-
-    //     if((this.dlvryPlantVal != undefined && this.dlvryPlantVal != '') || (this.custTypeVal != undefined && this.custTypeVal != '') || (this.accSegVal != undefined && this.accSegVal != '') ||
-    //     /*(this.taxTypeVal != undefined && this.taxTypeVal != '') ||*/ (this.taxCollectVal != undefined && this.taxCollectVal != '') || (this.paymentTermsVal != undefined && this.paymentTermsVal != '') ||
-    //     (this.transportTermsVal != undefined && this.transportTermsVal != '') /*|| (this.pan != undefined && this.pan != '') || (this.gst != undefined && this.gst != '') || (this.fssai != undefined && this.fssai > 0 )*/
-    //     ){
-    //         updateAccRecord({accId:this.accRecId, dlvryPlant:this.dlvryPlantVal, custType : this.custTypeVal, accSeg : this.accSegVal, taxType : this.taxTypeVal, taxCollect : this.taxCollectVal, paymentTerms : this.paymentTermsVal, transportTerms : this.transportTermsVal, Gst : this.gst, Pan : this.pan, fssai : this.fssai})
-    //     }
-    //     if(this.bothObjectDisplay){
-    //            this.showAccountFields = false;
-    //            this.showCustomerFields = true;
-    //            this.bothObjectDisplay = false;
-    //            console.log('Customer Address Fields --> ' + this.missingFieldsListCustAddress);
-    //       }else{
-    //           this.sendSONotification();
-    //           this.showToast('Success', 'Account updated successfully', 'success');
-    //           this.show1stPage = false;
-    //       }
-    // }
 
     closeModal() {
         this.dispatchEvent(new CloseActionScreenEvent());

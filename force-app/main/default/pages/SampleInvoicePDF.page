@@ -70,18 +70,21 @@
                     <th  style="border:1px solid black;background-color: #dddddd;font-size:12px;text-align:center;">Quantity</th>
                     <th  style="border:1px solid black;background-color: #dddddd;font-size:12px;text-align:center;">Packing</th>
                     <th  style="border:1px solid black;background-color: #dddddd;font-size:12px;text-align:center;">Unit</th>
+                    <th  style="border:1px solid black;background-color: #dddddd;font-size:12px;text-align:center;">Rate Per<br/>100.00<br/>UOM</th>
                     <th  style="border:1px solid black;background-color: #dddddd;font-size:12px;text-align:center;">Net Value</th>  
                 </tr>
                 
                 <apex:repeat value="{!sampLineItemList}" var="sliList"> 
                     <tr>
-                        <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sliList.Product_Code__c}</td>   <!-- R10007508 -->
+                        <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sliList.Product_Code__c}</td>   <!--  <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sliList.Quantity_Unit__c}</td>R10007508 -->
                         <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sliList.Product_Name__c}</td>
                         <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sliList.Product__r.HSN_Code__c}</td>
                         <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sliList.Quantity__c}</td>
-                        <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sliList.Packaging_Unit__c}</td>
-                        <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sliList.Quantity_Unit__c}</td>
-                        <td  style="border:1px solid black;font-size:12px;text-align:center;">0.90</td> 
+                        <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sliList.Packaging_Quantity__c} * {!sliList.Packaging_Unit__c} </td>
+                         <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sliList.Quantity_Unit__c} </td>
+                        <td  style="border:1px solid black;font-size:12px;text-align:right;">{!sliList.Rate_Per_100_G__c}</td>
+                        
+                        <td  style="border:1px solid black;font-size:12px;text-align:right;">{!sliList.Value__c}</td> 
                     </tr>
                 </apex:repeat>
                 
@@ -90,9 +93,8 @@
                     <td style="border:1px solid black; font-size:12px; padding-left:120px; " colspan="2"  > Total </td>
                     <td  style="border:1px solid black;font-size:12px; text-align:center;"></td>
                     <td style="border:1px solid black; font-size:12px; text-align:center;" > {!convertGmToKG}KG </td>
-                    <!--  <td  style="border:1px solid black;font-size:12px;text-align:center;"></td>  -->
-                    <td style="border:1px solid black; font-size:12px;text-align:right; " colspan="2"> </td>
-                    <td style="border:1px solid black; font-size:12px;text-align:right; " > 100 </td>
+                    <td style="border:1px solid black; font-size:12px;text-align:right; " colspan="3"> </td> 
+                    <td style="border:1px solid black; font-size:12px;text-align:right; " > {!totalValue} </td>
                     
                 </tr>
             </table>

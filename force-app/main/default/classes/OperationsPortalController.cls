@@ -74,7 +74,7 @@ public without sharing class OperationsPortalController {
     }
 
     @RemoteAction
-    public static accountDetailWrapper getCustomerDetails(string hashCode, string selProdFamily, string startDate, string endDate, boolean isToday){
+    public static accountDetailWrapper getCustomerDetails(string hashCode, string selProdFamily, string startDate, string endDate, boolean isToday, boolean isCreatedDate){
         try{
             System.debug('selProdFamily==> ' + selProdFamily);
             System.debug('startDate==> ' + startDate);
@@ -90,7 +90,7 @@ public without sharing class OperationsPortalController {
             List<Project__c> listOfSamples = New List<Project__c>();
             List<Sample_Line_Item__c> listOfAllSLI = New List<Sample_Line_Item__c>();
 
-            Contact conRecord = [SELECT Id,Name,Role__c,Login_Hash_Code__c,FirstName,LastName,Email,Phone,MobilePhone,Password__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
+            Contact conRecord = [SELECT Id,Name,Role__c,Login_Hash_Code__c,FirstName,LastName,Email,Phone,MobilePhone,Password__c,Sample_Assignment_Team__r.Team_Type__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
             system.debug('conRecord ====> '+conRecord);
             
             List<Sample_Allocation_Team__c> listOfAllocationTeam = [SELECT Id,Name,Sample_Assignment_Team__c FROM Sample_Allocation_Team__c WHERE Contact__r.Login_Hash_Code__c =: hashCode];
@@ -106,10 +106,10 @@ public without sharing class OperationsPortalController {
             
             if(conRecord.Role__c == 'Dispatch Team'){
                 system.debug('Dipatch Team');
-               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,SLI_Dispatched__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Release_to_Dispatch_Team__c = True];
+               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,Customer_Name__c,SLI_Dispatched__c,Release_Date_Time__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c,Product_Name__c FROM Sample_Line_Item__c WHERE Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Release_to_Dispatch_Team__c = True ORDER By Release_Date_Time__c DESC];
             }else{
                 system.debug('Operation & Sample Team');
-               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,SLI_Dispatched__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample'];
+               listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,Customer_Name__c,SLI_Dispatched__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c,Product_Name__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample'];
             }
             system.debug('listOfAllSLI ====> '+listOfAllSLI);
             accountDetailWrapper wrapper = new accountDetailWrapper();
@@ -136,30 +136,117 @@ public without sharing class OperationsPortalController {
                 oppLIneItems = [SELECT Id,Name,OpportunityId,Product2Id,Product2.Name,Quantity,ListPrice,UnitPrice,TotalPrice,Price_In_KG__c,Quantity_In_KG__c FROM OpportunityLineItem WHERE OpportunityId IN : setOfOppIds];
             }
             if(!setOfSampleIds.isEmpty()){
-                if(selProdFamily != '' && selProdFamily != null){
-                    System.debug('inside product family filter');
-                    listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
-                Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND Product_Family__c =:selProdFamily ORDER By LastModifiedDate DESC];
-                }else if(startDate != null && endDate != null){
-                    System.debug('inside date filter');
-                    DateTime startDateAPEX = Datetime.valueOf(startDate.replace('T', ' '));
-                    DateTime endDateAPEX = Datetime.valueOf(endDate.replace('T', ' '));
-                    listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
-                Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate >=: startDateAPEX AND CreatedDate <=: endDateAPEX ORDER By LastModifiedDate DESC]; 
-                }else if(isToday){
-                    System.debug('inside today filter');
-                    listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
-                Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate = TODAY ORDER By LastModifiedDate DESC]; 
+                if(conRecord.Role__c == 'Dispatch Team'){
+                    system.debug('Dispatch Team Query....');
+                    if(selProdFamily != '' && selProdFamily != null){
+                        System.debug('inside product family filter');
+                        listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,Customer_Name__c,SLI_Dispatched__c,Release_Date_Time__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c,Product_Name__c FROM Sample_Line_Item__c WHERE Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Release_to_Dispatch_Team__c = True AND Product_Family__c =: selProdFamily ORDER By Release_Date_Time__c DESC];
+                        set<Id> setOfSampleIdss = New set<Id>();
+                        if(!listOfAllSLI.isEmpty()){
+                            for(Sample_Line_Item__c sli : listOfAllSLI){
+                                setOfSampleIdss.add(sli.Sample__c);
+                            }
+                        }
+                        system.debug('setOfSampleIdss ====> '+setOfSampleIdss);
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c, Release_Date_Time__c From Project__c WHERE Id IN : setOfSampleIdss AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' ORDER By Release_Date_Time__c DESC];
+                    }else if(startDate != null && endDate != null){
+                        System.debug('inside date filter');
+                        DateTime startDateAPEX = Datetime.valueOf(startDate.replace('T', ' '));
+                        DateTime endDateAPEX = Datetime.valueOf(endDate.replace('T', ' '));
+                        Date startCreatedDateAPEX = Date.valueOf(startDate);
+                        Date endCreatedDateAPEX = Date.valueOf(endDate);
+                        if(isCreatedDate){
+                          listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c, Release_Date_Time__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate >=: startDateAPEX AND CreatedDate <=: endDateAPEX ORDER By Release_Date_Time__c DESC];   
+                        }else{
+                            listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c, Release_Date_Time__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND Sample_Submitted_Date__c >=: startCreatedDateAPEX AND Sample_Submitted_Date__c <=: endCreatedDateAPEX ORDER By Release_Date_Time__c DESC]; 
+                        }
+                    }else if(isToday){
+                        if(isCreatedDate){
+                            System.debug('inside today filter');
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c, Release_Date_Time__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate = TODAY ORDER By Release_Date_Time__c DESC]; 
+                        }else{
+                            System.debug('inside today filter');
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c, Release_Date_Time__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND Sample_Submitted_Date__c = TODAY ORDER By Release_Date_Time__c DESC]; 
+                        }
+                    }
+                    
+                    else{
+                        system.debug('Last Else Condition....');
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c, Release_Date_Time__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' ORDER By Release_Date_Time__c DESC];
+                    }
                 }
                 
                 else{
-                    listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
-                Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
-                Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' ORDER By LastModifiedDate DESC];
+                    system.debug('Sample Team Query....');
+                    if(selProdFamily != '' && selProdFamily != null){
+                        System.debug('inside product family filter');
+    
+                        if(conRecord.Role__c == 'Dispatch Team'){
+                            system.debug('Dipatch Team');
+                            listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,Customer_Name__c,SLI_Dispatched__c,Release_Date_Time__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c,Product_Name__c FROM Sample_Line_Item__c WHERE Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Release_to_Dispatch_Team__c = True AND Product_Family__c =: selProdFamily ORDER By Release_Date_Time__c DESC];
+                        }else{
+                            system.debug('Operation & Sample Team');
+                            listOfAllSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,Customer_Name__c,SLI_Dispatched__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c,Product_Name__c FROM Sample_Line_Item__c WHERE Sample_Assignment_Team__c IN : setOfSampleAssignment AND Sample__r.Submitted_To_SAP_Optiva__c = true AND Sample__r.Record_Type_Name__c = 'Sample' AND Product_Family__c =: selProdFamily];
+                        }
+                        set<Id> setOfSampleIdss = New set<Id>();
+                        if(!listOfAllSLI.isEmpty()){
+                            for(Sample_Line_Item__c sli : listOfAllSLI){
+                                setOfSampleIdss.add(sli.Sample__c);
+                            }
+                        }
+                        system.debug('setOfSampleIdss ====> '+setOfSampleIdss);
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c From Project__c WHERE Id IN : setOfSampleIdss AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' ORDER By Sample_Submitted_Date__c DESC];
+                    }else if(startDate != null && endDate != null){
+                        System.debug('inside date filter');
+                        DateTime startDateAPEX = Datetime.valueOf(startDate.replace('T', ' '));
+                        DateTime endDateAPEX = Datetime.valueOf(endDate.replace('T', ' '));
+                        Date startCreatedDateAPEX = Date.valueOf(startDate);
+                        Date endCreatedDateAPEX = Date.valueOf(endDate);
+                        if(isCreatedDate){
+                          listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate >=: startDateAPEX AND CreatedDate <=: endDateAPEX ORDER By Sample_Submitted_Date__c DESC];   
+                        }else{
+                            listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND Sample_Submitted_Date__c >=: startCreatedDateAPEX AND Sample_Submitted_Date__c <=: endCreatedDateAPEX ORDER By Sample_Submitted_Date__c DESC]; 
+                        }
+                    }else if(isToday){
+                        if(isCreatedDate){
+                            System.debug('inside today filter');
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND CreatedDate = TODAY ORDER By Sample_Submitted_Date__c DESC]; 
+                        }else{
+                            System.debug('inside today filter');
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' AND Sample_Submitted_Date__c = TODAY ORDER By Sample_Submitted_Date__c DESC]; 
+                        }
+                    }
+                    
+                    else{
+                        system.debug('Last Else Condition....');
+                        listOfSamples = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Account__r.Name, Account__c,
+                    Sample_Requested_by__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email,Customers_Contact__r.MailingStreet,
+                    Customers_Contact__r.MailingCity,Customers_Contact__r.MailingState,Customers_Contact__r.MailingCountry,Customers_Contact__r.MailingPostalCode, CreatedDate, Sample_Submitted_Date__c From Project__c WHERE Id IN : setOfSampleIds AND Submitted_To_SAP_Optiva__c = true AND Record_Type_Name__c = 'Sample' ORDER By Sample_Submitted_Date__c DESC];
+                    }
                 }
+                
             }
             wrapper.accList = allCustomerList;
             wrapper.accRecord = Null;
@@ -192,7 +279,7 @@ public without sharing class OperationsPortalController {
     @RemoteAction
     public static accountDetailWrapper getSampleDetails(string sampleId, string userHashId){
         try{
-            List<Contact> conRecord = [SELECT Id,Name,Login_Hash_Code__c,FirstName,LastName,MobilePhone,Email,Password__c, AccountId,Role__c, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r) /*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
+            List<Contact> conRecord = [SELECT Id,Name,Login_Hash_Code__c,FirstName,LastName,MobilePhone,Email,Password__c, AccountId,Role__c,Sample_Assignment_Team__r.Team_Type__c, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r) /*Sample_Assignment_Team__r.Team_Type__c*/ FROM Contact WHERE Login_Hash_Code__c =: userHashId];
             
             List<Contact> conRec = [SELECT AccountId,Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,Role__c, (SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r),Sample_Assignment_Team__r.Team_Type__c FROM Contact WHERE Login_Hash_Code__c =: userHashId];
             List<Project__c> sampleRec = new List<Project__c>();
@@ -231,7 +318,7 @@ public without sharing class OperationsPortalController {
             Total_Solids__c,Type_of_PR__c,Usage_Levels_in_Recipes_Average__c,Way_Bill_No__c,Wet_Dry__c,Where_Used__c,who_requested_the_sample__c,
             Opportunity__r.Name,Opportunity__r.AccountId,Account__r.Name,(SELECT Id, Sample_Invoice_Date__c,Courier__c, Actual_date_of_dispatch__c, Release_to_Dispatch_Team__c, Release_Status__c, Dispatch_Details__c, Way_Bill_No__c, Name, Product__c,Project_Quotient__c,OPTIVA_Recipe__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c,OPTIVA_Recipe__r.Name, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Product_Family__c,
                                                   Expected_Shelf_Life__c, Additional_Comments__c, Customer_Instructions__c, Sample__c,Sample__r.Owner.Email,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Family, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Product_Name__c
-                                                  FROM Sample_Line_Items__r WHERE Release_Status__c = 'Released') FROM Project__c WHERE Id =: sampleId];
+                                                  FROM Sample_Line_Items__r WHERE Release_Status__c = 'Released'),(SELECT Id,Name,Comment__c,Comment_By__r.Name FROM Comments__r) FROM Project__c WHERE Id =: sampleId];
             }else{
                 sampleRec = [SELECT Account__c,Acc_Email__c,Acidity__c,Actual_Date_of_Dispatch__c,Additional_Comments__c,Additive_Status__c,
             Allergen__c,Allergin_Free_Decleration__c,Annual_Value__c,Annual_Volume_Full__c,Annual_Volume_in_units__c,Application_guidelines_if_any__c,
@@ -267,7 +354,7 @@ public without sharing class OperationsPortalController {
             Total_Solids__c,Type_of_PR__c,Usage_Levels_in_Recipes_Average__c,Way_Bill_No__c,Wet_Dry__c,Where_Used__c,who_requested_the_sample__c,
             Opportunity__r.Name,Opportunity__r.AccountId,Account__r.Name,(SELECT Id, Sample_Invoice_Date__c,Courier__c, Actual_date_of_dispatch__c, Release_to_Dispatch_Team__c, Release_Status__c, Dispatch_Details__c, Way_Bill_No__c, Name, Product__c,Project_Quotient__c,OPTIVA_Recipe__c, Quantity__c, Quantity_Unit__c, Packaging_Quantity__c, Packaging_Unit__c, Product_Max_Qty__c, Formula_Packaging_Qty__c, Product__r.Regulatory__c,OPTIVA_Recipe__r.Name, OPTIVA_Recipe__r.Regulatory__c, OPTIVA_Recipe__r.Shelf_Life__c,Product_Family__c,
                                                   Expected_Shelf_Life__c, Additional_Comments__c, Product__r.Family,Customer_Instructions__c, Sample__c,Sample__r.Owner.Email,Project_Quotient__r.Name, Project_Quotient__r.SSC_Code__c, Product__r.Sampling_Qty_UNIT__c, Product__r.Name, Product__r.Max_sampling_Qty__c, Product__r.ProductCode, Product__r.Current_Shelf_Life__c, OPTIVA_Recipe__r.SSC_Code__c,Product_Name__c
-                                                  FROM Sample_Line_Items__r) FROM Project__c WHERE Id =: sampleId];
+                                                  FROM Sample_Line_Items__r),(SELECT Id,Name,Comment__c,Comment_By__r.Name FROM Comments__r) FROM Project__c WHERE Id =: sampleId];
             }
 
             accountDetailWrapper wrapper = new accountDetailWrapper();
@@ -296,7 +383,7 @@ public without sharing class OperationsPortalController {
 
     @RemoteAction
     public static Contact getConDetails(string userHashId){
-        Contact conRec = [SELECT Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,AccountId FROM Contact WHERE Login_Hash_Code__c =: userHashId];
+        Contact conRec = [SELECT Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,AccountId,Sample_Assignment_Team__r.Team_Type__c FROM Contact WHERE Login_Hash_Code__c =: userHashId];
         return conRec;
     }
     
@@ -350,7 +437,7 @@ public without sharing class OperationsPortalController {
             Set<Id> setOfSampleAssignment = New Set<Id>();
 			List<Sample_Line_Item__c> listOfAllSLI = New List<Sample_Line_Item__c>();
             
-            List<Contact> conRec = [SELECT Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,(SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/,Role__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
+            List<Contact> conRec = [SELECT Id,Name,FirstName,LastName,MobilePhone,Email,Password__c,Sample_Assignment_Team__r.Team_Type__c,(SELECT Id, Name, Sample_Assignment_Team_Type__c FROM Account__r)/*Sample_Assignment_Team__r.Team_Type__c*/,Role__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
             List<Account> accRecord = [SELECT AccountSource,Account_Potential__c,
             Account_Segment__c,Account_Type__c,BillingAddress,BillingCity,BillingCountry,
             BillingCountryCode,BillingGeocodeAccuracy,BillingLatitude,BillingLongitude,
@@ -411,7 +498,7 @@ public without sharing class OperationsPortalController {
                 wrapper.listOfSamples = listOfsamp;
                 system.debug('listOfAllSLI[0].Sample__r ====> '+listOfAllSLI[0].Sample__r);
             }else{
-              listOfAllSampleRecords = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Project_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Opportunity__c,CreatedDate From Project__c WHERE Opportunity__c IN : setOfOppIds AND Record_Type_Name__c = 'Sample'];
+              listOfAllSampleRecords = [SELECT Id,Name,Record_Type_Name__c,Sample_Name__c,Project_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Opportunity__c,CreatedDate,Sample_Submitted_Date__c From Project__c WHERE Opportunity__c IN : setOfOppIds AND Record_Type_Name__c = 'Sample'];
               wrapper.listOfSamples = listOfAllSampleRecords;
             }
             
@@ -615,7 +702,12 @@ public without sharing class OperationsPortalController {
         try {
             //  string  disReqId = id;
             //   PageReference ref =page.SymegaStickerPDF;
-            PageReference pageRef = page.SymegaStickerPDF;
+            PageReference pageRef;
+            if(fileName == 'Sample Invoice'){
+                pageRef = page.SymegaStickerPDF;
+            }else{
+                pageRef = page.NonHarzardousDHLPDF;
+            }
             pageRef.getParameters().put('id',id);
             blob vBody;
             if(Test.isRunningTest()){
@@ -741,6 +833,22 @@ public without sharing class OperationsPortalController {
     public static string updateSLIList(List<Sample_Line_Item__c> SLIList){
         try{
             System.debug('Inside Update SLI List Method');
+            set<Id> setOfSampleId = New set<Id>();
+            if(!SLIList.isEmpty()){
+                for(Sample_Line_Item__c sli : SLIList){
+                    if(sli.Release_Status__c == 'Released'){
+                        sli.Release_Date_Time__c = System.now();
+                        setOfSampleId.add(sli.Sample__c);
+                    }
+                }
+                List<Project__c> listOfSamples = [SELECT Id, Release_Date_Time__c FROM Project__c WHERE Id IN : setOfSampleId];
+                if(!listOfSamples.isEmpty()){
+                    for(Project__c samplerec : listOfSamples){
+                        samplerec.Release_Date_Time__c = System.now();
+                    }
+                    update listOfSamples;
+                }
+            }
             update SLIList;
             //insert comment;
             return 'Success';
@@ -750,9 +858,17 @@ public without sharing class OperationsPortalController {
     }
 
     @RemoteAction
-    public static List<Sample_Line_Item__c> searchOLI(string serachKey, string hashCode){
+    public static List<Sample_Line_Item__c> searchOLI(string serachKey, string hashCode, List<Sample_Line_Item__c> listOfSLIist){
         try{
-            List<Sample_Line_Item__c> listOfSLI = [SELECT Id,Name,Product__r.Name FROM Sample_Line_Item__c WHERE Product__r.Name LIKE :('%' + serachKey + '%') AND Contact__r.Login_Hash_Code__c =: hashCode];
+            system.debug('serachKey ====> '+serachKey);
+            system.debug('hashCode ====> '+hashCode);
+            set<Id> setOfSLIId = New set<Id>();
+            if(!listOfSLIist.isEmpty()){
+                for(Sample_Line_Item__c sli : listOfSLIist)
+                setOfSLIId.add(sli.Id);
+            }
+            List<Sample_Line_Item__c> listOfSLI = [SELECT Id,Name,Sample__c,Sample__r.Name,Sample_Type__c,Customer_Name__c,SLI_Dispatched__c,Release_Date_Time__c,Sample_Request_Status__c,Product__r.Name,Product_Family__c,Contact__c,Contact__r.Login_Hash_Code__c,Account_Id__c,Product_Code__c,Actual_date_of_dispatch__c,Product_Name__c FROM Sample_Line_Item__c WHERE Product_Name__c LIKE :('%' + serachKey + '%') AND Id IN : setOfSLIId];
+            system.debug('listOfSLI ====> '+listOfSLI);
             return listOfSLI;
         }catch(Exception e){
             return null;
@@ -768,7 +884,7 @@ public without sharing class OperationsPortalController {
                     setOfSampleIds.add(samp.Id);
                 }
             }
-            List<Project__c> listOfSample = [SELECT Id,Name,Sample_Name__c,Record_Type_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Account__r.Name,Account__c FROM Project__c WHERE (Sample_Name__c LIKE :('%' + serachKey + '%') OR Customer_Name__c LIKE :('%' + serachKey + '%')) AND Id IN : setOfSampleIds];
+            List<Project__c> listOfSample = [SELECT Id,Name,Sample_Name__c,Record_Type_Name__c,Shipping_Type__c,Status__c,Product_Family__c,Sample_Requested_by__c,Account__r.Name,Account__c FROM Project__c WHERE (Sample_Name__c LIKE :('%' + serachKey + '%') OR Customer_Name__c LIKE :('%' + serachKey + '%') OR Name LIKE :('%' + serachKey + '%')) AND Id IN : setOfSampleIds];
             return listOfSample;
         }catch(Exception e){
             return null;
@@ -778,13 +894,18 @@ public without sharing class OperationsPortalController {
     @RemoteAction
     public static List<Opportunity> searchOpportunity(string serachKey, List<Opportunity> listOfOpp){
         try{
+            system.debug('serachKey ====> '+serachKey);
+            system.debug('listOfOpp size ====> '+listOfOpp.size());
             Set<Id> setOfOppIds = New Set<Id>();
             if(!listOfOpp.isEmpty()){
                 for(Opportunity opp : listOfOpp){
                     setOfOppIds.add(opp.Id);
                 }
             }
+            system.debug('setOfOppIds ====> '+setOfOppIds);
+            system.debug('setOfOppIds Size ====> '+setOfOppIds.size());
             List<Opportunity> listOfOpportunity = [SELECT Id,Name,Account.Name,Amount,CloseDate,AccountId,StageName,Probability,Type,RecordType.Name FROM Opportunity WHERE Name LIKE :('%' + serachKey + '%') AND Id IN : setOfOppIds];
+            system.debug('listOfOpportunity ====> '+listOfOpportunity);
             return listOfOpportunity;
         }catch(Exception e){
             return null;
@@ -1070,6 +1191,20 @@ public without sharing class OperationsPortalController {
             List<Contact> conRec = [SELECT Id,Name,Login_Hash_Code__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
             com.Comment_By__c = conRec[0].Id;
             com.Sample_Line_Item__c = SLIid;
+            system.debug('com =====> '+com);
+           	insert com;
+            return com.Id;
+        }catch(Exception e){
+           return e.getMessage()+e.getLineNumber(); 
+        }
+    }
+
+    @RemoteAction
+    public static string saveCommentSample(Comment__c com, String hashCode, string SLIid){
+        try{
+            List<Contact> conRec = [SELECT Id,Name,Login_Hash_Code__c FROM Contact WHERE Login_Hash_Code__c =: hashCode];
+            com.Comment_By__c = conRec[0].Id;
+            com.Sample__c = SLIid;
             system.debug('com =====> '+com);
            	insert com;
             return com.Id;

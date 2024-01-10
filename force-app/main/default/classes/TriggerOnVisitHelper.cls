@@ -3,6 +3,8 @@ public class TriggerOnVisitHelper {
         Map<Id, List<Visit__c>> dayVisitMap = new Map<Id, List<Visit__c>>();
         
         for (Visit__c newVisit : updatedVisits) {
+            system.debug('newVisit ID-->'+newVisit.ID);
+            system.debug('newVisit Distance_Km__c-->'+newVisit.Distance__c);
             if (newVisit.Visit_Plan__c != null) {
                 if (!dayVisitMap.containsKey(newVisit.Visit_Plan__c)) {
                     dayVisitMap.put(newVisit.Visit_Plan__c, new List<Visit__c>());
@@ -12,15 +14,17 @@ public class TriggerOnVisitHelper {
         }
         
         List<Day_Visit_Plan__c> dayVisitToBeUpdatedDistance = new List<Day_Visit_Plan__c>();
-        
+        system.debug('dayVisitToBeUpdatedDistance-->'+dayVisitToBeUpdatedDistance);
         for (Id dayVisitId : dayVisitMap.keySet()) {
             Day_Visit_Plan__c toUpdateDis = new Day_Visit_Plan__c(Id = dayVisitId);
             Double totalDistance = 0;
             for (Visit__c visit : dayVisitMap.get(dayVisitId)) {
                 try {
                     // Make sure Distance__c is populated before using it
-                    if (visit.Distance_Km__c != null) {
-                        totalDistance += visit.Distance_Km__c;
+                    system.debug('visit.Distance_Km__c-->'+visit.Distance__c);
+                    if (visit.Distance__c != null) {
+                        totalDistance += visit.Distance__c;
+                        system.debug('totalDistance-->'+totalDistance);
                     }
                 } catch (Exception e) {
                     System.debug('Exception occurred: ' + e.getMessage());
@@ -39,6 +43,7 @@ public class TriggerOnVisitHelper {
             try {
                 System.debug('dayVisitToBeUpdatedDistance: ' + dayVisitToBeUpdatedDistance);
                 update dayVisitToBeUpdatedDistance;
+                System.debug('dayVisitToBeUpdatedDistance------>>> ' + dayVisitToBeUpdatedDistance);
             } catch (Exception e) {
                 System.debug('Exception occurred during update: ' + e.getMessage());
                 System.debug('Exception occurred at Line: ' + e.getLineNumber());

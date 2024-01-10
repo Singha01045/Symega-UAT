@@ -16,7 +16,8 @@
         var FourthMonthListMobile = [{month:'October'+' '+year,colormatch:null},{month:'November'+' '+year,colormatch:null},{month:'December'+' '+year,colormatch:null}];
         var allMonthListMobile = [{month:'January'+' '+year,colormatch:null},{month:'February'+' '+year,colormatch:null},{month:'March'+' '+year,colormatch:null},{month:'April'+' '+year,colormatch:null},{month:'May'+' '+year,colormatch:null} ,{month:'June'+' '+year,colormatch:null},{month:'July'+' '+year,colormatch:null},{month:'August'+' '+year,colormatch:null},{month:'September'+' '+year,colormatch:null},{month:'October'+' '+year,colormatch:null},{month:'November'+' '+year,colormatch:null},{month:'December'+' '+year,colormatch:null}];
         for(let i=0;i<FirstMonthList.length;i++){
-            if(FirstMonthList[i]==MonthName){
+            if(FirstMonthList[i].month==MonthName){
+                FirstMonthList[i].colormatch=true;
                 console.log('FirstMonthList');
                 component.set("v.MonthListToShow",FirstMonthList); 
             }

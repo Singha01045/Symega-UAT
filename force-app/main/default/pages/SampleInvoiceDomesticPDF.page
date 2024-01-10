@@ -116,7 +116,7 @@
             <div class="col" style="border: 1px solid black;">
                 <p style="font-size:12px;">
                     Invoice No : {!projRec.Invoice_No__c} &amp; Date : {!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())}<BR/>
-                    PO Number &amp; Date : 123/{!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())}<BR/>
+                    PO Number &amp; Date : {!projRec.Name}/{!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())}<BR/>
                     Sale Order Nr. &amp; Date : {!projRec.Opportunity__r.Sale_Order_No__c} / {!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())}<BR/> 
                     Delivery Number &amp; Date : 123 / {!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())} <BR/>
                     Terms of Delivery : {!projRec.Opportunity__r.Account.Transportation_Terms__c} <BR/>
@@ -153,17 +153,18 @@
                     <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sli.Product_Code__c}</td>
                     <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sli.Quantity__c}</td>
                     <td  style="border:1px solid black;font-size:12px;" >{!sli.Quantity_Unit__c}</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sli.Quantity_Unit__c}</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:right;">test</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:center;">test</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:right;" >test</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:center;">test</td>
+                    <!--td  style="border:1px solid black;font-size:12px;text-align:center;" >{!sli.Quantity_Unit__c}</td -->
+                    <td  style="border:1px solid black;font-size:12px;text-align:right;">{!sli.Rate_Per_100_G__c}</td>
+                    <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sli.Value__c}</td> <!-- Value -->
+                    <td  style="border:1px solid black;font-size:12px;text-align:right;" >{!sli.Freight_Value__c}</td>
+                    <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sli.Taxable_Value__c}</td>
+                    <td  style="border:1px solid black;font-size:12px;text-align:center;" > {!sli.Total_GST_Percent__c}</td> <!--{!sli.Product__r.HSN_TAX__c} -->
+                    <td  style="border:1px solid black;font-size:12px;text-align:center;">{!sli.CGST_Amount__c}</td>
+                    <td  style="border:1px solid black;font-size:12px;text-align:right;" >{!sli.SGST_Amount__c}</td>
+                    <td  style="border:1px solid black;font-size:12px;text-align:right;" >{!sli.IGSTC_Amount__c}</td>
                     <td  style="border:1px solid black;font-size:12px;text-align:center;" >test</td>
                     <td  style="border:1px solid black;font-size:12px;text-align:center;">test</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:right;" >test</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:center;" >test</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:center;">test</td>
-                    <td  style="border:1px solid black;font-size:12px;text-align:right;">test</td>
+                    <td  style="border:1px solid black;font-size:12px;text-align:right;">{!sli.Total__c}</td>
                 </tr>
             </apex:repeat>
             <tr>

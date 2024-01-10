@@ -17,6 +17,8 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.js"/>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.6/semantic.js">
             </script>
+            <script src="https://cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/ng.ckeditor/2.0.2/ng-ckeditor.min.js"></script>
             <style>
                 .loadingBackground {
                 position: fixed;
@@ -137,7 +139,7 @@
                         <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
                             <li><a class="dropdown-item pe-5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                              </svg>&nbsp;{{contactName}}</a></li>
+                              </svg>&nbsp;{{contactName}} - {{teamType}}</a></li>
                             <li>
                             <hr class="dropdown-divider" />
                         </li>
@@ -161,7 +163,15 @@
         </nav>
             <apex:includeLightning />
             <div  id="container"/>
-            
+            <div class="container-fluid px-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab">
+                        <button class="tablinks selectedTab" ng-click="onClickOfDetails()" id="DetailTab">Details</button>
+                        <button class="tablinks" ng-click="onClickOfComments()" id="CommentsTab">Comments</button>
+                      </div>
+                </div>
+            </div>
             <div class="row mx-5" ng-show="showDetailPage">
                 <div class="row box-shadow-2 mb-5">
                     <div class="row mt-5 mx-1">
@@ -241,7 +251,7 @@
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md-6 mb-5">
-                                                <button type="button" ng-click="saveSLIList()" class="blue-btn float-end" data-dismiss="modal">Save</button>
+                                                <button type="button" ng-click="saveSLIList()" class="blue-btn float-end">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -268,7 +278,7 @@
                                             </div>
                                             <div class="row mt-3">
                                                 <div class="col-md-6 mb-5">
-                                                    <button type="button" ng-click="saveLabel()" class="blue-btn float-end" data-dismiss="modal">Save</button>
+                                                    <button type="button" ng-click="saveLabel()" class="blue-btn float-end">Save</button>
                                                 </div>
                                                 <div class="col-md-6 mb-5">
                                                     <button type="button" data-dismiss="modal" class="blue-btn">Cancel</button>
@@ -298,7 +308,7 @@
                                             </div>
                                             <div class="row mt-3">
                                                 <div class="col-md-6 mb-5">
-                                                    <button type="button" ng-click="saveNonHazardous()" class="blue-btn float-end" data-dismiss="modal">Save</button>
+                                                    <button type="button" ng-click="saveNonHazardous()" class="blue-btn float-end">Save</button>
                                                 </div>
                                                 <div class="col-md-6 mb-5">
                                                     <button type="button" data-dismiss="modal" class="blue-btn">Cancel</button>
@@ -398,7 +408,7 @@
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md-6 mb-5">
-                                                <button type="button" ng-click="saveSLIDetails()" class="blue-btn float-end" data-dismiss="modal">Save</button>
+                                                <button type="button" ng-click="saveSLIDetails()" class="blue-btn float-end">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -676,14 +686,162 @@
                     </div>
                     
                 </div>
+                <div class="col-md-6 mt-3 mb-3" ng-show="showbackAndSaveBtn">
+                    <button class="blue-btn float-end me-2 mb-5" ng-click="SaveSampleDetails()" type="button">
+                        Save</button>
+                    <button class="blue-btn float-end me-2 mb-5" ng-click="back()" type="button">
+                        <i class="fa-solid fa-arrow-left me-2"></i>Back</button>
+                </div>
             </div>
             
-            <div class="col-md-6 mt-3 mb-3" ng-show="showbackAndSaveBtn">
-                <button class="blue-btn float-end me-2 mb-5" ng-click="SaveSampleDetails()" type="button">
-                    Save</button>
-                <button class="blue-btn float-end me-2 mb-5" ng-click="back()" type="button">
-                    <i class="fa-solid fa-arrow-left me-2"></i>Back</button>
+            
+
+
+
+
+            <div class="row tabContentSLIDetPage" ng-show="showComments">
+                <div class="col-md-12">
+                    <h3 class="pb-3 color-theme"><b>Comments :</b></h3>
+                </div>
+                    <div class="col-md-12">
+                        <button class="blue-btn float-end me-2 mb-5" ng-click="openPopUp()" type="button">
+                            New</button>
+                        </div>
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Comment No.</th>
+                                <th>Comment</th>
+                                <th>Commentted By</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="com in listOfComments">
+                                <td>{{$index+1}}</td>
+                                <td>{{com.Name}}</td>
+                                <td>{{com.Comment__c}}</td>
+                                <td>{{com.Comment_By__r.Name}}</td>
+                                <td><button type="button" data-bs-dismiss="modal" style="background:green;" class="blue-btn" ng-click="openReplyPopUp($index,com.Id)"><i class="fa fa-reply" aria-hidden="true"></i>Reply</button>
+                                    <div class="modal" id="flipFlop2{{$index}}">
+                                            <div class="modal-dialog" style="min-width:1000px">
+                                              <div class="modal-content">
+                                          
+                                                <div class="modal-header">
+                                                  <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                                    <h3 class="color-theme2" style="color:green;">
+                                                        <b>Add Reply</b>
+                                                    </h3>
+                                                </div></h4> 
+                                                  <button type="button" class="btn-close" data-dismiss="modal"></button>
+                                                </div>
+                                          
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                    <ng-ckeditor ng-model="cmnt.Reply__c" ng-config="config" ></ng-ckeditor>
+                                                </div>
+                                                </div>
+                                                <div class="row mt-3">
+                                                    <div class="col-md-12">
+                                                    <button type="button" data-bs-dismiss="modal" class="blue-btn float-end" ng-click="saveReply($index)">Save</button>                                                    
+                                                </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <button type="button" data-bs-dismiss="modal" style="background:rgb(179, 69, 5))" class="blue-btn" ng-click="openViewReplyPopUp($index,com.Id)">View Reply</button>
+                                <div class="modal" id="viewReplyBox{{$index}}">
+                                    <div class="modal-dialog" style="min-width:1000px">
+                                        <div class="modal-content">
+                                    
+                                        <div class="modal-header">
+                                            <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                                            <h3 class="color-theme2" style="color:green;">
+                                                <b>View Reply</b>
+                                            </h3>
+                                        </div></h4> 
+                                            <button type="button" class="btn-close" data-dismiss="modal"></button>
+                                        </div>
+                                    
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Reply No.</th>
+                                                                <th>Reply</th>
+                                                                <th>Replied By</th>
+                                                                <!--th>Action</th-->
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="com in listOfReplies">
+                                                                <td>{{$index+1}}</td> 
+                                                                <td>{{com.Name}}</td>
+                                                                <td>{{com.Reply__c}}</td>
+                                                                <td>{{com.Comment_By__r.Name}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                               <div class="row">
+                    <div class="col-md-12">
+                        <button class="paginationButton" ng-click="handleNext()">Next &#10230;</button>
+                        <button class="paginationButton" ng-click="handlePrevious()">&#10229; Previous</button>
+                    </div>
+                </div>
             </div>
+
+
+            <div class="modal" id="flipFlop3">
+                <div class="modal-dialog" style="min-width:1000px">
+                  <div class="modal-content">
+              
+                    <div class="modal-header">
+                      <h4 class="modal-title"><div class="d-flex justify-content-center" style="background:unset;">
+                        <h3>
+                            <b>Add Comment</b>
+                        </h3>
+                    </div></h4> 
+                      <button type="button" class="btn-close" data-dismiss="modal"></button>
+                    </div>
+              
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                        <ng-ckeditor ng-model="come.Comment__c" ng-config="config" ></ng-ckeditor>
+                    </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                        <button type="button" class="blue-btn float-end" ng-click="saveComment()">Save</button>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+
 
             <div class="row box-shadow-2" ng-show="showProfile" style="margin-top:10rem!important;margin-right:24rem!important;margin-left:24rem!important;">
                 <div class="row mt-5 mx-1">
@@ -709,18 +867,24 @@
                 <div class="col-md-6 mt-3">
                     <label class="font-if">Phone
                     </label>
-                    <input class="form-control" type="text" ng-model="conRec.MobilePhone"/>
+                    <input class="form-control" type="text" ng-model="conRec.MobilePhone" number="conRec.MobilePhone" maxlength="10" ng-disabled="disabled" />
                 </div>
                 <div class="col-md-6 mt-3 mb-5">
-                    <label class="font-if">Password
-                    </label>
-                    <input class="form-control" type="password" ng-model="conRec.Password__c"/>
+                    <div style="position: relative;">
+                        <label class="font-if">Password
+                        </label>
+                        <input class="form-control" type="password" id="psw" ng-model="conRec.Password__c" ng-disabled="disabled"/>
+                        <i class="fa fa-eye eye-icon" style="position:absolute;right:15px;top:40px;" ng-click="showHideLoginPassword('psw')"></i>
+                    </div>
+                    
                 </div>
                 <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
                     <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
                         <i class="fa-solid fa-check me-2"></i>Update</button>
                     <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
                         <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+                        <button class="blue-btn float-end me-2" ng-click="editProfile()" type="button">
+                            <i class="fa-solid fa-pencil me-2"></i>Edit</button>
                 </div>
             </div>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"/>
@@ -758,29 +922,11 @@
                 }
             };
         });
-        
-        angular.module('decimal', [])
-        .directive('decimal', function () {
-            return {
-                require: 'ngModel',
-                restrict: 'A',
-                link: function (scope, element, attrs, ctrl) {
-                    ctrl.$parsers.push(function (input) {
-                        if (input == undefined) return ''
-                        var inputNumber = input.toString().replace(/[^0-9/.]/g, '');
-                        if (inputNumber != input) {
-                            ctrl.$setViewValue(inputNumber);
-                            ctrl.$render();
-                        }
-                        return inputNumber;
-                    });
-                }
-            };
-        });
-        var app = angular.module('SampleDet_App', []);
+        var app = angular.module('SampleDet_App', ['ng.ckeditor','number']);
         app.controller('SampleDet_ctrl', function ($scope,$sce){
             debugger;
            // $scope.challanLink = {!JSENCODE($Label.SymegaWaterMarkLink)};
+           $scope.disabled = true;
            $scope.challanLink = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/SymegaStickerPDF?id=';
            $scope.challanLinkForNonHazardous = 'https://symegafood--uat--c.sandbox.vf.force.com/apex/NonHarzardousDHLPDF?id=';
             $scope.quantityUnit = quantityUnit;
@@ -797,10 +943,12 @@
             $scope.mergedList = [{Id:'--None--', Name:'--None--'}];
             $scope.productIdTest = "01t5j000005iDRPAA2";
             $scope.dispatchButtonText = "Release To Dispatch Team";
+            $scope.cmnt = {"Reply__c":""};
+            $scope.showComments = false;
             
             $scope.getSampleDetails = function(){
                 debugger;
-                
+                $scope.showSpinner = true;
                 //productId = {Id:'', Name:''};
                 OperationsPortalController.getSampleDetails(sampleId,userHashId,function(result,event){
                     debugger;
@@ -838,6 +986,7 @@
                             $scope.sampleDetails.First_Sample_due_date__c = new Date(result.listOfSamples[0].First_Sample_due_date__c); 
                         }
                         $scope.contactName = result.conRec.Name;
+                        $scope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
                         $scope.accId = result.
                         accId;
 
@@ -934,13 +1083,49 @@
                                $scope.SLIlist[i].check = true;
                                }
                         }
+
+
+                        if($scope.sampleDetails.Comments__r != undefined){
+                                $scope.listOfComments = $scope.sampleDetails.Comments__r;
+                                if($scope.listOfComments.length > 0){
+                                    for(var i=0;i<$scope.listOfComments.length;i++){
+                                        if($scope.listOfComments[i].Comment__c != undefined || $scope.listOfComments[i].Comment__c != ''){
+                                            // $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c ? $scope.listOfComments[i].Comment__c.replace(/&amp;/g,'&').replaceAll('&amp;amp;','&').replaceAll('&amp;gt;','>').replaceAll('&lt;','<').replaceAll('lt;','<').replaceAll('&gt;','>').replaceAll('gt;','>').replaceAll('&amp;','&').replaceAll('amp;','&').replaceAll('&quot;','\'') : $scope.listOfComments[i].Comment__c;
+                                            // var regex = /(<([^>]+)>|&)/ig; // Regular expression to match HTML tags
+                                            // $scope.listOfComments[i].Comment__c =  $scope.listOfComments[i].Comment__c.replace(regex, '');
+                                            $scope.listOfComments[i].Comment__c = angular.element('<textarea>').html($scope.listOfComments[i].Comment__c).text(); // Decode HTML entities
+                                            var regex = /(<([^>]+)>|&)/ig; // Updated regex to match HTML tags and "&"
+                                            $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c.replace(regex, ''); // Remove HTML tags and "&" from the decoded text
+                                            $scope.listOfComments[i].Comment__c = $sce.trustAsHtml($scope.listOfComments[i].Comment__c);
+                                        }
+                                    }
+                                }
+                        }
+
+
                         //$scope.mergedList = [].concat($scope.productList, $scope.optivaRecipeList, $scope.projectQuotientList);
+                        $scope.showSpinner = false;
                         console.log($scope.SLIlist);
                         $scope.$apply();
                     }
                 })
             }
             $scope.getSampleDetails();
+
+            $scope.editProfile = function(){
+                    debugger;
+                    $scope.disabled = false;
+                }
+
+                $scope.showHideLoginPassword = function(controlid){
+                    debugger;
+                    var x = document.getElementById(controlid);
+                    if (x.type === "password") {
+                        x.type = "text";
+                    } else {
+                        x.type = "password";
+                    }
+                }
 
             $scope.ChangeOfReleaseStatus = function(value, SLIRec){
                     debugger;
@@ -956,6 +1141,15 @@
 
                 $scope.saveSLIList = function(){
                     debugger;
+                    $scope.showSpinner = true;
+                    for(var i=-0; i<$scope.SLIlist.length; i++){
+                        if($scope.SLIlist[i].Release_Status__c == undefined || $scope.SLIlist[i].Release_Status__c == "" || $scope.SLIlist[i].Release_Status__c == " "){
+                            $scope.showSpinner = false;
+                            swal("error", "Please update status for all Products.","error");
+                            return;
+                        }
+                    }
+
                     for(var i=-0; i<$scope.SLIlist.length; i++){
                         delete ($scope.SLIlist[i]['$$hashKey']);
                         delete ($scope.SLIlist[i]['checkReleaseStatus']);
@@ -981,6 +1175,7 @@
                             if(event.status && result){
                                 swal("success", "Records has been updated successfully.","success");
                                 //$('#releaseToDispatch').modal('toggle');
+                                $scope.showSpinner = false;
                                 $scope.$apply();
                             }
                             //$scope.getSampleDetails();
@@ -1007,6 +1202,13 @@
 
             $scope.saveDetails = function(){
                 debugger;
+                if($scope.conRec.MobilePhone != undefined || $scope.conRec.MobilePhone != ""){
+                    if($scope.conRec.MobilePhone.length < 10){
+                        swal("error", "Phone number should be of 10 digit.","error");
+                        return;
+                    }
+                }
+
                 delete($scope.conRec['Account__r']);
                 $scope.showSpinner = true;
                 OperationsPortalController.updateProfile($scope.conRec,function(result,event){
@@ -1057,19 +1259,19 @@
 
 $scope.saveLabel = function(){
                 debugger;
+                $scope.showSpinner = true;
                 OperationsPortalController.savePDF($scope.urlToSendToApex, $scope.sampleId, 'Sample Invoice', function(result, event){
-                    $scope.showSpinner = true;
                     if(event.status && result){
                         $scope.labelToDisplay = result;
                             //$scope.contentVersionId = result[0].ContentVersionId;
-                            $scope.showSpinner = false;
                             swal("success", "Label has been successfully saved!","success");
-                            //$('#genrateLabelModal').modal('toggle');
+                            // $('#genrateLabelModal').modal('toggle');
+                            $scope.showSpinner = false;
                             $scope.$apply();
                             //$scope.filePreviewHandler(result);
                     }else{
-                        swal("error", "Label wasn't saved due to an error!","error");
-                        $scope.showSpinner = false;
+                            swal("error", "Label wasn't saved due to an error!","error");
+                            $scope.showSpinner = false;
                             //$('#genrateLabelModal').modal('toggle');
                             $scope.$apply();
                     }
@@ -1078,14 +1280,14 @@ $scope.saveLabel = function(){
 
             $scope.saveNonHazardous = function(){
                 debugger;
-                OperationsPortalController.savePDF($scope.urlToSendToApexForNonHazardous, $scope.sampleId, 'Sample Invoice', function(result, event){
-                    $scope.showSpinner = true;
+                $scope.showSpinner = true;
+                OperationsPortalController.savePDF($scope.urlToSendToApexForNonHazardous, $scope.sampleId, 'Non-Hazardous', function(result, event){
                     if(event.status && result){
                         $scope.labelToDisplay = result;
                             //$scope.contentVersionId = result[0].ContentVersionId;
-                            $scope.showSpinner = false;
                             swal("success", "Label has been successfully saved!","success");
                             //$('#genrateNonHazardousModal').modal('toggle');
+                            $scope.showSpinner = false;
                             $scope.$apply();
                             //$scope.filePreviewHandler(result);
                     }else{
@@ -1151,7 +1353,7 @@ $scope.saveLabel = function(){
                 });
             }
             
-            // $scope.counter =1;
+            $scope.counter =1;
             $scope.onChangeToAssignProduct = function(SLI,productId){
                 debugger;
                 // if($scope.counter == 1){
@@ -1194,7 +1396,8 @@ $scope.saveLabel = function(){
                 $scope.addedSLIs = [];
                 for(var i=0;i<$scope.SLIlist.length;i++){
                     debugger;
-                    if($scope.SLIlist[i].Product__c == undefined && $scope.SLIlist[i].OPTIVA_Recipe__c == undefined && $scope.SLIlist[i].Project_Quotient__c == undefined){
+                    if($scope.SLIlist[i].check == false){
+                        if($scope.SLIlist[i].Product__c == undefined && $scope.SLIlist[i].OPTIVA_Recipe__c == undefined && $scope.SLIlist[i].Project_Quotient__c == undefined){
                         $scope.showSpinner = false;
                         swal("info", "Please add Product.","info");
                         return;
@@ -1213,6 +1416,7 @@ $scope.saveLabel = function(){
                         $scope.showSpinner = false;
                         swal("info", "Please enter packaging quantity.","info");
                         return;
+                    }
                     }
                 }
                 //$('#flipFlop').modal('toggle');
@@ -1255,12 +1459,12 @@ $scope.saveLabel = function(){
                     debugger;
                     if(event.status && result){
                         debugger;
-                        $scope.showSpinner = false;
                         swal("success", "Record has been update successfully.","success");
+                        $scope.showSpinner = false;
                         window.location.reload();
                     }else{
-                        $scope.showSpinner = false;
                         swal("error", "Could not Update the Record due to an error","error");
+                        $scope.showSpinner = false;
                     }
                     //$scope.getSampleDetails();
                 })
@@ -1325,6 +1529,120 @@ $scope.saveLabel = function(){
                     $scope.$apply();
                 })
             }
+
+
+            $scope.onClickOfDetails = function(){
+                debugger;
+                var detailTab = document.getElementById("DetailTab");
+                detailTab.classList.add("selectedTab");
+                var CommentsTab = document.getElementById("CommentsTab");
+                CommentsTab.classList.remove("selectedTab");
+                $scope.showDetailPage = true;
+                $scope.showComments = false;
+            }
+
+            $scope.onClickOfComments = function(){
+                debugger;
+                var detailTab = document.getElementById("DetailTab");
+                detailTab.classList.remove("selectedTab");
+                var CommentsTab = document.getElementById("CommentsTab");
+                CommentsTab.classList.add("selectedTab");
+                $scope.showDetailPage = false;
+                $scope.showComments = true;
+            }
+
+            $scope.openPopUp = function () {
+                    debugger;
+                    var myModal = new bootstrap.Modal(document.getElementById('flipFlop3'));
+                    myModal.show('slow');
+                    $scope.$apply();
+    			}
+                    
+                    $scope.openReplyPopUp = function(index,comId){
+                        debugger;
+                        $scope.comId = comId;
+                        var myModal = new bootstrap.Modal(document.getElementById('flipFlop2' + index));
+                        myModal.show('slow');
+                        $scope.$apply();
+                    }
+
+                    $scope.openViewReplyPopUp = function(index,comId){
+                    debugger;
+                    $scope.showSpinner = true;
+                    $scope.comId = comId;
+                    OperationsPortalController.getReplies(comId,function(result,event){
+                    if(event.status && result){
+                        $scope.listOfReplies = result;
+                        if($scope.listOfReplies != undefined){
+                            for(var i=0;i<$scope.listOfReplies.length;i++){
+                                if($scope.listOfReplies[i].Reply__c != undefined || $scope.listOfReplies[i].Reply__c != ''){
+                                    $scope.listOfReplies[i].Reply__c = angular.element('<textarea>').html($scope.listOfReplies[i].Reply__c).text(); // Decode HTML entities
+                                    var regex = /(<([^>]+)>|&)/ig; // Updated regex to match HTML tags and "&"
+                                    $scope.listOfReplies[i].Reply__c = $scope.listOfReplies[i].Reply__c.replace(regex, ''); // Remove HTML tags and "&" from the decoded text
+                                    $scope.listOfReplies[i].Reply__c = $sce.trustAsHtml($scope.listOfReplies[i].Reply__c);
+                                }
+                            }
+                        }
+                        $scope.showSpinner = false;
+                        var myModal = new bootstrap.Modal(document.getElementById('viewReplyBox' + index));
+                        myModal.show('slow');
+                        $scope.$apply();
+                    }
+                    })
+                }
+
+            $scope.paginateData = function() {
+                    debugger;
+                     const startIndex = ($scope.currentPage - 1) * $scope.pageSize;
+                     const endIndex = startIndex + $scope.pageSize;
+                     $scope.listOfComments3 = $scope.listOfComments.slice(startIndex, endIndex);
+                }
+                
+                $scope.handleNext = function(){
+                     debugger;
+                     if ($scope.currentPage < $scope.totalPages){
+                         $scope.currentPage += 1;
+                         $scope.paginateData($scope.listOfComments);
+                     }
+                 }
+                
+                $scope.handlePrevious = function(){
+                     debugger;
+                     if ($scope.currentPage > 1){
+                         this.currentPage -= 1;
+                         this.paginateData(this.listOfComments);
+                     }
+                 }
+
+                 $scope.saveComment = function(){
+                        debugger;
+                        OperationsPortalController.saveCommentSample($scope.come,userHashId,sampleId,function(result,event){
+                            debugger;
+                            if(event.status && result){
+                                swal("success", "Comment added successfully.","success");
+                                $scope.showSpinner = false;
+                                window.location.reload();
+                                $scope.come.Comment__c = "";
+                                // $scope.getSampleDetails();
+                                $scope.$apply();
+                            }
+                        })
+                    }
+                    
+                    $scope.saveReply = function(ind){
+                        debugger;
+                        OperationsPortalController.saveReply($scope.cmnt,userHashId,$scope.comId,function(result,event){
+                            debugger;
+                            if(event.status && result){
+                                swal("success", "Reply added successfully.","success");
+                                $scope.showSpinner = false;
+                                window.location.reload();
+                                $scope.cmnt.Reply__c = "";
+                                // $scope.getSampleDetails();
+                                $scope.$apply();
+                            }
+                        })
+                    }
             
             
             $scope.showCustomerssPage = function(){

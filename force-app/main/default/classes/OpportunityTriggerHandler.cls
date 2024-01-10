@@ -31,12 +31,15 @@ public without sharing class OpportunityTriggerHandler {
     //NEW
     public void onMarkdownAddition(List<Opportunity> opportunityList, Map<id,Opportunity> oldOppMap) {
         for(Opportunity opp : opportunityList) {
-            if(opp.Total_Unit_Price__c != null && ( (opp.Total_Unit_Price__c != oldOppMap.get(opp.Id).Total_Unit_Price__c) || (opp.Total_List_Price__c != null && opp.Total_List_Price__c != oldOppMap.get(opp.Id).Total_List_Price__c) ) && opp.Total_Unit_Price__c < opp.Total_List_Price__c && opp.Total_Unit_Price__c > 0 && opp.Total_List_Price__c > 0){
+            if( (opp.Approval_Status__c == 'Markdown Rejected' && opp.Approval_Status__c != oldOppMap.get(opp.Id).Approval_Status__c) || (opp.Is_Manual_Approval_Completed__c && opp.Total_Unit_Price__c != null && ( (opp.Total_Unit_Price__c != oldOppMap.get(opp.Id).Total_Unit_Price__c) || (opp.Total_List_Price__c != null && opp.Total_List_Price__c != oldOppMap.get(opp.Id).Total_List_Price__c) ) && opp.Total_Unit_Price__c < opp.Total_List_Price__c && opp.Total_Unit_Price__c > 0 && opp.Total_List_Price__c > 0 )){
                 system.debug('onMarkdownAddition Opp -- ' + opp);
                 if(opp.Approved_by_Manager__c){
                     opp.Approved_by_Manager__c = false;
                     opp.Approved_by_Business_Head__c = false;
                     opp.Approved_by_MD__c = false;                    
+                }
+                if(opp.Approval_Status__c == 'Markdown Rejected'){
+                    opp.Is_Manual_Approval_Completed__c = TRUE;
                 }
             }
         }
@@ -91,7 +94,7 @@ public without sharing class OpportunityTriggerHandler {
                     
                     //1st use case is initial submission
                     System.debug('--- Testing : :  ');
-                    if(opp.Total_Unit_Price__c != null && ( (opp.Total_Unit_Price__c != oldOppMap.get(opp.Id).Total_Unit_Price__c) || (opp.Total_List_Price__c != null && opp.Total_List_Price__c != oldOppMap.get(opp.Id).Total_List_Price__c) ) && opp.Total_Unit_Price__c < opp.Total_List_Price__c && opp.Total_Unit_Price__c > 0 && opp.Total_List_Price__c > 0 && opp.Approved_by_Business_Head__c == false && opp.Approved_By_Manager__c == false && opp.Approved_By_MD__c == false) {
+                    if(opp.Total_Unit_Price__c != null && ( (opp.Total_Unit_Price__c != oldOppMap.get(opp.Id).Total_Unit_Price__c) || (opp.Total_List_Price__c != null && opp.Total_List_Price__c != oldOppMap.get(opp.Id).Total_List_Price__c) ) && opp.Total_Unit_Price__c < opp.Total_List_Price__c && opp.Total_Unit_Price__c > 0 && opp.Total_List_Price__c > 0) {
                         //calculate %
                         Double difference = opp.Total_List_Price__c - opp.Total_Unit_Price__c;
                         System.debug('--- difference '+ difference);
@@ -101,7 +104,7 @@ public without sharing class OpportunityTriggerHandler {
                         oppUpdateList.add(new Opportunity(Id = opp.Id, Markdown__c = markDownPercentage, Approved_by_Manager__c = false, Approved_by_Business_Head__c = false, Approved_By_MD__c = false));
                         
                         
-                        if(markDownPercentage > 0) {
+                        if(opp.Approved_by_Business_Head__c == false && opp.Approved_By_Manager__c == false && opp.Approved_By_MD__c == false && markDownPercentage > 0 && opp.Is_Manual_Approval_Completed__c) {
                             if((managerId != null && managerId != businessHeadId && !freshOppMap.get(opp.Id).Owner.UserRole.Name.contains('Business Head')) || (managerId != null && freshOppMap.get(opp.Id).Owner.UserRole.Name.contains('Business Head'))) {
                                 oppUpdateList2.add(new Opportunity(Id = opp.Id, Approver_Name__c = userByIdMap.get(managerId).Name));
                                 managerApprovalOppList.add(new ApprovalWrapper(opp, managerId));
@@ -111,10 +114,12 @@ public without sharing class OpportunityTriggerHandler {
                             }
                         }
                         
-                    }else if(businessHeadId != null && opp.Approved_by_Business_Head__c == false && opp.Approved_by_Manager__c == true && opp.Approved_by_Manager__c != oldOppMap.get(opp.Id).Approved_by_Manager__c) {
+                    }
+                    else if(businessHeadId != null && opp.Approved_by_Business_Head__c == false && opp.Approved_by_Manager__c == true && opp.Approved_by_Manager__c != oldOppMap.get(opp.Id).Approved_by_Manager__c) {
                         oppUpdateList2.add(new Opportunity(Id = opp.Id, Approver_Name__c = userByIdMap.get(businessHeadId).Name));
                         bhApprovalFutureOppMap.put(opp.Id, new ApprovalWrapper(opp, businessHeadId));
-                    }else if(mdId != null && opp.Approved_by_Business_Head__c == true && opp.Approved_by_Business_Head__c != oldOppMap.get(opp.Id).Approved_by_Business_Head__c && opp.Markdown__c > 6) {
+                    }
+                    else if(mdId != null && opp.Approved_by_Business_Head__c == true && opp.Approved_by_Business_Head__c != oldOppMap.get(opp.Id).Approved_by_Business_Head__c && opp.Markdown__c > 6) {
                         oppUpdateList2.add(new Opportunity(Id = opp.Id, Approver_Name__c = userByIdMap.get(mdId).Name));
                         mdApprovalMap.put(opp.Id, new ApprovalWrapper(opp, mdId));
                     }
@@ -148,8 +153,10 @@ public without sharing class OpportunityTriggerHandler {
                     }
                 }
                 
-                if(!oppUpdateList.isEmpty() && !oppUpdateList2.isEmpty())
+                if(!oppUpdateList.isEmpty())
                     update oppUpdateList;
+                
+                if(!oppUpdateList2.isEmpty())
                     update oppUpdateList2;
                 
                 if(!managerApprovalOppList.isEmpty()) {

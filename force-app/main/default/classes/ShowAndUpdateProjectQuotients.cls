@@ -34,7 +34,7 @@ public class ShowAndUpdateProjectQuotients {
                 Integer wonQntCnt = 0;
                 Integer lostQntCnt = 0;
                 
-                Project__c projectRec = [SELECT ID, OwnerId, Owner.FirstName, Owner.Email, Manager_Email__c, Name, Project_Name__c FROM Project__c WHERE Id =: projId];
+                Project__c projectRec = [SELECT ID, OwnerId, Owner.FirstName, Owner.Email, Manager_Email__c, Name, Project_Name__c, Product_Family__c  FROM Project__c WHERE Id =: projId];
                 List<Project_Quotient__c> wonProjQntlist = new List<Project_Quotient__c>();
                 List<Project_Quotient__c> lostProjQntlist = new List<Project_Quotient__c>();
                 
@@ -54,12 +54,18 @@ public class ShowAndUpdateProjectQuotients {
                         }
                     }
                 }
-
+                
+                Map<string, Notification_Ids_Metadata__mdt	> getMDTByMap = new Map<string, Notification_Ids_Metadata__mdt	>();
+                list<Notification_Ids_Metadata__mdt	> mdtList = Notification_Ids_Metadata__mdt.getAll().values();
+                for (Notification_Ids_Metadata__mdt	 MDT : mdtList) {getMDTByMap.put(MDT.Label, MDT);}  
+                String emails = getMDTByMap.get(projectRec.Product_Family__c ).Email_Ids__c;
+                List <String> emailRecipients = emails.split(',');
+                
                 if(wonProjQntlist.size()>0){
-                    sendWonEmail(projectRec, wonQntCnt, wonProjQntlist);
+                    sendWonEmail(projectRec, wonQntCnt, wonProjQntlist, emailRecipients);
                 }
                 if(lostProjQntlist.size()>0){
-                    sendLostEmail(projectRec, lostQntCnt, lostProjQntlist);
+                    sendLostEmail(projectRec, lostQntCnt, lostProjQntlist, emailRecipients);
                 }
                 return 'success';
             }
@@ -72,9 +78,15 @@ public class ShowAndUpdateProjectQuotients {
         }
     }
     
-    public static void sendWonEmail( Project__c projRec, Integer wonCount, List<Project_Quotient__c> projQntList){
+    public static void sendWonEmail( Project__c projRec, Integer wonCount, List<Project_Quotient__c> projQntList, List <String> emailRecipients){
         try{
-            String  adminMail = System.Label.Admin_Mail_Id;
+            
+            String adminMail = null;
+            list<Admin_Mail_Id__mdt> mdtList = Admin_Mail_Id__mdt.getAll().values();
+            if(mdtList.size() >0 && mdtList[0].Email__c != null){
+                adminMail = mdtList[0].Email__c;
+            }
+            
             system.debug('adminMail--->'+adminMail);
             
             List<Messaging.SingleEmailMessage> semList = new List<Messaging.SingleEmailMessage>(); 
@@ -83,14 +95,22 @@ public class ShowAndUpdateProjectQuotients {
             String mailSubject ;
             mailSubject = projRec.Project_Name__c + '-'+ projRec.Name +' - ' + wonCount + ' - Project Quotients are Won';
             List<String> emailList = new List<String>();
+            if(emailRecipients.size()>0)
+                emailList = emailRecipients;
+            
             emailList.add(projRec.Owner.Email);
             if(projRec.Manager_Email__c != null)
                 emailList.add(projRec.Manager_Email__c);
             if(adminMail != null)
                 emailList.add(adminMail);
+            
             mymail.setToAddresses(emailList);            
             mymail.setSenderDisplayName('Symega');
-            mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
+            
+            Symega_Configuration__c orgConfig = Symega_Configuration__c.getValues('Symega Configuration');
+            String replyTo =  orgConfig.Symega_Email_Id__c == null ? projRec.Owner.Email : orgConfig.Symega_Email_Id__c;
+            mymail.setReplyTo(replyTo); //recently Added
+            
             mymail.setSubject(mailSubject);
             mymail.setSaveAsActivity(false);   
             semList.add(mymail);  
@@ -124,9 +144,14 @@ public class ShowAndUpdateProjectQuotients {
         }
     }
     
-    public static void sendLostEmail( Project__c projRec, Integer lostCount, List<Project_Quotient__c> projQntList){
+    public static void sendLostEmail( Project__c projRec, Integer lostCount, List<Project_Quotient__c> projQntList, List <String> emailRecipients){
         try{
-            String  adminMail = System.Label.Admin_Mail_Id;
+            String adminMail = null;
+            list<Admin_Mail_Id__mdt> mdtList = Admin_Mail_Id__mdt.getAll().values();
+            if(mdtList.size() >0 && mdtList[0].Email__c != null){
+                adminMail = mdtList[0].Email__c;
+            }
+            
             system.debug('adminMail--->'+adminMail);
             
             List<Messaging.SingleEmailMessage> semList = new List<Messaging.SingleEmailMessage>(); 
@@ -135,6 +160,9 @@ public class ShowAndUpdateProjectQuotients {
             String mailSubject ;
             mailSubject = projRec.Project_Name__c + '-'+ projRec.Name +' - ' + lostCount + ' - Project Quotients are Lost';
             List<String> emailList = new List<String>();
+            if(emailRecipients.size()>0)
+                emailList = emailRecipients;
+            
             emailList.add(projRec.Owner.Email);
             if(projRec.Manager_Email__c != null)
                 emailList.add(projRec.Manager_Email__c);
@@ -142,7 +170,11 @@ public class ShowAndUpdateProjectQuotients {
                 emailList.add(adminMail);
             mymail.setToAddresses(emailList);            
             mymail.setSenderDisplayName('Symega');
-            mymail.setReplyTo(UserInfo.getUserEmail()); //recently Added
+            
+            Symega_Configuration__c orgConfig = Symega_Configuration__c.getValues('Symega Configuration');
+            String replyTo =  orgConfig.Symega_Email_Id__c == null ? projRec.Owner.Email : orgConfig.Symega_Email_Id__c;
+            mymail.setReplyTo(replyTo); //recently Added
+            
             mymail.setSubject(mailSubject);
             mymail.setSaveAsActivity(false);   
             semList.add(mymail);  

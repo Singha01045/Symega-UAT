@@ -7,15 +7,16 @@ public without sharing class SampleInvoicePDFController {
     public Integer totalQuantity {get; set;}
     public  decimal convertGmToKG {get; set;}
     public Date Today { get { return Date.today(); }}
-
+    public Decimal totalValue {get; set;}
 
     public SampleInvoicePDFController(){
         try{
             convertGmToKG = 0;
+             totalValue = 0;
             sampDetails = [select Id, MasterLabel,CIN__c,City__c,Country__c,Hno__c,Landmark__c,mobile1__c,mobile2__c,Name__c,Pancode__c,Pincode__c,State__c,SyntPark__c from SamplePdfDetails__mdt];
             //ShippingCity,ShippingState,ShippingStreet,ShippingPostalCode,ShippingCountry   Opportunity__r.Account.ShippingCity,  Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.AccountShippingCountry
             projRec = [SELECT ID,Name,Opportunity__c,Opportunity__r.AccountId,Opportunity__r.Account.Customer_Number__c,Invoice_No__c,Opportunity__r.CurrencyIsoCode,City__c,State__c,Street__c,Postal_Code__c,Country__c,Customers_Contact__c,Customers_Contact__r.Name,Customers_Contact__r.Phone,Customers_Contact__r.Email, No_Of_Cartoons__c,Mode_Of_Courier__c, Opportunity__r.Account.ShippingCity,  Opportunity__r.Account.ShippingState, Opportunity__r.Account.ShippingStreet, Opportunity__r.Account.ShippingPostalCode, Opportunity__r.Account.ShippingCountry, AWB_NO__c,Airport_Of_Departure__c,Airport_Of_Destination__c FROM Project__c WHERE ID =:recordId];
-            sampLineItemList = [SELECT ID,Sample__c,Product_Code__c,Product_Name__c,Product__c,Product__r.HSN_Code__c,Quantity__c,Quantity_Unit__c,Packaging_Quantity__c,Packaging_Unit__c FROM Sample_Line_Item__c WHERE Sample__c =:recordId];
+            sampLineItemList = [SELECT ID,Sample__c,Product_Code__c,Product_Name__c,Product__c,Product__r.HSN_Code__c,Quantity__c,Quantity_Unit__c,Packaging_Quantity__c,Packaging_Unit__c,Rate_Per_100_G__c,Value__c,Quantity_In_Grams__c FROM Sample_Line_Item__c WHERE Sample__c =:recordId];
             
             for(Sample_Line_Item__c sliRec: sampLineItemList){
                 
@@ -29,6 +30,10 @@ public without sharing class SampleInvoicePDFController {
                 }else if(sliRec.Quantity_Unit__c == 'KG'){
                     
                     convertGmToKG += sliRec.Quantity__c ;
+                }
+               
+                if(sliRec.Value__c != null){
+                    totalValue += sliRec.Value__c;
                 }
                 
             }

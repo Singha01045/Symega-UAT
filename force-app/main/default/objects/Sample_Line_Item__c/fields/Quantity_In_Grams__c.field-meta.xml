@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Quantity_In_Grams__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( ISPICKVAL(Quantity_Unit__c , &apos;KG&apos;) , Quantity__c * 1000,  
+IF(ISPICKVAL(Quantity_Unit__c , &apos;GM&apos;), Quantity__c ,  IF( ISPICKVAL(Quantity_Unit__c, &apos;ML&apos;) , Quantity__c * 1,  IF( ISPICKVAL(Quantity_Unit__c , &apos;TONNE&apos;) , Quantity__c * 1000000 ,  IF( ISPICKVAL(Quantity_Unit__c, &apos;MT&apos;) , Quantity__c * 1000000 ,  IF( ISPICKVAL(Quantity_Unit__c , &apos;EA&apos;) , Quantity__c * 1000000000000000000 , 0) ) ) ) )  )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Quantity In Grams</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

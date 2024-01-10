@@ -100,7 +100,7 @@
                             <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
                             </i>
                             <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-                                <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
+                                <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}} - {{teamType}}</a></li>
                                 <li>
                                 <hr class="dropdown-divider" />
                             </li>
@@ -748,18 +748,24 @@
             <div class="col-md-6 mt-3">
                 <label class="font-if">Phone
                 </label>
-                <input class="form-control" type="text" ng-model="conRec.MobilePhone"/>
+                <input class="form-control" type="text" ng-model="conRec.MobilePhone" number="conRec.MobilePhone" maxlength="10" ng-disabled="disabled"/>
             </div>
             <div class="col-md-6 mt-3 mb-5">
-                <label class="font-if">Password
-                </label>
-                <input class="form-control" type="password" ng-model="conRec.Password__c"/>
+                <div style="position: relative;">
+                    <label class="font-if">Password
+                    </label>
+                    <input class="form-control" type="password" id="psw" ng-model="conRec.Password__c" ng-disabled="disabled"/>
+                    <i class="fa fa-eye eye-icon" style="position:absolute;right:15px;top:40px;" ng-click="showHideLoginPassword('psw')"></i>
+                </div>
+                
             </div>
             <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
                 <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
                     <i class="fa-solid fa-check me-2"></i>Update</button>
                 <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
                     <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+                    <button class="blue-btn float-end me-2" ng-click="editProfile()" type="button">
+                        <i class="fa-solid fa-pencil me-2"></i>Edit</button>
             </div>
         </div>
         </body>
@@ -788,10 +794,31 @@
             var accountSegmant = JSON.parse('{!accountSegmant}');
             var transportationTerms = JSON.parse('{!transportationTerms}');
         	var customerAddType = JSON.parse('{!customerAddType}');
-            var app = angular.module('OppDet_App', []);
+
+            angular.module('number', [])
+        .directive('number', function () {
+            return {
+                require: 'ngModel',
+                restrict: 'A',
+                link: function (scope, element, attrs, ctrl) {
+                    ctrl.$parsers.push(function (input) {
+                        if (input == undefined) return ''
+                        var inputNumber = input.toString().replace(/[^0-9]/g, '');
+                        if (inputNumber != input) {
+                            ctrl.$setViewValue(inputNumber);
+                            ctrl.$render();
+                        }
+                        return inputNumber;
+                    });
+                }
+            };
+        });
+
+            var app = angular.module('OppDet_App', ['number']);
         	var parentId = '0061m000001fQjuAAE';
             app.controller('OppDet_ctrl', function ($scope){
                 debugger;
+                $scope.disabled = true;
                 $scope.packingType = packingType;
                 $scope.vegNonVegLabel = vegNonVegLabel;
                 $scope.ingredients = ingredients;
@@ -932,6 +959,21 @@
                     }
                     $scope.getOpportunityDetails();
 
+                    $scope.editProfile = function(){
+                    debugger;
+                    $scope.disabled = false;
+                }
+
+                $scope.showHideLoginPassword = function(controlid){
+                    debugger;
+                    var x = document.getElementById(controlid);
+                    if (x.type === "password") {
+                        x.type = "text";
+                    } else {
+                        x.type = "password";
+                    }
+                }
+
                     $scope.getCustomerDetail = function(){
                     debugger;
                     OperationsPortalController.getConDetails(userHashId,function(result,event){
@@ -940,6 +982,7 @@
                             debugger;
                             $scope.conRec = result;
                             $scope.contactName = result.Name;
+                            $scope.teamType = result.Sample_Assignment_Team__r.Team_Type__c;
                             $scope.$apply();
                         }
                     })
@@ -965,6 +1008,13 @@
 
             $scope.saveDetails = function(){
                 debugger;
+                if($scope.conRec.MobilePhone != undefined || $scope.conRec.MobilePhone != ""){
+                    if($scope.conRec.MobilePhone.length < 10){
+                        swal("error", "Phone number should be of 10 digit.","error");
+                        return;
+                    }
+                }
+
                 delete($scope.conRec['Account__r']);
                 $scope.showSpinner = true;
                 OperationsPortalController.updateProfile($scope.conRec,function(result,event){

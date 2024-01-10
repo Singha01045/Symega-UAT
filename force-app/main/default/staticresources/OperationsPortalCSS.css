@@ -38,7 +38,7 @@
     border: 1px solid lightgray;
     border-top: none;
     border-radius: 15px;
-    margin-top: -32px!important;
+    /* margin-top: -32px!important; */
     width:97%;
     margin-left: 1%!important;
 }

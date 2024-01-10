@@ -93,7 +93,7 @@ export default class CreateSampleAccount extends NavigationMixin(LightningElemen
                 actionName: 'new'
             },state: {
                defaultFieldValues: defaultValues,
-               recordTypeId: this.recordTypeSelected
+               recordTypeId: recordTypeId
             }
         });
     }).catch(error=>{

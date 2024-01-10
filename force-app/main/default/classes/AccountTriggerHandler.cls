@@ -40,7 +40,7 @@ public without sharing class AccountTriggerHandler {
         Set<Id> setOfAccountToUpdate = new Set<Id>();
         Set<Id> registeredAccIds = new Set<Id>();
         for(Account acc : newMap.values()){
-            if(oldMap.get(acc.Id).Customer_Code_SAP__c==null && acc.Customer_Code_SAP__c!=null){
+            if((oldMap.get(acc.Id).Customer_Code_SAP__c==null && acc.Customer_Code_SAP__c!=null && acc.Shipping_Customer_Code_SAP__c!=null) || (oldMap.get(acc.Id).Shipping_Customer_Code_SAP__c==null && acc.Shipping_Customer_Code_SAP__c!=null && acc.Customer_Code_SAP__c!=null)){
                 accIds.add(acc.Id);
             }
             

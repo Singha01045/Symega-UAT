@@ -1,10 +1,3 @@
-<!--
-@description       : 
-@author            : Dhanush Babu
-@group             : 
-@last modified on  : 10-31-2023
-@last modified by  : Dhanush Babu
--->
 <apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="OperationsPortalController">
 <html>
     <head>
@@ -113,28 +106,26 @@ border-top: none;
                     <div>
                         <apex:image url="{!$Resource.logo}" alt="SYMEGA" styleClass="brand-logo"/>
                     </div>
-                    <!-- <a class="nav-link" ng-click="customerPage()" style="color:white;">
-                        Customer
+                    <a class="nav-link" ng-click="showCustomerssPage()" style="color:white;cursor:pointer;margin-left: -1%;" id="customerTab">
+                        <b style="font-size:large;">Home</b>
                     </a>
-                    <a class="nav-link" href="#/Home" style="color:white;">
-                        Samples
+                    <a class="nav-link selectedTabOnSLIDetailPage" style="color:white;cursor:pointer;margin-left: -1%;" id="sampleTab">
+                        <b style="font-size:large;">Customers</b>
                     </a>
-                    <a class="nav-link" href="#/Home" style="color:white;">
-                        Sample Products
-                    </a> -->
-
-                    <div style="width: 50%;">
-                        <!-- <marquee>
-                            <h2 class="nav-link" style="color:white;"><b>Hello We partner with our customers across a project’s lifespan – from inception, through product commercialisation, sharing our experience and expertise. With our informed, committed, and passionate team of professionals, we strive to provide you with solutions that bring your culinary ideas to life, faster and better.</b></h2>
-                            </marquee> -->
-                    </div>
+                    <a class="nav-link" id="sampleProdTab">
+                    </a>
+                <div style="width: 50%;">
+                    <!-- <marquee>
+<h2 class="nav-link" style="color:white;"><b>Hello We partner with our customers across a project’s lifespan – from inception, through product commercialisation, sharing our experience and expertise. With our informed, committed, and passionate team of professionals, we strive to provide you with solutions that bring your culinary ideas to life, faster and better.</b></h2>
+</marquee> -->
+                </div>
                     
                         <div class="d-flex text-align-center">
                             <div class="dropdown">
                                 <i class="far fa-user fa-2x" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
                                 </i>
                                 <ul class="dropdown-menu" style="width: 300px" aria-labelledby="dropdownMenuButton1">                                                            
-                                    <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}}</a></li>
+                                    <li><a class="dropdown-item pe-5"><i class="fa-solid fa-user me-3"></i>{{contactName}} - {{teamType}}</a></li>
                                     <li>
                                     <hr class="dropdown-divider" />
                                 </li>
@@ -158,7 +149,7 @@ border-top: none;
                         <div class="tab">
                             <button class="tablinks selectedTab" ng-click="onClickOfDetailPage()" id="DetailTab">Details</button>
                             <button class="tablinks" ng-click="onClickOfSamplePage()" id="SampleTab">Samples</button>
-                            <button class="tablinks" ng-click="onClickOfFilesPage()" id="FilesTab">Files</button>
+                            <!-- <button class="tablinks" ng-click="onClickOfFilesPage()" id="FilesTab">Files</button> -->
                             <button ng-if="conRec.Role__c == 'Operation Team'" class="tablinks" ng-click="onClickOfComments()" id="CommentsTab">Comments</button>
                         </div>    
                     </div> </div>                       
@@ -752,10 +743,11 @@ border-top: none;
                 <div class="row mt-5 mx-5" id="sampleDetailtab" ng-show="showSamplePage">
                     <div class="col-md-12">
                         <div class="col-md-4" style="width:100%;">
-                            <button class="blue-bordered-btn float-end me-2" style="margin-bottom:3%;" ng-click="generateInvoice()" type="button">
+                            <button class="blue-bordered-btn float-end me-2" ng-click="generateInvoice()" type="button">
                                 Generate Invoice</button>
                         </div>
                         <table class="table">
+                            <h2 style="color:crimson;"><i class="fa fa-user" style="font-size:30px;color:red"></i>&nbsp;&nbsp;<b><u>{{accDetails.Name}}</u></b></h2>
                             <thead>
                                 <tr>
                                     <td>Select</td>
@@ -768,6 +760,7 @@ border-top: none;
                                     <th>Sample Requested By</th>
                                     <th>Record Type</th>
                                     <th>Created Date</th>
+                                    <th>Submitted Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -783,6 +776,7 @@ border-top: none;
                                     <td>{{sample.Sample_Requested_by__c}}</td>
                                     <td>{{sample.Record_Type_Name__c}}</td>
                                     <td>{{sample.CreatedDate | date:'yyyy-MM-dd'}}</td>
+                                    <td>{{sample.Sample_Submitted_Date__c | date:'yyyy-MM-dd'}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1004,18 +998,24 @@ border-top: none;
         <div class="col-md-6 mt-3">
             <label class="font-if">Phone
             </label>
-            <input class="form-control" type="text" ng-model="conDetails.MobilePhone"/>
+            <input class="form-control" type="text" ng-model="conDetails.MobilePhone" number="conDetails.MobilePhone" maxlength="10" ng-disabled="disabled"/>
         </div>
         <div class="col-md-6 mt-3 mb-5">
-            <label class="font-if">Password
-            </label>
-            <input class="form-control" type="password" ng-model="conDetails.Password__c"/>
+            <div style="position: relative;">
+                <label class="font-if">Password
+                </label>
+                <input class="form-control" type="password" id="psw" ng-model="conDetails.Password__c" ng-disabled="disabled"/>
+                <i class="fa fa-eye eye-icon" style="position:absolute;right:15px;top:40px;" ng-click="showHideLoginPassword('psw')"></i>
+            </div>
+            
         </div>
         <div class="col-md-6 mt-3 mb-5" id="updateCancelBtn">
             <button class="blue-btn float-end" ng-click="saveDetails()" type="button">
                 <i class="fa-solid fa-check me-2"></i>Update</button>
             <button class="blue-bordered-btn float-end me-2" ng-click="backProfile()" type="button">
                 <i class="fa-solid fa-arrow-left me-2"></i>Cancel</button>
+                <button class="blue-btn float-end me-2" ng-click="editProfile()" type="button">
+                    <i class="fa-solid fa-pencil me-2"></i>Edit</button>
         </div>
     </div>
         </body>
@@ -1024,9 +1024,30 @@ border-top: none;
             var userHashId = '{!$CurrentPage.parameters.id}';
             var accId = '{!$CurrentPage.parameters.accId}';
             var transportationTerms = JSON.parse('{!transportationTerms}');
-            var app = angular.module('customerDet_App', ['ng.ckeditor']);
-            app.controller('customerDet_ctrl', function ($scope){
+
+            angular.module('number', [])
+        .directive('number', function () {
+            return {
+                require: 'ngModel',
+                restrict: 'A',
+                link: function (scope, element, attrs, ctrl) {
+                    ctrl.$parsers.push(function (input) {
+                        if (input == undefined) return ''
+                        var inputNumber = input.toString().replace(/[^0-9]/g, '');
+                        if (inputNumber != input) {
+                            ctrl.$setViewValue(inputNumber);
+                            ctrl.$render();
+                        }
+                        return inputNumber;
+                    });
+                }
+            };
+        });
+
+            var app = angular.module('customerDet_App', ['ng.ckeditor','number']);
+            app.controller('customerDet_ctrl', function ($scope,$sce){
                 debugger;
+                $scope.disabled = true;
                 $scope.transportationTerms = transportationTerms;
                 $scope.accId = accId;
                 $scope.showDetailPage = true;
@@ -1045,13 +1066,15 @@ border-top: none;
 
                 $scope.getCustomerDetail = function(){
                     debugger;
+                    $scope.showSpinner = true;
                     OperationsPortalController.getCustomerDetail(accId,userHashId,function(result,event){
                         debugger;
                         if(event.status && result){
                             debugger;
                             $scope.conRec = result.conRec;
-                            $scope.conDetails = result.conRec;
+                            $scope.conDetails = result.conRec;  
                             $scope.contactName = result.conRec.Name;
+                            $scope.teamType = result.conRec.Sample_Assignment_Team__r.Team_Type__c;
                             $scope.filesList = result.filesList;
                             if(result.filesList != undefined && result.filesList != null && result.filesList.length>0){
                                 $scope.fileAvailable = true;
@@ -1076,7 +1099,11 @@ border-top: none;
                             if($scope.listOfComments.length > 0){
                                 for(var i=0;i<$scope.listOfComments.length;i++){
                                     if($scope.listOfComments[i].Comment__c != undefined || $scope.listOfComments[i].Comment__c != ''){
-                                        $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c ? $scope.listOfComments[i].Comment__c.replace(/&amp;/g,'&').replaceAll('&amp;amp;','&').replaceAll('&amp;gt;','>').replaceAll('&lt;','<').replaceAll('lt;','<').replaceAll('&gt;','>').replaceAll('gt;','>').replaceAll('&amp;','&').replaceAll('amp;','&').replaceAll('&quot;','\'').replaceAll('&<p&>','').replaceAll('&</p&>','') : $scope.listOfComments[i].Comment__c;
+                                        $scope.listOfComments[i].Comment__c = angular.element('<textarea>').html($scope.listOfComments[i].Comment__c).text(); // Decode HTML entities
+                                            var regex = /(<([^>]+)>|&)/ig; // Updated regex to match HTML tags and "&"
+                                            $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c.replace(regex, ''); // Remove HTML tags and "&" from the decoded text
+                                            $scope.listOfComments[i].Comment__c = $sce.trustAsHtml($scope.listOfComments[i].Comment__c);
+                                        // $scope.listOfComments[i].Comment__c = $scope.listOfComments[i].Comment__c ? $scope.listOfComments[i].Comment__c.replace(/&amp;/g,'&').replaceAll('&amp;amp;','&').replaceAll('&amp;gt;','>').replaceAll('&lt;','<').replaceAll('lt;','<').replaceAll('&gt;','>').replaceAll('gt;','>').replaceAll('&amp;','&').replaceAll('amp;','&').replaceAll('&quot;','\'').replaceAll('&<p&>','').replaceAll('&</p&>','') : $scope.listOfComments[i].Comment__c;
                                     }
                                 }
                             }
@@ -1088,11 +1115,27 @@ border-top: none;
                                 //$scope.listOfComments.push({"Comment__c":""});
                             }
                             $scope.paginateData();
+                            $scope.showSpinner = false;
                             $scope.$apply();
                         }
                     })
                 }
                 $scope.getCustomerDetail();
+
+                $scope.editProfile = function(){
+                    debugger;
+                    $scope.disabled = false;
+                }
+
+                $scope.showHideLoginPassword = function(controlid){
+                    debugger;
+                    var x = document.getElementById(controlid);
+                    if (x.type === "password") {
+                        x.type = "text";
+                    } else {
+                        x.type = "password";
+                    }
+                }
 
                 $scope.showProfileDiv=function(){
                 debugger;
@@ -1113,8 +1156,8 @@ border-top: none;
                     detailTab.classList.add("selectedTab");
                     var sampleTab = document.getElementById("SampleTab");
                     sampleTab.classList.remove("selectedTab");
-                    var FilesTab = document.getElementById("FilesTab");
-                    FilesTab.classList.remove("selectedTab");
+                    // var FilesTab = document.getElementById("FilesTab");
+                    // FilesTab.classList.remove("selectedTab");
                     if($scope.conRec.Role__c == 'Operation Team'){
                         var CommentsTab = document.getElementById("CommentsTab");
                     CommentsTab.classList.remove("selectedTab");   
@@ -1128,6 +1171,13 @@ border-top: none;
 
             $scope.saveDetails = function(){
                 debugger;
+                if($scope.conDetails.MobilePhone != undefined || $scope.conDetails.MobilePhone != ""){
+                    if($scope.conDetails.MobilePhone.length < 10){
+                        swal("error", "Phone number should be of 10 digit.","error");
+                        return;
+                    }
+                }
+                
                 delete($scope.conDetails['Account__r']);
                 $scope.showSpinner = true;
                 OperationsPortalController.updateProfile($scope.conDetails,function(result,event){
@@ -1239,8 +1289,8 @@ $scope.$apply();
                     detailTab.classList.add("selectedTab");
                     var sampleTab = document.getElementById("SampleTab");
                     sampleTab.classList.remove("selectedTab");
-                    var FilesTab = document.getElementById("FilesTab");
-                    FilesTab.classList.remove("selectedTab");
+                    // var FilesTab = document.getElementById("FilesTab");
+                    // FilesTab.classList.remove("selectedTab");
                     if($scope.conRec.Role__c == 'Operation Team'){
                         var CommentsTab = document.getElementById("CommentsTab");
                     CommentsTab.classList.remove("selectedTab");   
@@ -1259,8 +1309,8 @@ $scope.$apply();
                     detailTab.classList.remove("selectedTab");
                     var sampleTab = document.getElementById("SampleTab");
                     sampleTab.classList.add("selectedTab");
-                    var FilesTab = document.getElementById("FilesTab");
-                    FilesTab.classList.remove("selectedTab");
+                    // var FilesTab = document.getElementById("FilesTab");
+                    // FilesTab.classList.remove("selectedTab");
                     if($scope.conRec.Role__c == 'Operation Team'){
                         var CommentsTab = document.getElementById("CommentsTab");
                     CommentsTab.classList.remove("selectedTab");
@@ -1280,8 +1330,8 @@ $scope.$apply();
                     detailTab.classList.remove("selectedTab");
                     var sampleTab = document.getElementById("SampleTab");
                     sampleTab.classList.remove("selectedTab");
-                    var FilesTab = document.getElementById("FilesTab");
-                    FilesTab.classList.add("selectedTab");
+                    // var FilesTab = document.getElementById("FilesTab");
+                    // FilesTab.classList.add("selectedTab");
                     if($scope.conRec.Role__c == 'Operation Team'){
                         var CommentsTab = document.getElementById("CommentsTab");
                     CommentsTab.classList.remove("selectedTab");
@@ -1313,8 +1363,8 @@ $scope.$apply();
                     detailTab.classList.remove("selectedTab");
                     var sampleTab = document.getElementById("SampleTab");
                     sampleTab.classList.remove("selectedTab");
-                    var FilesTab = document.getElementById("FilesTab");
-                    FilesTab.classList.remove("selectedTab");
+                    // var FilesTab = document.getElementById("FilesTab");
+                    // FilesTab.classList.remove("selectedTab");
                     if($scope.conRec.Role__c == 'Operation Team'){
                         var CommentsTab = document.getElementById("CommentsTab");
                     CommentsTab.classList.add("selectedTab");
@@ -1350,6 +1400,16 @@ $scope.$apply();
                     OperationsPortalController.getReplies(comId,function(result,event){
                     if(event.status && result){
                         $scope.listOfReplies = result;
+                        if($scope.listOfReplies != undefined){
+                            for(var i=0;i<$scope.listOfReplies.length;i++){
+                                if($scope.listOfReplies[i].Reply__c != undefined || $scope.listOfReplies[i].Reply__c != ''){
+                                    $scope.listOfReplies[i].Reply__c = angular.element('<textarea>').html($scope.listOfReplies[i].Reply__c).text(); // Decode HTML entities
+                                    var regex = /(<([^>]+)>|&)/ig; // Updated regex to match HTML tags and "&"
+                                    $scope.listOfReplies[i].Reply__c = $scope.listOfReplies[i].Reply__c.replace(regex, ''); // Remove HTML tags and "&" from the decoded text
+                                    $scope.listOfReplies[i].Reply__c = $sce.trustAsHtml($scope.listOfReplies[i].Reply__c);
+                                }
+                            }
+                        }
                         $scope.showSpinner = false;
                         var myModal = new bootstrap.Modal(document.getElementById('viewReplyBox' + index));
                         myModal.show('slow');
@@ -1429,6 +1489,11 @@ $scope.$apply();
                 }
             }
         }
+
+        $scope.showCustomerssPage = function(){
+                var sitePrefix = window.location.href.includes('/apex') ? '/apex' : '/operations/SampleLineItemDetailPage';
+                window.location.replace(window.location.origin + sitePrefix +'?id='+userHashId);
+            }
 
         $scope.DomesticSamples = [];
         $scope.ExportSamples = [];
